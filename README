@@ -1,0 +1,14 @@
+Generic CSS object model written in C.
+
+Features:
+  
+  - Fast
+      Uses libsacc library to parse css3 which is already fast. Fast property
+    access provided by the finite-state machine.
+
+  - Relevant
+      Follow W3 specifications.
+
+  - Useful
+      Can be used in a multithreaded environment. Can be extended with
+    user-defined properties.
