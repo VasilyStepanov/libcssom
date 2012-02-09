@@ -9,7 +9,7 @@ extern "C" {
 
 typedef struct _CSSOM_CSSRule CSSOM_CSSRule;
 
-unsigned short CSSOM_CSSRule_get_type(CSSOM_CSSRule *cssRule);
+unsigned short CSSOM_CSSRule_type(CSSOM_CSSRule *cssRule);
 
 
 

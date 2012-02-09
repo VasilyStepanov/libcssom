@@ -9,7 +9,9 @@ extern "C" {
 
 
 
-typedef CSSOM_CSSRule* CSSOM_CSSRuleList;
+typedef struct _CSSOM_CSSRuleList CSSOM_CSSRuleList;
+
+void CSSOM_CSSRuleList_free(CSSOM_CSSRuleList *cssRules);
 
 
 

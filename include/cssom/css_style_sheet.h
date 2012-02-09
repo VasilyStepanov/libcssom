@@ -11,10 +11,12 @@ extern "C" {
 
 typedef struct _CSSOM_CSSStyleSheet CSSOM_CSSStyleSheet;
 
-const CSSOM_CSSRuleList*
-CSSOM_CSSStyleSheet_get_cssRules(CSSOM_CSSStyleSheet *styleSheet);
+
 
 void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet);
+
+const CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
+  const CSSOM_CSSStyleSheet *styleSheet);
 
 
 
