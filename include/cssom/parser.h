@@ -29,9 +29,9 @@ CSSOM_Parser* CSSOM_Parser_create();
 void CSSOM_Parser_release(CSSOM_Parser *parser);
 
 /**
- * Parse stylesheet.
+ * Parse style sheet.
  *
- * The caller is responsible for disposing the stylesheet by calling
+ * The caller is responsible for disposing the CSSStyleSheet by calling
  * CSSOM_CSSStyleSheet_free().
  */
 CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,

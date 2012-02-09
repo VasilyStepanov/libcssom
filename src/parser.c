@@ -5,6 +5,7 @@
 #include <sacc.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -35,4 +36,13 @@ CSSOM_Parser* CSSOM_Parser_create() {
 void CSSOM_Parser_release(CSSOM_Parser *parser) {
   SAC_DisposeParser(parser->sac);
   free(parser);
+}
+
+
+
+CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
+  const char *cssText)
+{
+  SAC_ParseStyleSheet(parser->sac, cssText, strlen(cssText));
+  return NULL;
 }
