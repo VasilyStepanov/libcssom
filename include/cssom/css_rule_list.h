@@ -9,7 +9,7 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_CSSRule* CSSOM_CSSRuleList;
+typedef CSSOM_CSSRule* CSSOM_CSSRuleList;
 
 
 
