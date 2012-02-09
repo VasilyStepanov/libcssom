@@ -5,7 +5,7 @@ AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
 
 test_suite_SOURCES = test_suite.c \
                      test_parser.c \
-                     test_sequence.c
+                     test_list.c
 
 test_suite_LDADD = $(top_srcdir)/src/libcssom.la
 
