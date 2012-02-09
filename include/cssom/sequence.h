@@ -6,10 +6,11 @@ extern "C" {
 #endif
 
 
-#define CSSOM_SEQUENCE(name, type) \
-  typedef struct _##name name; \
+#define CSSOM_SEQUENCE(N, T) \
+  typedef struct _##N N; \
   \
-  void name##_free(name *sequence);
+  N* N##_init(); \
+  void N##_free(N *sequence);
 
 
 #ifdef __cplusplus

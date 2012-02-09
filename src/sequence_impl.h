@@ -5,12 +5,23 @@
 
 
 
-#define CSSOM_SEQUENCE_IMPL(name, type) \
-  struct _##name { \
+#define CSSOM_SEQUENCE_IMPL(N, T) \
+  struct _##N { \
     int dummy; \
   }; \
   \
-  void name##_free(name *sequence) { \
+  \
+  \
+  N* N##_init() { \
+    N *sequence; \
+    \
+    sequence = malloc(sizeof(struct _##N)); \
+    return sequence; \
+  } \
+  \
+  \
+  \
+  void N##_free(N *sequence) { \
     free(sequence); \
   }
 
