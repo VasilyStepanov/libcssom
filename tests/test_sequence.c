@@ -1,14 +1,14 @@
 #include "test_sequence.h"
 
-#include "src/sequence_impl.h"
+#include "src/sequence_define.h"
 
 #include <cssom/sequence.h>
 
 
 
-CSSOM_SEQUENCE(vi, int)
+CSSOM_SEQUENCE_DECLARE(vi, int)
 
-CSSOM_SEQUENCE_IMPL(vi, int)
+CSSOM_SEQUENCE_DEFINE(vi, int)
 
 
 

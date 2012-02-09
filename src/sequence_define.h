@@ -1,11 +1,11 @@
-#ifndef CSSOM_SEQUENCE_IMPL_H
-#define CSSOM_SEQUENCE_IMPL_H
+#ifndef CSSOM_SEQUENCE_DEFINE_H
+#define CSSOM_SEQUENCE_DEFINE_H
 
 #include <stdlib.h>
 
 
 
-#define CSSOM_SEQUENCE_IMPL(N, T) \
+#define CSSOM_SEQUENCE_DEFINE(N, T) \
   struct _##N { \
     int dummy; \
   }; \

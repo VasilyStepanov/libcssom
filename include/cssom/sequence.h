@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 
-#define CSSOM_SEQUENCE(N, T) \
+#define CSSOM_SEQUENCE_DECLARE(N, T) \
   typedef struct _##N N; \
   \
   N* N##_init(); \

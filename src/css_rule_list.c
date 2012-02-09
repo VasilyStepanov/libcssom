@@ -1,7 +1,7 @@
 #include <cssom/css_rule_list.h>
 
-#include "sequence_impl.h"
+#include "sequence_define.h"
 
 
 
-CSSOM_SEQUENCE_IMPL(CSSOM_CSSRuleList, CSSOM_CSSRule)
+CSSOM_SEQUENCE_DEFINE(CSSOM_CSSRuleList, CSSOM_CSSRule)
