@@ -1,5 +1,7 @@
 #include <cssom/css_style_sheet.h>
 
+#include <cssom/types.h>
+
 #include <stdlib.h>
 
 
@@ -11,9 +13,13 @@ struct _CSSOM_CSSStyleSheet {
 
 
 void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
+  CSSOM_CSSRule **it;
+
   if (styleSheet == NULL) return;
 
-  CSSOM_CSSRuleList_free(styleSheet->cssRules);
+  for (it = styleSheet->cssRules; *it != NULL; ++it)
+    CSSOM_CSSRule_free(*it);
+  free(styleSheet->cssRules);
   free(styleSheet);
 }
 

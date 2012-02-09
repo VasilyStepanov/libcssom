@@ -1,8 +1,9 @@
 #include "test_sequence.h"
 
 #include "src/sequence_define.h"
+#include "src/sequence.h"
 
-#include <cssom/sequence.h>
+#include <assert.h>
 
 
 
