@@ -9,7 +9,7 @@ AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
 libcssom_ladir = $(includedir)
 
-libcssom_la_HEADERS = ../include/sacc.h
+libcssom_la_HEADERS = ../include/cssom.h
 
 libcssom_la_SOURCES = style_sheet.c
 
