@@ -4,7 +4,6 @@
 #include <cssom/css_rule.h>
 #include <cssom/css_rule_list.h>
 #include <cssom/css_style_sheet.h>
-#include <cssom/style_sheet.h>
 #include <cssom/types.h>
 #include <cssom/parser.h>
 
