@@ -1,5 +1,5 @@
-#ifndef CSSOM_LIST_DEFINE_H
-#define CSSOM_LIST_DEFINE_H
+#ifndef _CSSOM_LIST_DEFINE_H
+#define _CSSOM_LIST_DEFINE_H
 
 #include "gcc.h"
 

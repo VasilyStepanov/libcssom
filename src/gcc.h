@@ -1,5 +1,5 @@
-#ifndef GCC_H
-#define GCC_H
+#ifndef _CSSOM_GCC_H
+#define _CSSOM_GCC_H
 
 
 
