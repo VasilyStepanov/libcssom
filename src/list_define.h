@@ -15,7 +15,7 @@
   \
   \
   \
-  static struct _CSSOM_##prefix##ListItem* CSSOM_##prefix##ListItem_init() { \
+  static struct _CSSOM_##prefix##ListItem* CSSOM_##prefix##ListItem_alloc() { \
     struct _CSSOM_##prefix##ListItem *item; \
     \
     item = (struct _CSSOM_##prefix##ListItem*)malloc( \
@@ -44,11 +44,11 @@
   \
   \
   \
-  CSSOM_##prefix##List* CSSOM_##prefix##List_init() { \
+  CSSOM_##prefix##List* CSSOM_##prefix##List_alloc() { \
     CSSOM_##prefix##List *list; \
     struct _CSSOM_##prefix##ListItem *item; \
     \
-    item = CSSOM_##prefix##ListItem_init(); \
+    item = CSSOM_##prefix##ListItem_alloc(); \
     if (item == NULL) return NULL; \
     \
     list = (CSSOM_##prefix##List*)malloc( \
@@ -79,7 +79,7 @@
   T* CSSOM_##prefix##List_append(CSSOM_##prefix##List *list, T value) { \
     struct _CSSOM_##prefix##ListItem *item; \
     \
-    item = CSSOM_##prefix##ListItem_init(); \
+    item = CSSOM_##prefix##ListItem_alloc(); \
     if (item == NULL) return NULL; \
     \
     item->value = value; \

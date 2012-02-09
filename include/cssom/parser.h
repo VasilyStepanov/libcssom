@@ -19,14 +19,14 @@ typedef struct _CSSOM_Parser CSSOM_Parser;
  * Returns NULL if out of memory.
  *
  * The caller is responsible for disposing the parser by calling
- * CSSOM_Parser_release().
+ * CSSOM_Parser_free().
  */
-CSSOM_Parser* CSSOM_Parser_create();
+CSSOM_Parser* CSSOM_Parser_alloc();
 
 /**
  * Release the parser.
  */
-void CSSOM_Parser_release(CSSOM_Parser *parser);
+void CSSOM_Parser_free(CSSOM_Parser *parser);
 
 /**
  * Parse style sheet.

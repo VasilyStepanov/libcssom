@@ -18,7 +18,7 @@ void test_list() {
   CSSOM_IntList *l;
   CSSOM_IntListIter it;
 
-  l = CSSOM_IntList_init();
+  l = CSSOM_IntList_alloc();
 
   assert(CSSOM_IntList_begin(l) == CSSOM_IntList_end(l));
   assert(CSSOM_IntList_size(l) == 0);

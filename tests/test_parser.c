@@ -8,7 +8,7 @@ static void test_parser_basics() {
   CSSOM_Parser *parser;
   CSSOM_CSSStyleSheet *styleSheet;
   
-  parser = CSSOM_Parser_create();
+  parser = CSSOM_Parser_alloc();
 
   styleSheet = CSSOM_Parser_parseStyleSheet(parser,
 "p {\n"
@@ -18,7 +18,7 @@ static void test_parser_basics() {
 
   CSSOM_CSSStyleSheet_free(styleSheet);
 
-  CSSOM_Parser_release(parser);
+  CSSOM_Parser_free(parser);
 }
 
 

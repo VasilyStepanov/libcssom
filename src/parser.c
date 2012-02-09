@@ -15,7 +15,7 @@ struct _CSSOM_Parser {
 
 
 
-CSSOM_Parser* CSSOM_Parser_create() {
+CSSOM_Parser* CSSOM_Parser_alloc() {
   CSSOM_Parser *parser;
   SAC_Parser sac;
 
@@ -33,7 +33,7 @@ CSSOM_Parser* CSSOM_Parser_create() {
 
 
 
-void CSSOM_Parser_release(CSSOM_Parser *parser) {
+void CSSOM_Parser_free(CSSOM_Parser *parser) {
   SAC_DisposeParser(parser->sac);
   free(parser);
 }
