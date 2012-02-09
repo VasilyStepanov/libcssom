@@ -11,7 +11,29 @@ extern "C" {
 
 typedef struct _CSSOM_Parser CSSOM_Parser;
 
-const CSSOM_CSSStyleSheet* parser(CSSOM_Parser *parser, const char *css);
+
+
+/**
+ * Create the parser.
+ *
+ * The caller is responsible for disposing the parser by calling
+ * CSSOM_Parser_release().
+ */
+CSSOM_Parser* CSSOM_Parser_create();
+
+/**
+ * Release the parser.
+ */
+void CSSOM_Parser_release(CSSOM_Parser *parser);
+
+/**
+ * Parse stylesheet.
+ *
+ * The caller is responsible for disposing the stylesheet by calling
+ * CSSOM_CSSStyleSheet_free().
+ */
+CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
+  const char *cssText);
 
 
 
