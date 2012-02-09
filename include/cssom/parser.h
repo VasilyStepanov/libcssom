@@ -16,6 +16,8 @@ typedef struct _CSSOM_Parser CSSOM_Parser;
 /**
  * Create the parser.
  *
+ * Returns NULL if out of memory.
+ *
  * The caller is responsible for disposing the parser by calling
  * CSSOM_Parser_release().
  */

@@ -1,7 +1,8 @@
 lib_LTLIBRARIES = libcssom.la
 
 GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
-                 -I$(top_srcdir)/include
+                 -I$(top_srcdir)/include \
+                 $(SACC_CFLAGS)
 
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
@@ -19,7 +20,10 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/css_rule.h \
                       $(top_srcdir)/include/cssom/types.h \
                       $(top_srcdir)/include/cssom/parser.h
 
-libcssom_la_SOURCES = css_style_sheet.c
+libcssom_la_SOURCES = css_style_sheet.c \
+                      parser.c
+
+libcssom_la_LIBADD = $(SACC_LIBS)
 
 
 
