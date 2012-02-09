@@ -8,18 +8,18 @@
 
 
 #define CSSOM_LIST_DEFINE(T, suffix) \
-  struct _CSSOM_List_##suffixItem { \
+  struct _CSSOM_ListItem_##suffix { \
     T value; \
-    struct _CSSOM_List_##suffixItem *next; \
+    struct _CSSOM_ListItem_##suffix *next; \
   }; \
   \
   \
   \
-  static struct _CSSOM_List_##suffixItem* CSSOM_List_##suffixItem_alloc() { \
-    struct _CSSOM_List_##suffixItem *item; \
+  static struct _CSSOM_ListItem_##suffix* CSSOM_ListItem_##suffix##_alloc() { \
+    struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = (struct _CSSOM_List_##suffixItem*)malloc( \
-      sizeof(struct _CSSOM_List_##suffixItem)); \
+    item = (struct _CSSOM_ListItem_##suffix*)malloc( \
+      sizeof(struct _CSSOM_ListItem_##suffix)); \
     if (item == NULL) return NULL; \
     \
     item->next = NULL; \
@@ -28,8 +28,8 @@
   \
   \
   \
-  static void CSSOM_List_##suffixItem_free( \
-    struct _CSSOM_List_##suffixItem *item) \
+  static void CSSOM_ListItem_##suffix##_free( \
+    struct _CSSOM_ListItem_##suffix *item) \
   { \
     free(item); \
   } \
@@ -37,8 +37,8 @@
   \
   \
   struct _CSSOM_List_##suffix { \
-    struct _CSSOM_List_##suffixItem *head; \
-    struct _CSSOM_List_##suffixItem *tail; \
+    struct _CSSOM_ListItem_##suffix *head; \
+    struct _CSSOM_ListItem_##suffix *tail; \
     size_t size; \
   }; \
   \
@@ -46,9 +46,9 @@
   \
   CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc() { \
     CSSOM_List_##suffix *list; \
-    struct _CSSOM_List_##suffixItem *item; \
+    struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = CSSOM_List_##suffixItem_alloc(); \
+    item = CSSOM_ListItem_##suffix##_alloc(); \
     if (item == NULL) return NULL; \
     \
     list = (CSSOM_List_##suffix*)malloc( \
@@ -64,12 +64,12 @@
   \
   \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list) { \
-    struct _CSSOM_List_##suffixItem *item; \
-    struct _CSSOM_List_##suffixItem *next; \
+    struct _CSSOM_ListItem_##suffix *item; \
+    struct _CSSOM_ListItem_##suffix *next; \
     \
     for (item = list->head; item != NULL; item = next) { \
       next = item->next; \
-      CSSOM_List_##suffixItem_free(item); \
+      CSSOM_ListItem_##suffix##_free(item); \
     } \
     free(list); \
   } \
@@ -77,9 +77,9 @@
   \
   \
   T* CSSOM_List_##suffix##_append(CSSOM_List_##suffix *list, T value) { \
-    struct _CSSOM_List_##suffixItem *item; \
+    struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = CSSOM_List_##suffixItem_alloc(); \
+    item = CSSOM_ListItem_##suffix##_alloc(); \
     if (item == NULL) return NULL; \
     \
     item->value = value; \
@@ -117,7 +117,7 @@
     CSSOM_ListIter_##suffix iter) \
   { \
     return (CSSOM_ListIter_##suffix) \
-      ((struct _CSSOM_List_##suffixItem*)iter)->next; \
+      ((struct _CSSOM_ListItem_##suffix*)iter)->next; \
   }
 
 
