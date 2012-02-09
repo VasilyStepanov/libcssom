@@ -2,6 +2,7 @@
 #define CSSOM_CSS_RULE_LIST_H
 
 #include <cssom/css_rule.h>
+#include <cssom/sequence.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,9 +10,7 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_CSSRuleList CSSOM_CSSRuleList;
-
-void CSSOM_CSSRuleList_free(CSSOM_CSSRuleList *cssRules);
+CSSOM_SEQUENCE(CSSOM_CSSRuleList, CSSOM_CSSRule)
 
 
 

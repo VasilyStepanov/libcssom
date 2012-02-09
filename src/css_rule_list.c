@@ -1,9 +1,7 @@
 #include <cssom/css_rule_list.h>
 
-#include <stdlib.h>
+#include "sequence_impl.h"
 
 
 
-void CSSOM_CSSRuleList_free(CSSOM_CSSRuleList *cssRules) {
-  free(cssRules);
-}
+CSSOM_SEQUENCE_IMPL(CSSOM_CSSRuleList, CSSOM_CSSRule)
