@@ -7,19 +7,19 @@
 
 
 
-#define CSSOM_LIST_DEFINE(T, prefix) \
-  struct _CSSOM_##prefix##ListItem { \
+#define CSSOM_LIST_DEFINE(T, suffix) \
+  struct _CSSOM_List_##suffixItem { \
     T value; \
-    struct _CSSOM_##prefix##ListItem *next; \
+    struct _CSSOM_List_##suffixItem *next; \
   }; \
   \
   \
   \
-  static struct _CSSOM_##prefix##ListItem* CSSOM_##prefix##ListItem_alloc() { \
-    struct _CSSOM_##prefix##ListItem *item; \
+  static struct _CSSOM_List_##suffixItem* CSSOM_List_##suffixItem_alloc() { \
+    struct _CSSOM_List_##suffixItem *item; \
     \
-    item = (struct _CSSOM_##prefix##ListItem*)malloc( \
-      sizeof(struct _CSSOM_##prefix##ListItem)); \
+    item = (struct _CSSOM_List_##suffixItem*)malloc( \
+      sizeof(struct _CSSOM_List_##suffixItem)); \
     if (item == NULL) return NULL; \
     \
     item->next = NULL; \
@@ -28,31 +28,31 @@
   \
   \
   \
-  static void CSSOM_##prefix##ListItem_free( \
-    struct _CSSOM_##prefix##ListItem *item) \
+  static void CSSOM_List_##suffixItem_free( \
+    struct _CSSOM_List_##suffixItem *item) \
   { \
     free(item); \
   } \
   \
   \
   \
-  struct _CSSOM_##prefix##List { \
-    struct _CSSOM_##prefix##ListItem *head; \
-    struct _CSSOM_##prefix##ListItem *tail; \
+  struct _CSSOM_List_##suffix { \
+    struct _CSSOM_List_##suffixItem *head; \
+    struct _CSSOM_List_##suffixItem *tail; \
     size_t size; \
   }; \
   \
   \
   \
-  CSSOM_##prefix##List* CSSOM_##prefix##List_alloc() { \
-    CSSOM_##prefix##List *list; \
-    struct _CSSOM_##prefix##ListItem *item; \
+  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc() { \
+    CSSOM_List_##suffix *list; \
+    struct _CSSOM_List_##suffixItem *item; \
     \
-    item = CSSOM_##prefix##ListItem_alloc(); \
+    item = CSSOM_List_##suffixItem_alloc(); \
     if (item == NULL) return NULL; \
     \
-    list = (CSSOM_##prefix##List*)malloc( \
-      sizeof(CSSOM_##prefix##List)); \
+    list = (CSSOM_List_##suffix*)malloc( \
+      sizeof(CSSOM_List_##suffix)); \
     if (list == NULL) return NULL; \
     \
     list->head = item; \
@@ -63,23 +63,23 @@
   \
   \
   \
-  void CSSOM_##prefix##List_free(CSSOM_##prefix##List *list) { \
-    struct _CSSOM_##prefix##ListItem *item; \
-    struct _CSSOM_##prefix##ListItem *next; \
+  void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list) { \
+    struct _CSSOM_List_##suffixItem *item; \
+    struct _CSSOM_List_##suffixItem *next; \
     \
     for (item = list->head; item != NULL; item = next) { \
       next = item->next; \
-      CSSOM_##prefix##ListItem_free(item); \
+      CSSOM_List_##suffixItem_free(item); \
     } \
     free(list); \
   } \
   \
   \
   \
-  T* CSSOM_##prefix##List_append(CSSOM_##prefix##List *list, T value) { \
-    struct _CSSOM_##prefix##ListItem *item; \
+  T* CSSOM_List_##suffix##_append(CSSOM_List_##suffix *list, T value) { \
+    struct _CSSOM_List_##suffixItem *item; \
     \
-    item = CSSOM_##prefix##ListItem_alloc(); \
+    item = CSSOM_List_##suffixItem_alloc(); \
     if (item == NULL) return NULL; \
     \
     item->value = value; \
@@ -91,33 +91,33 @@
   \
   \
   \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##List_begin( \
-    CSSOM_##prefix##List *list) \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
+    CSSOM_List_##suffix *list) \
   { \
-    return (CSSOM_##prefix##ListIter)list->head->next; \
+    return (CSSOM_ListIter_##suffix)list->head->next; \
   } \
   \
   \
   \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##List_end( \
-    CSSOM_##prefix##List *list CSSOM_UNUSED) \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_end( \
+    CSSOM_List_##suffix *list CSSOM_UNUSED) \
   { \
-    return (CSSOM_##prefix##ListIter)NULL; \
+    return (CSSOM_ListIter_##suffix)NULL; \
   } \
   \
   \
   \
-  size_t CSSOM_##prefix##List_size(CSSOM_##prefix##List *list) { \
+  size_t CSSOM_List_##suffix##_size(CSSOM_List_##suffix *list) { \
     return list->size; \
   } \
   \
   \
   \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##ListIter_next( \
-    CSSOM_##prefix##ListIter iter) \
+  CSSOM_ListIter_##suffix CSSOM_ListIter_##suffix##_next( \
+    CSSOM_ListIter_##suffix iter) \
   { \
-    return (CSSOM_##prefix##ListIter) \
-      ((struct _CSSOM_##prefix##ListItem*)iter)->next; \
+    return (CSSOM_ListIter_##suffix) \
+      ((struct _CSSOM_List_##suffixItem*)iter)->next; \
   }
 
 

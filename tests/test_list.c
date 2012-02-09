@@ -15,34 +15,34 @@ CSSOM_LIST_DEFINE(int, Int)
 
 
 void test_list() {
-  CSSOM_IntList *l;
-  CSSOM_IntListIter it;
+  CSSOM_List_Int *l;
+  CSSOM_ListIter_Int it;
 
-  l = CSSOM_IntList_alloc();
+  l = CSSOM_List_Int_alloc();
 
-  assert(CSSOM_IntList_begin(l) == CSSOM_IntList_end(l));
-  assert(CSSOM_IntList_size(l) == 0);
+  assert(CSSOM_List_Int_begin(l) == CSSOM_List_Int_end(l));
+  assert(CSSOM_List_Int_size(l) == 0);
 
-  CSSOM_IntList_append(l, 1);
-  CSSOM_IntList_append(l, 2);
-  CSSOM_IntList_append(l, 3);
+  CSSOM_List_Int_append(l, 1);
+  CSSOM_List_Int_append(l, 2);
+  CSSOM_List_Int_append(l, 3);
 
-  it = CSSOM_IntList_begin(l);
-  assert(it != CSSOM_IntList_end(l));
+  it = CSSOM_List_Int_begin(l);
+  assert(it != CSSOM_List_Int_end(l));
   assert(*it == 1);
 
-  it = CSSOM_IntListIter_next(it);
-  assert(it != CSSOM_IntList_end(l));
+  it = CSSOM_ListIter_Int_next(it);
+  assert(it != CSSOM_List_Int_end(l));
   assert(*it == 2);
 
-  it = CSSOM_IntListIter_next(it);
-  assert(it != CSSOM_IntList_end(l));
+  it = CSSOM_ListIter_Int_next(it);
+  assert(it != CSSOM_List_Int_end(l));
   assert(*it == 3);
 
-  it = CSSOM_IntListIter_next(it);
-  assert(it == CSSOM_IntList_end(l));
+  it = CSSOM_ListIter_Int_next(it);
+  assert(it == CSSOM_List_Int_end(l));
 
-  assert(CSSOM_IntList_size(l) == 3);
+  assert(CSSOM_List_Int_size(l) == 3);
 
-  CSSOM_IntList_free(l);
+  CSSOM_List_Int_free(l);
 }

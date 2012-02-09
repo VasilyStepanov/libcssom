@@ -3,20 +3,20 @@
 
 
 
-#define CSSOM_LIST_DECLARE(T, prefix) \
-  typedef struct _CSSOM_##prefix##List CSSOM_##prefix##List; \
-  typedef T* CSSOM_##prefix##ListIter; \
+#define CSSOM_LIST_DECLARE(T, suffix) \
+  typedef struct _CSSOM_List_##suffix CSSOM_List_##suffix; \
+  typedef T* CSSOM_ListIter_##suffix; \
   \
-  CSSOM_##prefix##List* CSSOM_##prefix##List_alloc(); \
-  void CSSOM_##prefix##List_free(CSSOM_##prefix##List *list); \
-  T* CSSOM_##prefix##List_append(CSSOM_##prefix##List *list, T value); \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##List_begin( \
-    CSSOM_##prefix##List *list); \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##List_end( \
-    CSSOM_##prefix##List *list); \
+  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc(); \
+  void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list); \
+  T* CSSOM_List_##suffix##_append(CSSOM_List_##suffix *list, T value); \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
+    CSSOM_List_##suffix *list); \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_end( \
+    CSSOM_List_##suffix *list); \
   \
-  CSSOM_##prefix##ListIter CSSOM_##prefix##ListIter_next( \
-    CSSOM_##prefix##ListIter iter);
+  CSSOM_ListIter_##suffix CSSOM_ListIter_##suffix##_next( \
+    CSSOM_ListIter_##suffix iter);
 
 
 
