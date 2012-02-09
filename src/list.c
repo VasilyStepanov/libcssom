@@ -52,7 +52,7 @@
     if (item == NULL) return NULL; \
     \
     list = (CSSOM_##prefix##List*)malloc( \
-      sizeof(struct _CSSOM_##prefix##List)); \
+      sizeof(CSSOM_##prefix##List)); \
     if (list == NULL) return NULL; \
     \
     list->head = item; \
