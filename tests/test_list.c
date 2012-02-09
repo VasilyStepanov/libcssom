@@ -1,6 +1,7 @@
 #include "test_list.h"
 
-#include "src/list.h"
+#include "src/list_declare.h"
+#include "src/list_define.h"
 
 #include <assert.h>
 

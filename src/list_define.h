@@ -1,15 +1,7 @@
-#ifndef CSSOM_LIST_H
-#define CSSOM_LIST_H
+#ifndef CSSOM_LIST_DEFINE_H
+#define CSSOM_LIST_DEFINE_H
 
 #include <stdlib.h>
-
-
-
-#define CSSOM_LIST_DECLARE(N, T) \
-  typedef struct _##N N; \
-  \
-  N* N##_init(); \
-  void N##_free(N *list);
 
 
 
