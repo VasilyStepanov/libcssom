@@ -21,8 +21,8 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/css_rule.h \
                       $(top_srcdir)/include/cssom/parser.h
 
 libcssom_la_SOURCES = css_rule.c \
-                      css_rule_list.c \
                       css_style_sheet.c \
+                      list_css_rule.c \
                       parser.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)
