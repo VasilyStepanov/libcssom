@@ -53,7 +53,10 @@
     \
     list = (CSSOM_List_##suffix*)malloc( \
       sizeof(CSSOM_List_##suffix)); \
-    if (list == NULL) return NULL; \
+    if (list == NULL) { \
+      CSSOM_ListItem_##suffix##_free(item); \
+      return NULL; \
+    } \
     \
     list->head = item; \
     list->tail = list->head; \

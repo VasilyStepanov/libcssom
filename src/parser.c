@@ -31,7 +31,10 @@ CSSOM_Parser* CSSOM_Parser_alloc() {
   if (sac == NULL) return NULL;
  
   parser = malloc(sizeof(CSSOM_Parser));
-  if (parser == NULL) return parser;
+  if (parser == NULL) {
+    SAC_DisposeParser(sac);
+    return NULL;
+  }
 
   parser->sac = sac;
  
