@@ -110,6 +110,22 @@
   \
   \
   \
+  CSSOM_ListConstIter_##suffix CSSOM_List_##suffix##_cbegin( \
+    const CSSOM_List_##suffix *list) \
+  { \
+    return (CSSOM_ListConstIter_##suffix)list->head->next; \
+  } \
+  \
+  \
+  \
+  CSSOM_ListConstIter_##suffix CSSOM_List_##suffix##_cend( \
+    const CSSOM_List_##suffix *list CSSOM_UNUSED) \
+  { \
+    return (CSSOM_ListConstIter_##suffix)NULL; \
+  } \
+  \
+  \
+  \
   size_t CSSOM_List_##suffix##_size(CSSOM_List_##suffix *list) { \
     return list->size; \
   } \
@@ -121,6 +137,15 @@
   { \
     return (CSSOM_ListIter_##suffix) \
       ((struct _CSSOM_ListItem_##suffix*)iter)->next; \
+  } \
+  \
+  \
+  \
+  CSSOM_ListConstIter_##suffix CSSOM_ListConstIter_##suffix##_next( \
+    CSSOM_ListConstIter_##suffix iter) \
+  { \
+    return (CSSOM_ListConstIter_##suffix) \
+      ((const struct _CSSOM_ListItem_##suffix*)iter)->next; \
   }
 
 
