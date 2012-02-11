@@ -1,3 +1,4 @@
+#include "CSSRule.h"
 #include <cssom/CSSRule.h>
 
 #include <stdlib.h>

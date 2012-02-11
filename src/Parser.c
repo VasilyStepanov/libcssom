@@ -1,6 +1,7 @@
 #include <cssom/Parser.h>
 
 #include "CSSStyleSheet.h"
+#include "CSSRule.h"
 #include "List_CSSRule.h"
 
 #include <cssom/types.h>
