@@ -1,6 +1,8 @@
 #ifndef _CSSOM_LIST_H
 #define _CSSOM_LIST_H
 
+#include <stddef.h>
+
 
 
 #define CSSOM_LIST_DECLARE(T, suffix) \
@@ -19,6 +21,7 @@
     const CSSOM_List_##suffix *list); \
   CSSOM_ListConstIter_##suffix CSSOM_List_##suffix##_cend( \
     const CSSOM_List_##suffix *list); \
+  size_t CSSOM_List_##suffix##_size(const CSSOM_List_##suffix *list); \
   \
   CSSOM_ListIter_##suffix CSSOM_ListIter_##suffix##_next( \
     CSSOM_ListIter_##suffix iter); \

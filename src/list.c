@@ -123,7 +123,7 @@
   \
   \
   \
-  size_t CSSOM_List_##suffix##_size(CSSOM_List_##suffix *list) { \
+  size_t CSSOM_List_##suffix##_size(const CSSOM_List_##suffix *list) { \
     return list->size; \
   } \
   \
