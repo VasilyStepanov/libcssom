@@ -1,6 +1,3 @@
-#ifndef _CSSOM_LIST_DEFINE_H
-#define _CSSOM_LIST_DEFINE_H
-
 #include "gcc.h"
 
 #include <stdlib.h>
@@ -147,7 +144,3 @@
     return (CSSOM_ListConstIter_##suffix) \
       ((const struct _CSSOM_ListItem_##suffix*)iter)->next; \
   }
-
-
-
-#endif
