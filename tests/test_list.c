@@ -34,6 +34,10 @@ void test_list() {
   assert(it != CSSOM_List_Int_end(l));
   assert(*it == 1);
 
+  *it = 10;
+  assert(*CSSOM_List_Int_begin(l) == 10);
+  *it = 1;
+
   it = CSSOM_ListIter_Int_next(it);
   assert(it != CSSOM_List_Int_end(l));
   assert(*it == 2);
