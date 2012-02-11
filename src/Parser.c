@@ -11,9 +11,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "gcc.h"
+#include <stdio.h>
 
 
-static void CSSOM_List_CSSRule_cleanup(CSSOM_List_CSSRule *list) {
+
+static void List_CSSRule_cleanup(CSSOM_List_CSSRule *list) {
   CSSOM_ListIter_CSSRule it;
 
   for (it = CSSOM_List_CSSRule_begin(list);
@@ -34,7 +37,28 @@ struct _CSSOM_Parser {
 
 struct _CSSOM_ParserStack {
   CSSOM_List_CSSRule *cssRules;
+  CSSOM_CSSRule *curCSSRule;
 };
+
+
+
+static void startStyleHandler(void *userData,
+  const SAC_Selector *selectors[] CSSOM_UNUSED)
+{
+  struct _CSSOM_ParserStack *stack;
+  
+  stack = (struct _CSSOM_ParserStack*)userData;
+}
+
+
+
+static void endStyleHandler(void *userData,
+  const SAC_Selector *selectors[] CSSOM_UNUSED)
+{
+  struct _CSSOM_ParserStack *stack;
+  
+  stack = (struct _CSSOM_ParserStack*)userData;
+}
 
 
 
@@ -43,6 +67,8 @@ CSSOM_Parser* CSSOM_Parser_alloc() {
   SAC_Parser sac;
 
   sac = SAC_CreateParser();
+  SAC_SetStyleHandler(sac, startStyleHandler, endStyleHandler);
+
   if (sac == NULL) return NULL;
  
   parser = malloc(sizeof(CSSOM_Parser));
@@ -77,7 +103,7 @@ CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
 
   styleSheet = CSSOM_CSSStyleSheet_alloc(parserStack.cssRules);
   if (styleSheet == NULL) {
-    CSSOM_List_CSSRule_cleanup(parserStack.cssRules);
+    List_CSSRule_cleanup(parserStack.cssRules);
     CSSOM_List_CSSRule_free(parserStack.cssRules);
     return NULL;
   }
