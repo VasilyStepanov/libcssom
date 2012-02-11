@@ -1,9 +1,9 @@
 #ifndef _CSSOM_CSSRULELIST_H
 #define _CSSOM_CSSRULELIST_H
 
-#include "list_css_rule.h"
+#include "List_CSSRule.h"
 
-#include <cssom/css_rule_list.h>
+#include <cssom/CSSRuleList.h>
 
 
 

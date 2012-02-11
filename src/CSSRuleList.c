@@ -1,6 +1,6 @@
-#include "css_rule_list.h"
+#include "CSSRuleList.h"
 
-#include <cssom/css_rule.h>
+#include <cssom/CSSRule.h>
 
 #include <stdlib.h>
 

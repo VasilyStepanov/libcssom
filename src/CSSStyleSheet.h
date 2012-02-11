@@ -1,9 +1,9 @@
 #ifndef _CSSOM_CSSSTYLESHEET_H
 #define _CSSOM_CSSSTYLESHEET_H
 
-#include "list_css_rule.h"
+#include "List_CSSRule.h"
 
-#include <cssom/css_style_sheet.h>
+#include <cssom/CSSStyleSheet.h>
 
 
 

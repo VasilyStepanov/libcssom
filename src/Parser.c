@@ -1,7 +1,7 @@
-#include <cssom/parser.h>
+#include <cssom/Parser.h>
 
-#include "css_style_sheet.h"
-#include "list_css_rule.h"
+#include "CSSStyleSheet.h"
+#include "List_CSSRule.h"
 
 #include <cssom/types.h>
 

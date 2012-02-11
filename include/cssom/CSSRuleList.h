@@ -1,7 +1,7 @@
 #ifndef CSSOM_CSSRULELIST_H
 #define CSSOM_CSSRULELIST_H
 
-#include <cssom/css_rule.h>
+#include <cssom/CSSRule.h>
 
 #ifdef __cplusplus
 extern "C" {

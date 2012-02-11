@@ -1,7 +1,7 @@
-#include "test_list.h"
+#include "test_List.h"
 
-#include "src/list.h"
-#include "src/list.c"
+#include "src/List.h"
+#include "src/List.c"
 
 #include <assert.h>
 
@@ -14,7 +14,7 @@ CSSOM_LIST_DEFINE(int, Int)
 
 
 
-void test_list() {
+void test_List() {
   CSSOM_List_Int *l;
   CSSOM_ListIter_Int it;
   CSSOM_ListConstIter_Int cit;

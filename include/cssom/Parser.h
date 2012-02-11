@@ -1,7 +1,7 @@
 #ifndef CSSOM_PARSER_H
 #define CSSOM_PARSER_H
 
-#include <cssom/css_style_sheet.h>
+#include <cssom/CSSStyleSheet.h>
 
 #ifdef __cplusplus
 extern "C" {

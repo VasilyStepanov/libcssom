@@ -1,7 +1,7 @@
 #ifndef CSSOM_CSSSTYLESHEET_H
 #define CSSOM_CSSSTYLESHEET_H
 
-#include <cssom/css_rule_list.h>
+#include <cssom/CSSRuleList.h>
 
 #ifdef __cplusplus
 extern "C" {

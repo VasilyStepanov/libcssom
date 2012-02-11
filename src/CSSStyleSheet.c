@@ -1,7 +1,7 @@
-#include "css_style_sheet.h"
-#include <cssom/css_style_sheet.h>
+#include "CSSStyleSheet.h"
+#include <cssom/CSSStyleSheet.h>
 
-#include "css_rule_list.h"
+#include "CSSRuleList.h"
 
 #include <cssom/types.h>
 

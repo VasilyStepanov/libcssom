@@ -1,10 +1,10 @@
-#include "test_parser.h"
+#include "test_Parser.h"
 
-#include <cssom/parser.h>
+#include <cssom/Parser.h>
 
 
 
-static void test_parser_basics() {
+static void test_Parser_basics() {
   CSSOM_Parser *parser;
   CSSOM_CSSStyleSheet *styleSheet;
   
@@ -23,6 +23,6 @@ static void test_parser_basics() {
 
 
 
-void test_parser() {
-  test_parser_basics();
+void test_Parser() {
+  test_Parser_basics();
 }

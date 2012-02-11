@@ -14,17 +14,17 @@ libcssom_base_la_HEADERS = $(top_srcdir)/include/cssom.h
 
 libcssom_ladir = $(includedir)/cssom
 
-libcssom_la_HEADERS = $(top_srcdir)/include/cssom/css_rule.h \
-                      $(top_srcdir)/include/cssom/css_rule_list.h \
-                      $(top_srcdir)/include/cssom/css_style_sheet.h \
+libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSRule.h \
+                      $(top_srcdir)/include/cssom/CSSRuleList.h \
+                      $(top_srcdir)/include/cssom/CSSStyleSheet.h \
                       $(top_srcdir)/include/cssom/types.h \
-                      $(top_srcdir)/include/cssom/parser.h
+                      $(top_srcdir)/include/cssom/Parser.h
 
-libcssom_la_SOURCES = css_rule.c \
-                      css_rule_list.c \
-                      css_style_sheet.c \
-                      list_css_rule.c \
-                      parser.c
+libcssom_la_SOURCES = CSSRule.c \
+                      CSSRuleList.c \
+                      CSSStyleSheet.c \
+                      List_CSSRule.c \
+                      Parser.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)
 
