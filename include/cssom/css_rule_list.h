@@ -1,5 +1,5 @@
-#ifndef CSSOM_CSS_RULE_LIST_H
-#define CSSOM_CSS_RULE_LIST_H
+#ifndef CSSOM_CSSRULELIST_H
+#define CSSOM_CSSRULELIST_H
 
 #include <cssom/css_rule.h>
 

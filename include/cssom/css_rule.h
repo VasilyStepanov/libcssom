@@ -1,5 +1,5 @@
-#ifndef CSSOM_CSS_RULE_H
-#define CSSOM_CSS_RULE_H
+#ifndef CSSOM_CSSRULE_H
+#define CSSOM_CSSRULE_H
 
 #ifdef __cplusplus
 extern "C" {
