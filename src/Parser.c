@@ -42,22 +42,24 @@ struct _CSSOM_ParserStack {
 
 
 
-static void startStyleHandler(void *userData,
+static int startStyleHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
   
   stack = (struct _CSSOM_ParserStack*)userData;
+  return 0;
 }
 
 
 
-static void endStyleHandler(void *userData,
+static int endStyleHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
   
   stack = (struct _CSSOM_ParserStack*)userData;
+  return 0;
 }
 
 
