@@ -1,6 +1,7 @@
 #include <cssom/parser.h>
 
 #include "css_style_sheet.h"
+#include "list_css_rule.h"
 
 #include <cssom/types.h>
 
@@ -18,7 +19,7 @@ struct _CSSOM_Parser {
 
 
 struct _CSSOM_ParserStack {
-  int dummy;
+  CSSOM_List_CSSRule *cssRules;
 };
 
 
@@ -52,11 +53,30 @@ void CSSOM_Parser_free(CSSOM_Parser *parser) {
 
 CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
   const char *cssText)
-{
+{ 
+  CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
 
+  parserStack.cssRules = CSSOM_List_CSSRule_alloc();
   SAC_SetUserData(parser->sac, &parserStack);
   SAC_ParseStyleSheet(parser->sac, cssText, strlen(cssText));
 
-  return CSSOM_CSSStyleSheet_alloc();
+  styleSheet = CSSOM_CSSStyleSheet_alloc(parserStack.cssRules);
+  if (styleSheet == NULL) {
+    CSSOM_ListIter_CSSRule it;
+
+    for (it = CSSOM_List_CSSRule_begin(parserStack.cssRules);
+      it != CSSOM_List_CSSRule_end(parserStack.cssRules);
+      it = CSSOM_ListIter_CSSRule_next(it))
+    {
+      CSSOM_CSSRule_free(*it);
+    }
+
+    CSSOM_List_CSSRule_free(parserStack.cssRules);
+    return NULL;
+  }
+
+  CSSOM_List_CSSRule_free(parserStack.cssRules);
+
+  return styleSheet;
 }

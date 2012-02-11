@@ -1,4 +1,7 @@
+#include "css_style_sheet.h"
 #include <cssom/css_style_sheet.h>
+
+#include "css_rule_list.h"
 
 #include <cssom/types.h>
 
@@ -12,13 +15,20 @@ struct _CSSOM_CSSStyleSheet {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc() {
+CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc(CSSOM_List_CSSRule *list) {
+  CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSStyleSheet *styleSheet;
 
+  cssRules = CSSOM_CSSRuleList_alloc(list);
+  if (cssRules == NULL) return NULL;
+  
   styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
-  if (styleSheet == NULL) return NULL;
+  if (styleSheet == NULL) {
+    free(cssRules);
+    return NULL;
+  }
 
-  styleSheet->cssRules = NULL;
+  styleSheet->cssRules = cssRules;
 
   return styleSheet;
 }
@@ -26,14 +36,9 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc() {
 
 
 void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
-  CSSOM_CSSRule **it;
-
   if (styleSheet == NULL) return;
 
-  if (styleSheet->cssRules != NULL)
-    for (it = styleSheet->cssRules; *it != NULL; ++it)
-      CSSOM_CSSRule_free(*it);
-  free(styleSheet->cssRules);
+  CSSOM_CSSRuleList_free(styleSheet->cssRules);
   free(styleSheet);
 }
 
