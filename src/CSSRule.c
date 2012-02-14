@@ -30,6 +30,6 @@ void CSSOM_CSSRule_free(CSSOM_CSSRule *cssRule) {
 
 
 
-CSSOM_CSSRuleType CSSOM_CSSRule_type(CSSOM_CSSRule *rule) {
+CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *rule) {
   return rule->type;
 }

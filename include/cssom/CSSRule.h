@@ -18,7 +18,7 @@ typedef enum _CSSOM_CSSRuleType {
 
 typedef struct _CSSOM_CSSRule CSSOM_CSSRule;
 
-CSSOM_CSSRuleType CSSOM_CSSRule_type(CSSOM_CSSRule *cssRule);
+CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule);
 
 
 

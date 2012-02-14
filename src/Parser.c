@@ -46,8 +46,20 @@ static int startStyleHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
+  CSSOM_CSSRule *rule;
   
   stack = (struct _CSSOM_ParserStack*)userData;
+
+  rule = CSSOM_CSSRule_alloc(CSSOM_STYLE_RULE);
+  if (rule == NULL) return 1;
+
+  if (CSSOM_List_CSSRule_append(stack->cssRules, rule) == NULL) {
+    CSSOM_CSSRule_free(rule);
+    return 1;
+  }
+
+  stack->curCSSRule = rule;
+
   return 0;
 }
 
