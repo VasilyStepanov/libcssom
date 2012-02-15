@@ -19,15 +19,28 @@ static void test_CSSStyleSheet_append() {
   cssRule3 = CSSOM_CSSRule_alloc(CSSOM_STYLE_RULE);
   styleSheet = CSSOM_CSSStyleSheet_alloc();
 
+
+
   CSSOM_CSSStyleSheet_append(styleSheet, cssRule1);
   CSSOM_CSSStyleSheet_append(styleSheet, cssRule2);
+
+  cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
+  assert(cssRules[0] == cssRule1);
+  assert(cssRules[1] == cssRule2);
+  assert(cssRules[2] == NULL);
+  assert(cssRules == CSSOM_CSSStyleSheet_cssRules(styleSheet));
+
+
+
   CSSOM_CSSStyleSheet_append(styleSheet, cssRule3);
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
-
   assert(cssRules[0] == cssRule1);
   assert(cssRules[1] == cssRule2);
   assert(cssRules[2] == cssRule3);
   assert(cssRules[3] == NULL);
+  assert(cssRules == CSSOM_CSSStyleSheet_cssRules(styleSheet));
+
+
 
   CSSOM_CSSStyleSheet_free(styleSheet);
 }

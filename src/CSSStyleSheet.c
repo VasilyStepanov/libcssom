@@ -27,6 +27,51 @@ struct _CSSOM_CSSStyleSheet {
 
 
 
+static const CSSOM_CSSRuleList* StaticCSSStyleSheet_cssRules(
+  const CSSOM_CSSStyleSheet *styleSheet);
+
+static CSSOM_CSSRule* StaticCSSStyleSheet_append(
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule);
+
+static struct _CSSOM_CSSStyleSheet_vtable StaticCSSStyleSheet_vtable = {
+  &StaticCSSStyleSheet_cssRules,
+  &StaticCSSStyleSheet_append
+};
+
+
+
+static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
+  const CSSOM_CSSStyleSheet *styleSheet);
+
+static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule);
+
+static struct _CSSOM_CSSStyleSheet_vtable DynamicCSSStyleSheet_vtable = {
+  &DynamicCSSStyleSheet_cssRules,
+  &DynamicCSSStyleSheet_append
+};
+
+
+
+static const CSSOM_CSSRuleList* StaticCSSStyleSheet_cssRules(
+  const CSSOM_CSSStyleSheet *styleSheet)
+{
+  return styleSheet->cssRules;
+}
+
+
+
+static CSSOM_CSSRule* StaticCSSStyleSheet_append(
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
+{
+  free(styleSheet->cssRules);
+  styleSheet->cssRules = NULL;
+  ((CSSOM_CSSStyleSheet*)styleSheet)->vtable = &DynamicCSSStyleSheet_vtable;
+  return CSSOM_CSSStyleSheet_append(styleSheet, cssRule);
+}
+
+
+
 static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
@@ -48,9 +93,10 @@ static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
   }
   cssRules[size] = NULL;
 
-  free(styleSheet->cssRules);
   ((CSSOM_CSSStyleSheet*)styleSheet)->cssRules = cssRules;
-  return styleSheet->cssRules;
+
+  ((CSSOM_CSSStyleSheet*)styleSheet)->vtable = &StaticCSSStyleSheet_vtable;
+  return CSSOM_CSSStyleSheet_cssRules(styleSheet);
 }
 
 
@@ -62,13 +108,6 @@ static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
     return NULL;
   return cssRule;
 }
-
-
-
-static struct _CSSOM_CSSStyleSheet_vtable DynamicCSSStyleSheet_vtable = {
-  &DynamicCSSStyleSheet_cssRules,
-  &DynamicCSSStyleSheet_append
-};
 
 
 
@@ -107,6 +146,7 @@ void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
   }
 
   CSSOM_List_CSSRule_free(styleSheet->_cssRules);
+  free(styleSheet->cssRules);
   free(styleSheet);
 }
 
