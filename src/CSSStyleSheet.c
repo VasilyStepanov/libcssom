@@ -64,8 +64,6 @@ static const CSSOM_CSSRuleList* StaticCSSStyleSheet_cssRules(
 static CSSOM_CSSRule* StaticCSSStyleSheet_append(
   CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
 {
-  free(styleSheet->cssRules);
-  styleSheet->cssRules = NULL;
   ((CSSOM_CSSStyleSheet*)styleSheet)->vtable = &DynamicCSSStyleSheet_vtable;
   return CSSOM_CSSStyleSheet_append(styleSheet, cssRule);
 }
@@ -75,23 +73,11 @@ static CSSOM_CSSRule* StaticCSSStyleSheet_append(
 static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
-  size_t size;
   CSSOM_CSSRuleList *cssRules;
-  CSSOM_ListIter_CSSRule lit;
-  CSSOM_CSSRuleList *vit;
 
-  size = CSSOM_List_CSSRule_size(styleSheet->_cssRules);
-
-  cssRules = (CSSOM_CSSRuleList*)malloc(sizeof(CSSOM_CSSRuleList) * (size + 1));
+  cssRules = CSSOM_CSSRuleList_realloc(styleSheet->cssRules,
+    styleSheet->_cssRules);
   if (cssRules == NULL) return NULL;
-
-  for (lit = CSSOM_List_CSSRule_begin(styleSheet->_cssRules), vit = cssRules;
-    lit != CSSOM_List_CSSRule_end(styleSheet->_cssRules);
-    lit = CSSOM_ListIter_CSSRule_next(lit), ++vit)
-  {
-    *vit = *lit;
-  }
-  cssRules[size] = NULL;
 
   ((CSSOM_CSSStyleSheet*)styleSheet)->cssRules = cssRules;
 
@@ -146,7 +132,7 @@ void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
   }
 
   CSSOM_List_CSSRule_free(styleSheet->_cssRules);
-  free(styleSheet->cssRules);
+  CSSOM_CSSRuleList_free(styleSheet->cssRules);
   free(styleSheet);
 }
 
