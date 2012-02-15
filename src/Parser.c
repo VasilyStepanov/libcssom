@@ -16,19 +16,6 @@
 
 
 
-static void List_CSSRule_cleanup(CSSOM_List_CSSRule *list) {
-  CSSOM_ListIter_CSSRule it;
-
-  for (it = CSSOM_List_CSSRule_begin(list);
-    it != CSSOM_List_CSSRule_end(list);
-    it = CSSOM_ListIter_CSSRule_next(it))
-  {
-    CSSOM_CSSRule_free(*it);
-  }
-}
-
-
-
 struct _CSSOM_Parser {
   SAC_Parser sac;
 };
@@ -36,7 +23,7 @@ struct _CSSOM_Parser {
 
 
 struct _CSSOM_ParserStack {
-  CSSOM_List_CSSRule *cssRules;
+  CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *curCSSRule;
 };
 
@@ -53,12 +40,10 @@ static int startStyleHandler(void *userData,
   rule = CSSOM_CSSRule_alloc(CSSOM_STYLE_RULE);
   if (rule == NULL) return 1;
 
-  if (CSSOM_List_CSSRule_append(stack->cssRules, rule) == NULL) {
+  if (CSSOM_CSSStyleSheet_append(stack->styleSheet, rule) == NULL) {
     CSSOM_CSSRule_free(rule);
     return 1;
   }
-
-  stack->curCSSRule = rule;
 
   return 0;
 }
@@ -108,21 +93,12 @@ void CSSOM_Parser_free(CSSOM_Parser *parser) {
 CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
   const char *cssText)
 { 
-  CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
 
-  parserStack.cssRules = CSSOM_List_CSSRule_alloc();
+  parserStack.styleSheet = CSSOM_CSSStyleSheet_alloc();
+  if (parserStack.styleSheet == NULL) return NULL;
   SAC_SetUserData(parser->sac, &parserStack);
   SAC_ParseStyleSheet(parser->sac, cssText, strlen(cssText));
 
-  styleSheet = CSSOM_CSSStyleSheet_alloc(parserStack.cssRules);
-  if (styleSheet == NULL) {
-    List_CSSRule_cleanup(parserStack.cssRules);
-    CSSOM_List_CSSRule_free(parserStack.cssRules);
-    return NULL;
-  }
-
-  CSSOM_List_CSSRule_free(parserStack.cssRules);
-
-  return styleSheet;
+  return parserStack.styleSheet;
 }
