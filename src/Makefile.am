@@ -22,6 +22,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSRule.h \
 
 libcssom_la_SOURCES = CSSRule.c \
                       CSSRuleList.c \
+                      CSSStyleDeclaration.c \
                       CSSStyleSheet.c \
                       List_CSSRule.c \
                       Parser.c

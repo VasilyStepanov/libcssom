@@ -2,6 +2,8 @@
 
 #include <cssom/Parser.h>
 #include <cssom/CSSRule.h>
+#include <cssom/CSSStyleRule.h>
+#include <cssom/CSSStyleDeclaration.h>
 #include <cssom/types.h>
 
 #include <assert.h>
@@ -12,6 +14,7 @@ static void test_Parser_basics() {
   CSSOM_Parser *parser;
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
+  const CSSOM_CSSStyleDeclaration *style;
   
   parser = CSSOM_Parser_alloc();
 
@@ -25,6 +28,10 @@ static void test_Parser_basics() {
 
   assert(CSSOM_CSSRule_type(cssRules[0]) == CSSOM_STYLE_RULE);
   assert(cssRules[1] == NULL);
+
+  style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)cssRules[0]);
+
+  assert(CSSOM_CSSStyleDeclaration_length(style) == 1);
 
   CSSOM_CSSStyleSheet_free(styleSheet);
 

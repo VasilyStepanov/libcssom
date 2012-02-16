@@ -1,6 +1,7 @@
 #include "CSSRule.h"
 #include <cssom/CSSRule.h>
 #include <cssom/CSSStyleRule.h>
+#include <cssom/CSSStyleDeclaration.h>
 
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@ struct _CSSOM_CSSRule {
 
 struct _CSSOM_CSSStyleRule {
   CSSOM_CSSRule super;
+  CSSOM_CSSStyleDeclaration *style;
 };
 
 
@@ -65,4 +67,12 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc() {
   ((CSSOM_CSSRule*)cssRule)->vtable = &CSSStyleRule_vtable;
 
   return cssRule;
+}
+
+
+
+const CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
+  CSSOM_CSSStyleRule *cssRule)
+{
+  return cssRule->style;
 }
