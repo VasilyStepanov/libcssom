@@ -8,11 +8,11 @@
 
 
 static void test_CSSRule_alloc() {
-  CSSOM_CSSRule *rule = CSSOM_CSSRule_alloc(CSSOM_STYLE_RULE);
+  CSSOM_CSSRule *cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
 
-  assert(CSSOM_CSSRule_type(rule) == CSSOM_STYLE_RULE);
+  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
 
-  CSSOM_CSSRule_free(rule);
+  CSSOM_CSSRule_free(cssRule);
 }
 
 

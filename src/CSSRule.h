@@ -5,7 +5,7 @@
 
 
 
-CSSOM_CSSRule* CSSOM_CSSRule_alloc(CSSOM_CSSRuleType type);
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc();
 
 void CSSOM_CSSRule_free(CSSOM_CSSRule *cssRule);
 
