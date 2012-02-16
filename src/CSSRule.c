@@ -29,12 +29,12 @@ struct _CSSOM_CSSStyleRule {
 
 
 
-static void CSSStyleRule_free(CSSOM_CSSRule *cssRule) {
-  free((CSSOM_CSSStyleRule*)cssRule);
+static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
+  free(cssRule);
 }
 
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
-  &CSSStyleRule_free
+  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_free
 };
 
 
