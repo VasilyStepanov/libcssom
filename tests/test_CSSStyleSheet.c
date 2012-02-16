@@ -2,6 +2,7 @@
 
 #include "src/CSSStyleSheet.h"
 #include "src/CSSRule.h"
+#include "src/CSSStyleRule.h"
 
 #include <cssom/types.h>
 

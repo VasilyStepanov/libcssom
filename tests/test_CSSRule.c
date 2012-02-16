@@ -1,7 +1,9 @@
 #include "test_CSSRule.h"
 
 #include "src/CSSRule.h"
+#include "src/CSSStyleRule.h"
 #include <cssom/CSSRule.h>
+#include <cssom/CSSStyleRule.h>
 
 #include <assert.h>
 

@@ -1,5 +1,6 @@
 #include "CSSRule.h"
 #include <cssom/CSSRule.h>
+#include <cssom/CSSStyleRule.h>
 
 #include <stdlib.h>
 
