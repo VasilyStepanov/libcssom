@@ -72,13 +72,12 @@ static int propertyHandler(void *userData,
   SAC_Boolean important)
 {
   struct _CSSOM_ParserStack *stack;
-  const CSSOM_CSSStyleDeclaration *style;
+  CSSOM_CSSStyleDeclaration *style;
   
   stack = (struct _CSSOM_ParserStack*)userData;
   style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->curCSSRule);
 
-  CSSOM_CSSStyleDeclaration_append((CSSOM_CSSStyleDeclaration*)style,
-    propertyName, value, important);
+  CSSOM_CSSStyleDeclaration_append(style, propertyName, value, important);
 
   return 0;
 }

@@ -80,8 +80,8 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc() {
 
 
 
-const CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
-  CSSOM_CSSStyleRule *cssRule)
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
+  const CSSOM_CSSStyleRule *cssRule)
 {
   return cssRule->style;
 }

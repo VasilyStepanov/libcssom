@@ -1,5 +1,7 @@
 #include "test_Parser.h"
 
+#include "test_utils.h"
+
 #include <cssom/Parser.h>
 #include <cssom/CSSRule.h>
 #include <cssom/CSSStyleRule.h>
@@ -14,6 +16,7 @@ static void test_Parser_basics() {
   CSSOM_Parser *parser;
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
+  CSSOM_CSSRule *cssRule;
   const CSSOM_CSSStyleDeclaration *style;
   
   parser = CSSOM_Parser_alloc();
@@ -26,12 +29,18 @@ static void test_Parser_basics() {
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
 
-  assert(CSSOM_CSSRule_type(cssRules[0]) == CSSOM_STYLE_RULE);
+  assert(cssRules[0] != NULL);
   assert(cssRules[1] == NULL);
+  cssRule = cssRules[0];
 
-  style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)cssRules[0]);
+  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
+
+  style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)cssRule);
 
   assert(CSSOM_CSSStyleDeclaration_length(style) == 1);
+
+  ASSERT_EQUAL_STRINGS("green",
+    CSSOM_CSSStyleDeclaration_getPropertyValue(style, "color"));
 
   CSSOM_CSSStyleSheet_free(styleSheet);
 

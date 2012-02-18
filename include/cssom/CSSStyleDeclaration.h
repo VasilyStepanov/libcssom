@@ -14,6 +14,9 @@ typedef struct _CSSOM_CSSStyleDeclaration CSSOM_CSSStyleDeclaration;
 unsigned long CSSOM_CSSStyleDeclaration_length(
   const CSSOM_CSSStyleDeclaration *style);
 
+const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
+  const CSSOM_CSSStyleDeclaration *style, const char *property);
+
 
 
 #ifdef __cplusplus

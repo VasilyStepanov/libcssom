@@ -46,3 +46,12 @@ void CSSOM_CSSStyleDeclaration_append(CSSOM_CSSStyleDeclaration *style,
 {
   ++style->length;
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
+  const CSSOM_CSSStyleDeclaration *style CSSOM_UNUSED,
+  const char *property CSSOM_UNUSED)
+{
+  return "unknown";
+}

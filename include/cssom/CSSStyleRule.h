@@ -13,8 +13,8 @@ typedef struct _CSSOM_CSSStyleRule CSSOM_CSSStyleRule;
 
 
 
-const CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
-  CSSOM_CSSStyleRule *cssRule);
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
+  const CSSOM_CSSStyleRule *cssRule);
 
 
 
