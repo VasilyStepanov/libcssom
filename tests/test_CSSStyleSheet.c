@@ -4,8 +4,7 @@
 #include "src/CSSRule.h"
 #include "src/CSSStyleRule.h"
 
-#include <cssom/types.h>
-
+#include <stdlib.h>
 #include <assert.h>
 
 

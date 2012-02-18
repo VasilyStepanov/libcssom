@@ -5,7 +5,6 @@
 #include <cssom/CSSStyleRule.h>
 #include <cssom/CSSRuleList.h>
 #include <cssom/CSSStyleSheet.h>
-#include <cssom/types.h>
-#include <cssom/parser.h>
+#include <cssom/Parser.h>
 
 #endif

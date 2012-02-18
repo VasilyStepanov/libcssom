@@ -5,8 +5,6 @@
 #include "CSSRuleList.h"
 #include "CSSRule.h"
 
-#include <cssom/types.h>
-
 #include <stdlib.h>
 
 

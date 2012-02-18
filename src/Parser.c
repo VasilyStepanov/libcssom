@@ -6,8 +6,6 @@
 #include "CSSStyleDeclaration.h"
 #include "List_CSSRule.h"
 
-#include <cssom/types.h>
-
 #include <sacc.h>
 
 #include <stdlib.h>

@@ -17,7 +17,6 @@ libcssom_ladir = $(includedir)/cssom
 libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSRule.h \
                       $(top_srcdir)/include/cssom/CSSRuleList.h \
                       $(top_srcdir)/include/cssom/CSSStyleSheet.h \
-                      $(top_srcdir)/include/cssom/types.h \
                       $(top_srcdir)/include/cssom/Parser.h
 
 libcssom_la_SOURCES = CSSRule.c \
