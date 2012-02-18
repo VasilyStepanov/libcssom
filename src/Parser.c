@@ -3,10 +3,10 @@
 #include "CSSStyleSheet.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
+#include "CSSStyleDeclaration.h"
 #include "List_CSSRule.h"
 
 #include <cssom/types.h>
-#include <cssom/CSSStyleDeclaration.h>
 
 #include <sacc.h>
 
@@ -70,8 +70,8 @@ static int endStyleHandler(void *userData,
 
 static int propertyHandler(void *userData,
   const SAC_STRING propertyName,
-  const SAC_LexicalUnit *value CSSOM_UNUSED,
-  SAC_Boolean important CSSOM_UNUSED)
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important)
 {
   struct _CSSOM_ParserStack *stack;
   const CSSOM_CSSStyleDeclaration *style;
@@ -79,8 +79,8 @@ static int propertyHandler(void *userData,
   stack = (struct _CSSOM_ParserStack*)userData;
   style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->curCSSRule);
 
-  CSSOM_CSSStyleDeclaration_setProperty((CSSOM_CSSStyleDeclaration*)style,
-    propertyName, NULL);
+  CSSOM_CSSStyleDeclaration_append((CSSOM_CSSStyleDeclaration*)style,
+    propertyName, value, important);
 
   return 0;
 }

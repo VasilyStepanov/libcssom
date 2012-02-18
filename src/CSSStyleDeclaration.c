@@ -39,8 +39,10 @@ unsigned long CSSOM_CSSStyleDeclaration_length(
 
 
 
-void CSSOM_CSSStyleDeclaration_setProperty(CSSOM_CSSStyleDeclaration *style,
-  const char *property CSSOM_UNUSED, const char *value CSSOM_UNUSED)
+void CSSOM_CSSStyleDeclaration_append(CSSOM_CSSStyleDeclaration *style,
+  const char *property CSSOM_UNUSED,
+  const SAC_LexicalUnit *value CSSOM_UNUSED,
+  SAC_Boolean important CSSOM_UNUSED)
 {
   ++style->length;
 }
