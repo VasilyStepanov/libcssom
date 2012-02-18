@@ -1,7 +1,7 @@
 #include "CSSRule.h"
-#include <cssom/CSSRule.h>
-#include <cssom/CSSStyleRule.h>
-#include <cssom/CSSStyleDeclaration.h>
+#include "CSSStyleRule.h"
+
+#include "CSSStyleDeclaration.h"
 
 #include <stdlib.h>
 
@@ -30,6 +30,7 @@ struct _CSSOM_CSSStyleRule {
 
 
 static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
+  CSSOM_CSSStyleDeclaration_free(cssRule->style);
   free(cssRule);
 }
 
@@ -58,13 +59,21 @@ CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc() {
+  CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
 
+  style = CSSOM_CSSStyleDeclaration_alloc();
+  if (style == NULL) return NULL;
+
   cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));
-  if (cssRule == NULL) return NULL;
+  if (cssRule == NULL) {
+    CSSOM_CSSStyleDeclaration_free(style);
+    return NULL;
+  }
 
   CSSOM_CSSRule_init((CSSOM_CSSRule*)cssRule, CSSOM_STYLE_RULE);
   ((CSSOM_CSSRule*)cssRule)->vtable = &CSSStyleRule_vtable;
+  cssRule->style = style;
 
   return cssRule;
 }

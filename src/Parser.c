@@ -6,6 +6,7 @@
 #include "List_CSSRule.h"
 
 #include <cssom/types.h>
+#include <cssom/CSSStyleDeclaration.h>
 
 #include <sacc.h>
 
@@ -46,6 +47,8 @@ static int startStyleHandler(void *userData,
     return 1;
   }
 
+  stack->curCSSRule = cssRule;
+
   return 0;
 }
 
@@ -55,8 +58,30 @@ static int endStyleHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
+
+  stack = (struct _CSSOM_ParserStack*)userData;
+
+  stack->curCSSRule = NULL;
+
+  return 0;
+}
+
+
+
+static int propertyHandler(void *userData,
+  const SAC_STRING propertyName,
+  const SAC_LexicalUnit *value CSSOM_UNUSED,
+  SAC_Boolean important CSSOM_UNUSED)
+{
+  struct _CSSOM_ParserStack *stack;
+  const CSSOM_CSSStyleDeclaration *style;
   
   stack = (struct _CSSOM_ParserStack*)userData;
+  style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->curCSSRule);
+
+  CSSOM_CSSStyleDeclaration_setProperty((CSSOM_CSSStyleDeclaration*)style,
+    propertyName, NULL);
+
   return 0;
 }
 
@@ -68,6 +93,7 @@ CSSOM_Parser* CSSOM_Parser_alloc() {
 
   sac = SAC_CreateParser();
   SAC_SetStyleHandler(sac, startStyleHandler, endStyleHandler);
+  SAC_SetPropertyHandler(sac, propertyHandler);
 
   if (sac == NULL) return NULL;
  
@@ -97,6 +123,7 @@ CSSOM_CSSStyleSheet* CSSOM_Parser_parseStyleSheet(CSSOM_Parser *parser,
   struct _CSSOM_ParserStack parserStack;
 
   parserStack.styleSheet = CSSOM_CSSStyleSheet_alloc();
+  parserStack.curCSSRule = NULL;
   if (parserStack.styleSheet == NULL) return NULL;
   SAC_SetUserData(parser->sac, &parserStack);
   SAC_ParseStyleSheet(parser->sac, cssText, strlen(cssText));

@@ -5,4 +5,10 @@
 
 
 
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc();
+
+void CSSOM_CSSStyleDeclaration_free(CSSOM_CSSStyleDeclaration *style);
+
+
+
 #endif
