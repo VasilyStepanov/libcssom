@@ -7,6 +7,7 @@
 #define CSSOM_LIST_DEFINE(T, suffix) \
   struct _CSSOM_ListItem_##suffix { \
     T value; \
+    struct _CSSOM_ListItem_##suffix *prev; \
     struct _CSSOM_ListItem_##suffix *next; \
   }; \
   \
@@ -20,6 +21,7 @@
     if (item == NULL) return NULL; \
     \
     item->next = NULL; \
+    item->prev = NULL; \
     return item; \
   } \
   \
@@ -83,6 +85,7 @@
     if (item == NULL) return NULL; \
     \
     item->value = value; \
+    item->prev = list->tail; \
     list->tail->next = item; \
     list->tail = item; \
     ++list->size; \
