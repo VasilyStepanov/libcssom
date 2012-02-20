@@ -120,6 +120,24 @@
   \
   \
   \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_erase( \
+    CSSOM_List_##suffix *list, CSSOM_ListIter_##suffix position) \
+  { \
+    struct _CSSOM_ListItem_##suffix *item; \
+    struct _CSSOM_ListItem_##suffix *at; \
+    \
+    at = (struct _CSSOM_ListItem_##suffix*)position; \
+    item = at->next; \
+    \
+    at->prev->next = item; \
+    if (item != NULL) item->prev = at->prev; \
+    CSSOM_ListItem_##suffix##_free(at); \
+    --list->size; \
+    return (CSSOM_ListIter_##suffix)item; \
+  } \
+  \
+  \
+  \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
     CSSOM_List_##suffix *list) \
   { \

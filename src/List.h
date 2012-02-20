@@ -16,6 +16,8 @@
     CSSOM_List_##suffix *list, T value); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_insert( \
     CSSOM_List_##suffix *list, CSSOM_ListIter_##suffix position, T value); \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_erase( \
+    CSSOM_List_##suffix *list, CSSOM_ListIter_##suffix position); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
     CSSOM_List_##suffix *list); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_end( \

@@ -128,7 +128,61 @@ void test_List_insert() {
 
 
 
+void test_List_erase() {
+  CSSOM_List_Int *l;
+  CSSOM_ListIter_Int it;
+
+  l = CSSOM_List_Int_alloc();
+
+  /**
+   * [1, 2, 3]
+   *     ^
+   */
+  CSSOM_List_Int_append(l, 1);
+  it = CSSOM_List_Int_append(l, 2);
+  CSSOM_List_Int_append(l, 3);
+
+  /**
+   * [1, 3]
+   *     ^
+   */
+  it = CSSOM_List_Int_erase(l, it);
+  assert(CSSOM_List_Int_size(l) == 2);
+  assert(*it == 3);
+  it = CSSOM_List_Int_begin(l);
+  assert(*it == 1);
+  it = CSSOM_ListIter_Int_next(it);
+  assert(*it == 3);
+  assert(CSSOM_ListIter_Int_next(it) == CSSOM_List_Int_end(l));
+
+  /**
+   * [1]
+   *     ^
+   */
+  it = CSSOM_List_Int_erase(l, it);
+  assert(CSSOM_List_Int_size(l) == 1);
+  assert(it == CSSOM_List_Int_end(l));
+  it = CSSOM_List_Int_begin(l);
+  assert(*it == 1);
+  it = CSSOM_ListIter_Int_next(it);
+  assert(it == CSSOM_List_Int_end(l));
+
+  /**
+   * []
+   */
+  it = CSSOM_List_Int_erase(l, CSSOM_List_Int_begin(l));
+  assert(CSSOM_List_Int_size(l) == 0);
+  assert(it == CSSOM_List_Int_end(l));
+  assert(CSSOM_List_Int_begin(l) == CSSOM_List_Int_end(l));
+
+
+  CSSOM_List_Int_free(l);
+}
+
+
+
 void test_List() {
   test_List_basics();
   test_List_insert();
+  test_List_erase();
 }
