@@ -94,6 +94,30 @@
   \
   \
   \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_insert( \
+    CSSOM_List_##suffix *list, CSSOM_ListIter_##suffix position, T value) \
+  { \
+    struct _CSSOM_ListItem_##suffix *item; \
+    struct _CSSOM_ListItem_##suffix *at; \
+    \
+    if (position == CSSOM_List_##suffix##_end(list)) \
+      return CSSOM_List_##suffix##_append(list, value); \
+    \
+    at = (struct _CSSOM_ListItem_##suffix*)position; \
+    item = CSSOM_ListItem_##suffix##_alloc(); \
+    if (item == NULL) return CSSOM_List_##suffix##_end(list); \
+    \
+    item->value = value; \
+    at->prev->next = item; \
+    item->prev = at->prev; \
+    at->prev = item; \
+    item->next = at; \
+    ++list->size; \
+    return (CSSOM_ListIter_##suffix)item; \
+  } \
+  \
+  \
+  \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
     CSSOM_List_##suffix *list) \
   { \
