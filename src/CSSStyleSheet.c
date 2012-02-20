@@ -88,8 +88,8 @@ static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
 static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
   CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
 {
-  if (CSSOM_List_CSSRule_append(styleSheet->_cssRules, cssRule) == NULL)
-    return NULL;
+  if (CSSOM_List_CSSRule_append(styleSheet->_cssRules, cssRule) ==
+    CSSOM_List_CSSRule_end(styleSheet->_cssRules)) return NULL;
   return cssRule;
 }
 

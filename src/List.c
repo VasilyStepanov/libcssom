@@ -78,18 +78,20 @@
   \
   \
   \
-  T* CSSOM_List_##suffix##_append(CSSOM_List_##suffix *list, T value) { \
+  CSSOM_ListIter_##suffix  CSSOM_List_##suffix##_append( \
+    CSSOM_List_##suffix *list, T value) \
+  { \
     struct _CSSOM_ListItem_##suffix *item; \
     \
     item = CSSOM_ListItem_##suffix##_alloc(); \
-    if (item == NULL) return NULL; \
+    if (item == NULL) return CSSOM_List_##suffix##_end(list); \
     \
     item->value = value; \
     item->prev = list->tail; \
     list->tail->next = item; \
     list->tail = item; \
     ++list->size; \
-    return &item->value; \
+    return (CSSOM_ListIter_##suffix)item; \
   } \
   \
   \

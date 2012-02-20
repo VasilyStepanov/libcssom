@@ -12,7 +12,8 @@
   \
   CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc(); \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list); \
-  T* CSSOM_List_##suffix##_append(CSSOM_List_##suffix *list, T value); \
+  CSSOM_ListIter_##suffix CSSOM_List_##suffix##_append( \
+    CSSOM_List_##suffix *list, T value); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_insert( \
     CSSOM_List_##suffix *list, CSSOM_ListIter_##suffix position, T value); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_begin( \
