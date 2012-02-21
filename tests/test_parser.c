@@ -1,27 +1,21 @@
-#include "test_Parser.h"
+#include "test_parser.h"
 
 #include "test_utils.h"
 
-#include <cssom/Parser.h>
-#include <cssom/CSSRule.h>
-#include <cssom/CSSStyleRule.h>
-#include <cssom/CSSStyleDeclaration.h>
+#include <cssom.h>
 
 #include <assert.h>
 #include <stdlib.h>
 
 
 
-static void test_Parser_basics() {
-  CSSOM_Parser *parser;
+static void test_parser_basics() {
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSRule *cssRule;
   const CSSOM_CSSStyleDeclaration *style;
   
-  parser = CSSOM_Parser_alloc();
-
-  styleSheet = CSSOM_Parser_parseStyleSheet(parser,
+  styleSheet = CSSOM_CSSStyleSheet_parse(
 "p {\n"
 "  color : green\n"
 "}\n"
@@ -43,12 +37,10 @@ static void test_Parser_basics() {
     CSSOM_CSSStyleDeclaration_getPropertyValue(style, "color"));
 
   CSSOM_CSSStyleSheet_free(styleSheet);
-
-  CSSOM_Parser_free(parser);
 }
 
 
 
-void test_Parser() {
-  test_Parser_basics();
+void test_parser() {
+  test_parser_basics();
 }

@@ -5,6 +5,11 @@
 #include <cssom/CSSStyleRule.h>
 #include <cssom/CSSRuleList.h>
 #include <cssom/CSSStyleSheet.h>
-#include <cssom/Parser.h>
+
+
+
+CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_parse(const char *cssText);
+
+
 
 #endif
