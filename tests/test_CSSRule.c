@@ -10,7 +10,7 @@
 
 
 static void test_CSSRule_alloc() {
-  CSSOM_CSSRule *cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
+  CSSOM_CSSRule *cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(NULL);
 
   assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
 

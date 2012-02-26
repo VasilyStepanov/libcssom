@@ -3,9 +3,11 @@
 
 #include <cssom/CSSStyleRule.h>
 
+#include "FSM.h"
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc();
+
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(const CSSOM_FSM *fsm);
 
 
 

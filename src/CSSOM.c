@@ -21,6 +21,7 @@ struct _CSSOM {
 
 
 struct _CSSOM_ParserStack {
+  const CSSOM_FSM *fsm;
   CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *curCSSRule;
 };
@@ -67,7 +68,7 @@ static int startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_ParserStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(stack->fsm);
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet_append(stack->styleSheet, cssRule) == NULL) {
@@ -109,9 +110,7 @@ void CSSOM_dispose(CSSOM *cssom) {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom CSSOM_UNUSED,
-  const char *cssText)
-{ 
+CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText) { 
   SAC_Parser parser;
   CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
@@ -127,6 +126,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom CSSOM_UNUSED,
 
   parserStack.styleSheet = styleSheet;
   parserStack.curCSSRule = NULL;
+  parserStack.fsm = cssom->fsm;
 
   SAC_SetStyleHandler(parser,startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);

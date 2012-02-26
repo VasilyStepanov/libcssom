@@ -3,11 +3,14 @@
 
 #include <cssom/CSSStyleDeclaration.h>
 
+#include "FSM.h"
+
 #include <sacc.h>
 
 
 
-CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc();
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
+  const CSSOM_FSM *fsm);
 
 void CSSOM_CSSStyleDeclaration_free(CSSOM_CSSStyleDeclaration *style);
 
