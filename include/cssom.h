@@ -5,6 +5,7 @@
 #include <cssom/CSSStyleRule.h>
 #include <cssom/CSSRuleList.h>
 #include <cssom/CSSStyleSheet.h>
+#include <cssom/CSSProperty.h>
 #include <cssom/CSSOM.h>
 
 #endif

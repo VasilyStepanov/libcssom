@@ -14,7 +14,7 @@
 
 
 struct _CSSOM {
-  int dummy;
+  CSSOM_CSSPropertyDef *defs;
 };
 
 
@@ -81,11 +81,13 @@ static int startStyleHandler(void *userData,
 
 
 
-CSSOM* CSSOM_create() {
+CSSOM* CSSOM_create(CSSOM_CSSPropertyDef *defs) {
   CSSOM *cssom;
 
   cssom = (CSSOM*)malloc(sizeof(CSSOM));
   if (cssom == NULL) return NULL;
+
+  cssom->defs = defs;
 
   return cssom;
 }

@@ -16,7 +16,7 @@ static void test_parser_basics() {
   CSSOM_CSSRule *cssRule;
   const CSSOM_CSSStyleDeclaration *style;
   
-  cssom = CSSOM_create();
+  cssom = CSSOM_create(CSSOM_CSSPropertyDefs);
   styleSheet = CSSOM_parse(cssom,
 "p {\n"
 "  color : green\n"
