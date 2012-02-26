@@ -7,6 +7,7 @@ AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
 test_suite_SOURCES = test_CSSRule.c \
                      test_CSSStyleSheet.c \
                      test_List.c \
+                     test_FSM.c \
                      test_parser.c \
                      test_suite.c
 
