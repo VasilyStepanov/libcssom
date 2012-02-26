@@ -16,7 +16,7 @@ struct _CSSOM_FSMItem {
 
 
 
-CSSOM_FSM* CSSOM_FSM_alloc(CSSOM_FSMItem *map);
+CSSOM_FSM* CSSOM_FSM_alloc(const CSSOM_FSMItem *map);
 
 void CSSOM_FSM_free(CSSOM_FSM *fsm);
 

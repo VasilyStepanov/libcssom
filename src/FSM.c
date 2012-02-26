@@ -7,12 +7,12 @@
 
 
 struct _CSSOM_FSM {
-  CSSOM_FSMItem *map;
+  const CSSOM_FSMItem *map;
 };
 
 
 
-CSSOM_FSM* CSSOM_FSM_alloc(CSSOM_FSMItem *map) {
+CSSOM_FSM* CSSOM_FSM_alloc(const CSSOM_FSMItem *map) {
   CSSOM_FSM *fsm;
 
   fsm = (CSSOM_FSM*)malloc(sizeof(CSSOM_FSM));
@@ -32,7 +32,7 @@ void CSSOM_FSM_free(CSSOM_FSM *fsm) {
 
 
 int CSSOM_FSM_find(const CSSOM_FSM *fsm, const char *key) {
-  CSSOM_FSMItem *it;
+  const CSSOM_FSMItem *it;
 
   it = fsm->map;
   while (1) {

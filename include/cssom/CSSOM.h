@@ -12,7 +12,9 @@ extern "C" {
 
 typedef struct _CSSOM CSSOM;
 
-CSSOM* CSSOM_create(CSSOM_CSSPropertyDef *defs);
+
+
+CSSOM* CSSOM_create(const CSSOM_CSSPropertyDef *defs);
 
 void CSSOM_dispose(CSSOM *cssom);
 
