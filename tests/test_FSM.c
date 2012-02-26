@@ -25,6 +25,8 @@ void test_FSM_basics() {
   assert(CSSOM_FSM_find(fsm, "aaB") == 1);
   assert(CSSOM_FSM_find(fsm, "aaC") == -1);
 
+  assert(CSSOM_FSM_size(fsm) == 2);
+
   CSSOM_FSM_free(fsm);
   free(map);
 }

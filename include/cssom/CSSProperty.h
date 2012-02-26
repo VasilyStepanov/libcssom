@@ -8,7 +8,7 @@ extern "C" {
 
 
 typedef enum _CSSOM_CSSPropertyType {
-  CSSOM_COLOR_PROPERTY
+  CSSOM_COLOR_PROPERTY = 0
 } CSSOM_CSSPropertyType;
 
 typedef struct _CSSOM_CSSPropertyDef {
