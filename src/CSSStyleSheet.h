@@ -3,12 +3,16 @@
 
 #include <cssom/CSSStyleSheet.h>
 
+#include <sacc.h>
+
 
 
 CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc();
 
 CSSOM_CSSRule* CSSOM_CSSStyleSheet_append(CSSOM_CSSStyleSheet *styleSheet,
   CSSOM_CSSRule *cssRule);
+
+SAC_Parser CSSOM_CSSStyleSheet_parser(CSSOM_CSSStyleSheet *styleSheet);
 
 
 
