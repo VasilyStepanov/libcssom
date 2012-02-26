@@ -23,7 +23,7 @@ void test_FSM_basics() {
 
   assert(CSSOM_FSM_find(fsm, "aaA") == 0);
   assert(CSSOM_FSM_find(fsm, "aaB") == 1);
-  assert(CSSOM_FSM_find(fsm, "aaC") == 999);
+  assert(CSSOM_FSM_find(fsm, "aaC") == -1);
 
   CSSOM_FSM_free(fsm);
   free(map);

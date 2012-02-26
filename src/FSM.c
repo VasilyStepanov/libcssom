@@ -36,7 +36,7 @@ int CSSOM_FSM_find(const CSSOM_FSM *fsm, const char *key) {
 
   it = fsm->map;
   while (1) {
-    if (it->key == NULL) return it->value;
+    if (it->key == NULL) return -1;
     if (strcasecmp(it->key, key) == 0) return it->value;
     ++it;
   }
