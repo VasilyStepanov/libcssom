@@ -10,12 +10,14 @@
 
 
 static void test_parser_basics() {
+  CSSOM *cssom;
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSRule *cssRule;
   const CSSOM_CSSStyleDeclaration *style;
   
-  styleSheet = CSSOM_CSSStyleSheet_parse(
+  cssom = CSSOM_create();
+  styleSheet = CSSOM_parse(cssom,
 "p {\n"
 "  color : green\n"
 "}\n"
@@ -37,6 +39,7 @@ static void test_parser_basics() {
     CSSOM_CSSStyleDeclaration_getPropertyValue(style, "color"));
 
   CSSOM_CSSStyleSheet_free(styleSheet);
+  CSSOM_dispose(cssom);
 }
 
 

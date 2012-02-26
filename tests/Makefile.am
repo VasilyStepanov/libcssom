@@ -1,7 +1,8 @@
 noinst_PROGRAMS = test_suite
 
 AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
-            -I$(top_srcdir)/include
+            -I$(top_srcdir)/include \
+            $(SACC_CFLAGS)
 
 test_suite_SOURCES = test_CSSRule.c \
                      test_CSSStyleSheet.c \

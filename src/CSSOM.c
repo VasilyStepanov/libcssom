@@ -101,22 +101,26 @@ void CSSOM_dispose(CSSOM *cssom) {
 CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom CSSOM_UNUSED,
   const char *cssText)
 { 
+  SAC_Parser parser;
   CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
 
-  styleSheet = CSSOM_CSSStyleSheet_alloc();
-  if (styleSheet == NULL) return NULL;
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  styleSheet = CSSOM_CSSStyleSheet_alloc(parser);
+  if (styleSheet == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
 
   parserStack.styleSheet = styleSheet;
   parserStack.curCSSRule = NULL;
 
-  SAC_SetStyleHandler(CSSOM_CSSStyleSheet_parser(styleSheet),
-    startStyleHandler, endStyleHandler);
-  SAC_SetPropertyHandler(CSSOM_CSSStyleSheet_parser(styleSheet),
-    propertyHandler);
-  SAC_SetUserData(CSSOM_CSSStyleSheet_parser(styleSheet), &parserStack);
-  SAC_ParseStyleSheet(CSSOM_CSSStyleSheet_parser(styleSheet),
-    cssText, strlen(cssText));
+  SAC_SetStyleHandler(parser,startStyleHandler, endStyleHandler);
+  SAC_SetPropertyHandler(parser, propertyHandler);
+  SAC_SetUserData(parser, &parserStack);
+  SAC_ParseStyleSheet(parser, cssText, strlen(cssText));
 
   return parserStack.styleSheet;
 }

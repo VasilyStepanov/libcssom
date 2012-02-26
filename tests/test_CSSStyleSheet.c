@@ -17,7 +17,7 @@ static void test_CSSStyleSheet_append() {
   cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
   cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
   cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc();
-  styleSheet = CSSOM_CSSStyleSheet_alloc();
+  styleSheet = CSSOM_CSSStyleSheet_alloc(NULL);
 
 
 

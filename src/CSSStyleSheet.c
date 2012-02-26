@@ -97,23 +97,15 @@ static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc() {
-  SAC_Parser parser;
+CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet_alloc(SAC_Parser parser) {
   CSSOM_List_CSSRule *_cssRules;
   CSSOM_CSSStyleSheet *styleSheet;
 
-  parser = SAC_CreateParser();
-  if (parser == NULL) return NULL;
-
   _cssRules = CSSOM_List_CSSRule_alloc();
-  if (_cssRules == NULL) {
-    SAC_DisposeParser(parser);
-    return NULL;
-  }
+  if (_cssRules == NULL) return NULL;
 
   styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    SAC_DisposeParser(parser);
     CSSOM_List_CSSRule_free(_cssRules);
     return NULL;
   }
@@ -146,12 +138,6 @@ void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
   SAC_DisposeParser(styleSheet->parser);
 
   free(styleSheet);
-}
-
-
-
-SAC_Parser CSSOM_CSSStyleSheet_parser(CSSOM_CSSStyleSheet *styleSheet) {
-  return styleSheet->parser;
 }
 
 
