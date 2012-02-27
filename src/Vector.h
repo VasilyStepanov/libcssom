@@ -11,12 +11,18 @@
   typedef const T* CSSOM_VectorConstIter_##suffix; \
   \
   CSSOM_Vector_##suffix* CSSOM_Vector_##suffix##_alloc(size_t size); \
+  CSSOM_Vector_##suffix* CSSOM_Vector_##suffix##_alloc_ex(size_t size, \
+    size_t capacity); \
   void CSSOM_Vector_##suffix##_free(CSSOM_Vector_##suffix *vector); \
-  size_t CSSOM_Vector_##suffix##_size(CSSOM_Vector_##suffix *vector); \
+  size_t CSSOM_Vector_##suffix##_size(const CSSOM_Vector_##suffix *vector); \
+  size_t CSSOM_Vector_##suffix##_capacity( \
+    const CSSOM_Vector_##suffix *vector); \
+  CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_append( \
+    CSSOM_Vector_##suffix *vector, T value); \
   CSSOM_VectorConstIter_##suffix CSSOM_Vector_##suffix##_cbegin( \
-    CSSOM_Vector_##suffix *vector); \
+    const CSSOM_Vector_##suffix *vector); \
   CSSOM_VectorConstIter_##suffix CSSOM_Vector_##suffix##_cend( \
-    CSSOM_Vector_##suffix *vector); \
+    const CSSOM_Vector_##suffix *vector); \
   CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_begin( \
     CSSOM_Vector_##suffix *vector); \
   CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_end( \
