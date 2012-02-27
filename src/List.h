@@ -30,7 +30,6 @@
   \
   CSSOM_ListIter_##suffix CSSOM_ListIter_##suffix##_next( \
     CSSOM_ListIter_##suffix iter); \
-  \
   CSSOM_ListConstIter_##suffix CSSOM_ListConstIter_##suffix##_next( \
     CSSOM_ListConstIter_##suffix iter);
 

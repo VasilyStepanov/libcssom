@@ -1,3 +1,4 @@
+#include "test_Vector.h"
 #include "test_List.h"
 #include "test_FSM.h"
 #include "test_CSSRule.h"
@@ -9,6 +10,7 @@
 
 
 int main() {
+  test_Vector();
   test_List();
   test_FSM();
   test_CSSRule();
