@@ -8,16 +8,13 @@
 
 
 void test_FSM_basics() {
-  CSSOM_FSMItem *map;
-  CSSOM_FSM *fsm;
+  CSSOM_FSMItem map[] = {
+    {"aaa", 0},
+    {"aab", 1},
+    {NULL, 999}
+  };
 
-  map = (CSSOM_FSMItem*)malloc(sizeof(CSSOM_FSMItem) * 3);
-  map[0].key = "aaa";
-  map[0].value = 0;
-  map[1].key = "aab";
-  map[1].value = 1;
-  map[2].key = NULL;
-  map[2].value = 999;
+  CSSOM_FSM *fsm;
 
   fsm = CSSOM_FSM_alloc(map);
 
@@ -28,7 +25,6 @@ void test_FSM_basics() {
   assert(CSSOM_FSM_size(fsm) == 2);
 
   CSSOM_FSM_free(fsm);
-  free(map);
 }
 
 
