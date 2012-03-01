@@ -223,9 +223,49 @@ void test_Vector_erase() {
 
 
 
+void test_Vector_pop() {
+  CSSOM_Vector_Int *v;
+
+  v = CSSOM_Vector_Int_alloc(3);
+
+  CSSOM_Vector_Int_begin(v)[0] = 1;
+  CSSOM_Vector_Int_begin(v)[1] = 2;
+  CSSOM_Vector_Int_begin(v)[2] = 3;
+
+  assert(CSSOM_Vector_Int_size(v) == 3);
+
+
+
+  CSSOM_Vector_Int_pop(v);
+
+  assert(CSSOM_Vector_Int_size(v) == 2);
+  assert(CSSOM_Vector_Int_begin(v)[0] == 1);
+  assert(CSSOM_Vector_Int_begin(v)[1] == 2);
+
+
+
+  CSSOM_Vector_Int_pop(v);
+
+  assert(CSSOM_Vector_Int_size(v) == 1);
+  assert(CSSOM_Vector_Int_begin(v)[0] == 1);
+
+
+
+  CSSOM_Vector_Int_pop(v);
+
+  assert(CSSOM_Vector_Int_size(v) == 0);
+
+
+
+  CSSOM_Vector_Int_free(v);
+}
+
+
+
 void test_Vector() {
   test_Vector_basics();
   test_Vector_append();
   test_Vector_insert();
   test_Vector_erase();
+  test_Vector_pop();
 }

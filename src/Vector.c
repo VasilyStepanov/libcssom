@@ -126,6 +126,13 @@
   \
   \
   \
+  void CSSOM_Vector_##suffix##_pop(CSSOM_Vector_##suffix *vector) { \
+    --vector->size; \
+    vector->end = &vector->data[vector->size]; \
+  } \
+  \
+  \
+  \
   CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_insert( \
     CSSOM_Vector_##suffix *vector, \
     CSSOM_VectorIter_##suffix position, T value) \
