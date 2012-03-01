@@ -142,7 +142,48 @@ void test_Vector_append() {
 
 
 
+void test_Vector_insert() {
+  CSSOM_Vector_Int *v;
+  CSSOM_VectorIter_Int it;
+
+  v = CSSOM_Vector_Int_alloc(2);
+
+  CSSOM_Vector_Int_begin(v)[0] = 1;
+  CSSOM_Vector_Int_begin(v)[1] = 3;
+
+  assert(CSSOM_Vector_Int_size(v) == 2);
+
+
+  it = CSSOM_Vector_Int_begin(v) + 1;
+
+  assert(*it == 3);
+
+
+
+  it = CSSOM_Vector_Int_insert(v, it, 2);
+
+  assert(*it == 2);
+  assert(CSSOM_Vector_Int_size(v) == 3);
+
+
+
+  it = CSSOM_Vector_Int_insert(v, CSSOM_Vector_Int_end(v), 4);
+
+  assert(CSSOM_Vector_Int_size(v) == 4);
+  assert(CSSOM_Vector_Int_begin(v)[0] == 1);
+  assert(CSSOM_Vector_Int_begin(v)[1] == 2);
+  assert(CSSOM_Vector_Int_begin(v)[2] == 3);
+  assert(CSSOM_Vector_Int_begin(v)[3] == 4);
+
+
+
+  CSSOM_Vector_Int_free(v);
+}
+
+
+
 void test_Vector() {
   test_Vector_basics();
   test_Vector_append();
+  test_Vector_insert();
 }

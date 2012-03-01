@@ -1,6 +1,7 @@
 #include "Vector.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -121,6 +122,31 @@
     ++vector->size; \
     vector->end = &vector->data[vector->size]; \
     return &vector->data[vector->size - 1]; \
+  } \
+  \
+  \
+  \
+  CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_insert( \
+    CSSOM_Vector_##suffix *vector, \
+    CSSOM_VectorIter_##suffix position, T value) \
+  { \
+    size_t offset; \
+    \
+    offset = position - vector->data; \
+    \
+    if (vector->size == vector->capacity) { \
+      if (Vector_##suffix##_enlarge(vector) == NULL) { \
+        return CSSOM_Vector_##suffix##_end(vector); \
+      } \
+    } \
+    \
+    memmove(&vector->data[offset + 1], &vector->data[offset], \
+      sizeof(T) * (vector->size - offset)); \
+    \
+    vector->data[offset] = value; \
+    ++vector->size; \
+    vector->end = &vector->data[vector->size]; \
+    return &vector->data[offset]; \
   } \
   \
   \

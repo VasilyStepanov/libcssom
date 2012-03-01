@@ -19,6 +19,9 @@
     const CSSOM_Vector_##suffix *vector); \
   CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_append( \
     CSSOM_Vector_##suffix *vector, T value); \
+  CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_insert( \
+    CSSOM_Vector_##suffix *vector, \
+    CSSOM_VectorIter_##suffix position, T value); \
   CSSOM_VectorConstIter_##suffix CSSOM_Vector_##suffix##_cbegin( \
     const CSSOM_Vector_##suffix *vector); \
   CSSOM_VectorConstIter_##suffix CSSOM_Vector_##suffix##_cend( \
