@@ -151,6 +151,29 @@
   \
   \
   \
+  CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_erase( \
+    CSSOM_Vector_##suffix *vector, CSSOM_VectorIter_##suffix position) \
+  { \
+    size_t offset; \
+    \
+    offset = position - vector->data; \
+    \
+    if (vector->size == vector->capacity) { \
+      if (Vector_##suffix##_enlarge(vector) == NULL) { \
+        return CSSOM_Vector_##suffix##_end(vector); \
+      } \
+    } \
+    \
+    memmove(&vector->data[offset], &vector->data[offset + 1], \
+      sizeof(T) * (vector->size - offset - 1)); \
+    \
+    --vector->size; \
+    vector->end = &vector->data[vector->size]; \
+    return &vector->data[offset]; \
+  } \
+  \
+  \
+  \
   CSSOM_VectorIter_##suffix CSSOM_Vector_##suffix##_begin( \
     CSSOM_Vector_##suffix *vector) \
   { \
