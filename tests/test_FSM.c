@@ -8,10 +8,10 @@
 
 
 void test_FSM_basics() {
-  CSSOM_FSMItem map[] = {
-    {"aaa", 0},
-    {"aab", 1},
-    {NULL, 999}
+  const char *map[] = {
+    "aaa",
+    "aab",
+    NULL
   };
 
   CSSOM_FSM *fsm;

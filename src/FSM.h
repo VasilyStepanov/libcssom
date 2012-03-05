@@ -7,18 +7,10 @@
 
 typedef struct _CSSOM_FSM CSSOM_FSM;
 
-typedef struct _CSSOM_FSMItem CSSOM_FSMItem;
 
 
 
-struct _CSSOM_FSMItem {
-  const char *key;
-  int value;
-};
-
-
-
-CSSOM_FSM* CSSOM_FSM_alloc(const CSSOM_FSMItem *map);
+CSSOM_FSM* CSSOM_FSM_alloc(const char **map);
 
 void CSSOM_FSM_free(CSSOM_FSM *fsm);
 

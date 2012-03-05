@@ -7,27 +7,24 @@
 
 
 struct _CSSOM_FSM {
-  const CSSOM_FSMItem *map;
+  const char **map;
   size_t size;
 };
 
 
 
-CSSOM_FSM* CSSOM_FSM_alloc(const CSSOM_FSMItem *map) {
+CSSOM_FSM* CSSOM_FSM_alloc(const char **map) {
   CSSOM_FSM *fsm;
-  const CSSOM_FSMItem *it;
-  int max;
+  size_t size;
+  const char **it;
 
-  max = 0;
-  for (it = map; it->key != NULL; ++it) {
-    if (max < it->value) max = it->value;
-  }
+  for (it = map, size = 0; *it != NULL; ++it, ++size);
 
   fsm = (CSSOM_FSM*)malloc(sizeof(CSSOM_FSM));
   if (fsm == NULL) return NULL;
 
   fsm->map = map;
-  fsm->size = max + 1;
+  fsm->size = size;
 
   return fsm;
 }
@@ -41,14 +38,11 @@ void CSSOM_FSM_free(CSSOM_FSM *fsm) {
 
 
 int CSSOM_FSM_find(const CSSOM_FSM *fsm, const char *key) {
-  const CSSOM_FSMItem *it;
+  size_t i;
+  const char **it;
 
-  it = fsm->map;
-  while (1) {
-    if (it->key == NULL) return -1;
-    if (strcasecmp(it->key, key) == 0) return it->value;
-    ++it;
-  }
+  for (i = 0, it = fsm->map; i < fsm->size; ++i, ++it)
+    if (strcasecmp(*it, key) == 0) return i;
   
   return -1;
 }

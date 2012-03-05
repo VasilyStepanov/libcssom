@@ -2,7 +2,8 @@
 #define CSSOM_CSSOM_H
 
 #include <cssom/CSSStyleSheet.h>
-#include <cssom/CSSProperty.h>
+
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +15,7 @@ typedef struct _CSSOM CSSOM;
 
 
 
-CSSOM* CSSOM_create(const CSSOM_CSSPropertyDef *defs);
+CSSOM* CSSOM_create(const char **properties);
 
 void CSSOM_dispose(CSSOM *cssom);
 

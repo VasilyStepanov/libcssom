@@ -4,7 +4,7 @@
 
 
 
-CSSOM_CSSPropertyDef CSSOM_CSSPropertyDefs[] = {
-  {"color", CSSOM_COLOR_PROPERTY},
-  {NULL, -1}
+const char *CSSOM_CSSProperties[] = {
+  "color",
+  NULL
 };

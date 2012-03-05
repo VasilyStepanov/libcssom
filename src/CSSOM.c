@@ -83,11 +83,11 @@ static int startStyleHandler(void *userData,
 
 
 
-CSSOM* CSSOM_create(const CSSOM_CSSPropertyDef *defs) {
+CSSOM* CSSOM_create(const char **properties) {
   CSSOM_FSM *fsm;
   CSSOM *cssom;
 
-  fsm = CSSOM_FSM_alloc((const CSSOM_FSMItem*)defs);
+  fsm = CSSOM_FSM_alloc(properties);
   if (fsm == NULL) return NULL;
 
   cssom = (CSSOM*)malloc(sizeof(CSSOM));
