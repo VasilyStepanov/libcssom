@@ -7,14 +7,14 @@
 
 
 struct _CSSOM_CSSStyleDeclaration {
-  const CSSOM_FSM *fsm;
+  const CSSOM_FSM_CSSProperty *fsm;
   unsigned long length;
 };
 
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
-  const CSSOM_FSM *fsm)
+  const CSSOM_FSM_CSSProperty *fsm)
 {
   CSSOM_CSSStyleDeclaration *style;
 

@@ -58,7 +58,7 @@ CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(const CSSOM_FSM *fsm) {
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(const CSSOM_FSM_CSSProperty *fsm) {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
 

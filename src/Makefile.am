@@ -24,7 +24,7 @@ libcssom_la_SOURCES = CSSOM.c \
                       CSSRuleList.c \
                       CSSStyleDeclaration.c \
                       CSSStyleSheet.c \
-                      FSM.c \
+                      FSM_CSSProperty.c \
                       List_CSSRule.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)

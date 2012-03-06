@@ -4,7 +4,7 @@
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
-#include "FSM.h"
+#include "FSM_CSSProperty.h"
 #include "gcc.h"
 
 #include <sacc.h>
@@ -15,13 +15,13 @@
 
 
 struct _CSSOM {
-  CSSOM_FSM *fsm;
+  CSSOM_FSM_CSSProperty *fsm;
 };
 
 
 
 struct _CSSOM_ParserStack {
-  const CSSOM_FSM *fsm;
+  const CSSOM_FSM_CSSProperty *fsm;
   CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *curCSSRule;
 };
@@ -84,15 +84,15 @@ static int startStyleHandler(void *userData,
 
 
 CSSOM* CSSOM_create(const char **properties) {
-  CSSOM_FSM *fsm;
+  CSSOM_FSM_CSSProperty *fsm;
   CSSOM *cssom;
 
-  fsm = CSSOM_FSM_alloc(properties);
+  fsm = CSSOM_FSM_CSSProperty_alloc(properties);
   if (fsm == NULL) return NULL;
 
   cssom = (CSSOM*)malloc(sizeof(CSSOM));
   if (cssom == NULL) {
-    CSSOM_FSM_free(fsm);
+    CSSOM_FSM_CSSProperty_free(fsm);
     return NULL;
   }
 
@@ -104,7 +104,7 @@ CSSOM* CSSOM_create(const char **properties) {
 
 
 void CSSOM_dispose(CSSOM *cssom) {
-  CSSOM_FSM_free(cssom->fsm);
+  CSSOM_FSM_CSSProperty_free(cssom->fsm);
   free(cssom);
 }
 
