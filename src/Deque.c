@@ -124,6 +124,31 @@
   \
   \
   \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_insert( \
+    CSSOM_Deque_##suffix *deque, CSSOM_DequeIter_##suffix position, T value) \
+  { \
+    struct _CSSOM_DequeItem_##suffix *item; \
+    struct _CSSOM_DequeItem_##suffix *at; \
+    \
+    if (position == CSSOM_Deque_##suffix##_end(deque)) \
+      return CSSOM_Deque_##suffix##_append(deque, value); \
+    \
+    at = (struct _CSSOM_DequeItem_##suffix*)position; \
+    item = CSSOM_DequeItem_##suffix##_alloc(); \
+    if (item == NULL) return CSSOM_Deque_##suffix##_end(deque); \
+    \
+    item->value = value; \
+    at->prev->next = item; \
+    item->prev = at->prev; \
+    at->prev = item; \
+    item->next = at; \
+    ++deque->size; \
+    \
+    return (CSSOM_DequeIter_##suffix)item; \
+  } \
+  \
+  \
+  \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_begin( \
     CSSOM_Deque_##suffix *deque) \
   { \

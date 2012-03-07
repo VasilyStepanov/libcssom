@@ -14,6 +14,8 @@
   size_t CSSOM_Deque_##suffix##_size(const CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_append( \
     CSSOM_Deque_##suffix *deque, T value); \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_insert( \
+    CSSOM_Deque_##suffix *deque, CSSOM_DequeIter_##suffix position, T value); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_begin( \
     CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_end( \
