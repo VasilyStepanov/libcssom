@@ -1,4 +1,4 @@
-#include "gcc.h"
+#include "List.h"
 
 #include <stdlib.h>
 
@@ -159,9 +159,9 @@
   \
   \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_end( \
-    CSSOM_List_##suffix *list CSSOM_UNUSED) \
+    CSSOM_List_##suffix *list) \
   { \
-    return (CSSOM_ListIter_##suffix)NULL; \
+    return (CSSOM_ListIter_##suffix)list->tail->next; \
   } \
   \
   \
@@ -175,9 +175,9 @@
   \
   \
   CSSOM_ListConstIter_##suffix CSSOM_List_##suffix##_cend( \
-    const CSSOM_List_##suffix *list CSSOM_UNUSED) \
+    const CSSOM_List_##suffix *list) \
   { \
-    return (CSSOM_ListConstIter_##suffix)NULL; \
+    return (CSSOM_ListConstIter_##suffix)list->tail->next; \
   } \
   \
   \
