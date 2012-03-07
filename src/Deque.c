@@ -149,6 +149,25 @@
   \
   \
   \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_erase( \
+    CSSOM_Deque_##suffix *deque, CSSOM_DequeIter_##suffix position) \
+  { \
+    struct _CSSOM_DequeItem_##suffix *item; \
+    struct _CSSOM_DequeItem_##suffix *at; \
+    \
+    at = (struct _CSSOM_DequeItem_##suffix*)position; \
+    item = at->next; \
+    \
+    at->prev->next = item; \
+    if (item != NULL) item->prev = at->prev; \
+    CSSOM_DequeItem_##suffix##_free(at); \
+    --deque->size; \
+    \
+    return (CSSOM_DequeIter_##suffix)item; \
+  } \
+  \
+  \
+  \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_begin( \
     CSSOM_Deque_##suffix *deque) \
   { \

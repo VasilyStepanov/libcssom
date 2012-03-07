@@ -16,6 +16,8 @@
     CSSOM_Deque_##suffix *deque, T value); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_insert( \
     CSSOM_Deque_##suffix *deque, CSSOM_DequeIter_##suffix position, T value); \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_erase( \
+    CSSOM_Deque_##suffix *deque, CSSOM_DequeIter_##suffix position); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_begin( \
     CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_end( \
