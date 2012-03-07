@@ -10,6 +10,8 @@
   typedef T* CSSOM_DequeIter_##suffix; \
   \
   CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc(size_t size); \
+  CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc_ex(size_t size, \
+    size_t capacity); \
   void CSSOM_Deque_##suffix##_free(CSSOM_Deque_##suffix *deque); \
   size_t CSSOM_Deque_##suffix##_size(const CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_append( \

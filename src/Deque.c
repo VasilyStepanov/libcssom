@@ -71,6 +71,14 @@
   \
   \
   CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc(size_t size) { \
+    return CSSOM_Deque_##suffix##_alloc_ex(size, size); \
+  } \
+  \
+  \
+  \
+  CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc_ex(size_t size, \
+    size_t capacity) \
+  { \
     CSSOM_Vector_DequeItem_##suffix *refs; \
     struct _CSSOM_DequeItem_##suffix **referencesraw; \
     struct _CSSOM_DequeItem_##suffix *item; \
@@ -78,7 +86,7 @@
     CSSOM_Deque_##suffix *deque; \
     size_t i; \
     \
-    refs = CSSOM_Vector_DequeItem_##suffix##_alloc(size); \
+    refs = CSSOM_Vector_DequeItem_##suffix##_alloc_ex(size, capacity); \
     if (refs == NULL) return NULL; \
     \
     referencesraw = &*CSSOM_Vector_DequeItem_##suffix##_begin(refs); \
