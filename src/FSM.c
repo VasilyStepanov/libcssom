@@ -2,6 +2,8 @@
 
 #include "Vector.h"
 #include "Vector.c"
+#include "Deque.h"
+#include "Deque.c"
 
 #include <stdlib.h>
 #include <string.h>
@@ -14,9 +16,15 @@
   \
   CSSOM_VECTOR_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
   \
+  CSSOM_DEQUE_DECLARE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  \
+  CSSOM_DEQUE_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  \
+  \
+  \
   struct _CSSOM_FSM_##suffix { \
     CSSOM_Vector_FSMItem_##suffix *table; \
-    CSSOM_Vector_FSMItem_##suffix *data; \
+    CSSOM_Deque_FSMItem_##suffix *data; \
     size_t capacity; \
   }; \
   \
@@ -41,7 +49,7 @@
   \
   \
   CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **map) { \
-    CSSOM_Vector_FSMItem_##suffix *data; \
+    CSSOM_Deque_FSMItem_##suffix *data; \
     CSSOM_Vector_FSMItem_##suffix *table; \
     CSSOM_FSMItem_##suffix *tableraw; \
     CSSOM_FSM_##suffix *fsm; \
@@ -54,7 +62,7 @@
     table = CSSOM_Vector_FSMItem_##suffix##_alloc(capacity); \
     if (table == NULL) return NULL; \
     \
-    data = CSSOM_Vector_FSMItem_##suffix##_alloc_ex(0, capacity); \
+    data = CSSOM_Deque_FSMItem_##suffix##_alloc_ex(0, capacity); \
     if (data == NULL) { \
       CSSOM_Vector_FSMItem_##suffix##_free(table); \
       return NULL; \
@@ -62,7 +70,7 @@
     \
     fsm = (CSSOM_FSM_##suffix*)malloc(sizeof(CSSOM_FSM_##suffix)); \
     if (fsm == NULL) { \
-      CSSOM_Vector_FSMItem_##suffix##_free(data); \
+      CSSOM_Deque_FSMItem_##suffix##_free(data); \
       CSSOM_Vector_FSMItem_##suffix##_free(table); \
       return NULL; \
     } \
@@ -83,7 +91,7 @@
   \
   \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm) { \
-    CSSOM_Vector_FSMItem_##suffix##_free(fsm->data); \
+    CSSOM_Deque_FSMItem_##suffix##_free(fsm->data); \
     CSSOM_Vector_FSMItem_##suffix##_free(fsm->table); \
     free(fsm); \
   } \
@@ -91,7 +99,7 @@
   \
   \
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm) { \
-    return CSSOM_Vector_FSMItem_##suffix##_size(fsm->data); \
+    return CSSOM_Deque_FSMItem_##suffix##_size(fsm->data); \
   }  \
   \
   \
@@ -102,13 +110,13 @@
   \
   \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_begin(CSSOM_FSM_##suffix *fsm) { \
-    return CSSOM_Vector_FSMItem_##suffix##_begin(fsm->data); \
+    return CSSOM_Deque_FSMItem_##suffix##_begin(fsm->data); \
   } \
   \
   \
   \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_end(CSSOM_FSM_##suffix *fsm) { \
-    return CSSOM_Vector_FSMItem_##suffix##_end(fsm->data); \
+    return CSSOM_Deque_FSMItem_##suffix##_end(fsm->data); \
   }  \
   \
   \
@@ -116,7 +124,8 @@
   CSSOM_FSMIter_##suffix CSSOM_FSMIter_##suffix##_next( \
     CSSOM_FSMIter_##suffix iter) \
   { \
-    return CSSOM_VectorIter_FSMItem_##suffix##_next(iter); \
+    return CSSOM_DequeIter_FSMItem_##suffix##_next( \
+      (CSSOM_DequeIter_FSMItem_##suffix)iter); \
   }
 
 /*
