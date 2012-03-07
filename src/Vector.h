@@ -8,7 +8,7 @@
 #define CSSOM_VECTOR_DECLARE(T, suffix) \
   typedef struct _CSSOM_Vector_##suffix CSSOM_Vector_##suffix; \
   typedef T* CSSOM_VectorIter_##suffix; \
-  typedef const T* CSSOM_VectorConstIter_##suffix; \
+  typedef T const * CSSOM_VectorConstIter_##suffix; \
   \
   CSSOM_Vector_##suffix* CSSOM_Vector_##suffix##_alloc(size_t size); \
   CSSOM_Vector_##suffix* CSSOM_Vector_##suffix##_alloc_ex(size_t size, \
