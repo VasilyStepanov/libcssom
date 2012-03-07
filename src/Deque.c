@@ -190,7 +190,12 @@
     item->next = at; \
     ++deque->size; \
     \
-    for (at = item->next; at != NULL; at = at->next) ++at->index; \
+    for (; \
+      refit != CSSOM_Vector_DequeItem_##suffix##_end(deque->refs); \
+      refit = CSSOM_VectorIter_DequeItem_##suffix##_next(refit)) \
+    { \
+      ++(**refit).index; \
+    } \
     \
     return (CSSOM_DequeIter_##suffix)item; \
   } \
@@ -209,14 +214,19 @@
       (CSSOM_Vector_DequeItem_##suffix##_begin(deque->refs) + at->index); \
     item = at->next; \
     \
-    CSSOM_Vector_DequeItem_##suffix##_erase(deque->refs, refit); \
+    refit = CSSOM_Vector_DequeItem_##suffix##_erase(deque->refs, refit); \
     \
     at->prev->next = item; \
     if (item != NULL) item->prev = at->prev; \
     DequeItem_##suffix##_free(at); \
     --deque->size; \
     \
-    for (at = item; at != NULL; at = at->next) --at->index; \
+    for (; \
+      refit != CSSOM_Vector_DequeItem_##suffix##_end(deque->refs); \
+      refit = CSSOM_VectorIter_DequeItem_##suffix##_next(refit)) \
+    { \
+      --(**refit).index; \
+    } \
     \
     return (CSSOM_DequeIter_##suffix)item; \
   } \
