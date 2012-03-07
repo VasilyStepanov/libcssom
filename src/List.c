@@ -22,6 +22,7 @@
     \
     item->next = NULL; \
     item->prev = NULL; \
+    \
     return item; \
   } \
   \
@@ -31,6 +32,19 @@
     struct _CSSOM_ListItem_##suffix *item) \
   { \
     free(item); \
+  } \
+  \
+  \
+  \
+  static void CSSOM_ListItem_##suffix##_freeAll( \
+    struct _CSSOM_ListItem_##suffix *item) \
+  { \
+    struct _CSSOM_ListItem_##suffix *next; \
+    \
+    for (; item != NULL; item = next) { \
+      next = item->next; \
+      CSSOM_ListItem_##suffix##_free(item); \
+    } \
   } \
   \
   \
@@ -58,21 +72,16 @@
     } \
     \
     list->head = item; \
-    list->tail = list->head; \
+    list->tail = item; \
     list->size = 0; \
+    \
     return list; \
   } \
   \
   \
   \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list) { \
-    struct _CSSOM_ListItem_##suffix *item; \
-    struct _CSSOM_ListItem_##suffix *next; \
-    \
-    for (item = list->head; item != NULL; item = next) { \
-      next = item->next; \
-      CSSOM_ListItem_##suffix##_free(item); \
-    } \
+    CSSOM_ListItem_##suffix##_freeAll(list->head); \
     free(list); \
   } \
   \
@@ -91,6 +100,7 @@
     list->tail->next = item; \
     list->tail = item; \
     ++list->size; \
+    \
     return (CSSOM_ListIter_##suffix)item; \
   } \
   \
@@ -115,6 +125,7 @@
     at->prev = item; \
     item->next = at; \
     ++list->size; \
+    \
     return (CSSOM_ListIter_##suffix)item; \
   } \
   \
@@ -133,6 +144,7 @@
     if (item != NULL) item->prev = at->prev; \
     CSSOM_ListItem_##suffix##_free(at); \
     --list->size; \
+    \
     return (CSSOM_ListIter_##suffix)item; \
   } \
   \
