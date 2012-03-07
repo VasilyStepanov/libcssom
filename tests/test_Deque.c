@@ -102,6 +102,21 @@ static void test_Deque_append() {
   it = CSSOM_DequeIter_Int_next(it);
   assert(it == CSSOM_Deque_Int_end(d));
 
+  it = CSSOM_Deque_Int_at(d, 0);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 1);
+
+  it = CSSOM_Deque_Int_at(d, 1);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 2);
+
+  it = CSSOM_Deque_Int_at(d, 2);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 3);
+
+  it = CSSOM_Deque_Int_at(d, 3);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 4);
 
 
   CSSOM_Deque_Int_free(d);
@@ -148,6 +163,22 @@ static void test_Deque_insert() {
 
   it = CSSOM_DequeIter_Int_next(it);
   assert(it == CSSOM_Deque_Int_end(d));
+
+  it = CSSOM_Deque_Int_at(d, 0);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 1);
+
+  it = CSSOM_Deque_Int_at(d, 1);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 2);
+
+  it = CSSOM_Deque_Int_at(d, 2);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 3);
+
+  it = CSSOM_Deque_Int_at(d, 3);
+  assert(it != CSSOM_Deque_Int_end(d));
+  assert(*it == 4);
 
 
 
