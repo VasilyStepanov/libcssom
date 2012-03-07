@@ -39,25 +39,7 @@
   \
   \
   CSSOM_Vector_##suffix* CSSOM_Vector_##suffix##_alloc(size_t size) { \
-    T *data; \
-    CSSOM_Vector_##suffix *vector; \
-    \
-    data = (T*)malloc(sizeof(T) * size); \
-    if (size != 0 && data == NULL) return NULL; \
-    \
-    vector = (CSSOM_Vector_##suffix*)malloc( \
-      sizeof(CSSOM_Vector_##suffix)); \
-    if (vector == NULL) { \
-      free(data); \
-      return NULL; \
-    } \
-    \
-    vector->data = data; \
-    vector->size = size; \
-    vector->capacity = size; \
-    vector->end = &data[size]; \
-    \
-    return vector; \
+    return CSSOM_Vector_##suffix##_alloc_ex(size, size); \
   } \
   \
   \
