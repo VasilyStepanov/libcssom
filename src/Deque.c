@@ -24,7 +24,7 @@
   \
   \
   static struct _CSSOM_DequeItem_##suffix* \
-  CSSOM_DequeItem_##suffix##_alloc(size_t index) \
+  DequeItem_##suffix##_alloc(size_t index) \
   { \
     struct _CSSOM_DequeItem_##suffix *item; \
     \
@@ -41,7 +41,7 @@
   \
   \
   \
-  static void CSSOM_DequeItem_##suffix##_free( \
+  static void DequeItem_##suffix##_free( \
     struct _CSSOM_DequeItem_##suffix *item) \
   { \
     free(item); \
@@ -49,14 +49,14 @@
   \
   \
   \
-  static void CSSOM_DequeItem_##suffix##_freeAll( \
+  static void DequeItem_##suffix##_freeAll( \
     struct _CSSOM_DequeItem_##suffix *item) \
   { \
     struct _CSSOM_DequeItem_##suffix *next; \
     \
     for (; item != NULL; item = next) { \
       next = item->next; \
-      CSSOM_DequeItem_##suffix##_free(item); \
+      DequeItem_##suffix##_free(item); \
     } \
   } \
   \
@@ -84,17 +84,17 @@
     \
     referencesraw = &*CSSOM_Vector_DequeItem_##suffix##_begin(refs); \
     \
-    item = CSSOM_DequeItem_##suffix##_alloc((size_t)-1); \
+    item = DequeItem_##suffix##_alloc((size_t)-1); \
     if (item == NULL) { \
       CSSOM_Vector_DequeItem_##suffix##_free(refs); \
       return NULL; \
     } \
     \
     for (i = 0, at = item; i < size; ++i, at = at->next) { \
-      at->next = CSSOM_DequeItem_##suffix##_alloc(i); \
+      at->next = DequeItem_##suffix##_alloc(i); \
       if (at->next == NULL) { \
         CSSOM_Vector_DequeItem_##suffix##_free(refs); \
-        CSSOM_DequeItem_##suffix##_freeAll(item); \
+        DequeItem_##suffix##_freeAll(item); \
         return NULL; \
       } \
       \
@@ -106,7 +106,7 @@
     deque = (CSSOM_Deque_##suffix*)malloc(sizeof(CSSOM_Deque_##suffix)); \
     if (deque == NULL) { \
       CSSOM_Vector_DequeItem_##suffix##_free(refs); \
-      CSSOM_DequeItem_##suffix##_freeAll(item); \
+      DequeItem_##suffix##_freeAll(item); \
       return NULL; \
     } \
     \
@@ -122,7 +122,7 @@
   \
   void CSSOM_Deque_##suffix##_free(CSSOM_Deque_##suffix *deque) { \
     CSSOM_Vector_DequeItem_##suffix##_free(deque->refs); \
-    CSSOM_DequeItem_##suffix##_freeAll(deque->head); \
+    DequeItem_##suffix##_freeAll(deque->head); \
     free(deque); \
   } \
   \
@@ -140,12 +140,12 @@
     struct _CSSOM_DequeItem_##suffix *item; \
     CSSOM_VectorIter_DequeItem_##suffix it; \
     \
-    item = CSSOM_DequeItem_##suffix##_alloc(deque->size); \
+    item = DequeItem_##suffix##_alloc(deque->size); \
     if (item == NULL) return CSSOM_Deque_##suffix##_end(deque); \
     \
     it = CSSOM_Vector_DequeItem_##suffix##_append(deque->refs, item); \
     if (it == CSSOM_Vector_DequeItem_##suffix##_end(deque->refs)) { \
-      CSSOM_DequeItem_##suffix##_free(item); \
+      DequeItem_##suffix##_free(item); \
       return CSSOM_Deque_##suffix##_end(deque); \
     } \
     \
@@ -173,13 +173,13 @@
     at = (struct _CSSOM_DequeItem_##suffix*)position; \
     refit = (CSSOM_VectorIter_DequeItem_##suffix) \
       (CSSOM_Vector_DequeItem_##suffix##_begin(deque->refs) + at->index); \
-    item = CSSOM_DequeItem_##suffix##_alloc(at->index); \
+    item = DequeItem_##suffix##_alloc(at->index); \
     if (item == NULL) return CSSOM_Deque_##suffix##_end(deque); \
     \
     refit = CSSOM_Vector_DequeItem_##suffix##_insert(deque->refs, \
       refit, item); \
     if (refit == CSSOM_Vector_DequeItem_##suffix##_end(deque->refs)) { \
-      CSSOM_DequeItem_##suffix##_free(item); \
+      DequeItem_##suffix##_free(item); \
       return CSSOM_Deque_##suffix##_end(deque); \
     } \
     \
@@ -213,7 +213,7 @@
     \
     at->prev->next = item; \
     if (item != NULL) item->prev = at->prev; \
-    CSSOM_DequeItem_##suffix##_free(at); \
+    DequeItem_##suffix##_free(at); \
     --deque->size; \
     \
     for (at = item; at != NULL; at = at->next) --at->index; \

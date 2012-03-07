@@ -13,7 +13,7 @@
   \
   \
   \
-  static struct _CSSOM_ListItem_##suffix* CSSOM_ListItem_##suffix##_alloc() { \
+  static struct _CSSOM_ListItem_##suffix* ListItem_##suffix##_alloc() { \
     struct _CSSOM_ListItem_##suffix *item; \
     \
     item = (struct _CSSOM_ListItem_##suffix*)malloc( \
@@ -28,7 +28,7 @@
   \
   \
   \
-  static void CSSOM_ListItem_##suffix##_free( \
+  static void ListItem_##suffix##_free( \
     struct _CSSOM_ListItem_##suffix *item) \
   { \
     free(item); \
@@ -36,14 +36,14 @@
   \
   \
   \
-  static void CSSOM_ListItem_##suffix##_freeAll( \
+  static void ListItem_##suffix##_freeAll( \
     struct _CSSOM_ListItem_##suffix *item) \
   { \
     struct _CSSOM_ListItem_##suffix *next; \
     \
     for (; item != NULL; item = next) { \
       next = item->next; \
-      CSSOM_ListItem_##suffix##_free(item); \
+      ListItem_##suffix##_free(item); \
     } \
   } \
   \
@@ -61,13 +61,13 @@
     CSSOM_List_##suffix *list; \
     struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = CSSOM_ListItem_##suffix##_alloc(); \
+    item = ListItem_##suffix##_alloc(); \
     if (item == NULL) return NULL; \
     \
     list = (CSSOM_List_##suffix*)malloc( \
       sizeof(CSSOM_List_##suffix)); \
     if (list == NULL) { \
-      CSSOM_ListItem_##suffix##_free(item); \
+      ListItem_##suffix##_free(item); \
       return NULL; \
     } \
     \
@@ -81,7 +81,7 @@
   \
   \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list) { \
-    CSSOM_ListItem_##suffix##_freeAll(list->head); \
+    ListItem_##suffix##_freeAll(list->head); \
     free(list); \
   } \
   \
@@ -92,7 +92,7 @@
   { \
     struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = CSSOM_ListItem_##suffix##_alloc(); \
+    item = ListItem_##suffix##_alloc(); \
     if (item == NULL) return CSSOM_List_##suffix##_end(list); \
     \
     item->value = value; \
@@ -116,7 +116,7 @@
       return CSSOM_List_##suffix##_append(list, value); \
     \
     at = (struct _CSSOM_ListItem_##suffix*)position; \
-    item = CSSOM_ListItem_##suffix##_alloc(); \
+    item = ListItem_##suffix##_alloc(); \
     if (item == NULL) return CSSOM_List_##suffix##_end(list); \
     \
     item->value = value; \
@@ -142,7 +142,7 @@
     \
     at->prev->next = item; \
     if (item != NULL) item->prev = at->prev; \
-    CSSOM_ListItem_##suffix##_free(at); \
+    ListItem_##suffix##_free(at); \
     --list->size; \
     \
     return (CSSOM_ListIter_##suffix)item; \
