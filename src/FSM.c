@@ -16,13 +16,13 @@
   \
   CSSOM_VECTOR_DEFINE(int, FSMItemIdx_##suffix) \
   \
-  CSSOM_VECTOR_DECLARE(CSSOM_FSMItem_##suffix*, FSMItemPtr_##suffix) \
-  \
-  CSSOM_VECTOR_DEFINE(CSSOM_FSMItem_##suffix*, FSMItemPtr_##suffix) \
-  \
   CSSOM_DEQUE_DECLARE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
   \
   CSSOM_DEQUE_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  \
+  CSSOM_VECTOR_DECLARE(CSSOM_DequeIter_FSMItem_##suffix, FSMItemPtr_##suffix) \
+  \
+  CSSOM_VECTOR_DEFINE(CSSOM_DequeIter_FSMItem_##suffix, FSMItemPtr_##suffix) \
   \
   \
   \
@@ -116,7 +116,7 @@
       refsit != CSSOM_Vector_FSMItemPtr_##suffix##_end(refs); \
       refsit = CSSOM_VectorIter_FSMItemPtr_##suffix##_next(refsit)) \
     { \
-      *refsit = NULL; \
+      *refsit = CSSOM_Deque_FSMItem_##suffix##_end(data); \
     } \
     \
     fsm->map = map; \
@@ -175,29 +175,26 @@
     const char *key, T value) \
   { \
     CSSOM_FSMItem_##suffix item; \
-    int index; \
+    int hash; \
     CSSOM_VectorIter_FSMItemPtr_##suffix at; \
     CSSOM_DequeIter_FSMItem_##suffix itemit; \
     \
-    index = CSSOM_FSM_##suffix##_table_add(fsm, key); \
-    if (index == -1) return CSSOM_FSM_##suffix##_end(fsm); \
+    hash = CSSOM_FSM_##suffix##_table_add(fsm, key); \
+    if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
-    item.key = fsm->map[index]; \
-    item.hash = index; \
+    item.key = fsm->map[hash]; \
+    item.hash = hash; \
     item.value = value; \
     \
     itemit = CSSOM_Deque_FSMItem_##suffix##_append(fsm->data, item); \
     if (itemit == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
       return CSSOM_FSM_##suffix##_end(fsm); \
     \
-    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + index; \
-    if (*at != NULL) { \
-      CSSOM_DequeIter_FSMItem_##suffix erase = \
-        CSSOM_Deque_FSMItem_##suffix##_at(fsm->data, (**at).hash); \
-      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, erase); \
-    } \
+    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
+    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
+      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, *at); \
     \
-    *at = &*itemit; \
+    *at = itemit; \
     \
-    return CSSOM_FSM_##suffix##_end(fsm); \
+    return (CSSOM_FSMIter_##suffix)itemit; \
   }
