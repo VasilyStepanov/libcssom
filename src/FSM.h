@@ -17,7 +17,7 @@
   typedef struct _CSSOM_FSM_##suffix CSSOM_FSM_##suffix; \
   typedef CSSOM_FSMItem_##suffix* CSSOM_FSMIter_##suffix; \
   \
-  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **map); \
+  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **dict); \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm); \
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm); \
   size_t CSSOM_FSM_##suffix##_capacity(const CSSOM_FSM_##suffix *fsm); \

@@ -12,9 +12,13 @@
 
 
 #define CSSOM_FSM_DEFINE(T, suffix) \
-  CSSOM_VECTOR_DECLARE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  CSSOM_VECTOR_DECLARE(int, FSMItemIdx_##suffix) \
   \
-  CSSOM_VECTOR_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  CSSOM_VECTOR_DEFINE(int, FSMItemIdx_##suffix) \
+  \
+  CSSOM_VECTOR_DECLARE(CSSOM_FSMItem_##suffix*, FSMItemPtr_##suffix) \
+  \
+  CSSOM_VECTOR_DEFINE(CSSOM_FSMItem_##suffix*, FSMItemPtr_##suffix) \
   \
   CSSOM_DEQUE_DECLARE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
   \
@@ -23,7 +27,8 @@
   \
   \
   struct _CSSOM_FSM_##suffix { \
-    CSSOM_Vector_FSMItem_##suffix *table; \
+    CSSOM_Vector_FSMItemIdx_##suffix *table; \
+    CSSOM_Vector_FSMItemPtr_##suffix *map; \
     CSSOM_Deque_FSMItem_##suffix *data; \
     size_t capacity; \
   }; \
@@ -33,14 +38,17 @@
   int CSSOM_FSM_##suffix##_search(const CSSOM_FSM_##suffix *fsm, \
     const char *key) \
   { \
-    CSSOM_VectorConstIter_FSMItem_##suffix it; \
+    CSSOM_VectorConstIter_FSMItemIdx_##suffix it; \
+    struct _CSSOM_FSMItem_##suffix * const * rawmap = \
+      CSSOM_Vector_FSMItemPtr_##suffix##_cbegin(fsm->map); \
     \
     for ( \
-      it = CSSOM_Vector_FSMItem_##suffix##_begin(fsm->table); \
-      it != CSSOM_Vector_FSMItem_##suffix##_end(fsm->table); \
-      it = CSSOM_VectorConstIter_FSMItem_##suffix##_next(it)) \
+      it = CSSOM_Vector_FSMItemIdx_##suffix##_begin(fsm->table); \
+      it != CSSOM_Vector_FSMItemIdx_##suffix##_end(fsm->table); \
+      it = CSSOM_VectorConstIter_FSMItemIdx_##suffix##_next(it)) \
     { \
-      if (strcasecmp(it->key, key) == 0) return it->hash; \
+      const struct _CSSOM_FSMItem_##suffix *item = rawmap[*it]; \
+      if (strcasecmp(item->key, key) == 0) return *it; \
     } \
     \
     return -1; \
@@ -48,40 +56,52 @@
   \
   \
   \
-  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **map) { \
+  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **dict) { \
+    CSSOM_Vector_FSMItemIdx_##suffix *table; \
+    CSSOM_Vector_FSMItemPtr_##suffix *map; \
     CSSOM_Deque_FSMItem_##suffix *data; \
-    CSSOM_Vector_FSMItem_##suffix *table; \
-    CSSOM_FSMItem_##suffix *tableraw; \
     CSSOM_FSM_##suffix *fsm; \
     size_t capacity; \
     int i; \
-    const char **it; \
+    CSSOM_VectorIter_FSMItemIdx_##suffix tableit; \
+    const char **dictit; \
     \
-    for (it = map, capacity = 0; *it != NULL; ++it, ++capacity); \
+    for (dictit = dict, capacity = 0; *dictit != NULL; ++dictit, ++capacity); \
     \
-    table = CSSOM_Vector_FSMItem_##suffix##_alloc(capacity); \
+    table = CSSOM_Vector_FSMItemIdx_##suffix##_alloc(capacity); \
     if (table == NULL) return NULL; \
+    \
+    map = CSSOM_Vector_FSMItemPtr_##suffix##_alloc(capacity); \
+    if (map == NULL) { \
+      CSSOM_Vector_FSMItemIdx_##suffix##_free(table); \
+      return NULL; \
+    } \
     \
     data = CSSOM_Deque_FSMItem_##suffix##_alloc_ex(0, capacity); \
     if (data == NULL) { \
-      CSSOM_Vector_FSMItem_##suffix##_free(table); \
+      CSSOM_Vector_FSMItemPtr_##suffix##_free(map); \
+      CSSOM_Vector_FSMItemIdx_##suffix##_free(table); \
       return NULL; \
     } \
     \
     fsm = (CSSOM_FSM_##suffix*)malloc(sizeof(CSSOM_FSM_##suffix)); \
     if (fsm == NULL) { \
+      CSSOM_Vector_FSMItemPtr_##suffix##_free(map); \
+      CSSOM_Vector_FSMItemIdx_##suffix##_free(table); \
       CSSOM_Deque_FSMItem_##suffix##_free(data); \
-      CSSOM_Vector_FSMItem_##suffix##_free(table); \
       return NULL; \
     } \
     \
-    tableraw = CSSOM_Vector_FSMItem_##suffix##_begin(table); \
-    for (it = map, i = 0; *it != NULL; ++it) { \
-      tableraw[i].key = *it; \
-      tableraw[i].hash = i; \
+    for ( \
+      tableit = CSSOM_Vector_FSMItemIdx_##suffix##_begin(table), i = 0; \
+      tableit != CSSOM_Vector_FSMItemIdx_##suffix##_end(table); \
+      tableit = CSSOM_VectorIter_FSMItemIdx_##suffix##_next(tableit), ++i) \
+    { \
+      *tableit = i; \
     } \
     \
     fsm->table = table; \
+    fsm->map = map; \
     fsm->data = data; \
     fsm->capacity = capacity; \
     \
@@ -92,7 +112,8 @@
   \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm) { \
     CSSOM_Deque_FSMItem_##suffix##_free(fsm->data); \
-    CSSOM_Vector_FSMItem_##suffix##_free(fsm->table); \
+    CSSOM_Vector_FSMItemPtr_##suffix##_free(fsm->map); \
+    CSSOM_Vector_FSMItemIdx_##suffix##_free(fsm->table); \
     free(fsm); \
   } \
   \
