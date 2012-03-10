@@ -103,41 +103,6 @@
   \
   \
   \
-  static void dump_table(CSSOM_FSMTable_##suffix *table) { \
-    const char **mapit; \
-    size_t i, j; \
-    CSSOM_DequeIter_FSMTableRow_##suffix rowit; \
-    \
-    for (mapit = table->map, i = 0; *mapit != NULL; ++mapit, ++i) { \
-      printf("%3d: %s\n", i, *mapit); \
-    } \
-    \
-    printf("    "); \
-    for (j = 0; j < 256; ++j) \
-      if ((j >= '0' && j <= '9') \
-       || (j >= 'a' && j <= 'z') \
-       || (j >= 'A' && j <= 'Z')) \
-        printf(" %c", (char)j); \
-      else \
-        printf("  "); \
-    printf("\n"); \
-    \
-    for ( \
-      rowit = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data), i = 0; \
-      rowit != CSSOM_Deque_FSMTableRow_##suffix##_end(table->data); \
-      rowit = CSSOM_DequeIter_FSMTableRow_##suffix##_next(rowit), ++i) \
-    { \
-      printf("%3d:", i); \
-      for (j = 0; j < 256; ++j) \
-        printf("%2d", (*rowit)[j]); \
-      printf("\n"); \
-    } \
-    printf("\n"); \
-    printf("\n"); \
-  } \
-  \
-  \
-  \
   CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map) { \
     CSSOM_Deque_FSMTableRow_##suffix *data; \
     CSSOM_FSMTable_##suffix *table; \
@@ -173,8 +138,6 @@
     table->map = map; \
     table->data = data; \
     table->amount = amount; \
-    \
-    dump_table(table); \
     \
     return table; \
   } \
@@ -443,3 +406,41 @@
     return (CSSOM_FSMIter_##suffix) \
       CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, erase); \
   }
+
+/*
+  static void dump_table(CSSOM_FSMTable_##suffix *table) { \
+    const char **mapit; \
+    size_t i, j; \
+    CSSOM_DequeIter_FSMTableRow_##suffix rowit; \
+    \
+    for (mapit = table->map, i = 0; *mapit != NULL; ++mapit, ++i) { \
+      printf("%3d: %s\n", i, *mapit); \
+    } \
+    \
+    printf("    "); \
+    for (j = 0; j < 256; ++j) \
+      if ((j >= '0' && j <= '9') \
+       || (j >= 'a' && j <= 'z') \
+       || (j >= 'A' && j <= 'Z')) \
+        printf(" %c", (char)j); \
+      else \
+        printf("  "); \
+    printf("\n"); \
+    \
+    for ( \
+      rowit = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data), i = 0; \
+      rowit != CSSOM_Deque_FSMTableRow_##suffix##_end(table->data); \
+      rowit = CSSOM_DequeIter_FSMTableRow_##suffix##_next(rowit), ++i) \
+    { \
+      printf("%3d:", i); \
+      for (j = 0; j < 256; ++j) \
+        printf("%2d", (*rowit)[j]); \
+      printf("\n"); \
+    } \
+    printf("\n"); \
+    printf("\n"); \
+  } \
+  \
+  \
+  \
+*/

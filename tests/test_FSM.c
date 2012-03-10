@@ -272,7 +272,7 @@ static void test_FSM_order() {
 
 
 
-static void test_FSM_table() {
+static void test_FSM_erase_first() {
   const char *map[] = {
     "background",
     "background-color",
@@ -281,8 +281,122 @@ static void test_FSM_table() {
   };
 
   CSSOM_FSMTable_Int *table;
+  CSSOM_FSM_Int *fsm;
+  CSSOM_FSMIter_Int it;
 
   table = CSSOM_FSMTable_Int_alloc(map);
+  fsm = CSSOM_FSM_Int_alloc(table);
+
+
+
+  CSSOM_FSM_Int_add(fsm, "background-color", 1);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 1);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background-color", it->key);
+  assert(it->value == 1);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  CSSOM_FSM_Int_add(fsm, "background", 2);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 2);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background-color", it->key);
+  assert(it->value == 1);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background", it->key);
+  assert(it->value == 2);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  it = CSSOM_FSM_Int_find(fsm, "background-color");
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  CSSOM_FSM_Int_erase(fsm, it);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 1);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background", it->key);
+  assert(it->value == 2);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  CSSOM_FSM_Int_free(fsm);
+  CSSOM_FSMTable_Int_free(table);
+}
+
+
+
+static void test_FSM_erase_last() {
+  const char *map[] = {
+    "background",
+    "background-color",
+    "background-style",
+    NULL
+  };
+
+  CSSOM_FSMTable_Int *table;
+  CSSOM_FSM_Int *fsm;
+  CSSOM_FSMIter_Int it;
+
+  table = CSSOM_FSMTable_Int_alloc(map);
+  fsm = CSSOM_FSM_Int_alloc(table);
+
+
+
+  CSSOM_FSM_Int_add(fsm, "background-color", 1);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 1);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background-color", it->key);
+  assert(it->value == 1);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  CSSOM_FSM_Int_add(fsm, "background", 2);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 2);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background-color", it->key);
+  assert(it->value == 1);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background", it->key);
+  assert(it->value == 2);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  it = CSSOM_FSM_Int_find(fsm, "background");
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  CSSOM_FSM_Int_erase(fsm, it);
+
+  assert(CSSOM_FSM_Int_size(fsm) == 1);
+  it = CSSOM_FSM_Int_begin(fsm);
+  assert(it != CSSOM_FSM_Int_end(fsm));
+  ASSERT_EQUAL_STRINGS("background-color", it->key);
+  assert(it->value == 1);
+  it = CSSOM_FSMIter_Int_next(it);
+  assert(it == CSSOM_FSM_Int_end(fsm));
+
+
+
+  CSSOM_FSM_Int_free(fsm);
   CSSOM_FSMTable_Int_free(table);
 }
 
@@ -292,5 +406,6 @@ void test_FSM() {
   test_FSM_add();
   test_FSM_iterate();
   test_FSM_order();
-  test_FSM_table();
+  test_FSM_erase_first();
+  test_FSM_erase_last();
 }
