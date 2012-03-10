@@ -8,17 +8,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <stdio.h>
 
 
 
 #define CSSOM_FSM_DEFINE(T, suffix) \
-  CSSOM_VECTOR_DECLARE(int, FSMItemIdx_##suffix) \
-  \
-  CSSOM_VECTOR_DEFINE(int, FSMItemIdx_##suffix) \
-  \
   CSSOM_DEQUE_DECLARE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
   \
   CSSOM_DEQUE_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
+  \
+  CSSOM_DEQUE_DECLARE(size_t*, FSMTableRow_##suffix) \
+  \
+  CSSOM_DEQUE_DEFINE(size_t*, FSMTableRow_##suffix) \
   \
   CSSOM_VECTOR_DECLARE(CSSOM_DequeIter_FSMItem_##suffix, FSMItemPtr_##suffix) \
   \
@@ -28,23 +29,152 @@
   \
   struct _CSSOM_FSMTable_##suffix { \
     const char **map; \
+    CSSOM_Deque_FSMTableRow_##suffix *data; \
     size_t capacity; \
   }; \
   \
   \
   \
+  static CSSOM_DequeIter_FSMTableRow_##suffix FSMTableData_##suffix##_append( \
+    CSSOM_Deque_FSMTableRow_##suffix *data) \
+  { \
+    size_t *row; \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
+    \
+    row = (size_t*)malloc(sizeof(size_t) * 256); \
+    if (row == NULL) return CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
+    \
+    memset(row, 0, sizeof(size_t) * 256); \
+    row[0] = (size_t)-1; \
+    \
+    it = CSSOM_Deque_FSMTableRow_##suffix##_append(data, row); \
+    if (it == CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
+      return CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
+    \
+    return it; \
+  } \
+  \
+  \
+  \
+  static size_t FSMTableData_##suffix##_add( \
+    CSSOM_Deque_FSMTableRow_##suffix *data, const char *key, int hash) \
+  { \
+    const char *ch; \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
+    \
+    it = CSSOM_Deque_FSMTableRow_##suffix##_begin(data); \
+    for (ch = key; *ch != '\0'; ++ch) { \
+      size_t *at; \
+      \
+      at = &(*it)[(size_t)*ch]; \
+      if (*at == 0) { \
+        it = FSMTableData_##suffix##_append(data); \
+        if (it == CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
+          return (size_t)-1; \
+        \
+        *at = CSSOM_Deque_FSMTableRow_##suffix##_size(data) - 1; \
+      } else { \
+        it = CSSOM_Deque_FSMTableRow_##suffix##_at(data, *at); \
+      } \
+    } \
+    \
+    (*it)[0] = hash; \
+    \
+    return CSSOM_Deque_FSMTableRow_##suffix##_size(data) - 1; \
+  } \
+  \
+  \
+  \
+  static void FSMTableData_##suffix##_free( \
+    CSSOM_Deque_FSMTableRow_##suffix *data) \
+  { \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
+    \
+    for ( \
+      it = CSSOM_Deque_FSMTableRow_##suffix##_begin(data); \
+      it != CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
+      it = CSSOM_DequeIter_FSMTableRow_##suffix##_next(it)) \
+    { \
+      free(*it); \
+    } \
+    \
+    CSSOM_Deque_FSMTableRow_##suffix##_free(data); \
+  } \
+  \
+  \
+  \
+  static void dump_table(CSSOM_FSMTable_##suffix *table) { \
+    const char **mapit; \
+    size_t i, j; \
+    CSSOM_DequeIter_FSMTableRow_##suffix rowit; \
+    \
+    for (mapit = table->map, i = 0; *mapit != NULL; ++mapit, ++i) { \
+      printf("%3d: %s\n", i, *mapit); \
+    } \
+    \
+    printf("    "); \
+    for (j = 0; j < 256; ++j) \
+      if ((j >= '0' && j <= '9') \
+       || (j >= 'a' && j <= 'z') \
+       || (j >= 'A' && j <= 'Z')) \
+        printf(" %c", (char)j); \
+      else \
+        printf("  "); \
+    printf("\n"); \
+    \
+    for ( \
+      rowit = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data), i = 0; \
+      rowit != CSSOM_Deque_FSMTableRow_##suffix##_end(table->data); \
+      rowit = CSSOM_DequeIter_FSMTableRow_##suffix##_next(rowit), ++i) \
+    { \
+      printf("%3d:", i); \
+      for (j = 0; j < 256; ++j) \
+        printf("%2u", (*rowit)[j]); \
+      printf("\n"); \
+    } \
+    printf("\n"); \
+    printf("\n"); \
+  } \
+  \
+  \
+  \
   CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map) { \
+    CSSOM_Deque_FSMTableRow_##suffix *data; \
     CSSOM_FSMTable_##suffix *table; \
     size_t capacity; \
-    const char **mapit; \
+    const char **it; \
     \
-    for (mapit = map, capacity = 0; *mapit != NULL; ++mapit, ++capacity); \
+    data = CSSOM_Deque_FSMTableRow_##suffix##_alloc(0); \
+    if (data == NULL) return NULL; \
+    \
+    if (FSMTableData_##suffix##_append(data) == \
+      CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
+    { \
+      FSMTableData_##suffix##_free(data); \
+      return NULL; \
+    } \
+    \
+    for (it = map, capacity = 0; *it != NULL; ++it, ++capacity) { \
+      size_t index; \
+      \
+      index = FSMTableData_##suffix##_add(data, *it, capacity); \
+      if (index == (size_t)-1) { \
+        FSMTableData_##suffix##_free(data); \
+        return NULL; \
+      } \
+    } \
     \
     table = (CSSOM_FSMTable_##suffix*)malloc(sizeof(CSSOM_FSMTable_##suffix)); \
-    if (table == NULL) return NULL; \
+    if (table == NULL) { \
+      FSMTableData_##suffix##_free(data); \
+      return NULL; \
+    } \
     \
     table->map = map; \
+    table->data = data; \
     table->capacity = capacity; \
+    \
+    dump_table(table); \
     \
     return table; \
   } \
@@ -52,6 +182,7 @@
   \
   \
   void CSSOM_FSMTable_##suffix##_free(CSSOM_FSMTable_##suffix *table) { \
+    FSMTableData_##suffix##_free(table->data); \
     free(table); \
   } \
   \

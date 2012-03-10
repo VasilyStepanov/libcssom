@@ -272,8 +272,25 @@ static void test_FSM_order() {
 
 
 
+static void test_FSM_table() {
+  const char *map[] = {
+    "background",
+    "background-color",
+    "background-style",
+    NULL
+  };
+
+  CSSOM_FSMTable_Int *table;
+
+  table = CSSOM_FSMTable_Int_alloc(map);
+  CSSOM_FSMTable_Int_free(table);
+}
+
+
+
 void test_FSM() {
   test_FSM_add();
   test_FSM_iterate();
   test_FSM_order();
+  test_FSM_table();
 }
