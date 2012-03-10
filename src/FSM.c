@@ -36,7 +36,7 @@
   \
   \
   \
-  int CSSOM_FSM_##suffix##_table_find(const CSSOM_FSM_##suffix *fsm, \
+  static int CSSOM_FSM_##suffix##_table_find(const CSSOM_FSM_##suffix *fsm, \
     const char *key) \
   { \
     const char **it; \
@@ -51,7 +51,22 @@
   \
   \
   \
-  int CSSOM_FSM_##suffix##_table_add(const CSSOM_FSM_##suffix *fsm, \
+  static int CSSOM_FSM_##suffix##_table_add(const CSSOM_FSM_##suffix *fsm, \
+    const char *key) \
+  { \
+    const char **it; \
+    int index; \
+    \
+    for (it = fsm->map, index = 0; *it != NULL; ++it, ++index) { \
+      if (strcasecmp(*it, key) == 0) return index; \
+    } \
+    \
+    return -1; \
+  } \
+  \
+  \
+  \
+  static int CSSOM_FSM_##suffix##_table_remove(const CSSOM_FSM_##suffix *fsm, \
     const char *key) \
   { \
     const char **it; \
@@ -171,6 +186,24 @@
   \
   \
   \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_find(CSSOM_FSM_##suffix *fsm, \
+    const char *key) \
+  { \
+    int hash; \
+    CSSOM_VectorIter_FSMItemPtr_##suffix at; \
+    \
+    hash = CSSOM_FSM_##suffix##_table_find(fsm, key); \
+    if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
+    \
+    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
+    if (*at == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
+      return CSSOM_FSM_##suffix##_end(fsm); \
+    \
+    return (CSSOM_FSMIter_##suffix)*at; \
+  } \
+  \
+  \
+  \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_add(CSSOM_FSM_##suffix *fsm, \
     const char *key, T value) \
   { \
@@ -197,4 +230,25 @@
     *at = itemit; \
     \
     return (CSSOM_FSMIter_##suffix)itemit; \
+  } \
+  \
+  \
+  \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_erase(CSSOM_FSM_##suffix *fsm, \
+    CSSOM_FSMIter_##suffix position) \
+  { \
+    int hash; \
+    CSSOM_VectorIter_FSMItemPtr_##suffix at; \
+    CSSOM_DequeIter_FSMItem_##suffix erase; \
+    \
+    hash = CSSOM_FSM_##suffix##_table_remove(fsm, position->key); \
+    if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
+    \
+    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
+    \
+    erase = *at; \
+    *at = CSSOM_Deque_FSMItem_##suffix##_end(fsm->data); \
+    \
+    return (CSSOM_FSMIter_##suffix) \
+      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, erase); \
   }

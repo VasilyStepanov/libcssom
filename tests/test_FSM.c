@@ -24,10 +24,6 @@ static void test_FSM_add() {
     "d",
     NULL
   };
-  const int a = 2;
-  const int b = 3;
-  const int c = 2;
-  const int d = 3;
 
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
@@ -67,24 +63,11 @@ static void test_FSM_add() {
   it = CSSOM_FSM_Int_find(fsm, "x");
   assert(it == CSSOM_FSM_Int_end(fsm));
 
-  it = CSSOM_FSM_Int_fastFind(fsm, a);
-  assert(it != CSSOM_FSM_Int_end(fsm));
-  assert(it->value == 1);
-  it = CSSOM_FSM_Int_fastFind(fsm, b);
-  assert(it != CSSOM_FSM_Int_end(fsm));
-  assert(it->value == 2);
-  it = CSSOM_FSM_Int_fastFind(fsm, c);
-  assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_fastFind(fsm, d);
-  assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_fastFind(fsm, 999);
-  assert(it == CSSOM_FSM_Int_end(fsm));
 
 
-
-  it = CSSOM_FSM_Int_fastAdd(fsm, c, 3);
+  it = CSSOM_FSM_Int_add(fsm, "c", 3);
   assert(it->value == 3);
-  it = CSSOM_FSM_Int_fastAdd(fsm, d, 4);
+  it = CSSOM_FSM_Int_add(fsm, "d", 4);
   assert(it->value == 4);
   assert(CSSOM_FSM_Int_size(fsm) == 4);
 
@@ -95,25 +78,12 @@ static void test_FSM_add() {
   assert(it != CSSOM_FSM_Int_end(fsm));
   assert(it->value == 2);
   it = CSSOM_FSM_Int_find(fsm, "c");
-  assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_find(fsm, "d");
-  assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_find(fsm, "x");
-  assert(it == CSSOM_FSM_Int_end(fsm));
-
-  it = CSSOM_FSM_Int_fastFind(fsm, a);
-  assert(it != CSSOM_FSM_Int_end(fsm));
-  assert(it->value == 1);
-  it = CSSOM_FSM_Int_fastFind(fsm, b);
-  assert(it != CSSOM_FSM_Int_end(fsm));
-  assert(it->value == 2);
-  it = CSSOM_FSM_Int_fastFind(fsm, c);
   assert(it != CSSOM_FSM_Int_end(fsm));
   assert(it->value == 3);
-  it = CSSOM_FSM_Int_fastFind(fsm, d);
+  it = CSSOM_FSM_Int_find(fsm, "d");
   assert(it != CSSOM_FSM_Int_end(fsm));
   assert(it->value == 4);
-  it = CSSOM_FSM_Int_fastFind(fsm, 999);
+  it = CSSOM_FSM_Int_find(fsm, "x");
   assert(it == CSSOM_FSM_Int_end(fsm));
 
   CSSOM_FSM_Int_free(fsm);
@@ -263,7 +233,8 @@ static void test_FSM_order() {
   it = CSSOM_FSM_Int_find(fsm, "a");
   assert(it != CSSOM_FSM_Int_end(fsm));
   assert(it->value == 1);
-  CSSOM_FSM_Int_erase(fsm, it);
+  it = CSSOM_FSM_Int_erase(fsm, it);
+  assert(it->value == 300);
 
   /**
    * d b c
