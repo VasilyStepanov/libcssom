@@ -177,8 +177,6 @@ static void test_FSM_ffind() {
   assert(it == CSSOM_FSM_Int_end(fsm));
   it = CSSOM_FSM_Int_ffind(fsm, d);
   assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_ffind(fsm, 999);
-  assert(it == CSSOM_FSM_Int_end(fsm));
 
 
 
@@ -213,8 +211,6 @@ static void test_FSM_ffind() {
   assert(it->hash == 3);
   assert(it->value == 4);
   CSSOM_FSM_Int_erase(fsm, it);
-  it = CSSOM_FSM_Int_ffind(fsm, 999);
-  assert(it == CSSOM_FSM_Int_end(fsm));
 
 
 
@@ -225,8 +221,6 @@ static void test_FSM_ffind() {
   it = CSSOM_FSM_Int_ffind(fsm, c);
   assert(it == CSSOM_FSM_Int_end(fsm));
   it = CSSOM_FSM_Int_ffind(fsm, d);
-  assert(it == CSSOM_FSM_Int_end(fsm));
-  it = CSSOM_FSM_Int_ffind(fsm, 999);
   assert(it == CSSOM_FSM_Int_end(fsm));
 
 

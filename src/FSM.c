@@ -343,13 +343,8 @@
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_ffind(CSSOM_FSM_##suffix *fsm, \
     int hash) \
   { \
-    CSSOM_VectorIter_FSMItemPtr_##suffix at; \
-    \
-    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
-    if (*at == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
-      return CSSOM_FSM_##suffix##_end(fsm); \
-    \
-    return (CSSOM_FSMIter_##suffix)*at; \
+    return (CSSOM_FSMIter_##suffix) \
+      *(CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash); \
   } \
   \
   \
@@ -358,16 +353,11 @@
     const char *key) \
   { \
     int hash; \
-    CSSOM_VectorIter_FSMItemPtr_##suffix at; \
     \
     hash = FSMTable_##suffix##_find(fsm->table, fsm->state, key); \
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
-    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
-    if (*at == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
-      return CSSOM_FSM_##suffix##_end(fsm); \
-    \
-    return (CSSOM_FSMIter_##suffix)*at; \
+    return CSSOM_FSM_##suffix##_ffind(fsm, hash); \
   } \
   \
   \
