@@ -7,6 +7,8 @@
 #include "FSM_CSSProperty.h"
 #include "gcc.h"
 
+#include <cssom/CSSProperty.h>
+
 #include <sacc.h>
 
 #include <stdlib.h>
@@ -15,6 +17,7 @@
 
 
 struct _CSSOM {
+  char **properties;
   CSSOM_FSMTable_CSSProperty *table;
 };
 
@@ -83,19 +86,63 @@ static int startStyleHandler(void *userData,
 
 
 
+static void freeProperties(char **properties) {
+  char **it;
+
+  if (properties == (char**)CSSOM_CSSProperties) return;
+
+  for (it = properties; *it != NULL; ++it)
+    free(*it);
+
+  free(properties);
+}
+
+
+
 CSSOM* CSSOM_create(const char **properties) {
+  char **propertiesCopy;
   CSSOM_FSMTable_CSSProperty *table;
   CSSOM *cssom;
 
+  if (properties != CSSOM_CSSProperties) {
+    char **itlhs;
+    const char **itrhs;
+    size_t size;
+
+    for (itrhs = properties, size = 0; *itrhs != NULL; ++itrhs, ++size);
+
+    propertiesCopy = (char**)malloc(sizeof(char*) * (size + 1));
+    if (propertiesCopy == NULL) return NULL;
+
+    for (
+      itrhs = properties, itlhs = propertiesCopy;
+      *itrhs != NULL;
+      ++itrhs, ++itlhs)
+    {
+      *itlhs = strdup(*itrhs);
+      if (*itlhs == NULL) {
+        freeProperties(propertiesCopy);
+        return NULL;
+      }
+    }
+  } else {
+    propertiesCopy = (char**)properties;
+  }
+
   table = CSSOM_FSMTable_CSSProperty_alloc(properties);
-  if (table == NULL) return NULL;
+  if (table == NULL) {
+    freeProperties(propertiesCopy);
+    return NULL;
+  }
 
   cssom = (CSSOM*)malloc(sizeof(CSSOM));
   if (cssom == NULL) {
+    freeProperties(propertiesCopy);
     CSSOM_FSMTable_CSSProperty_free(table);
     return NULL;
   }
 
+  cssom->properties = propertiesCopy;
   cssom->table = table;
 
   return cssom;
@@ -105,6 +152,7 @@ CSSOM* CSSOM_create(const char **properties) {
 
 void CSSOM_dispose(CSSOM *cssom) {
   CSSOM_FSMTable_CSSProperty_free(cssom->table);
+  freeProperties(cssom->properties);
   free(cssom);
 }
 
