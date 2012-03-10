@@ -15,13 +15,13 @@
 
 
 struct _CSSOM {
-  CSSOM_FSM_CSSProperty *fsm;
+  CSSOM_FSMTable_CSSProperty *table;
 };
 
 
 
 struct _CSSOM_ParserStack {
-  const CSSOM_FSM_CSSProperty *fsm;
+  const CSSOM_FSMTable_CSSProperty *table;
   CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *curCSSRule;
 };
@@ -68,7 +68,7 @@ static int startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_ParserStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(stack->fsm);
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(stack->table);
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet_append(stack->styleSheet, cssRule) == NULL) {
@@ -84,19 +84,19 @@ static int startStyleHandler(void *userData,
 
 
 CSSOM* CSSOM_create(const char **properties) {
-  CSSOM_FSM_CSSProperty *fsm;
+  CSSOM_FSMTable_CSSProperty *table;
   CSSOM *cssom;
 
-  fsm = CSSOM_FSM_CSSProperty_alloc(properties);
-  if (fsm == NULL) return NULL;
+  table = CSSOM_FSMTable_CSSProperty_alloc(properties);
+  if (table == NULL) return NULL;
 
   cssom = (CSSOM*)malloc(sizeof(CSSOM));
   if (cssom == NULL) {
-    CSSOM_FSM_CSSProperty_free(fsm);
+    CSSOM_FSMTable_CSSProperty_free(table);
     return NULL;
   }
 
-  cssom->fsm = fsm;
+  cssom->table = table;
 
   return cssom;
 }
@@ -104,7 +104,7 @@ CSSOM* CSSOM_create(const char **properties) {
 
 
 void CSSOM_dispose(CSSOM *cssom) {
-  CSSOM_FSM_CSSProperty_free(cssom->fsm);
+  CSSOM_FSMTable_CSSProperty_free(cssom->table);
   free(cssom);
 }
 
@@ -126,7 +126,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText) {
 
   parserStack.styleSheet = styleSheet;
   parserStack.curCSSRule = NULL;
-  parserStack.fsm = cssom->fsm;
+  parserStack.table = cssom->table;
 
   SAC_SetStyleHandler(parser,startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);

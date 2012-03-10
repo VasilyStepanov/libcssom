@@ -58,11 +58,13 @@ CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(const CSSOM_FSM_CSSProperty *fsm) {
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(
+  const CSSOM_FSMTable_CSSProperty *table)
+{
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
 
-  style = CSSOM_CSSStyleDeclaration_alloc(fsm);
+  style = CSSOM_CSSStyleDeclaration_alloc(table);
   if (style == NULL) return NULL;
 
   cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));

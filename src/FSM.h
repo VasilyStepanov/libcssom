@@ -14,13 +14,18 @@
   \
   \
   \
+  typedef struct _CSSOM_FSMTable_##suffix CSSOM_FSMTable_##suffix; \
+  \
+  CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map); \
+  void CSSOM_FSMTable_##suffix##_free(CSSOM_FSMTable_##suffix *table); \
+  \
   typedef struct _CSSOM_FSM_##suffix CSSOM_FSM_##suffix; \
   typedef CSSOM_FSMItem_##suffix* CSSOM_FSMIter_##suffix; \
   \
-  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc(const char **map); \
+  CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc( \
+    const CSSOM_FSMTable_##suffix *table); \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm); \
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm); \
-  size_t CSSOM_FSM_##suffix##_capacity(const CSSOM_FSM_##suffix *fsm); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_add( \
     CSSOM_FSM_##suffix *fsm, const char *key, T value); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_erase( \

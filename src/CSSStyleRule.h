@@ -7,7 +7,8 @@
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(const CSSOM_FSM_CSSProperty *fsm);
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(
+  const CSSOM_FSMTable_CSSProperty *table);
 
 
 

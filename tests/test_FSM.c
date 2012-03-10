@@ -25,12 +25,13 @@ static void test_FSM_add() {
     NULL
   };
 
+  CSSOM_FSMTable_Int *table;
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  fsm = CSSOM_FSM_Int_alloc(map);
+  table = CSSOM_FSMTable_Int_alloc(map);
 
-  assert(CSSOM_FSM_Int_capacity(fsm) == 4);
+  fsm = CSSOM_FSM_Int_alloc(table);
 
   it = CSSOM_FSM_Int_add(fsm, "a", 1);
   assert(it->value == 1);
@@ -87,6 +88,8 @@ static void test_FSM_add() {
   assert(it == CSSOM_FSM_Int_end(fsm));
 
   CSSOM_FSM_Int_free(fsm);
+
+  CSSOM_FSMTable_Int_free(table);
 }
 
 
@@ -100,10 +103,13 @@ static void test_FSM_iterate() {
     NULL
   };
 
+  CSSOM_FSMTable_Int *table;
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  fsm = CSSOM_FSM_Int_alloc(map);
+  table = CSSOM_FSMTable_Int_alloc(map);
+
+  fsm = CSSOM_FSM_Int_alloc(table);
 
   CSSOM_FSM_Int_add(fsm, "a", 1);
   CSSOM_FSM_Int_add(fsm, "b", 2);
@@ -134,6 +140,8 @@ static void test_FSM_iterate() {
   assert(it == CSSOM_FSM_Int_end(fsm));
 
   CSSOM_FSM_Int_free(fsm);
+
+  CSSOM_FSMTable_Int_free(table);
 }
 
 
@@ -147,10 +155,13 @@ static void test_FSM_order() {
     NULL
   };
 
+  CSSOM_FSMTable_Int *table;
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  fsm = CSSOM_FSM_Int_alloc(map);
+  table = CSSOM_FSMTable_Int_alloc(map);
+
+  fsm = CSSOM_FSM_Int_alloc(table);
 
   CSSOM_FSM_Int_add(fsm, "d", 4);
   CSSOM_FSM_Int_add(fsm, "c", 3);
@@ -255,6 +266,8 @@ static void test_FSM_order() {
   assert(it == CSSOM_FSM_Int_end(fsm));
 
   CSSOM_FSM_Int_free(fsm);
+
+  CSSOM_FSMTable_Int_free(table);
 }
 
 

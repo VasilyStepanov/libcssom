@@ -10,13 +10,19 @@
 
 
 static void test_CSSStyleSheet_append() {
+  const char *map[] = {
+    NULL
+  };
+
+  CSSOM_FSMTable_CSSProperty *table;
   CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *cssRule1, *cssRule2, *cssRule3;
   const CSSOM_CSSRuleList *cssRules;
 
-  cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(NULL);
-  cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(NULL);
-  cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(NULL);
+  table = CSSOM_FSMTable_CSSProperty_alloc(map);
+  cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
+  cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
+  cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
   styleSheet = CSSOM_CSSStyleSheet_alloc(NULL);
 
 
@@ -43,6 +49,7 @@ static void test_CSSStyleSheet_append() {
 
 
   CSSOM_CSSStyleSheet_free(styleSheet);
+  CSSOM_FSMTable_CSSProperty_free(table);
 }
 
 

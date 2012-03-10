@@ -10,7 +10,7 @@
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
-  const CSSOM_FSM_CSSProperty *fsm);
+  const CSSOM_FSMTable_CSSProperty *table);
 
 void CSSOM_CSSStyleDeclaration_free(CSSOM_CSSStyleDeclaration *style);
 

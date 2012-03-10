@@ -14,12 +14,19 @@ struct _CSSOM_CSSStyleDeclaration {
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
-  const CSSOM_FSM_CSSProperty *fsm)
+  const CSSOM_FSMTable_CSSProperty *table)
 {
   CSSOM_CSSStyleDeclaration *style;
+  CSSOM_FSM_CSSProperty *fsm;
+
+  fsm = CSSOM_FSM_CSSProperty_alloc(table);
+  if (fsm == NULL) return NULL;
 
   style = (CSSOM_CSSStyleDeclaration*)malloc(sizeof(CSSOM_CSSStyleDeclaration));
-  if (style == NULL) return NULL;
+  if (style == NULL) {
+    CSSOM_FSM_CSSProperty_free(fsm);
+    return NULL;
+  }
 
   style->fsm = fsm;
   style->length = 0;
