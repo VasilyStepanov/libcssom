@@ -17,9 +17,9 @@
   \
   CSSOM_DEQUE_DEFINE(CSSOM_FSMItem_##suffix, FSMItem_##suffix) \
   \
-  CSSOM_DEQUE_DECLARE(size_t*, FSMTableRow_##suffix) \
+  CSSOM_DEQUE_DECLARE(int*, FSMTableRow_##suffix) \
   \
-  CSSOM_DEQUE_DEFINE(size_t*, FSMTableRow_##suffix) \
+  CSSOM_DEQUE_DEFINE(int*, FSMTableRow_##suffix) \
   \
   CSSOM_VECTOR_DECLARE(CSSOM_DequeIter_FSMItem_##suffix, FSMItemPtr_##suffix) \
   \
@@ -30,7 +30,7 @@
   struct _CSSOM_FSMTable_##suffix { \
     const char **map; \
     CSSOM_Deque_FSMTableRow_##suffix *data; \
-    size_t capacity; \
+    size_t amount; \
   }; \
   \
   \
@@ -38,14 +38,14 @@
   static CSSOM_DequeIter_FSMTableRow_##suffix FSMTableData_##suffix##_append( \
     CSSOM_Deque_FSMTableRow_##suffix *data) \
   { \
-    size_t *row; \
+    int *row; \
     CSSOM_DequeIter_FSMTableRow_##suffix it; \
     \
-    row = (size_t*)malloc(sizeof(size_t) * 256); \
+    row = (int*)malloc(sizeof(int) * 256); \
     if (row == NULL) return CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
     \
-    memset(row, 0, sizeof(size_t) * 256); \
-    row[0] = (size_t)-1; \
+    memset(row, 0, sizeof(int) * 256); \
+    row[0] = -1; \
     \
     it = CSSOM_Deque_FSMTableRow_##suffix##_append(data, row); \
     if (it == CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
@@ -56,7 +56,7 @@
   \
   \
   \
-  static size_t FSMTableData_##suffix##_add( \
+  static int FSMTableData_##suffix##_add( \
     CSSOM_Deque_FSMTableRow_##suffix *data, const char *key, int hash) \
   { \
     const char *ch; \
@@ -64,13 +64,13 @@
     \
     it = CSSOM_Deque_FSMTableRow_##suffix##_begin(data); \
     for (ch = key; *ch != '\0'; ++ch) { \
-      size_t *at; \
+      int *at; \
       \
       at = &(*it)[(size_t)*ch]; \
       if (*at == 0) { \
         it = FSMTableData_##suffix##_append(data); \
         if (it == CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
-          return (size_t)-1; \
+          return -1; \
         \
         *at = CSSOM_Deque_FSMTableRow_##suffix##_size(data) - 1; \
       } else { \
@@ -129,7 +129,7 @@
     { \
       printf("%3d:", i); \
       for (j = 0; j < 256; ++j) \
-        printf("%2u", (*rowit)[j]); \
+        printf("%2d", (*rowit)[j]); \
       printf("\n"); \
     } \
     printf("\n"); \
@@ -141,7 +141,7 @@
   CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map) { \
     CSSOM_Deque_FSMTableRow_##suffix *data; \
     CSSOM_FSMTable_##suffix *table; \
-    size_t capacity; \
+    size_t amount; \
     const char **it; \
     \
     data = CSSOM_Deque_FSMTableRow_##suffix##_alloc(0); \
@@ -154,11 +154,11 @@
       return NULL; \
     } \
     \
-    for (it = map, capacity = 0; *it != NULL; ++it, ++capacity) { \
-      size_t index; \
+    for (it = map, amount = 0; *it != NULL; ++it, ++amount) { \
+      int index; \
       \
-      index = FSMTableData_##suffix##_add(data, *it, capacity); \
-      if (index == (size_t)-1) { \
+      index = FSMTableData_##suffix##_add(data, *it, amount); \
+      if (index == -1) { \
         FSMTableData_##suffix##_free(data); \
         return NULL; \
       } \
@@ -172,7 +172,7 @@
     \
     table->map = map; \
     table->data = data; \
-    table->capacity = capacity; \
+    table->amount = amount; \
     \
     dump_table(table); \
     \
@@ -188,55 +188,84 @@
   \
   \
   \
-  static size_t FSMTable_##suffix##_capacity( \
+  static size_t FSMTable_##suffix##_amount( \
     const CSSOM_FSMTable_##suffix *table) \
   { \
-    return table->capacity; \
+    return table->amount; \
+  } \
+  \
+  \
+  \
+  static size_t FSMTable_##suffix##_size( \
+    const CSSOM_FSMTable_##suffix *table) \
+  { \
+    return CSSOM_Deque_FSMTableRow_##suffix##_size(table->data); \
   } \
   \
   \
   \
   static int FSMTable_##suffix##_find( \
-    const CSSOM_FSMTable_##suffix *table, const char *key) \
+    const CSSOM_FSMTable_##suffix *table, int *state, const char *key) \
   { \
-    const char **it; \
-    int index; \
+    const char *ch; \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
     \
-    for (it = table->map, index = 0; *it != NULL; ++it, ++index) { \
-      if (strcasecmp(*it, key) == 0) return index; \
+    it = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data); \
+    for (ch = key; *ch != '\0'; ++ch) { \
+      int *at; \
+      \
+      at = &(*it)[(size_t)*ch]; \
+      if (*at == 0) return -1; \
+      if (state[*at] == 0) return -1; \
+      \
+      it = CSSOM_Deque_FSMTableRow_##suffix##_at(table->data, *at); \
     } \
     \
-    return -1; \
+    return (*it)[0]; \
   } \
   \
   \
   \
   static int FSMTable_##suffix##_add( \
-    const CSSOM_FSMTable_##suffix *table, const char *key) \
+    const CSSOM_FSMTable_##suffix *table, int *state, const char *key) \
   { \
-    const char **it; \
-    int index; \
+    const char *ch; \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
     \
-    for (it = table->map, index = 0; *it != NULL; ++it, ++index) { \
-      if (strcasecmp(*it, key) == 0) return index; \
+    it = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data); \
+    for (ch = key; *ch != '\0'; ++ch) { \
+      int *at; \
+      \
+      at = &(*it)[(size_t)*ch]; \
+      if (*at == 0) return -1; \
+      ++state[*at]; \
+      \
+      it = CSSOM_Deque_FSMTableRow_##suffix##_at(table->data, *at); \
     } \
     \
-    return -1; \
+    return (*it)[0]; \
   } \
   \
   \
   \
   static int FSMTable_##suffix##_remove( \
-    const CSSOM_FSMTable_##suffix *table, const char *key) \
+    const CSSOM_FSMTable_##suffix *table, int *state, const char *key) \
   { \
-    const char **it; \
-    int index; \
+    const char *ch; \
+    CSSOM_DequeIter_FSMTableRow_##suffix it; \
     \
-    for (it = table->map, index = 0; *it != NULL; ++it, ++index) { \
-      if (strcasecmp(*it, key) == 0) return index; \
+    it = CSSOM_Deque_FSMTableRow_##suffix##_begin(table->data); \
+    for (ch = key; *ch != '\0'; ++ch) { \
+      int *at; \
+      \
+      at = &(*it)[(size_t)*ch]; \
+      if (*at == 0) return -1; \
+      --state[*at]; \
+      \
+      it = CSSOM_Deque_FSMTableRow_##suffix##_at(table->data, *at); \
     } \
     \
-    return -1; \
+    return (*it)[0]; \
   } \
   \
   \
@@ -251,6 +280,7 @@
   \
   struct _CSSOM_FSM_##suffix { \
     const CSSOM_FSMTable_##suffix *table; \
+    int *state; \
     CSSOM_Vector_FSMItemPtr_##suffix *refs; \
     CSSOM_Deque_FSMItem_##suffix *data; \
   }; \
@@ -260,19 +290,29 @@
   CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc( \
     const CSSOM_FSMTable_##suffix *table) \
   { \
+    int *state; \
     CSSOM_Vector_FSMItemPtr_##suffix *refs; \
     CSSOM_Deque_FSMItem_##suffix *data; \
     CSSOM_FSM_##suffix *fsm; \
     CSSOM_VectorIter_FSMItemPtr_##suffix refsit; \
     \
+    state = (int*)malloc(sizeof(int) * FSMTable_##suffix##_size(table)); \
+    if (state == NULL) return NULL; \
+    \
+    memset(state, 0, sizeof(int) * FSMTable_##suffix##_size(table)); \
+    \
     refs = CSSOM_Vector_FSMItemPtr_##suffix##_alloc( \
-      FSMTable_##suffix##_capacity(table)); \
-    if (refs == NULL) return NULL; \
+      FSMTable_##suffix##_amount(table)); \
+    if (refs == NULL) { \
+      free(state); \
+      return NULL; \
+    } \
     \
     data = CSSOM_Deque_FSMItem_##suffix##_alloc_ex(0, \
-      FSMTable_##suffix##_capacity(table)); \
+      FSMTable_##suffix##_amount(table)); \
     if (data == NULL) { \
       CSSOM_Vector_FSMItemPtr_##suffix##_free(refs); \
+      free(state); \
       return NULL; \
     } \
     \
@@ -280,6 +320,7 @@
     if (fsm == NULL) { \
       CSSOM_Vector_FSMItemPtr_##suffix##_free(refs); \
       CSSOM_Deque_FSMItem_##suffix##_free(data); \
+      free(state); \
       return NULL; \
     } \
     \
@@ -292,6 +333,7 @@
     } \
     \
     fsm->table = table; \
+    fsm->state = state; \
     fsm->refs = refs; \
     fsm->data = data; \
     \
@@ -303,6 +345,7 @@
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm) { \
     CSSOM_Deque_FSMItem_##suffix##_free(fsm->data); \
     CSSOM_Vector_FSMItemPtr_##suffix##_free(fsm->refs); \
+    free(fsm->state); \
     free(fsm); \
   } \
   \
@@ -340,7 +383,7 @@
     int hash; \
     CSSOM_VectorIter_FSMItemPtr_##suffix at; \
     \
-    hash = FSMTable_##suffix##_find(fsm->table, key); \
+    hash = FSMTable_##suffix##_find(fsm->table, fsm->state, key); \
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
     at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
@@ -360,7 +403,7 @@
     CSSOM_VectorIter_FSMItemPtr_##suffix at; \
     CSSOM_DequeIter_FSMItem_##suffix itemit; \
     \
-    hash = FSMTable_##suffix##_add(fsm->table, key); \
+    hash = FSMTable_##suffix##_add(fsm->table, fsm->state, key); \
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
     item.key = FSMTable_##suffix##_key(fsm->table, hash); \
@@ -389,7 +432,7 @@
     CSSOM_VectorIter_FSMItemPtr_##suffix at; \
     CSSOM_DequeIter_FSMItem_##suffix erase; \
     \
-    hash = FSMTable_##suffix##_remove(fsm->table, position->key); \
+    hash = FSMTable_##suffix##_remove(fsm->table, fsm->state, position->key); \
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
     at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
