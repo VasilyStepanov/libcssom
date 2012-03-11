@@ -171,6 +171,8 @@ void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property) {
 
 void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name) {
   property->name = name;
+  free(property->cssText);
+  property->cssText = NULL;
 }
 
 

@@ -1,15 +1,16 @@
 #include "CSSStyleDeclaration.h"
 
 #include "CSSProperty.h"
+#include "CSSEmitter.h"
 
+#include <stdio.h>
 #include <stdlib.h>
-
-#include "gcc.h"
 
 
 
 struct _CSSOM_CSSStyleDeclaration {
   CSSOM_FSM_CSSProperty *fsm;
+  char *cssText;
 };
 
 
@@ -30,6 +31,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   }
 
   style->fsm = fsm;
+  style->cssText = NULL;
 
   return style;
 }
@@ -47,6 +49,7 @@ void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
     CSSOM_CSSProperty__free(it->value);
   }
 
+  free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
   free(style);
 }
@@ -76,6 +79,9 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
     CSSOM_CSSProperty__free(prop);
     return NULL;
   }
+
+  free(style->cssText);
+  style->cssText = NULL;
 
   CSSOM_CSSProperty__setName(prop, it->key);
 
@@ -108,4 +114,40 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
   if (CSSOM_CSSProperty_important(it->value) == 0) return "";
 
   return "important";
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cssText(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  if (style->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+    CSSOM_FSMConstIter_CSSProperty it;
+
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    it = CSSOM_FSM_CSSProperty_cbegin(style->fsm);
+    if (it != CSSOM_FSM_CSSProperty_cend(style->fsm)) {
+      CSSOM_CSSEmitter_cssProperty(out, it->value);
+      fprintf(out, ";");
+      for (
+        it = CSSOM_FSMConstIter_CSSProperty_next(it);
+        it != CSSOM_FSM_CSSProperty_cend(style->fsm);
+        it = CSSOM_FSMConstIter_CSSProperty_next(it))
+      {
+        fprintf(out, " ");
+        CSSOM_CSSEmitter_cssProperty(out, it->value);
+        fprintf(out, ";");
+      }
+    }
+
+    if (fclose(out) != 0) return NULL;
+
+    ((CSSOM_CSSStyleDeclaration*)style)->cssText = buf;
+  }
+  return style->cssText;
 }

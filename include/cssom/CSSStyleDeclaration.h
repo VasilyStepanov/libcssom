@@ -20,6 +20,9 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
 const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
   const CSSOM_CSSStyleDeclaration *style, const char *property);
 
+const char* CSSOM_CSSStyleDeclaration_cssText(
+  const CSSOM_CSSStyleDeclaration *style);
+
 
 
 #ifdef __cplusplus
