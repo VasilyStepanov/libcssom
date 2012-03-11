@@ -135,6 +135,7 @@ const char *CSSOM_CSSProperties[] = {
 struct _CSSOM_CSSProperty {
   const char *name;
   const SAC_LexicalUnit *value;
+  char *cssText;
   SAC_Boolean important;
 };
 
@@ -150,6 +151,7 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
 
   property->value = value;
   property->important = important;
+  property->cssText = NULL;
 
   return property;
 }
@@ -157,6 +159,7 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
 
 
 void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property) {
+  free(property->cssText);
   free(property);
 }
 
