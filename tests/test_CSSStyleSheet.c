@@ -20,15 +20,15 @@ static void test_CSSStyleSheet_append() {
   const CSSOM_CSSRuleList *cssRules;
 
   table = CSSOM_FSMTable_CSSProperty_alloc(map);
-  cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
-  cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
-  cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(table);
-  styleSheet = CSSOM_CSSStyleSheet_alloc(NULL);
+  cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
+  cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
+  cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
+  styleSheet = CSSOM_CSSStyleSheet__alloc(NULL);
 
 
 
-  CSSOM_CSSStyleSheet_append(styleSheet, cssRule1);
-  CSSOM_CSSStyleSheet_append(styleSheet, cssRule2);
+  CSSOM_CSSStyleSheet__append(styleSheet, cssRule1);
+  CSSOM_CSSStyleSheet__append(styleSheet, cssRule2);
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
   assert(cssRules[0] == cssRule1);
@@ -38,7 +38,7 @@ static void test_CSSStyleSheet_append() {
 
 
 
-  CSSOM_CSSStyleSheet_append(styleSheet, cssRule3);
+  CSSOM_CSSStyleSheet__append(styleSheet, cssRule3);
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
   assert(cssRules[0] == cssRule1);
   assert(cssRules[1] == cssRule2);

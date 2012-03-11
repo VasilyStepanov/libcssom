@@ -9,12 +9,12 @@
 
 
 
-CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   const CSSOM_FSMTable_CSSProperty *table);
 
-void CSSOM_CSSStyleDeclaration_free(CSSOM_CSSStyleDeclaration *style);
+void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style);
 
-void CSSOM_CSSStyleDeclaration_append(CSSOM_CSSStyleDeclaration *style,
+void CSSOM_CSSStyleDeclaration__append(CSSOM_CSSStyleDeclaration *style,
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
 
 

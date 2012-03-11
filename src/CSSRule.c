@@ -30,7 +30,7 @@ struct _CSSOM_CSSStyleRule {
 
 
 static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
-  CSSOM_CSSStyleDeclaration_free(cssRule->style);
+  CSSOM_CSSStyleDeclaration__free(cssRule->style);
   free(cssRule);
 }
 
@@ -46,7 +46,7 @@ static void CSSOM_CSSRule_init(CSSOM_CSSRule *cssRule, CSSOM_CSSRuleType type) {
 
 
 
-void CSSOM_CSSRule_free(CSSOM_CSSRule *cssRule) {
+void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule) {
   cssRule->vtable->free(cssRule);
 }
 
@@ -58,18 +58,18 @@ CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule_alloc(
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   const CSSOM_FSMTable_CSSProperty *table)
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
 
-  style = CSSOM_CSSStyleDeclaration_alloc(table);
+  style = CSSOM_CSSStyleDeclaration__alloc(table);
   if (style == NULL) return NULL;
 
   cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration_free(style);
+    CSSOM_CSSStyleDeclaration__free(style);
     return NULL;
   }
 

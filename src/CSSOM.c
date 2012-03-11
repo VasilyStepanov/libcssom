@@ -42,7 +42,7 @@ static int propertyHandler(void *userData,
   stack = (struct _CSSOM_ParserStack*)userData;
   style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->curCSSRule);
 
-  CSSOM_CSSStyleDeclaration_append(style, propertyName, value, important);
+  CSSOM_CSSStyleDeclaration__append(style, propertyName, value, important);
 
   return 0;
 }
@@ -71,11 +71,11 @@ static int startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_ParserStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule_alloc(stack->table);
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->table);
   if (cssRule == NULL) return 1;
 
-  if (CSSOM_CSSStyleSheet_append(stack->styleSheet, cssRule) == NULL) {
-    CSSOM_CSSRule_free(cssRule);
+  if (CSSOM_CSSStyleSheet__append(stack->styleSheet, cssRule) == NULL) {
+    CSSOM_CSSRule__free(cssRule);
     return 1;
   }
 
@@ -166,7 +166,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText) {
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  styleSheet = CSSOM_CSSStyleSheet_alloc(parser);
+  styleSheet = CSSOM_CSSStyleSheet__alloc(parser);
   if (styleSheet == NULL) {
     SAC_DisposeParser(parser);
     return NULL;

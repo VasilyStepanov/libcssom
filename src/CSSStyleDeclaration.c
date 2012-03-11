@@ -13,7 +13,7 @@ struct _CSSOM_CSSStyleDeclaration {
 
 
 
-CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   const CSSOM_FSMTable_CSSProperty *table)
 {
   CSSOM_CSSStyleDeclaration *style;
@@ -36,7 +36,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration_alloc(
 
 
 
-void CSSOM_CSSStyleDeclaration_free(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
   free(style);
 }
 
@@ -50,7 +50,7 @@ unsigned long CSSOM_CSSStyleDeclaration_length(
 
 
 
-void CSSOM_CSSStyleDeclaration_append(CSSOM_CSSStyleDeclaration *style,
+void CSSOM_CSSStyleDeclaration__append(CSSOM_CSSStyleDeclaration *style,
   const char *property CSSOM_UNUSED,
   const SAC_LexicalUnit *value CSSOM_UNUSED,
   SAC_Boolean important CSSOM_UNUSED)

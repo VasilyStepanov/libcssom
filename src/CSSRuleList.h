@@ -7,10 +7,10 @@
 
 
 
-CSSOM_CSSRuleList* CSSOM_CSSRuleList_realloc(CSSOM_CSSRuleList *cssRules,
+CSSOM_CSSRuleList* CSSOM_CSSRuleList__realloc(CSSOM_CSSRuleList *cssRules,
   CSSOM_List_CSSRule *list);
 
-void CSSOM_CSSRuleList_free(CSSOM_CSSRuleList *cssRules);
+void CSSOM_CSSRuleList__free(CSSOM_CSSRuleList *cssRules);
 
 
 
