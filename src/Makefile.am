@@ -18,7 +18,8 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSRule.h \
                       $(top_srcdir)/include/cssom/CSSRuleList.h \
                       $(top_srcdir)/include/cssom/CSSStyleSheet.h
 
-libcssom_la_SOURCES = CSSOM.c \
+libcssom_la_SOURCES = CSSEmitter.c \
+                      CSSOM.c \
                       CSSProperty.c \
                       CSSRule.c \
                       CSSRuleList.c \
