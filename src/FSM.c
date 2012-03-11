@@ -30,6 +30,7 @@
     const char **map; \
     CSSOM_Deque_FSMTableRow_##suffix *data; \
     size_t amount; \
+    void (*release)(T value); \
   }; \
   \
   \
@@ -114,7 +115,9 @@
   \
   \
   \
-  CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map) { \
+  CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc( \
+    const char **map, void (*release)(T value)) \
+  { \
     CSSOM_Deque_FSMTableRow_##suffix *data; \
     CSSOM_FSMTable_##suffix *table; \
     size_t amount; \
@@ -149,6 +152,7 @@
     table->map = map; \
     table->data = data; \
     table->amount = amount; \
+    table->release = release; \
     \
     return table; \
   } \
@@ -158,6 +162,14 @@
   void CSSOM_FSMTable_##suffix##_free(CSSOM_FSMTable_##suffix *table) { \
     FSMTableData_##suffix##_free(table->data); \
     free(table); \
+  } \
+  \
+  \
+  \
+  static void CSSOM_FSMTable_##suffix##_release( \
+    const CSSOM_FSMTable_##suffix *table, T *value) \
+  { \
+    if (table->release != NULL) table->release(*value); \
   } \
   \
   \
@@ -419,8 +431,10 @@
       return CSSOM_FSM_##suffix##_end(fsm); \
     \
     at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
-    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
+    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) { \
+      CSSOM_FSMTable_##suffix##_release(fsm->table, &(**at).value); \
       CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, *at); \
+    } \
     \
     *at = itemit; \
     \
@@ -443,6 +457,8 @@
     \
     erase = *at; \
     *at = CSSOM_Deque_FSMItem_##suffix##_end(fsm->data); \
+    \
+    CSSOM_FSMTable_##suffix##_release(fsm->table, &erase->value); \
     \
     return (CSSOM_FSMIter_##suffix) \
       CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, erase); \

@@ -1,8 +1,9 @@
 #include "test_CSSStyleSheet.h"
 
-#include "src/CSSStyleSheet.h"
+#include "src/CSSProperty.h"
 #include "src/CSSRule.h"
 #include "src/CSSStyleRule.h"
+#include "src/CSSStyleSheet.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -19,7 +20,7 @@ static void test_CSSStyleSheet_append() {
   CSSOM_CSSRule *cssRule1, *cssRule2, *cssRule3;
   const CSSOM_CSSRuleList *cssRules;
 
-  table = CSSOM_FSMTable_CSSProperty_alloc(map);
+  table = CSSOM_FSMTable_CSSProperty_alloc(map, CSSOM_CSSProperty__free);
   cssRule1 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
   cssRule2 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
   cssRule3 = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);

@@ -1,5 +1,6 @@
 #include "test_CSSRule.h"
 
+#include "src/CSSProperty.h"
 #include "src/CSSRule.h"
 #include "src/CSSStyleRule.h"
 
@@ -12,7 +13,8 @@ static void test_CSSRule_alloc() {
     NULL
   };
 
-  CSSOM_FSMTable_CSSProperty *table = CSSOM_FSMTable_CSSProperty_alloc(map);
+  CSSOM_FSMTable_CSSProperty *table = CSSOM_FSMTable_CSSProperty_alloc(
+    map, CSSOM_CSSProperty__free);
   CSSOM_CSSRule *cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(table);
 
   assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);

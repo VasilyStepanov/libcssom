@@ -1,13 +1,12 @@
 #include <cssom/CSSOM.h>
 
+#include "CSSProperty.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
 #include "FSM_CSSProperty.h"
 #include "gcc.h"
-
-#include <cssom/CSSProperty.h>
 
 #include <sacc.h>
 
@@ -132,7 +131,7 @@ CSSOM* CSSOM_create(const char **properties) {
     propertiesCopy = (char**)properties;
   }
 
-  table = CSSOM_FSMTable_CSSProperty_alloc(properties);
+  table = CSSOM_FSMTable_CSSProperty_alloc(properties, CSSOM_CSSProperty__free);
   if (table == NULL) {
     freeProperties(propertiesCopy);
     return NULL;

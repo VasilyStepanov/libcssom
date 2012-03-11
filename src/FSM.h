@@ -16,7 +16,8 @@
   \
   typedef struct _CSSOM_FSMTable_##suffix CSSOM_FSMTable_##suffix; \
   \
-  CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc(const char **map); \
+  CSSOM_FSMTable_##suffix* CSSOM_FSMTable_##suffix##_alloc( \
+    const char **map, void (*release)(T value)); \
   void CSSOM_FSMTable_##suffix##_free(CSSOM_FSMTable_##suffix *table); \
   \
   typedef struct _CSSOM_FSM_##suffix CSSOM_FSM_##suffix; \
