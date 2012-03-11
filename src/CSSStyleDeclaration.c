@@ -85,8 +85,12 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
 
 
 const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
-  const CSSOM_CSSStyleDeclaration *style CSSOM_UNUSED,
-  const char *property CSSOM_UNUSED)
+  const CSSOM_CSSStyleDeclaration *style, const char *property)
 {
-  return "green";
+  CSSOM_FSMIter_CSSProperty it;
+
+  it = CSSOM_FSM_CSSProperty_find(style->fsm, property);
+  if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) return NULL;
+
+  return CSSOM_CSSProperty_cssText(it->value);
 }

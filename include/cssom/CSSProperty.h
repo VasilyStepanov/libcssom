@@ -142,6 +142,10 @@ typedef struct _CSSOM_CSSProperty CSSOM_CSSProperty;
 
 
 
+const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property);
+
+
+
 #ifdef __cplusplus
 }
 #endif
