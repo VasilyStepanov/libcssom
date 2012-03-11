@@ -1,4 +1,4 @@
-#include <cssom/CSSProperty.h>
+#include "CSSProperty.h"
 
 #include <stdlib.h>
 
@@ -129,3 +129,26 @@ const char *CSSOM_CSSProperties[] = {
   "z-index",
   NULL
 };
+
+
+
+struct _CSSOM_CSSProperty {
+  int dummy;
+};
+
+
+
+CSSOM_CSSProperty* CSSOM_CSSProperty__alloc() {
+  CSSOM_CSSProperty *property;
+
+  property = (CSSOM_CSSProperty*)malloc(sizeof(CSSOM_CSSProperty));
+  if (property == NULL) return NULL;
+
+  return property;
+}
+
+
+
+void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property) {
+  free(property);
+}

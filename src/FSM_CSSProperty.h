@@ -3,9 +3,11 @@
 
 #include "FSM.h"
 
+#include <cssom/CSSProperty.h>
 
 
-CSSOM_FSM_DECLARE(int, CSSProperty)
+
+CSSOM_FSM_DECLARE(CSSOM_CSSProperty*, CSSProperty)
 
 
 

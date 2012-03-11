@@ -138,6 +138,10 @@ extern const char *CSSOM_CSSProperties[];
 
 
 
+typedef struct _CSSOM_CSSProperty CSSOM_CSSProperty;
+
+
+
 #ifdef __cplusplus
 }
 #endif
