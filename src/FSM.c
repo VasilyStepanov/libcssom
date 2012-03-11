@@ -327,7 +327,8 @@
   \
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm) { \
     return CSSOM_Deque_FSMItem_##suffix##_size(fsm->data); \
-  }  \
+  } \
+  \
   \
   \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_begin(CSSOM_FSM_##suffix *fsm) { \
@@ -338,7 +339,23 @@
   \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_end(CSSOM_FSM_##suffix *fsm) { \
     return CSSOM_Deque_FSMItem_##suffix##_end(fsm->data); \
-  }  \
+  } \
+  \
+  \
+  \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSM_##suffix##_cbegin( \
+    const CSSOM_FSM_##suffix *fsm) \
+  { \
+    return CSSOM_Deque_FSMItem_##suffix##_cbegin(fsm->data); \
+  } \
+  \
+  \
+  \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSM_##suffix##_cend( \
+    const CSSOM_FSM_##suffix *fsm) \
+  { \
+    return CSSOM_Deque_FSMItem_##suffix##_cend(fsm->data); \
+  } \
   \
   \
   \
@@ -347,6 +364,15 @@
   { \
     return CSSOM_DequeIter_FSMItem_##suffix##_next( \
       (CSSOM_DequeIter_FSMItem_##suffix)iter); \
+  } \
+  \
+  \
+  \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSMConstIter_##suffix##_next( \
+    CSSOM_FSMConstIter_##suffix iter) \
+  { \
+    return CSSOM_DequeConstIter_FSMItem_##suffix##_next( \
+      (CSSOM_DequeConstIter_FSMItem_##suffix)iter); \
   } \
   \
   \

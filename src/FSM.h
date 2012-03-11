@@ -21,6 +21,7 @@
   \
   typedef struct _CSSOM_FSM_##suffix CSSOM_FSM_##suffix; \
   typedef CSSOM_FSMItem_##suffix* CSSOM_FSMIter_##suffix; \
+  typedef const CSSOM_FSMItem_##suffix* CSSOM_FSMConstIter_##suffix; \
   \
   CSSOM_FSM_##suffix* CSSOM_FSM_##suffix##_alloc( \
     const CSSOM_FSMTable_##suffix *table); \
@@ -36,9 +37,15 @@
     CSSOM_FSM_##suffix *fsm, const char *key); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_begin(CSSOM_FSM_##suffix *fsm); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_end(CSSOM_FSM_##suffix *fsm); \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSM_##suffix##_cbegin( \
+    const CSSOM_FSM_##suffix *fsm); \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSM_##suffix##_cend( \
+    const CSSOM_FSM_##suffix *fsm); \
   \
   CSSOM_FSMIter_##suffix CSSOM_FSMIter_##suffix##_next( \
-    CSSOM_FSMIter_##suffix iter);
+    CSSOM_FSMIter_##suffix iter); \
+  CSSOM_FSMConstIter_##suffix CSSOM_FSMConstIter_##suffix##_next( \
+    CSSOM_FSMConstIter_##suffix iter);
 
 
 
