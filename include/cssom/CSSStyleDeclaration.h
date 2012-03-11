@@ -17,6 +17,9 @@ unsigned long CSSOM_CSSStyleDeclaration_length(
 const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
   const CSSOM_CSSStyleDeclaration *style, const char *property);
 
+int CSSOM_CSSStyleDeclaration_getPropertyPriority(
+  const CSSOM_CSSStyleDeclaration *style, const char *property);
+
 
 
 #ifdef __cplusplus

@@ -365,3 +365,9 @@ const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property) {
   }
   return property->cssText;
 }
+
+
+
+int CSSOM_CSSProperty_priority(const CSSOM_CSSProperty *property) {
+  return property->important == SAC_TRUE ? 1 : 0;
+}

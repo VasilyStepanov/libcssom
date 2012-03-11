@@ -94,3 +94,16 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
 
   return CSSOM_CSSProperty_cssText(it->value);
 }
+
+
+
+int CSSOM_CSSStyleDeclaration_getPropertyPriority(
+  const CSSOM_CSSStyleDeclaration *style, const char *property)
+{
+  CSSOM_FSMIter_CSSProperty it;
+
+  it = CSSOM_FSM_CSSProperty_find(style->fsm, property);
+  if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) return 0;
+
+  return CSSOM_CSSProperty_priority(it->value);
+}
