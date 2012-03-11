@@ -8,6 +8,7 @@
 #define CSSOM_DEQUE_DECLARE(T, suffix) \
   typedef struct _CSSOM_Deque_##suffix CSSOM_Deque_##suffix; \
   typedef T* CSSOM_DequeIter_##suffix; \
+  typedef T const * CSSOM_DequeConstIter_##suffix; \
   \
   CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc(size_t size); \
   CSSOM_Deque_##suffix* CSSOM_Deque_##suffix##_alloc_ex(size_t size, \
@@ -24,11 +25,17 @@
     CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_end( \
     CSSOM_Deque_##suffix *deque); \
+  CSSOM_DequeConstIter_##suffix CSSOM_Deque_##suffix##_cbegin( \
+    const CSSOM_Deque_##suffix *deque); \
+  CSSOM_DequeConstIter_##suffix CSSOM_Deque_##suffix##_cend( \
+    const CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_at( \
     CSSOM_Deque_##suffix *deque, size_t index); \
   \
   CSSOM_DequeIter_##suffix CSSOM_DequeIter_##suffix##_next( \
-    CSSOM_DequeIter_##suffix iter);
+    CSSOM_DequeIter_##suffix iter); \
+  CSSOM_DequeConstIter_##suffix CSSOM_DequeConstIter_##suffix##_next( \
+    CSSOM_DequeConstIter_##suffix iter);
 
 
 

@@ -252,6 +252,22 @@
   \
   \
   \
+  CSSOM_DequeConstIter_##suffix CSSOM_Deque_##suffix##_cbegin( \
+    const CSSOM_Deque_##suffix *deque) \
+  { \
+    return (CSSOM_DequeConstIter_##suffix)deque->head->next; \
+  } \
+  \
+  \
+  \
+  CSSOM_DequeConstIter_##suffix CSSOM_Deque_##suffix##_cend( \
+    const CSSOM_Deque_##suffix *deque) \
+  { \
+    return (CSSOM_DequeConstIter_##suffix)deque->tail->next; \
+  } \
+  \
+  \
+  \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_at( \
     CSSOM_Deque_##suffix *deque, size_t index) \
   { \
@@ -265,5 +281,14 @@
     CSSOM_DequeIter_##suffix iter) \
   { \
     return (CSSOM_DequeIter_##suffix) \
+      ((struct _CSSOM_DequeItem_##suffix*)iter)->next; \
+  } \
+  \
+  \
+  \
+  CSSOM_DequeConstIter_##suffix CSSOM_DequeConstIter_##suffix##_next( \
+    CSSOM_DequeConstIter_##suffix iter) \
+  { \
+    return (CSSOM_DequeConstIter_##suffix) \
       ((struct _CSSOM_DequeItem_##suffix*)iter)->next; \
   }
