@@ -38,11 +38,14 @@ static int propertyHandler(void *userData,
 {
   struct _CSSOM_ParserStack *stack;
   CSSOM_CSSStyleDeclaration *style;
+  CSSOM_CSSProperty *property;
   
   stack = (struct _CSSOM_ParserStack*)userData;
   style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->curCSSRule);
 
-  CSSOM_CSSStyleDeclaration__append(style, propertyName, value, important);
+  property = CSSOM_CSSStyleDeclaration__setProperty(style,
+    propertyName, value, important);
+  if (property == NULL) return 1;
 
   return 0;
 }

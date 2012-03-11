@@ -1,5 +1,7 @@
 #include "CSSStyleDeclaration.h"
 
+#include "CSSProperty.h"
+
 #include <stdlib.h>
 
 #include "gcc.h"
@@ -7,8 +9,7 @@
 
 
 struct _CSSOM_CSSStyleDeclaration {
-  const CSSOM_FSM_CSSProperty *fsm;
-  unsigned long length;
+  CSSOM_FSM_CSSProperty *fsm;
 };
 
 
@@ -29,7 +30,6 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   }
 
   style->fsm = fsm;
-  style->length = 0;
 
   return style;
 }
@@ -37,6 +37,17 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
+  CSSOM_FSMIter_CSSProperty it;
+
+  for (
+    it = CSSOM_FSM_CSSProperty_begin(style->fsm);
+    it != CSSOM_FSM_CSSProperty_end(style->fsm);
+    it = CSSOM_FSMIter_CSSProperty_next(it))
+  {
+    CSSOM_CSSProperty__free(it->value);
+  }
+
+  CSSOM_FSM_CSSProperty_free(style->fsm);
   free(style);
 }
 
@@ -45,17 +56,30 @@ void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
 unsigned long CSSOM_CSSStyleDeclaration_length(
   const CSSOM_CSSStyleDeclaration *style)
 {
-  return style->length;
+  return CSSOM_FSM_CSSProperty_size(style->fsm);
 }
 
 
 
-void CSSOM_CSSStyleDeclaration__append(CSSOM_CSSStyleDeclaration *style,
-  const char *property CSSOM_UNUSED,
-  const SAC_LexicalUnit *value CSSOM_UNUSED,
-  SAC_Boolean important CSSOM_UNUSED)
+CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
+  CSSOM_CSSStyleDeclaration *style,
+  const char *property, const SAC_LexicalUnit *value, SAC_Boolean important)
 {
-  ++style->length;
+  CSSOM_CSSProperty *prop;
+  CSSOM_FSMIter_CSSProperty it;
+
+  prop = CSSOM_CSSProperty__alloc(value, important);
+  if (prop == NULL) return NULL;
+
+  it = CSSOM_FSM_CSSProperty_add(style->fsm, property, prop);
+  if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) {
+    CSSOM_CSSProperty__free(prop);
+    return NULL;
+  }
+
+  CSSOM_CSSProperty__setName(prop, it->key);
+
+  return prop;
 }
 
 

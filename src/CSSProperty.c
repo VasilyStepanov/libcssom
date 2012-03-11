@@ -133,16 +133,23 @@ const char *CSSOM_CSSProperties[] = {
 
 
 struct _CSSOM_CSSProperty {
-  int dummy;
+  const char *name;
+  const SAC_LexicalUnit *value;
+  SAC_Boolean important;
 };
 
 
 
-CSSOM_CSSProperty* CSSOM_CSSProperty__alloc() {
+CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
+  const SAC_LexicalUnit *value, SAC_Boolean important)
+{
   CSSOM_CSSProperty *property;
 
   property = (CSSOM_CSSProperty*)malloc(sizeof(CSSOM_CSSProperty));
   if (property == NULL) return NULL;
+
+  property->value = value;
+  property->important = important;
 
   return property;
 }
@@ -151,4 +158,10 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc() {
 
 void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property) {
   free(property);
+}
+
+
+
+void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name) {
+  property->name = name;
 }
