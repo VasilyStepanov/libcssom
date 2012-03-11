@@ -182,5 +182,5 @@ void CSSOM_CSSEmitter_cssProperty(FILE *out,
 {
   fprintf(out, "%s : %s",
     CSSOM_CSSProperty_name(property), CSSOM_CSSProperty_cssText(property));
-  if (CSSOM_CSSProperty_priority(property)) fprintf(out, "!important");
+  if (CSSOM_CSSProperty_important(property)) fprintf(out, "!important");
 }

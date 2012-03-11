@@ -97,13 +97,15 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
 
 
 
-int CSSOM_CSSStyleDeclaration_getPropertyPriority(
+const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
   const CSSOM_CSSStyleDeclaration *style, const char *property)
 {
   CSSOM_FSMIter_CSSProperty it;
 
   it = CSSOM_FSM_CSSProperty_find(style->fsm, property);
-  if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) return 0;
+  if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) return "";
 
-  return CSSOM_CSSProperty_priority(it->value);
+  if (CSSOM_CSSProperty_important(it->value) == 0) return "";
+
+  return "important";
 }

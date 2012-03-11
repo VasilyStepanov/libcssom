@@ -144,7 +144,9 @@ typedef struct _CSSOM_CSSProperty CSSOM_CSSProperty;
 
 const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property);
 
-int CSSOM_CSSProperty_priority(const CSSOM_CSSProperty *property);
+const char* CSSOM_CSSProperty_name(const CSSOM_CSSProperty *property);
+
+int CSSOM_CSSProperty_important(const CSSOM_CSSProperty *property);
 
 
 

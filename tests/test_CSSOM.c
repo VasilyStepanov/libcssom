@@ -37,7 +37,8 @@ static void test_CSSOM_basics() {
 
   ASSERT_EQUAL_STRINGS("green",
     CSSOM_CSSStyleDeclaration_getPropertyValue(style, "color"));
-  assert(CSSOM_CSSStyleDeclaration_getPropertyPriority(style, "color") == 0);
+  ASSERT_EQUAL_STRINGS("",
+    CSSOM_CSSStyleDeclaration_getPropertyPriority(style, "color"));
 
   CSSOM_CSSStyleSheet_free(styleSheet);
   CSSOM_dispose(cssom);
