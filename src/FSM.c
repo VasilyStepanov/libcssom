@@ -64,14 +64,26 @@
     it = CSSOM_Deque_FSMTableRow_##suffix##_begin(data); \
     for (ch = key; *ch != '\0'; ++ch) { \
       int *at; \
+      int *AT; \
       \
-      at = &(*it)[(size_t)*ch]; \
+      if (*ch >= 'a' && *ch <= 'z') { \
+        at = &(*it)[(size_t)*ch]; \
+        AT = &(*it)[(size_t)('A' + *ch - 'a')]; \
+      } else if (*ch >= 'A' && *ch <= 'Z') { \
+        at = &(*it)[(size_t)('a' + *ch - 'A')]; \
+        AT = &(*it)[(size_t)*ch]; \
+      } else { \
+        at = &(*it)[(size_t)*ch]; \
+        AT = NULL; \
+      } \
+      \
       if (*at == 0) { \
         it = FSMTableData_##suffix##_append(data); \
         if (it == CSSOM_Deque_FSMTableRow_##suffix##_end(data)) \
           return -1; \
         \
         *at = CSSOM_Deque_FSMTableRow_##suffix##_size(data) - 1; \
+        if (AT != NULL) *AT = *at; \
       } else { \
         it = CSSOM_Deque_FSMTableRow_##suffix##_at(data, *at); \
       } \

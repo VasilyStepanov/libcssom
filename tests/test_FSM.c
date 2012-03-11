@@ -375,7 +375,7 @@ static void test_FSM_erase_first() {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "background-color", 1);
+  CSSOM_FSM_Int_add(fsm, "Background-Color", 1);
 
   assert(CSSOM_FSM_Int_size(fsm) == 1);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -387,7 +387,7 @@ static void test_FSM_erase_first() {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "background", 2);
+  CSSOM_FSM_Int_add(fsm, "Background", 2);
 
   assert(CSSOM_FSM_Int_size(fsm) == 2);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -403,7 +403,7 @@ static void test_FSM_erase_first() {
 
 
 
-  it = CSSOM_FSM_Int_find(fsm, "background-color");
+  it = CSSOM_FSM_Int_find(fsm, "BACKGROUND-COLOR");
   assert(it != CSSOM_FSM_Int_end(fsm));
   CSSOM_FSM_Int_erase(fsm, it);
 
@@ -440,7 +440,7 @@ static void test_FSM_erase_last() {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "background-color", 1);
+  CSSOM_FSM_Int_add(fsm, "Background-Color", 1);
 
   assert(CSSOM_FSM_Int_size(fsm) == 1);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -452,7 +452,7 @@ static void test_FSM_erase_last() {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "background", 2);
+  CSSOM_FSM_Int_add(fsm, "Background", 2);
 
   assert(CSSOM_FSM_Int_size(fsm) == 2);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -468,7 +468,7 @@ static void test_FSM_erase_last() {
 
 
 
-  it = CSSOM_FSM_Int_find(fsm, "background");
+  it = CSSOM_FSM_Int_find(fsm, "BACKGROUND");
   assert(it != CSSOM_FSM_Int_end(fsm));
   CSSOM_FSM_Int_erase(fsm, it);
 
