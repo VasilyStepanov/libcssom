@@ -1,4 +1,4 @@
-#include "test_parser.h"
+#include "test_CSSOM.h"
 
 #include "test_utils.h"
 
@@ -9,7 +9,7 @@
 
 
 
-static void test_parser_basics() {
+static void test_CSSOM_basics() {
   CSSOM *cssom;
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
@@ -44,6 +44,6 @@ static void test_parser_basics() {
 
 
 
-void test_parser() {
-  test_parser_basics();
+void test_CSSOM() {
+  test_CSSOM_basics();
 }

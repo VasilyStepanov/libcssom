@@ -4,7 +4,7 @@
 #include "test_FSM.h"
 #include "test_CSSRule.h"
 #include "test_CSSStyleSheet.h"
-#include "test_parser.h"
+#include "test_CSSOM.h"
 
 #include <stdlib.h>
 
@@ -17,6 +17,6 @@ int main() {
   test_FSM();
   test_CSSRule();
   test_CSSStyleSheet();
-  test_parser();
+  test_CSSOM();
   return EXIT_SUCCESS;
 }
