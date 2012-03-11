@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 
 
@@ -137,6 +138,7 @@ const char *CSSOM_CSSProperties[] = {
 
 
 struct _CSSOM_CSSProperty {
+  size_t handles;
   const char *name;
   const SAC_LexicalUnit *value;
   char *cssText;
@@ -153,6 +155,7 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
   property = (CSSOM_CSSProperty*)malloc(sizeof(CSSOM_CSSProperty));
   if (property == NULL) return NULL;
 
+  property->handles = 1;
   property->value = value;
   property->important = important;
   property->cssText = NULL;
@@ -162,7 +165,17 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
 
 
 
-void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property) {
+void CSSOM_CSSProperty__acquire(CSSOM_CSSProperty *property) {
+  ++property->handles;
+}
+
+
+
+void CSSOM_CSSProperty__release(CSSOM_CSSProperty *property) {
+  assert(property->handles > 0);
+  --property->handles;
+  if (property->handles > 0) return;
+
   free(property->cssText);
   free(property);
 }

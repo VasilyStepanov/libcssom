@@ -4,19 +4,19 @@
 #include "CSSStyleDeclaration.h"
 
 #include <stdlib.h>
-
-#include <stdio.h>
+#include <assert.h>
 
 
 
 struct _CSSOM_CSSRule_vtable {
-  void (*free)(CSSOM_CSSRule *cssRule);
+  void (*release)(CSSOM_CSSRule *cssRule);
 };
 
 
 
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
+  size_t handles;
   CSSOM_CSSRuleType type;
 };
 
@@ -29,25 +29,39 @@ struct _CSSOM_CSSStyleRule {
 
 
 
-static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
-  CSSOM_CSSStyleDeclaration__free(cssRule->style);
+static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
+  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
+  --((CSSOM_CSSRule*)cssRule)->handles;
+  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
+
+  CSSOM_CSSStyleDeclaration__release(cssRule->style);
   free(cssRule);
 }
 
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
-  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_free
+  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release
 };
 
 
 
-static void CSSOM_CSSRule_init(CSSOM_CSSRule *cssRule, CSSOM_CSSRuleType type) {
+static void CSSRule_init(CSSOM_CSSRule *cssRule,
+  struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSRuleType type)
+{
+  cssRule->vtable = vtable;
+  cssRule->handles = 1;
   cssRule->type = type;
 }
 
 
 
-void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule) {
-  cssRule->vtable->free(cssRule);
+void CSSOM_CSSRule__acquire(CSSOM_CSSRule *cssRule) {
+  ++cssRule->handles;
+}
+
+
+
+void CSSOM_CSSRule__release(CSSOM_CSSRule *cssRule) {
+  cssRule->vtable->release(cssRule);
 }
 
 
@@ -69,12 +83,11 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
   cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration__free(style);
+    CSSOM_CSSStyleDeclaration__release(style);
     return NULL;
   }
 
-  CSSOM_CSSRule_init((CSSOM_CSSRule*)cssRule, CSSOM_STYLE_RULE);
-  ((CSSOM_CSSRule*)cssRule)->vtable = &CSSStyleRule_vtable;
+  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable, CSSOM_STYLE_RULE);
   cssRule->style = style;
 
   return cssRule;

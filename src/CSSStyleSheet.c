@@ -7,6 +7,7 @@
 #include <sacc.h>
 
 #include <stdlib.h>
+#include <assert.h>
 
 
 
@@ -20,6 +21,7 @@ struct _CSSOM_CSSStyleSheet_vtable {
 
 struct _CSSOM_CSSStyleSheet {
   struct _CSSOM_CSSStyleSheet_vtable *vtable;
+  size_t handles;
   SAC_Parser parser;
   CSSOM_List_CSSRule *_cssRules;
   CSSOM_CSSRuleList *cssRules;
@@ -111,6 +113,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
   }
 
   styleSheet->vtable = &DynamicCSSStyleSheet_vtable;
+  styleSheet->handles = 1;
   styleSheet->parser = parser;
   styleSheet->_cssRules = _cssRules;
   styleSheet->cssRules = NULL;
@@ -120,10 +123,26 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
 
 
 
-void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
+void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
+  CSSOM_CSSStyleSheet__release(styleSheet);
+}
+
+
+
+void CSSOM_CSSStyleSheet__acquire(CSSOM_CSSStyleSheet *styleSheet) {
+  ++styleSheet->handles;
+}
+
+
+
+void CSSOM_CSSStyleSheet__release(CSSOM_CSSStyleSheet *styleSheet) {
   CSSOM_ListIter_CSSRule it;
 
   if (styleSheet == NULL) return;
+
+  assert(styleSheet->handles > 0);
+  --styleSheet->handles;
+  if (styleSheet->handles > 0) return;
 
   CSSOM_CSSRuleList__free(styleSheet->cssRules);
 
@@ -131,7 +150,7 @@ void CSSOM_CSSStyleSheet_free(CSSOM_CSSStyleSheet *styleSheet) {
     it != CSSOM_List_CSSRule_end(styleSheet->_cssRules);
     it = CSSOM_ListIter_CSSRule_next(it))
   {
-    CSSOM_CSSRule__free(*it);
+    CSSOM_CSSRule__release(*it);
   }
   CSSOM_List_CSSRule_free(styleSheet->_cssRules);
 

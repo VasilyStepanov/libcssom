@@ -5,7 +5,9 @@
 
 
 
-void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule);
+void CSSOM_CSSRule__acquire(CSSOM_CSSRule *cssRule);
+
+void CSSOM_CSSRule__release(CSSOM_CSSRule *cssRule);
 
 
 

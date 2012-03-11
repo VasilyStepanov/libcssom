@@ -14,7 +14,7 @@
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   const CSSOM_FSMTable_CSSProperty *table);
 
-void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style);
+void CSSOM_CSSStyleDeclaration__release(CSSOM_CSSStyleDeclaration *style);
 
 CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
   CSSOM_CSSStyleDeclaration *style,

@@ -42,7 +42,7 @@ static void test_CSSOM_basics() {
   ASSERT_EQUAL_STRINGS("color : green;",
     CSSOM_CSSStyleDeclaration_cssText(style));
 
-  CSSOM_CSSStyleSheet_free(styleSheet);
+  CSSOM_CSSStyleSheet_dispose(styleSheet);
   CSSOM_dispose(cssom);
 }
 

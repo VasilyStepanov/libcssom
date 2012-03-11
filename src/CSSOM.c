@@ -1,4 +1,4 @@
-#include <cssom/CSSOM.h>
+#include "CSSOM.h"
 
 #include "CSSProperty.h"
 #include "CSSRule.h"
@@ -12,10 +12,12 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 
 
 struct _CSSOM {
+  size_t handles;
   char **properties;
   CSSOM_FSMTable_CSSProperty *table;
 };
@@ -77,7 +79,7 @@ static int startStyleHandler(void *userData,
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet__append(stack->styleSheet, cssRule) == NULL) {
-    CSSOM_CSSRule__free(cssRule);
+    CSSOM_CSSRule__release(cssRule);
     return 1;
   }
 
@@ -131,7 +133,8 @@ CSSOM* CSSOM_create(const char **properties) {
     propertiesCopy = (char**)properties;
   }
 
-  table = CSSOM_FSMTable_CSSProperty_alloc(properties, CSSOM_CSSProperty__free);
+  table = CSSOM_FSMTable_CSSProperty_alloc(properties, 
+    CSSOM_CSSProperty__release);
   if (table == NULL) {
     freeProperties(propertiesCopy);
     return NULL;
@@ -144,6 +147,7 @@ CSSOM* CSSOM_create(const char **properties) {
     return NULL;
   }
 
+  cssom->handles = 1;
   cssom->properties = propertiesCopy;
   cssom->table = table;
 
@@ -153,6 +157,22 @@ CSSOM* CSSOM_create(const char **properties) {
 
 
 void CSSOM_dispose(CSSOM *cssom) {
+  CSSOM__release(cssom);
+}
+
+
+
+void CSSOM__acquire(CSSOM *cssom) {
+  ++cssom->handles;
+}
+
+
+
+void CSSOM__release(CSSOM *cssom) {
+  assert(cssom->handles > 0);
+  --cssom->handles;
+  if (cssom->handles > 0) return;
+
   CSSOM_FSMTable_CSSProperty_free(cssom->table);
   freeProperties(cssom->properties);
   free(cssom);

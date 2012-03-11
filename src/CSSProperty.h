@@ -10,7 +10,9 @@
 CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
   const SAC_LexicalUnit *value, SAC_Boolean important);
 
-void CSSOM_CSSProperty__free(CSSOM_CSSProperty *property);
+void CSSOM_CSSProperty__acquire(CSSOM_CSSProperty *property);
+
+void CSSOM_CSSProperty__release(CSSOM_CSSProperty *property);
 
 void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name);
 

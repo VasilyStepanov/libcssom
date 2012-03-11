@@ -5,10 +5,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 
 
 struct _CSSOM_CSSStyleDeclaration {
+  size_t handles;
   CSSOM_FSM_CSSProperty *fsm;
   char *cssText;
 };
@@ -30,6 +32,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
     return NULL;
   }
 
+  style->handles = 1;
   style->fsm = fsm;
   style->cssText = NULL;
 
@@ -38,15 +41,25 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 
-void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration__aquire(CSSOM_CSSStyleDeclaration *style) {
+  ++style->handles;
+}
+
+
+
+void CSSOM_CSSStyleDeclaration__release(CSSOM_CSSStyleDeclaration *style) {
   CSSOM_FSMIter_CSSProperty it;
+
+  assert(style->handles > 0);
+  --style->handles;
+  if (style->handles > 0) return;
 
   for (
     it = CSSOM_FSM_CSSProperty_begin(style->fsm);
     it != CSSOM_FSM_CSSProperty_end(style->fsm);
     it = CSSOM_FSMIter_CSSProperty_next(it))
   {
-    CSSOM_CSSProperty__free(it->value);
+    CSSOM_CSSProperty__release(it->value);
   }
 
   free(style->cssText);
@@ -76,7 +89,7 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
 
   it = CSSOM_FSM_CSSProperty_add(style->fsm, property, prop);
   if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) {
-    CSSOM_CSSProperty__free(prop);
+    CSSOM_CSSProperty__release(prop);
     return NULL;
   }
 
