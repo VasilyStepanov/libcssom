@@ -116,10 +116,12 @@ void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
         fprintf(out, "%s(", value->desc.function.name);
 
         arg = value->desc.function.parameters;
-        CSSOM_CSSEmitter_lexicalUnit(out, *arg);
-        while (*(++arg) != NULL) {
-          fprintf(out, " ");
+        if (*arg != NULL) {
           CSSOM_CSSEmitter_lexicalUnit(out, *arg);
+          while (*(++arg) != NULL) {
+            fprintf(out, " ");
+            CSSOM_CSSEmitter_lexicalUnit(out, *arg);
+          }
         }
       }
       break;
@@ -137,10 +139,12 @@ void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
         SAC_LexicalUnit **sub;
 
         sub = value->desc.function.parameters;
-        CSSOM_CSSEmitter_lexicalUnit(out, *sub);
-        while (*(++sub) != NULL) {
-          fprintf(out, " ");
+        if (*sub != NULL) {
           CSSOM_CSSEmitter_lexicalUnit(out, *sub);
+          while (*(++sub) != NULL) {
+            fprintf(out, " ");
+            CSSOM_CSSEmitter_lexicalUnit(out, *sub);
+          }
         }
       }
       break;
