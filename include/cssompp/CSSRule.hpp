@@ -8,6 +8,7 @@ namespace cssom {
 
 
 class CSSRuleList;
+class CSSStyleRule;
 
 
 
@@ -34,6 +35,7 @@ class CSSRule {
 
   private:
     friend class CSSRuleList;
+    friend class CSSStyleRule;
 
     CSSOM_CSSRule *_impl;
 

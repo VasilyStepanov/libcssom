@@ -41,7 +41,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 
-void CSSOM_CSSStyleDeclaration__aquire(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration__acquire(CSSOM_CSSStyleDeclaration *style) {
   ++style->handles;
 }
 
