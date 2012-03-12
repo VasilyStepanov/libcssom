@@ -1,7 +1,8 @@
 lib_LTLIBRARIES = libcssompp.la
 
 GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic \
-                 -I$(top_srcdir)/include
+                 -I$(top_srcdir)/include \
+                 $(SACC_CFLAGS)
 
 AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
@@ -15,7 +16,8 @@ libcssompp_ladir = $(includedir)/cssom
 
 libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp
 
-libcssompp_la_SOURCES = CSSOM.cpp
+libcssompp_la_SOURCES = CSSOM.cpp \
+                        CSSStyleSheet.cpp
 
 libcssompp_la_LIBADD = $(top_srcdir)/cssom-src/libcssom.la
 

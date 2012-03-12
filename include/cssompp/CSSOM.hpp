@@ -15,6 +15,8 @@ class CSSOM {
 
     cssom::CSSOM& operator=(const cssom::CSSOM &rhs);
 
+    void swap(cssom::CSSOM &rhs);
+
   private:
     ::CSSOM *_impl;
 };

@@ -3,6 +3,7 @@
 #include "cssom-src/CSSOM.h"
 
 #include <new>
+#include <utility>
 
 namespace cssom {
 
@@ -25,6 +26,22 @@ CSSOM::CSSOM(const cssom::CSSOM &copy) :
 
 CSSOM::~CSSOM() {
   CSSOM__release(_impl);
+}
+
+
+
+cssom::CSSOM& CSSOM::operator=(const cssom::CSSOM &rhs) {
+  if (&rhs == this) return *this;
+
+  cssom::CSSOM(rhs).swap(*this);
+
+  return *this;
+}
+
+
+
+void CSSOM::swap(cssom::CSSOM &rhs) {
+  std::swap(_impl, rhs._impl);
 }
 
 
