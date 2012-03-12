@@ -25,9 +25,8 @@ static void test_CSSOM_basics() {
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
 
-  assert(cssRules[0] != NULL);
-  assert(cssRules[1] == NULL);
-  cssRule = cssRules[0];
+  cssRule = CSSOM_CSSRuleList_at(cssRules, 0);
+  assert(cssRule != NULL);
 
   assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
 

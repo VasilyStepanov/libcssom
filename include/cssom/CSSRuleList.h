@@ -3,13 +3,22 @@
 
 #include <cssom/CSSRule.h>
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 
-typedef CSSOM_CSSRule* CSSOM_CSSRuleList;
+typedef struct _CSSOM_CSSRuleList CSSOM_CSSRuleList;
+
+
+
+size_t CSSOM_CSSRuleList_size(const CSSOM_CSSRuleList *cssRules);
+
+CSSOM_CSSRule* CSSOM_CSSRuleList_at(const CSSOM_CSSRuleList *cssRules,
+  size_t index);
 
 
 

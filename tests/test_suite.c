@@ -3,7 +3,6 @@
 #include "test_Deque.h"
 #include "test_FSM.h"
 #include "test_CSSRule.h"
-#include "test_CSSStyleSheet.h"
 #include "test_CSSOM.h"
 
 #include <stdlib.h>
@@ -16,7 +15,6 @@ int main() {
   test_Deque();
   test_FSM();
   test_CSSRule();
-  test_CSSStyleSheet();
   test_CSSOM();
   return EXIT_SUCCESS;
 }

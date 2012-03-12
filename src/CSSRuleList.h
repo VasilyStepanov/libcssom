@@ -3,14 +3,16 @@
 
 #include <cssom/CSSRuleList.h>
 
-#include "List_CSSRule.h"
 
 
+CSSOM_CSSRuleList* CSSOM_CSSRuleList__alloc();
 
-CSSOM_CSSRuleList* CSSOM_CSSRuleList__realloc(CSSOM_CSSRuleList *cssRules,
-  CSSOM_List_CSSRule *list);
+void CSSOM_CSSRuleList__acquire(CSSOM_CSSRuleList *cssRules);
 
-void CSSOM_CSSRuleList__free(CSSOM_CSSRuleList *cssRules);
+void CSSOM_CSSRuleList__release(CSSOM_CSSRuleList *cssRules);
+
+CSSOM_CSSRule* CSSOM_CSSRuleList__append(CSSOM_CSSRuleList *cssRules,
+  CSSOM_CSSRule *cssRule);
 
 
 

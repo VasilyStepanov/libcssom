@@ -1,6 +1,6 @@
 #include "CSSStyleSheet.h"
 
-#include "List_CSSRule.h"
+#include "Deque_CSSRule.h"
 #include "CSSRuleList.h"
 #include "CSSRule.h"
 
@@ -11,120 +11,32 @@
 
 
 
-struct _CSSOM_CSSStyleSheet_vtable {
-  const CSSOM_CSSRuleList* (*cssRules)(const CSSOM_CSSStyleSheet *styleSheet);
-  CSSOM_CSSRule* (*append)(CSSOM_CSSStyleSheet *styleSheet,
-    CSSOM_CSSRule *cssRule);
-};
-
-
-
 struct _CSSOM_CSSStyleSheet {
-  struct _CSSOM_CSSStyleSheet_vtable *vtable;
   size_t handles;
   SAC_Parser parser;
-  CSSOM_List_CSSRule *_cssRules;
   CSSOM_CSSRuleList *cssRules;
 };
-
-
-
-static const CSSOM_CSSRuleList* StaticCSSStyleSheet_cssRules(
-  const CSSOM_CSSStyleSheet *styleSheet);
-
-static CSSOM_CSSRule* StaticCSSStyleSheet_append(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule);
-
-static struct _CSSOM_CSSStyleSheet_vtable StaticCSSStyleSheet_vtable = {
-  &StaticCSSStyleSheet_cssRules,
-  &StaticCSSStyleSheet_append
-};
-
-
-
-static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
-  const CSSOM_CSSStyleSheet *styleSheet);
-
-static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule);
-
-static struct _CSSOM_CSSStyleSheet_vtable DynamicCSSStyleSheet_vtable = {
-  &DynamicCSSStyleSheet_cssRules,
-  &DynamicCSSStyleSheet_append
-};
-
-
-
-static const CSSOM_CSSRuleList* StaticCSSStyleSheet_cssRules(
-  const CSSOM_CSSStyleSheet *styleSheet)
-{
-  return styleSheet->cssRules;
-}
-
-
-
-static CSSOM_CSSRule* StaticCSSStyleSheet_append(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
-{
-  ((CSSOM_CSSStyleSheet*)styleSheet)->vtable = &DynamicCSSStyleSheet_vtable;
-  return CSSOM_CSSStyleSheet__append(styleSheet, cssRule);
-}
-
-
-
-static const CSSOM_CSSRuleList* DynamicCSSStyleSheet_cssRules(
-  const CSSOM_CSSStyleSheet *styleSheet)
-{
-  CSSOM_CSSRuleList *cssRules;
-
-  cssRules = CSSOM_CSSRuleList__realloc(styleSheet->cssRules,
-    styleSheet->_cssRules);
-  if (cssRules == NULL) return NULL;
-
-  ((CSSOM_CSSStyleSheet*)styleSheet)->cssRules = cssRules;
-
-  ((CSSOM_CSSStyleSheet*)styleSheet)->vtable = &StaticCSSStyleSheet_vtable;
-  return CSSOM_CSSStyleSheet_cssRules(styleSheet);
-}
-
-
-
-static CSSOM_CSSRule* DynamicCSSStyleSheet_append(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
-{
-  if (CSSOM_List_CSSRule_append(styleSheet->_cssRules, cssRule) ==
-    CSSOM_List_CSSRule_end(styleSheet->_cssRules)) return NULL;
-  return cssRule;
-}
 
 
 
 CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
-  CSSOM_List_CSSRule *_cssRules;
+  CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSStyleSheet *styleSheet;
 
-  _cssRules = CSSOM_List_CSSRule_alloc();
-  if (_cssRules == NULL) return NULL;
+  cssRules = CSSOM_CSSRuleList__alloc();
+  if (cssRules == NULL) return NULL;
 
   styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    CSSOM_List_CSSRule_free(_cssRules);
+    CSSOM_CSSRuleList__release(cssRules);
     return NULL;
   }
 
-  styleSheet->vtable = &DynamicCSSStyleSheet_vtable;
   styleSheet->handles = 1;
   styleSheet->parser = parser;
-  styleSheet->_cssRules = _cssRules;
-  styleSheet->cssRules = NULL;
+  styleSheet->cssRules = cssRules;
 
   return styleSheet;
-}
-
-
-
-void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
-  CSSOM_CSSStyleSheet__release(styleSheet);
 }
 
 
@@ -136,35 +48,21 @@ void CSSOM_CSSStyleSheet__acquire(CSSOM_CSSStyleSheet *styleSheet) {
 
 
 void CSSOM_CSSStyleSheet__release(CSSOM_CSSStyleSheet *styleSheet) {
-  CSSOM_ListIter_CSSRule it;
-
   if (styleSheet == NULL) return;
 
   assert(styleSheet->handles > 0);
   --styleSheet->handles;
   if (styleSheet->handles > 0) return;
 
-  CSSOM_CSSRuleList__free(styleSheet->cssRules);
-
-  for (it = CSSOM_List_CSSRule_begin(styleSheet->_cssRules);
-    it != CSSOM_List_CSSRule_end(styleSheet->_cssRules);
-    it = CSSOM_ListIter_CSSRule_next(it))
-  {
-    CSSOM_CSSRule__release(*it);
-  }
-  CSSOM_List_CSSRule_free(styleSheet->_cssRules);
-
+  CSSOM_CSSRuleList__release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
-
   free(styleSheet);
 }
 
 
 
-CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(CSSOM_CSSStyleSheet *styleSheet,
-  CSSOM_CSSRule *cssRule)
-{
-  return styleSheet->vtable->append(styleSheet, cssRule);
+void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
+  CSSOM_CSSStyleSheet__release(styleSheet);
 }
 
 
@@ -172,5 +70,14 @@ CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(CSSOM_CSSStyleSheet *styleSheet,
 const CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
-  return styleSheet->vtable->cssRules(styleSheet);
+  return styleSheet->cssRules;
 }
+
+
+
+CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
+{
+  return CSSOM_CSSRuleList__append(styleSheet->cssRules, cssRule);
+}
+

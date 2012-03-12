@@ -1,13 +1,13 @@
 #ifndef _CSSOM_LIST_CSSRULE_H
 #define _CSSOM_LIST_CSSRULE_H
 
-#include "List.h"
+#include "Deque.h"
 
 #include <cssom/CSSRule.h>
 
 
 
-CSSOM_LIST_DECLARE(CSSOM_CSSRule*, CSSRule)
+CSSOM_DEQUE_DECLARE(CSSOM_CSSRule*, CSSRule)
 
 
 
