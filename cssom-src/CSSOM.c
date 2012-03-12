@@ -67,15 +67,14 @@ static int endStyleHandler(void *userData,
 
 
 
-static int startStyleHandler(void *userData,
-  const SAC_Selector *selectors[] CSSOM_UNUSED)
+static int startStyleHandler(void *userData, const SAC_Selector *selectors[])
 {
   struct _CSSOM_ParserStack *stack;
   CSSOM_CSSRule *cssRule;
   
   stack = (struct _CSSOM_ParserStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->table);
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->table, selectors);
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet__append(stack->styleSheet, cssRule) == NULL) {

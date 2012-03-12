@@ -24,6 +24,7 @@ struct _CSSOM_CSSRule {
 
 struct _CSSOM_CSSStyleRule {
   CSSOM_CSSRule super;
+  const SAC_Selector **selectors;
   CSSOM_CSSStyleDeclaration *style;
 };
 
@@ -73,7 +74,7 @@ CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
-  const CSSOM_FSMTable_CSSProperty *table)
+  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
@@ -88,6 +89,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   }
 
   CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable, CSSOM_STYLE_RULE);
+  cssRule->selectors = selectors;
   cssRule->style = style;
 
   return cssRule;
