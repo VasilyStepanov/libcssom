@@ -1,7 +1,7 @@
 if ENABLE_TESTS
   MAYBE_TESTS = tests
 endif
-SUBDIRS = src $(MAYBE_TESTS)
+SUBDIRS = cssom-src $(MAYBE_TESTS)
 
 ACLOCAL_AMFLAGS = -I m4
 

@@ -23,8 +23,8 @@ PKG_CHECK_MODULES(SACC, sacc)
 
 AC_CONFIG_FILES(
   [Makefile]
-  [src/Makefile]
-  [src/cssom.pc]
+  [cssom-src/Makefile]
+  [cssom-src/cssom.pc]
   [tests/Makefile]
 )
 

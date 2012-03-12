@@ -1,7 +1,7 @@
 #include "test_Vector.h"
 
-#include "src/Vector.h"
-#include "src/Vector.c"
+#include "cssom-src/Vector.h"
+#include "cssom-src/Vector.c"
 
 #include <assert.h>
 

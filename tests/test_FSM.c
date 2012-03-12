@@ -1,7 +1,7 @@
 #include "test_FSM.h"
 
-#include "src/FSM.h"
-#include "src/FSM.c"
+#include "cssom-src/FSM.h"
+#include "cssom-src/FSM.c"
 
 #include "test_utils.h"
 
