@@ -5,6 +5,10 @@
 
 #include <sacc.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser);
@@ -17,5 +21,9 @@ CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(CSSOM_CSSStyleSheet *styleSheet,
   CSSOM_CSSRule *cssRule);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

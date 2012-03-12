@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 #define CSSOM_LIST_DECLARE(T, suffix) \
@@ -34,5 +38,9 @@
     CSSOM_ListConstIter_##suffix iter);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

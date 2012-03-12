@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 #define CSSOM_DEQUE_DECLARE(T, suffix) \
@@ -38,5 +42,9 @@
     CSSOM_DequeConstIter_##suffix iter);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

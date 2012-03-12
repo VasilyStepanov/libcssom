@@ -3,6 +3,10 @@
 
 #include <cssom/CSSRuleList.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 CSSOM_CSSRuleList* CSSOM_CSSRuleList__alloc();
@@ -15,5 +19,9 @@ CSSOM_CSSRule* CSSOM_CSSRuleList__append(CSSOM_CSSRuleList *cssRules,
   CSSOM_CSSRule *cssRule);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

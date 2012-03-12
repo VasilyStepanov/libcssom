@@ -9,6 +9,10 @@
 
 #include <sacc.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
@@ -23,5 +27,9 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

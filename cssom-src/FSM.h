@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 #define CSSOM_FSM_DECLARE(T, suffix) \
@@ -49,5 +53,9 @@
     CSSOM_FSMConstIter_##suffix iter);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 #define CSSOM_VECTOR_DECLARE(T, suffix) \
@@ -40,5 +44,9 @@
     CSSOM_VectorConstIter_##suffix iter);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

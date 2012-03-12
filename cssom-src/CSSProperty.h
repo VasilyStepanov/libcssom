@@ -5,6 +5,10 @@
 
 #include <sacc.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
@@ -17,5 +21,9 @@ void CSSOM_CSSProperty__release(CSSOM_CSSProperty *property);
 void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
