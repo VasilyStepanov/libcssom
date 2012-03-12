@@ -25,6 +25,9 @@ void basics() {
   assert(cssRule.type() == CSSOM_STYLE_RULE);
 
   cssom::CSSStyleRule &styleRule = static_cast<cssom::CSSStyleRule&>(cssRule);
+
+  assert(std::string(styleRule.selectorText()) == "p");
+
   cssom::CSSStyleDeclaration style = styleRule.style();
   assert(style.length() == 1);
 

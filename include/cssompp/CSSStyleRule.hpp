@@ -11,6 +11,7 @@ namespace cssom {
 
 class CSSStyleRule : public cssom::CSSRule {
   public:
+    const char* selectorText() const;
     cssom::CSSStyleDeclaration style();
 };
 

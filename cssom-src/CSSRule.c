@@ -2,8 +2,10 @@
 #include "CSSStyleRule.h"
 
 #include "CSSStyleDeclaration.h"
+#include "CSSEmitter.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
 
@@ -24,6 +26,7 @@ struct _CSSOM_CSSRule {
 
 struct _CSSOM_CSSStyleRule {
   CSSOM_CSSRule super;
+  char *selectorText;
   const SAC_Selector **selectors;
   CSSOM_CSSStyleDeclaration *style;
 };
@@ -36,6 +39,7 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
   CSSOM_CSSStyleDeclaration__release(cssRule->style);
+  free(cssRule->selectorText);
   free(cssRule);
 }
 
@@ -89,6 +93,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   }
 
   CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable, CSSOM_STYLE_RULE);
+  cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
   cssRule->style = style;
 
@@ -101,4 +106,26 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
   const CSSOM_CSSStyleRule *cssRule)
 {
   return cssRule->style;
+}
+
+
+
+const char* CSSOM_CSSStyleRule_selectorText(
+  const CSSOM_CSSStyleRule *cssRule)
+{
+  if (cssRule->selectorText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    CSSOM_CSSEmitter_selectors(out, cssRule->selectors);
+
+    if (fclose(out) != 0) return NULL;
+
+    ((CSSOM_CSSStyleRule*)cssRule)->selectorText = buf;
+  }
+  return cssRule->selectorText;
 }

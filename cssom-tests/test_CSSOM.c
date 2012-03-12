@@ -32,6 +32,9 @@ static void test_CSSOM_basics() {
 
   assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
 
+  ASSERT_EQUAL_STRINGS("p",
+    CSSOM_CSSStyleRule_selectorText((CSSOM_CSSStyleRule*)cssRule));
+
   style = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)cssRule);
 
   assert(CSSOM_CSSStyleDeclaration_length(style) == 1);

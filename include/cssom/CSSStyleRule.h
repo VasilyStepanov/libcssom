@@ -16,6 +16,9 @@ typedef struct _CSSOM_CSSStyleRule CSSOM_CSSStyleRule;
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(
   const CSSOM_CSSStyleRule *cssRule);
 
+const char* CSSOM_CSSStyleRule_selectorText(
+  const CSSOM_CSSStyleRule *cssRule);
+
 
 
 #ifdef __cplusplus
