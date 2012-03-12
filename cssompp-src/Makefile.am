@@ -9,15 +9,15 @@ AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
 libcssompp_base_ladir = $(includedir)
 
-libcssompp_base_la_HEADERS = $(top_srcdir)/include/cssompp.h
+libcssompp_base_la_HEADERS = $(top_srcdir)/include/cssompp.hpp
 
 libcssompp_ladir = $(includedir)/cssom
 
-libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.h
+libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp
 
-libcssompp_la_LIBADD = $(SACC_LIBS)
+libcssompp_la_LIBADD = $(top_srcdir)/cssom-src/libcssom.la
 
 pkgconfigdir = $(libdir)/pkgconfig
 
