@@ -44,4 +44,16 @@ void CSSRuleList::swap(cssom::CSSRuleList &rhs) {
 
 
 
+size_t CSSRuleList::size() const {
+  return CSSOM_CSSRuleList_size(_impl);
+}
+
+
+
+cssom::CSSRule CSSRuleList::operator[](size_t index) const {
+  return cssom::CSSRule(CSSOM_CSSRuleList_at(_impl, index));
+}
+
+
+
 } // cssom
