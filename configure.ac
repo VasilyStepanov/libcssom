@@ -4,6 +4,7 @@ AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([config.h])
 
 AC_PROG_CC
+AC_PROG_CXX
 
 LT_INIT
 
@@ -25,6 +26,8 @@ AC_CONFIG_FILES(
   [Makefile]
   [cssom-src/Makefile]
   [cssom-src/cssom.pc]
+  [cssompp-src/Makefile]
+  [cssompp-src/cssompp.pc]
   [tests/Makefile]
 )
 
