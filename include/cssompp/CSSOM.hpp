@@ -2,6 +2,9 @@
 #define CSSOMPP_CSSOM_HPP
 
 #include <cssom/CSSOM.h>
+#include <cssompp/CSSStyleSheet.hpp>
+
+#include <string>
 
 namespace cssom {
 
@@ -16,6 +19,8 @@ class CSSOM {
     cssom::CSSOM& operator=(const cssom::CSSOM &rhs);
 
     void swap(cssom::CSSOM &rhs);
+    cssom::CSSStyleSheet parse(const char *cssText, int len);
+    cssom::CSSStyleSheet parse(const std::string &cssText);
 
   private:
     ::CSSOM *_impl;
