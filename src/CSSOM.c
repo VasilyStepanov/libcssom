@@ -180,7 +180,7 @@ void CSSOM__release(CSSOM *cssom) {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText) { 
+CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText, int len) { 
   SAC_Parser parser;
   CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
@@ -201,7 +201,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText) {
   SAC_SetStyleHandler(parser,startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
   SAC_SetUserData(parser, &parserStack);
-  SAC_ParseStyleSheet(parser, cssText, strlen(cssText));
+  SAC_ParseStyleSheet(parser, cssText, len);
 
   return parserStack.styleSheet;
 }

@@ -6,10 +6,16 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
 static void test_CSSOM_basics() {
+  const char *css =
+"p {\n"
+"  color : green\n"
+"}\n";
+
   CSSOM *cssom;
   CSSOM_CSSStyleSheet *styleSheet;
   const CSSOM_CSSRuleList *cssRules;
@@ -17,11 +23,7 @@ static void test_CSSOM_basics() {
   const CSSOM_CSSStyleDeclaration *style;
   
   cssom = CSSOM_create(CSSOM_CSSProperties);
-  styleSheet = CSSOM_parse(cssom,
-"p {\n"
-"  color : green\n"
-"}\n"
-  );
+  styleSheet = CSSOM_parse(cssom, css, strlen(css));
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
 
