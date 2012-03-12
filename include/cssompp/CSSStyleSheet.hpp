@@ -1,6 +1,8 @@
 #ifndef CSSOMPP_CSSSTYLESHEET_HPP
 #define CSSOMPP_CSSSTYLESHEET_HPP
 
+#include <cssompp/CSSRuleList.hpp>
+
 #include <cssom/CSSStyleSheet.h>
 
 namespace cssom {
@@ -25,6 +27,8 @@ class CSSStyleSheet {
     cssom::CSSStyleSheet& operator=(const cssom::CSSStyleSheet &rhs);
 
     void swap(CSSStyleSheet &rhs);
+    
+    cssom::CSSRuleList cssRules() const;
 
   private:
     friend class cssom::CSSOM;

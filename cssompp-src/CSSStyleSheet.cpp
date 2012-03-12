@@ -46,4 +46,10 @@ void CSSStyleSheet::swap(cssom::CSSStyleSheet &rhs) {
 
 
 
+cssom::CSSRuleList CSSStyleSheet::cssRules() const {
+  return cssom::CSSRuleList(CSSOM_CSSStyleSheet_cssRules(_impl));
+}
+
+
+
 } // cssom

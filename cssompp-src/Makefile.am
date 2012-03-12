@@ -17,6 +17,7 @@ libcssompp_ladir = $(includedir)/cssom
 libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
+                        CSSRuleList.cpp \
                         CSSStyleSheet.cpp
 
 libcssompp_la_LIBADD = $(top_srcdir)/cssom-src/libcssom.la

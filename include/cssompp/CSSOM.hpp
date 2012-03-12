@@ -1,8 +1,9 @@
 #ifndef CSSOMPP_CSSOM_HPP
 #define CSSOMPP_CSSOM_HPP
 
-#include <cssom/CSSOM.h>
 #include <cssompp/CSSStyleSheet.hpp>
+
+#include <cssom/CSSOM.h>
 
 #include <string>
 

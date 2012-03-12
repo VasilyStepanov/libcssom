@@ -67,7 +67,7 @@ void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
 
 
 
-const CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
+CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
   return styleSheet->cssRules;
