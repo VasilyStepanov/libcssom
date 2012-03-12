@@ -28,7 +28,8 @@ AC_CONFIG_FILES(
   [cssom-src/cssom.pc]
   [cssompp-src/Makefile]
   [cssompp-src/cssompp.pc]
-  [tests/Makefile]
+  [cssom-tests/Makefile]
+  [cssompp-tests/Makefile]
 )
 
 AC_OUTPUT

@@ -17,6 +17,7 @@ libcssompp_ladir = $(includedir)/cssom
 libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
+                        CSSProperty.cpp \
                         CSSRule.cpp \
                         CSSRuleList.cpp \
                         CSSStyleDeclaration.cpp \
@@ -33,7 +34,7 @@ pkgconfig_DATA = cssompp.pc
 
 if ENABLE_TESTS
 test: all
-	make -C $(top_srcdir)/tests test
+	make -C $(top_srcdir)/cssompp-tests test
 
 .PHONY: test
 endif

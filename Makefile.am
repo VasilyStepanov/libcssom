@@ -1,5 +1,5 @@
 if ENABLE_TESTS
-  MAYBE_TESTS = tests
+  MAYBE_TESTS = cssom-tests cssompp-tests
 endif
 SUBDIRS = cssom-src cssompp-src $(MAYBE_TESTS)
 
@@ -9,7 +9,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 if ENABLE_TESTS
 test: all
-	make -C tests test
+	make -C cssom-tests test
+	make -C cssompp-tests test
 
 .PHONY: test
 endif
