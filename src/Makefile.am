@@ -34,6 +34,10 @@ libcssom_la_SOURCES = CSSEmitter.c \
 
 libcssom_la_LIBADD = $(SACC_LIBS)
 
+pkgconfigdir = $(libdir)/pkgconfig
+
+pkgconfig_DATA = cssom.pc
+
 
 
 if ENABLE_TESTS
