@@ -34,7 +34,7 @@ pkgconfig_DATA = cssompp.pc
 
 if ENABLE_TESTS
 test: all
-	make -C $(top_srcdir)/cssompp-tests test
+	make -C $(top_srcdir)/tests test
 
 .PHONY: test
 endif
