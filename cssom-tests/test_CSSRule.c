@@ -1,8 +1,8 @@
 #include "test_CSSRule.h"
 
-#include "cssom-src/CSSProperty.h"
-#include "cssom-src/CSSRule.h"
-#include "cssom-src/CSSStyleRule.h"
+#include "src/CSSProperty.h"
+#include "src/CSSRule.h"
+#include "src/CSSStyleRule.h"
 
 #include <assert.h>
 

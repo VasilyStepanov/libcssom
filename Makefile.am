@@ -1,7 +1,7 @@
 if ENABLE_TESTS
   MAYBE_TESTS = cssom-tests cssompp-tests
 endif
-SUBDIRS = cssom-src cssompp-src $(MAYBE_TESTS)
+SUBDIRS = src libcssompp $(MAYBE_TESTS)
 
 ACLOCAL_AMFLAGS = -I m4
 

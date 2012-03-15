@@ -1,6 +1,6 @@
 #include <cssompp/CSSRule.hpp>
 
-#include "cssom-src/CSSRule.h"
+#include "src/CSSRule.h"
 
 #include <utility>
 

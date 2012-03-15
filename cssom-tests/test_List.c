@@ -1,7 +1,7 @@
 #include "test_List.h"
 
-#include "cssom-src/List.h"
-#include "cssom-src/List.c"
+#include "src/List.h"
+#include "src/List.c"
 
 #include <assert.h>
 

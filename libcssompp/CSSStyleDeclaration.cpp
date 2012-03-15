@@ -1,6 +1,6 @@
 #include <cssompp/CSSStyleDeclaration.hpp>
 
-#include "cssom-src/CSSStyleDeclaration.h"
+#include "src/CSSStyleDeclaration.h"
 
 #include <utility>
 

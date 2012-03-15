@@ -24,7 +24,7 @@ libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSStyleRule.cpp \
                         CSSStyleSheet.cpp
 
-libcssompp_la_LIBADD = $(top_srcdir)/cssom-src/libcssom.la
+libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
 
 pkgconfigdir = $(libdir)/pkgconfig
 

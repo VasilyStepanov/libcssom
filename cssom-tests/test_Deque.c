@@ -1,7 +1,7 @@
 #include "test_Deque.h"
 
-#include "cssom-src/Deque.h"
-#include "cssom-src/Deque.c"
+#include "src/Deque.h"
+#include "src/Deque.c"
 
 #include <assert.h>
 

@@ -24,10 +24,10 @@ PKG_CHECK_MODULES(SACC, sacc)
 
 AC_CONFIG_FILES(
   [Makefile]
-  [cssom-src/Makefile]
-  [cssom-src/cssom.pc]
-  [cssompp-src/Makefile]
-  [cssompp-src/cssompp.pc]
+  [src/Makefile]
+  [src/cssom.pc]
+  [libcssompp/Makefile]
+  [libcssompp/cssompp.pc]
   [cssom-tests/Makefile]
   [cssompp-tests/Makefile]
 )

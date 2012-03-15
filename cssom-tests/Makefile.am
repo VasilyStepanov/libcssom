@@ -12,7 +12,7 @@ test_suite_SOURCES = test_CSSOM.c \
                      test_Vector.c \
                      test_suite.c
 
-test_suite_LDADD = $(top_srcdir)/cssom-src/libcssom.la
+test_suite_LDADD = $(top_srcdir)/src/libcssom.la
 
 
 

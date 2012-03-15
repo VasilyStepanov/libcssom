@@ -1,6 +1,6 @@
 #include <cssompp/CSSStyleSheet.hpp>
 
-#include "cssom-src/CSSStyleSheet.h"
+#include "src/CSSStyleSheet.h"
 
 #include <utility>
 

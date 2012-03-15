@@ -1,6 +1,6 @@
 #include <cssompp/CSSOM.hpp>
 
-#include "cssom-src/CSSOM.h"
+#include "src/CSSOM.h"
 
 #include <new>
 #include <utility>
