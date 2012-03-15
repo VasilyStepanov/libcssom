@@ -202,12 +202,20 @@ const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property) {
     char *buf;
     size_t bufsize;
 
+    buf = NULL;
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    CSSOM_CSSEmitter_lexicalUnit(out, property->value);
+    if (CSSOM_CSSEmitter_lexicalUnit(out, property->value) != 0) {
+      fclose(out);
+      free(buf);
+      return NULL;
+    }
 
-    if (fclose(out) != 0) return NULL;
+    if (fclose(out) != 0) {
+      free(buf);
+      return NULL;
+    }
 
     ((CSSOM_CSSProperty*)property)->cssText = buf;
   }

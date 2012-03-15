@@ -2,27 +2,28 @@
 
 
 
-static void emit_selector(FILE *out, const SAC_Selector *selector);
+static int emit_selector(FILE *out, const SAC_Selector *selector);
 
 
 
-static void emit_name(FILE *out,
+static int emit_name(FILE *out,
   const char *namespaceURI, const char *localName)
 {
   if (namespaceURI != NULL && localName != NULL) {
-    fprintf(out, "%s|%s", namespaceURI, localName);
+    if (fprintf(out, "%s|%s", namespaceURI, localName) < 0) return 1;
   } else if (namespaceURI != NULL) {
-    fprintf(out, "%s|*", namespaceURI);
+    if (fprintf(out, "%s|*", namespaceURI) < 0) return 1;
   } else if (localName != NULL) {
-    fprintf(out, "%s", localName);
+    if (fprintf(out, "%s", localName) < 0) return 1;
   } else {
-    fprintf(out, "*");
+    if (fprintf(out, "*") < 0) return 1;
   }
+  return 0;
 }
 
 
 
-static void emit_condition(FILE *out, const SAC_Condition *condition) {
+static int emit_condition(FILE *out, const SAC_Condition *condition) {
   switch (condition->conditionType) {
     case SAC_ONE_OF_ATTRIBUTE_CONDITION:
     case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
@@ -32,45 +33,50 @@ static void emit_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
     case SAC_ID_CONDITION:
-      fprintf(out, "[");
-      emit_name(out,
+      if (fprintf(out, "[")) return 1;
+      if (emit_name(out,
         condition->desc.attribute.namespaceURI,
-        condition->desc.attribute.localName);
+        condition->desc.attribute.localName) != 0)
+      {
+        return 1;
+      }
 
       switch (condition->conditionType) {
         case SAC_ID_CONDITION:
-          fprintf(out, "\"id\"");
+          if (fprintf(out, "\"id\"")) return 1;
           break;
         case SAC_CLASS_CONDITION:
-          fprintf(out, "\"class\"");
+          if (fprintf(out, "\"class\"")) return 1;
           break;
         case SAC_PREFIX_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"prefix\"");
+          if (fprintf(out, "\"prefix\"")) return 1;
           break;
         case SAC_SUFFIX_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"suffix\"");
+          if (fprintf(out, "\"suffix\"")) return 1;
           break;
         case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"substr\"");
+          if (fprintf(out, "\"substr\"")) return 1;
           break;
         case SAC_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"attr\"");
+          if (fprintf(out, "\"attr\"")) return 1;
           break;
         case SAC_ONE_OF_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"one_of\"");
+          if (fprintf(out, "\"one_of\"")) return 1;
           break;
         case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-          fprintf(out, "\"begin_hypen\"");
+          if (fprintf(out, "\"begin_hypen\"")) return 1;
           break;
         default:
-          fprintf(out, "\"unknown_%d\"", condition->conditionType);
+          if (fprintf(out, "\"unknown_%d\"", condition->conditionType))
+            return 1;
           break;
       }
 
-      if (condition->desc.attribute.value != NULL)
-        fprintf(out, "=\"%s\"", condition->desc.attribute.value);
+      if (condition->desc.attribute.value != NULL) {
+        if (fprintf(out, "=\"%s\"", condition->desc.attribute.value)) return 1;
+      }
 
-      fprintf(out, "]");
+      if (fprintf(out, "]")) return 1;
 
       break;
     case SAC_PSEUDO_CLASS_CONDITION:
@@ -78,26 +84,29 @@ static void emit_condition(FILE *out, const SAC_Condition *condition) {
       {
         switch (condition->conditionType) {
           case SAC_PSEUDO_CLASS_CONDITION:
-            fprintf(out, ":");
+            if (fprintf(out, ":")) return 1;
             break;
           case SAC_PSEUDO_ELEMENT_CONDITION:
-            fprintf(out, "::");
+            if (fprintf(out, "::")) return 1;
             break;
           default:
-            fprintf(out, "?");
+            if (fprintf(out, "?")) return 1;
             break;
         }
-        CSSOM_CSSEmitter_lexicalUnit(out, condition->desc.pseudo);
+        if (CSSOM_CSSEmitter_lexicalUnit(out, condition->desc.pseudo) != 0)
+          return 1;
       }
       break;
     case SAC_AND_CONDITION:
-      emit_condition(out, condition->desc.combinator.firstCondition);
-      emit_condition(out, condition->desc.combinator.secondCondition);
+      if (emit_condition(out, condition->desc.combinator.firstCondition))
+        return 1;
+      if (emit_condition(out, condition->desc.combinator.secondCondition))
+        return 1;
       break;
     case SAC_NEGATIVE_CONDITION:
-      fprintf(out, "not(");
-      emit_selector(out, condition->desc.selector);
-      fprintf(out, ")");
+      if (fprintf(out, "not(")) return 1;
+      if (emit_selector(out, condition->desc.selector)) return 1;
+      if (fprintf(out, ")")) return 1;
       break;
     case SAC_OR_CONDITION:
     case SAC_POSITIONAL_CONDITION:
@@ -105,161 +114,228 @@ static void emit_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ONLY_CHILD_CONDITION:
     case SAC_ONLY_TYPE_CONDITION:
     case SAC_CONTENT_CONDITION:
-      fprintf(out, "?");
+      if (fprintf(out, "?")) return 1;
       break;
   }
+  return 0;
 }
 
 
 
-static void emit_selector(FILE *out, const SAC_Selector *selector) {
+static int emit_selector(FILE *out, const SAC_Selector *selector) {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
-      emit_selector(out, selector->desc.conditional.simpleSelector);
-      emit_condition(out, selector->desc.conditional.condition);
+      if (emit_selector(out, selector->desc.conditional.simpleSelector) != 0)
+        return 1;
+      if (emit_condition(out, selector->desc.conditional.condition) != 0)
+        return 1;
       break;
     case SAC_ANY_NODE_SELECTOR:
-      fprintf(out, "*");
+      if (fprintf(out, "*") < 0) return 1;
       break;
     case SAC_ELEMENT_NODE_SELECTOR:
-      emit_name(out,
+      if (emit_name(out,
         selector->desc.element.namespaceURI,
-        selector->desc.element.localName);
+        selector->desc.element.localName) != 0)
+      {
+        return 1;
+      }
       break;
     case SAC_DESCENDANT_SELECTOR:
     case SAC_CHILD_SELECTOR:
-      emit_selector(out, selector->desc.descendant.descendantSelector);
+      if (emit_selector(out, selector->desc.descendant.descendantSelector) != 0)
+        return 1;
       switch (selector->selectorType) {
         case SAC_DESCENDANT_SELECTOR:
-          fprintf(out, " ");
+          if (fprintf(out, " ") < 0) return 1;
           break;
         case SAC_CHILD_SELECTOR:
-          fprintf(out, " + ");
+          if (fprintf(out, " + ") < 0) return 1;
           break;
         default:
-          fprintf(out, " ? ");
+          if (fprintf(out, " ? ") < 0) return 1;
           break;
       }
-      emit_selector(out, selector->desc.descendant.simpleSelector);
+      if (emit_selector(out, selector->desc.descendant.simpleSelector) != 0)
+        return 1;
       break;
     case SAC_DIRECT_ADJACENT_SELECTOR:
-      emit_selector(out, selector->desc.sibling.firstSelector);
-      fprintf(out, " > ");
-      emit_selector(out, selector->desc.sibling.secondSelector);
+      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
+        return 1;
+      if (fprintf(out, " > ") < 0) return 1;
+      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
+        return 1;
       break;
     case SAC_GENERAL_ADJACENT_SELECTOR:
-      emit_selector(out, selector->desc.sibling.firstSelector);
-      fprintf(out, " ~ ");
-      emit_selector(out, selector->desc.sibling.secondSelector);
+      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
+        return 1;
+      if (fprintf(out, " ~ ") < 0) return 1;
+      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
+        return 1;
       break;
     case SAC_TEXT_NODE_SELECTOR:
     case SAC_CDATA_SECTION_NODE_SELECTOR:
     case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
     case SAC_COMMENT_NODE_SELECTOR:
-      fprintf(out, "?");
+      if (fprintf(out, "?") < 0) return 1;
       break;
   }
+  return 0;
 }
 
 
 
-void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
+int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
   switch (value->lexicalUnitType) {
     case SAC_OPERATOR_PLUS:
-      fprintf(out, "+");
+      if (fprintf(out, "+") < 0) return 1;
       break;
     case SAC_OPERATOR_MINUS:
-      fprintf(out, "-");
+      if (fprintf(out, "-") < 0) return 1;
       break;
     case SAC_OPERATOR_COMMA:
-      fprintf(out, ",");
+      if (fprintf(out, ",") < 0) return 1;
       break;
     case SAC_OPERATOR_SLASH:
-      fprintf(out, "/");
+      if (fprintf(out, "/") < 0) return 1;
       break;
     case SAC_INHERIT:
-      fprintf(out, "inherit");
+      if (fprintf(out, "inherit") < 0) return 1;
       break;
     case SAC_INTEGER:
-      fprintf(out, "%li", value->desc.integer);
+      if (fprintf(out, "%li", value->desc.integer) < 0) return 1;
       break;
     case SAC_REAL:
-      fprintf(out, "%g", value->desc.real);
+      if (fprintf(out, "%g", value->desc.real) < 0) return 1;
       break;
     case SAC_LENGTH_EM:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+          return 1;
+      }
       break;
     case SAC_LENGTH_EX:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_PIXEL:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_INCH:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_CENTIMETER:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_MILLIMETER:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_POINT:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_LENGTH_PICA:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_PERCENTAGE:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_DEGREE:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_GRADIAN:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_RADIAN:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_MILLISECOND:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_SECOND:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_HERTZ:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_KILOHERTZ:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_DOTS_PER_INCH:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_DOTS_PER_CENTIMETER:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.ureal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
+      {
+        return 1;
+      }
       break;
     case SAC_URI:
-      fprintf(out, "url(\"%s\")", value->desc.uri);
+      if (fprintf(out, "url(\"%s\")", value->desc.uri) < 0) return 1;
       break;
     case SAC_RGBCOLOR:
     case SAC_ATTR_FUNCTION:
@@ -274,26 +350,26 @@ void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
       {
         SAC_LexicalUnit **arg;
 
-        fprintf(out, "%s(", value->desc.function.name);
+        if (fprintf(out, "%s(", value->desc.function.name) < 0) return 1;
 
         arg = value->desc.function.parameters;
         if (*arg != NULL) {
-          CSSOM_CSSEmitter_lexicalUnit(out, *arg);
+          if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
           while (*(++arg) != NULL) {
-            fprintf(out, " ");
-            CSSOM_CSSEmitter_lexicalUnit(out, *arg);
+            if (fprintf(out, " ") < 0) return 1;
+            if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
           }
         }
       }
       break;
     case SAC_IDENT:
-      fprintf(out, "%s", value->desc.ident);
+      if (fprintf(out, "%s", value->desc.ident) < 0) return 1;
       break;
     case SAC_STRING_VALUE:
-      fprintf(out, "\"%s\"", value->desc.stringValue);
+      if (fprintf(out, "\"%s\"", value->desc.stringValue) < 0) return 1;
       break;
     case SAC_UNICODERANGE:
-      fprintf(out, "%s", value->desc.unicodeRange);
+      if (fprintf(out, "%s", value->desc.unicodeRange) < 0) return 1;
       break;
     case SAC_SUB_EXPRESSION:
       {
@@ -301,66 +377,75 @@ void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
         sub = value->desc.function.parameters;
         if (*sub != NULL) {
-          CSSOM_CSSEmitter_lexicalUnit(out, *sub);
+          if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
           while (*(++sub) != NULL) {
-            fprintf(out, " ");
-            CSSOM_CSSEmitter_lexicalUnit(out, *sub);
+            if (fprintf(out, " ") < 0) return 1;
+            if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
           }
         }
       }
       break;
     case SAC_DIMENSION:
-      fprintf(out, "%g %s",
-        value->desc.dimension.value.sreal, value->desc.dimension.unit);
+      if (fprintf(out, "%g %s",
+        value->desc.dimension.value.sreal, value->desc.dimension.unit))
+      {
+        return 1;
+      }
       break;
     case SAC_OPERATOR_MULTIPLY:
-      fprintf(out, "*");
+      if (fprintf(out, "*") < 0) return 1;
       break;
     case SAC_OPERATOR_MOD:
-      fprintf(out, "|");
+      if (fprintf(out, "|") < 0) return 1;
       break;
     case SAC_OPERATOR_EXP:
-      fprintf(out, "E");
+      if (fprintf(out, "E") < 0) return 1;
       break;
     case SAC_OPERATOR_LT:
-      fprintf(out, "<");
+      if (fprintf(out, "<") < 0) return 1;
       break;
     case SAC_OPERATOR_GT:
-      fprintf(out, ">");
+      if (fprintf(out, ">") < 0) return 1;
       break;
     case SAC_OPERATOR_LE:
-      fprintf(out, "<=");
+      if (fprintf(out, "<=") < 0) return 1;
       break;
     case SAC_OPERATOR_GE:
-      fprintf(out, ">=");
+      if (fprintf(out, ">=") < 0) return 1;
       break;
     case SAC_OPERATOR_TILDE:
-      fprintf(out, "~");
+      if (fprintf(out, "~") < 0) return 1;
       break;
   };
+  return 0;
 }
 
 
 
-void CSSOM_CSSEmitter_cssProperty(FILE *out,
-  const CSSOM_CSSProperty *property)
-{
-  fprintf(out, "%s : %s",
-    CSSOM_CSSProperty_name(property), CSSOM_CSSProperty_cssText(property));
-  if (CSSOM_CSSProperty_important(property)) fprintf(out, "!important");
+int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property) {
+  if (fprintf(out, "%s : %s",
+    CSSOM_CSSProperty_name(property), CSSOM_CSSProperty_cssText(property)) < 0)
+  {
+      return 1;
+  }
+  if (CSSOM_CSSProperty_important(property)) {
+    if (fprintf(out, "!important") < 0) return 1;
+  }
+  return 0;
 }
 
 
 
-void CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
+int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
   const SAC_Selector **it;
 
   it = selectors;
   if (*it != NULL) {
-    emit_selector(out, *it);
+    if (emit_selector(out, *it) != 0) return 1;
     while (*(++it) != NULL) {
-      fprintf(out, ", ");
-      emit_selector(out, *it);
+      if (fprintf(out, ", ") < 0) return 1;
+      if (emit_selector(out, *it) != 0) return 1;
     }
   }
+  return 0;
 }

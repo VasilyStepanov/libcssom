@@ -13,11 +13,11 @@ extern "C" {
 
 
 
-void CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value);
+int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value);
 
-void CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property);
+int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property);
 
-void CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]);
+int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]);
 
 
 

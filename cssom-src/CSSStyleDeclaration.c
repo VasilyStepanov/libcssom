@@ -131,6 +131,32 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
 
 
 
+static int emit_cssStyleDeclaration(FILE *out,
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  CSSOM_FSMConstIter_CSSProperty it;
+
+  it = CSSOM_FSM_CSSProperty_cbegin(style->fsm);
+  if (it != CSSOM_FSM_CSSProperty_cend(style->fsm)) {
+    if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
+    if (fprintf(out, ";") < 0) return 1;
+
+    for (
+      it = CSSOM_FSMConstIter_CSSProperty_next(it);
+      it != CSSOM_FSM_CSSProperty_cend(style->fsm);
+      it = CSSOM_FSMConstIter_CSSProperty_next(it))
+    {
+      if (fprintf(out, " ") < 0) return 1;
+      if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
+      if (fprintf(out, ";") < 0) return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_cssText(
   const CSSOM_CSSStyleDeclaration *style)
 {
@@ -138,27 +164,21 @@ const char* CSSOM_CSSStyleDeclaration_cssText(
     FILE *out;
     char *buf;
     size_t bufsize;
-    CSSOM_FSMConstIter_CSSProperty it;
 
+    buf = NULL;
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    it = CSSOM_FSM_CSSProperty_cbegin(style->fsm);
-    if (it != CSSOM_FSM_CSSProperty_cend(style->fsm)) {
-      CSSOM_CSSEmitter_cssProperty(out, it->value);
-      fprintf(out, ";");
-      for (
-        it = CSSOM_FSMConstIter_CSSProperty_next(it);
-        it != CSSOM_FSM_CSSProperty_cend(style->fsm);
-        it = CSSOM_FSMConstIter_CSSProperty_next(it))
-      {
-        fprintf(out, " ");
-        CSSOM_CSSEmitter_cssProperty(out, it->value);
-        fprintf(out, ";");
-      }
+    if (emit_cssStyleDeclaration(out, style) != 0) {
+      fclose(out);
+      free(buf);
+      return NULL;
     }
 
-    if (fclose(out) != 0) return NULL;
+    if (fclose(out) != 0) {
+      free(buf);
+      return NULL;
+    }
 
     ((CSSOM_CSSStyleDeclaration*)style)->cssText = buf;
   }

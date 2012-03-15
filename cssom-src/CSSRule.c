@@ -118,12 +118,20 @@ const char* CSSOM_CSSStyleRule_selectorText(
     char *buf;
     size_t bufsize;
 
+    buf = NULL;
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    CSSOM_CSSEmitter_selectors(out, cssRule->selectors);
+    if (CSSOM_CSSEmitter_selectors(out, cssRule->selectors) != 0) {
+      fclose(out);
+      free(buf);
+      return NULL;
+    }
 
-    if (fclose(out) != 0) return NULL;
+    if (fclose(out) != 0) {
+      free(buf);
+      return NULL;
+    }
 
     ((CSSOM_CSSStyleRule*)cssRule)->selectorText = buf;
   }
