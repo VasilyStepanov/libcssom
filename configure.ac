@@ -10,6 +10,8 @@ LT_INIT
 
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_CHECK_PYWIDL
+
 
 
 AC_ARG_ENABLE([tests], [AS_HELP_STRING([--enable-tests],
