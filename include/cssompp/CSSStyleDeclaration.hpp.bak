@@ -27,12 +27,16 @@ class CSSStyleDeclaration {
 
     void swap(cssom::CSSStyleDeclaration &rhs);
 
-    const char* cssText() const;
+    const char * cssText() const;
+
     unsigned long length() const;
-    const char* getPropertyValue(const char *property) const;
-    const char* getPropertyPriority(const char *property) const;
+
+    const char * getPropertyValue(const char *property) const;
+
+    const char * getPropertyPriority(const char *property) const;
 
   private:
+
     friend class CSSStyleRule;
 
     CSSOM_CSSStyleDeclaration *_impl;

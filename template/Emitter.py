@@ -10,6 +10,17 @@ friends = { \
 
 
 
+def attributeGetterName(name):
+  return name
+
+
+
+def attributeSetterName(name):
+  assert(name)
+  return "set%s%s" % (name[0].upper(), name[1:])
+
+
+
 def capitalizeCamelCase(ident):
   assert(' ' not in ident)
 
