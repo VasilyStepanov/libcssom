@@ -3,12 +3,12 @@ RUN_PYWIDL = $(PYWIDL_PYTHONPATH) $(PYWIDL) -n
 
 
 
-.idl.c:
+.idl.cpp:
 	@$(RM) $@
 	$(RUN_PYWIDL) -t template.CPPEmitter -o $@ $<
 
 
 
-.idl.h:
+.idl.hpp:
 	@$(RM) $@
 	$(RUN_PYWIDL) -t template.HPPEmitter -o $@ $<
