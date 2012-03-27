@@ -42,10 +42,6 @@ $(top_cssompp_includedir)/CSSStyleDeclaration.hpp: $(top_idldir)/CSSStyleDeclara
 
 
 
-$(top_idldir)/CSSStyleDeclaration.hpp: $(top_srcdir)/template/Emitter.py $(top_srcdir)/template/HPPEmitter.py
-
-
-
 clean-local:
 	$(RM) $(top_idldir)/*.hpp $(top_idldir)/*.cpp
 

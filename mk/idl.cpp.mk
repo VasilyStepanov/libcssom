@@ -12,3 +12,11 @@ RUN_PYWIDL = $(PYWIDL_PYTHONPATH) $(PYWIDL) -n
 .idl.hpp:
 	@$(RM) $@
 	$(RUN_PYWIDL) -t template.HPPEmitter -o $@ $<
+
+
+
+$(top_srcdir)/idl/*.hpp: $(top_srcdir)/template/*.py $(PYWIDL)
+
+
+
+$(top_srcdir)/idl/*.cpp: $(top_srcdir)/template/*.py $(PYWIDL)
