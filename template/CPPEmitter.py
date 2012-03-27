@@ -3,35 +3,12 @@
 from Emitter import filename
 from Emitter import emitType
 from Emitter import emitArgument
+from HPPEmitter import attributeGetterSignature
+from HPPEmitter import attributeSetterSignature
+from HPPEmitter import operationSignature
+from HPPEmitter import attributeSetterName
 
 import pywidl
-
-
-
-def operationSignature(operation):
-  return "%s(%s)" % ( \
-    operation.name,
-    ", ".join([emitArgument(arg) for arg in operation.arguments]))
-
-
-
-def attributeSetterName(name):
-  assert(name)
-  return "set%s%s" % (name[0].upper(), name[1:])
-
-
-
-def attributeGetterSignature(attribute):
-  return "%s() const" % attribute.name
-
-
-
-def attributeSetterSignature(attribute):
-  return "%s(%s %s)" % ( \
-        attributeSetterName(attribute.name),
-        emitType(attribute.type),
-        attribute.name,
-      )
 
 
 
@@ -83,7 +60,7 @@ def renderAttribute(out, interface, attribute):
     interface.name,
     attributeSetterSignature(attribute))
 
-  print >>out, "  CSSOM_%s_%s(impl, %s);" % ( \
+  print >>out, "  CSSOM_%s_%s(_impl, %s);" % ( \
     interface.name,
     attributeSetterName(attribute.name),
     attribute.name)

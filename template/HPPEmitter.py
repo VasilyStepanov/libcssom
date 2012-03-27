@@ -4,11 +4,35 @@ from Emitter import headerDefine
 from Emitter import friends
 from Emitter import emitType
 from Emitter import emitArgument
-from CPPEmitter import attributeGetterSignature
-from CPPEmitter import attributeSetterSignature
-from CPPEmitter import operationSignature
 
 import pywidl
+
+
+
+def operationSignature(operation):
+  return "%s(%s)" % ( \
+    operation.name,
+    ", ".join([emitArgument(arg) for arg in operation.arguments]))
+
+
+
+def attributeSetterName(name):
+  assert(name)
+  return "set%s%s" % (name[0].upper(), name[1:])
+
+
+
+def attributeGetterSignature(attribute):
+  return "%s() const" % attribute.name
+
+
+
+def attributeSetterSignature(attribute):
+  return "%s(%s %s)" % ( \
+        attributeSetterName(attribute.name),
+        emitType(attribute.type),
+        attribute.name,
+      )
 
 
 
