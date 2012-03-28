@@ -10,6 +10,19 @@ import pywidl
 
 
 
+def interfaceMemberName(interface, member):
+  i = 0
+  for m in interface.members:
+    if m == member:
+      if i == 0: return member.name
+      if i == 1: return "%sEx" % member.name
+      return "%sEx%d" % (member.name, i)
+    if m.name == member.name: i += 1
+
+  return member.name
+
+
+
 def attributeSetterName(name):
   assert(name)
   return "set%s%s" % (name[0].upper(), name[1:])
@@ -18,7 +31,7 @@ def attributeSetterName(name):
 
 def attributeGetterSignature(interface, attribute):
   return "CSSOM_%(iface)s_%(attr)s(const CSSOM_%(iface)s * %(inst)s)" % { \
-    "attr" : attribute.name,
+    "attr" : interfaceMemberName(interface, attribute),
     "inst" : instanceName(interface.name),
     "iface" : interface.name }
 
@@ -29,7 +42,7 @@ def attributeSetterSignature(interface, attribute):
     "(CSSOM_%(iface)s * %(inst)s, %(type)s %(attr)s)" % { \
     "iface" : interface.name,
     "inst" : instanceName(interface.name),
-    "setter" : attributeSetterName(attribute.name),
+    "setter" : attributeSetterName(interfaceMemberName(interface, attribute)),
     "type" : emitType(attribute.type),
     "attr" : attribute.name }
 
@@ -50,7 +63,7 @@ def operationSignature(interface, operation):
   return "CSSOM_%(iface)s_%(op)s(%(inst)s, %(args)s)" % { \
     "iface" : interface.name,
     "inst" : inst,
-    "op" : operation.name,
+    "op" : interfaceMemberName(interface, operation),
     "args" : ", ".join([emitArgument(arg) for arg in operation.arguments])}
 
 

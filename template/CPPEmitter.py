@@ -7,6 +7,7 @@ from HPPEmitter import attributeGetterSignature
 from HPPEmitter import attributeSetterSignature
 from HPPEmitter import operationSignature
 from HPPEmitter import attributeSetterName
+from HEmitter import interfaceMemberName
 
 import pywidl
 
@@ -29,7 +30,7 @@ def renderOperation(out, interface, operation):
 
   print >>out, "  return CSSOM_%s_%s(_impl%s);" % (
     interface.name,
-    operation.name,
+    interfaceMemberName(interface, operation),
     "".join([", %s" % arg.name for arg in operation.arguments]))
 
   print >>out, "}"
@@ -47,7 +48,8 @@ def renderAttribute(out, interface, attribute):
     attributeGetterSignature(attribute))
 
   print >>out, "  return CSSOM_%s_%s(_impl);" % ( \
-    interface.name, attribute.name)
+    interface.name,
+    interfaceMemberName(interface, attribute))
 
   print >>out, "}"
 
@@ -62,7 +64,7 @@ def renderAttribute(out, interface, attribute):
 
   print >>out, "  CSSOM_%s_%s(_impl, %s);" % ( \
     interface.name,
-    attributeSetterName(attribute.name),
+    attributeSetterName(interfaceMemberName(interface, attribute)),
     attribute.name)
 
   print >>out, "}"
