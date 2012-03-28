@@ -3,6 +3,8 @@
 from Emitter import headerDefine
 from Emitter import emitType
 from Emitter import emitArgument
+from Emitter import splitCamelCase
+from Emitter import instanceName
 
 import pywidl
 
@@ -15,25 +17,39 @@ def attributeSetterName(name):
 
 
 def attributeGetterSignature(interface, attribute):
-  return "CSSOM_%(iface)s_%(attr)s(const CSSOM_%(iface)s *)" % { \
+  return "CSSOM_%(iface)s_%(attr)s(const CSSOM_%(iface)s *%(inst)s)" % { \
     "attr" : attribute.name,
+    "inst" : instanceName(interface.name),
     "iface" : interface.name }
 
 
 
 def attributeSetterSignature(interface, attribute):
   return "CSSOM_%(iface)s_%(setter)s" \
-    "(CSSOM_%(iface)s *, %(type)s %(attr)s)" % { \
+    "(CSSOM_%(iface)s *%(inst)s, %(type)s %(attr)s)" % { \
     "iface" : interface.name,
+    "inst" : instanceName(interface.name),
     "setter" : attributeSetterName(attribute.name),
     "type" : emitType(attribute.type),
     "attr" : attribute.name }
 
 
 
+def isGetterOperation(operation):
+  return splitCamelCase(operation.name)[0] == "get"
+
+
+
 def operationSignature(interface, operation):
-  return "CSSOM_%(iface)s_%(op)s(CSSOM_%(iface)s *, %(args)s)" % { \
+  inst = "CSSOM_%(iface)s *%(inst)s" % {
     "iface" : interface.name,
+    "inst" : instanceName(interface.name)}
+
+  if isGetterOperation(operation): inst = "const %s" % inst
+
+  return "CSSOM_%(iface)s_%(op)s(%(inst)s, %(args)s)" % { \
+    "iface" : interface.name,
+    "inst" : inst,
     "op" : operation.name,
     "args" : ", ".join([emitArgument(arg) for arg in operation.arguments])}
 

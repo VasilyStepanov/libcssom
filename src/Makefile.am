@@ -33,6 +33,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       CSSStyleSheet.c \
                       Deque_CSSRule.c \
                       FSM_CSSProperty.c \
+                      CSSStyleDeclaration.c \
                       $(top_idldir)/CSSStyleDeclaration.idl
 
 libcssom_la_LIBADD = $(SACC_LIBS)

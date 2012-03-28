@@ -27,7 +27,7 @@ def renderOperation(out, interface, operation):
     interface.name,
     operationSignature(operation))
 
-  print >>out, "  CSSOM_%s_%s(_impl%s);" % (
+  print >>out, "  return CSSOM_%s_%s(_impl%s);" % (
     interface.name,
     operation.name,
     "".join([", %s" % arg.name for arg in operation.arguments]))

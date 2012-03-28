@@ -60,7 +60,7 @@ def emitType(typedef):
 
 
 
-def capitalizeCamelCase(ident):
+def splitCamelCase(ident):
   assert(' ' not in ident)
 
   if not ident: return ident
@@ -82,7 +82,20 @@ def capitalizeCamelCase(ident):
   word.append(ch)
   words.append(''.join(word))
 
-  return "_".join([word.upper() for word in words])
+  return words
+
+
+
+def capitalizeCamelCase(ident):
+  return "_".join([word.upper() for word in splitCamelCase(ident)])
+
+
+
+def instanceName(className):
+  words = splitCamelCase(className)
+  words[0] = words[0].lower()
+
+  return "".join(words)
 
 
 
