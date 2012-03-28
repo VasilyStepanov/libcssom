@@ -109,9 +109,9 @@ def renderInterface(out, interface):
     renderFriend(out, declaration)
 
   print >>out
-  print >>out, "    CSSOM_%(name)s *_impl;" % template
+  print >>out, "    CSSOM_%(name)s * _impl;" % template
   print >>out
-  print >>out, "    explicit %(name)s(CSSOM_%(name)s *impl);" % template
+  print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   print >>out, "};"
 
 

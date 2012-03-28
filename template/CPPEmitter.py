@@ -89,7 +89,7 @@ def renderInterface(out, interface):
   print >>out
   print >>out
   print >>out
-  print >>out, "%(name)s::%(name)s(CSSOM_%(name)s *impl) :" % template
+  print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
   print >>out, "  _impl(impl)"
   print >>out, "{}"
 

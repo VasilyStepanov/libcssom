@@ -17,7 +17,7 @@ def attributeSetterName(name):
 
 
 def attributeGetterSignature(interface, attribute):
-  return "CSSOM_%(iface)s_%(attr)s(const CSSOM_%(iface)s *%(inst)s)" % { \
+  return "CSSOM_%(iface)s_%(attr)s(const CSSOM_%(iface)s * %(inst)s)" % { \
     "attr" : attribute.name,
     "inst" : instanceName(interface.name),
     "iface" : interface.name }
@@ -26,7 +26,7 @@ def attributeGetterSignature(interface, attribute):
 
 def attributeSetterSignature(interface, attribute):
   return "CSSOM_%(iface)s_%(setter)s" \
-    "(CSSOM_%(iface)s *%(inst)s, %(type)s %(attr)s)" % { \
+    "(CSSOM_%(iface)s * %(inst)s, %(type)s %(attr)s)" % { \
     "iface" : interface.name,
     "inst" : instanceName(interface.name),
     "setter" : attributeSetterName(attribute.name),
@@ -41,7 +41,7 @@ def isGetterOperation(operation):
 
 
 def operationSignature(interface, operation):
-  inst = "CSSOM_%(iface)s *%(inst)s" % {
+  inst = "CSSOM_%(iface)s * %(inst)s" % {
     "iface" : interface.name,
     "inst" : instanceName(interface.name)}
 
