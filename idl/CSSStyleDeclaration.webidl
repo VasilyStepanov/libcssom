@@ -1,21 +1,20 @@
 interface CSSStyleDeclaration {
-  readonly attribute DOMString cssText;
+           attribute DOMString cssText;
 
   readonly attribute unsigned long length;
-  // DOMString item(unsigned long index);
+  DOMString item(unsigned long index);
 
   DOMString getPropertyValue(DOMString property);
   DOMString getPropertyPriority(DOMString property);
-  // void setProperty(DOMString? property, DOMString? value);
-  // void setProperty(DOMString? property, DOMString? value, DOMString? priority);
-  // DOMString removeProperty(DOMString property);
+  void setProperty(DOMString? property, DOMString? value);
+  void setProperty(DOMString? property, DOMString? value, DOMString? priority);
+  DOMString removeProperty(DOMString property);
 
-  // readonly attribute CSSStyleDeclarationValue values;
+  readonly attribute CSSStyleDeclarationValue values;
 
-  // readonly attribute CSSRule parentRule;
+  readonly attribute CSSRule parentRule;
 
   // CSS Properties
-  /*
            attribute DOMString? azimuth;
            attribute DOMString? background;
            attribute DOMString? backgroundAttachment;
@@ -138,5 +137,4 @@ interface CSSStyleDeclaration {
            attribute DOMString? width;
            attribute DOMString? wordSpacing;
            attribute DOMString? zIndex;
-  */
 };
