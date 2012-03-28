@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
 from Emitter import filename
-from Emitter import emitType
-from Emitter import emitArgument
+from HPPEmitter import emitArgument
+from HPPEmitter import emitType
 from HPPEmitter import attributeGetterSignature
 from HPPEmitter import attributeSetterSignature
 from HPPEmitter import operationSignature
@@ -71,6 +71,16 @@ def renderAttribute(out, interface, attribute):
 
 
 
+def renderConst(out, interface, const):
+  assert(not const.extended_attributes)
+  
+  print >>out, "%(type)s %(iface)s::%(name)s = CSSOM_%(iface)s_%(name)s;" % { \
+    "type" : emitType(const.type),
+    "iface" : interface.name,
+    "name" : const.name }
+
+
+
 def renderInterfaceMember(out, interface, member):
   print >>out
   print >>out
@@ -80,6 +90,8 @@ def renderInterfaceMember(out, interface, member):
     renderOperation(out, interface, member)
   elif isinstance(member, pywidl.Attribute):
     renderAttribute(out, interface, member)
+  elif isinstance(member, pywidl.Const):
+    renderConst(out, interface, member)
   else:
     raise RuntimeError("Unknown member type %s" % member)
 

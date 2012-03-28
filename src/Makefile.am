@@ -35,7 +35,8 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       FSM_CSSProperty.c \
                       CSSStyleDeclaration.c
 
-libcssom_la_DEPENDENCIES = $(top_idldir)/CSSStyleDeclaration.idl
+libcssom_la_DEPENDENCIES = $(top_idldir)/CSSRule.idl \
+                           $(top_idldir)/CSSStyleDeclaration.idl
 
 libcssom_la_LIBADD = $(SACC_LIBS)
 
@@ -47,6 +48,9 @@ pkgconfig_DATA = cssom.pc
 
 $(top_cssom_includedir)/CSSStyleDeclaration.h: $(top_idldir)/CSSStyleDeclaration.h
 	cp $(top_idldir)/CSSStyleDeclaration.h $(top_cssom_includedir)/CSSStyleDeclaration.h
+
+$(top_cssom_includedir)/CSSRule.h: $(top_idldir)/CSSRule.h
+	cp $(top_idldir)/CSSRule.h $(top_cssom_includedir)/CSSRule.h
 
 
 

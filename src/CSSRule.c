@@ -10,6 +10,30 @@
 
 
 
+unsigned short CSSOM_CSSRule_STYLE_RULE = 1;
+
+
+
+unsigned short CSSOM_CSSRule_IMPORT_RULE = 3;
+
+
+
+unsigned short CSSOM_CSSRule_MEDIA_RULE = 4;
+
+
+
+unsigned short CSSOM_CSSRule_FONT_FACE_RULE = 5;
+
+
+
+unsigned short CSSOM_CSSRule_PAGE_RULE = 6;
+
+
+
+unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
+
+
+
 struct _CSSOM_CSSRule_vtable {
   void (*release)(CSSOM_CSSRule *cssRule);
 };
@@ -19,7 +43,7 @@ struct _CSSOM_CSSRule_vtable {
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
-  CSSOM_CSSRuleType type;
+  unsigned short type;
 };
 
 
@@ -50,7 +74,7 @@ static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
 
 
 static void CSSRule_init(CSSOM_CSSRule *cssRule,
-  struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSRuleType type)
+  struct _CSSOM_CSSRule_vtable *vtable, unsigned short type)
 {
   cssRule->vtable = vtable;
   cssRule->handles = 1;
@@ -71,7 +95,7 @@ void CSSOM_CSSRule__release(CSSOM_CSSRule *cssRule) {
 
 
 
-CSSOM_CSSRuleType CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
+unsigned short CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
   return cssRule->type;
 }
 
@@ -92,7 +116,8 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
     return NULL;
   }
 
-  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable, CSSOM_STYLE_RULE);
+  CSSRule_init((CSSOM_CSSRule*)cssRule,
+    &CSSStyleRule_vtable, CSSOM_CSSRule_STYLE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
   cssRule->style = style;

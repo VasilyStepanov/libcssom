@@ -18,7 +18,7 @@ static void test_CSSRule_alloc() {
   CSSOM_CSSRule *cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(
     table, NULL);
 
-  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
+  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_CSSRule_STYLE_RULE);
 
   CSSOM_CSSRule__release(cssRule);
   CSSOM_FSMTable_CSSProperty_free(table);

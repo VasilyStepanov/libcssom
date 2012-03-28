@@ -18,14 +18,15 @@ libcssompp_base_la_HEADERS = $(top_srcdir)/include/cssompp.hpp
 libcssompp_ladir = $(includedir)/cssom
 
 libcssompp_la_HEADERS = $(top_cssompp_includedir)/CSSOM.hpp \
+                        $(top_cssompp_includedir)/CSSRule.hpp \
                         $(top_cssompp_includedir)/CSSStyleDeclaration.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSProperty.cpp \
-                        CSSRule.cpp \
                         CSSRuleList.cpp \
                         CSSStyleRule.cpp \
                         CSSStyleSheet.cpp \
+                        $(top_idldir)/CSSRule.idl \
                         $(top_idldir)/CSSStyleDeclaration.idl
 
 libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
@@ -39,6 +40,9 @@ pkgconfig_DATA = cssompp.pc
 
 $(top_cssompp_includedir)/CSSStyleDeclaration.hpp: $(top_idldir)/CSSStyleDeclaration.hpp
 	cp $(top_idldir)/CSSStyleDeclaration.hpp $(top_cssompp_includedir)/CSSStyleDeclaration.hpp
+
+$(top_cssompp_includedir)/CSSRule.hpp: $(top_idldir)/CSSRule.hpp
+	cp $(top_idldir)/CSSRule.hpp $(top_cssompp_includedir)/CSSRule.hpp
 
 
 

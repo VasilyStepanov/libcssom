@@ -7,18 +7,9 @@ import os.path
 
 
 friends = { \
-  'CSSStyleDeclaration' : ('CSSStyleRule', )
+  'CSSStyleDeclaration' : ('CSSStyleRule', ),
+  'CSSRule' : ('CSSRuleList', 'CSSStyleRule'),
 }
-
-
-
-def emitArgument(argument):
-  assert(not argument.optional)
-  assert(not argument.default)
-  assert(not argument.ellipsis)
-  assert(not argument.extended_attributes)
-
-  return "%s %s" % (emitType(argument.type), argument.name)
 
 
 
@@ -28,6 +19,12 @@ def emitSimpleType(typedef):
   elif typedef.type == typedef.VOID:
     assert(not typedef.nullable)
     return "void"
+  elif typedef.type == typedef.SHORT:
+    assert(not typedef.nullable)
+    return "short"
+  elif typedef.type == typedef.UNSIGNED_SHORT:
+    assert(not typedef.nullable)
+    return "unsigned short"
   elif typedef.type == typedef.LONG:
     assert(not typedef.nullable)
     return "long"
@@ -42,21 +39,6 @@ def emitSimpleType(typedef):
     return "unsigned long long"
   else:
     raise RuntimeError("Unknown simple type: %s" % typedef.type)
-
-
-
-def emitInterfaceType(typedef):
-  return "%s*" % typedef.name
-
-
-
-def emitType(typedef):
-  if isinstance(typedef, pywidl.SimpleType):
-    return emitSimpleType(typedef)
-  elif isinstance(typedef, pywidl.InterfaceType):
-    return emitInterfaceType(typedef)
-  else:
-    raise RuntimeError("Unknown type: %s" % typedef)
 
 
 

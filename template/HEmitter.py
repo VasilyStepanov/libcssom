@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from Emitter import headerDefine
-from Emitter import emitType
-from Emitter import emitArgument
+from Emitter import emitSimpleType
 from Emitter import splitCamelCase
 from Emitter import instanceName
 
@@ -68,6 +67,31 @@ def operationSignature(interface, operation):
 
 
 
+def emitArgument(argument):
+  assert(not argument.optional)
+  assert(not argument.default)
+  assert(not argument.ellipsis)
+  assert(not argument.extended_attributes)
+
+  return "%s %s" % (emitType(argument.type), argument.name)
+
+
+
+def emitInterfaceType(typedef):
+  return "CSSOM_%s*" % typedef.name
+
+
+
+def emitType(typedef):
+  if isinstance(typedef, pywidl.SimpleType):
+    return emitSimpleType(typedef)
+  elif isinstance(typedef, pywidl.InterfaceType):
+    return emitInterfaceType(typedef)
+  else:
+    raise RuntimeError("Unknown type: %s" % typedef)
+
+
+
 def renderAttribute(out, interface, attribute):
   assert(not attribute.extended_attributes)
   assert(not attribute.stringifier)
@@ -102,6 +126,16 @@ def renderOperation(out, interface, operation):
 
 
 
+def renderConst(out, interface, const):
+  assert(not const.extended_attributes)
+
+  print >>out, "extern %s CSSOM_%s_%s;" % ( \
+    emitType(const.type),
+    interface.name,
+    const.name)
+
+
+
 def renderInterfaceMember(out, interface, member):
   print >>out
   print >>out
@@ -110,6 +144,8 @@ def renderInterfaceMember(out, interface, member):
     renderAttribute(out, interface, member)
   elif isinstance(member, pywidl.Operation):
     renderOperation(out, interface, member)
+  elif isinstance(member, pywidl.Const):
+    renderConst(out, interface, member)
   else:
     raise RuntimeError("Unknown interface member %s" % member)
 

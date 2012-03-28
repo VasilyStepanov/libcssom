@@ -18,10 +18,6 @@ namespace cssom {
 
 
 
-typedef CSSOM_CSSRuleType CSSRuleType;
-
-
-
 class CSSRule {
   public:
     CSSRule(const cssom::CSSRule &copy);
@@ -31,7 +27,7 @@ class CSSRule {
 
     void swap(cssom::CSSRule &cssRule);
 
-    cssom::CSSRuleType type() const;
+    unsigned short type() const;
 
   private:
     friend class CSSRuleList;

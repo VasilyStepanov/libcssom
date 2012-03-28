@@ -2,8 +2,7 @@
 
 from Emitter import headerDefine
 from Emitter import friends
-from Emitter import emitType
-from Emitter import emitArgument
+from Emitter import emitSimpleType
 
 import pywidl
 
@@ -33,6 +32,31 @@ def attributeSetterSignature(attribute):
         emitType(attribute.type),
         attribute.name,
       )
+
+
+
+def emitInterfaceType(typedef):
+  return "%s*" % typedef.name
+
+
+
+def emitType(typedef):
+  if isinstance(typedef, pywidl.SimpleType):
+    return emitSimpleType(typedef)
+  elif isinstance(typedef, pywidl.InterfaceType):
+    return emitInterfaceType(typedef)
+  else:
+    raise RuntimeError("Unknown type: %s" % typedef)
+
+
+
+def emitArgument(argument):
+  assert(not argument.optional)
+  assert(not argument.default)
+  assert(not argument.ellipsis)
+  assert(not argument.extended_attributes)
+
+  return "%s %s" % (emitType(argument.type), argument.name)
 
 
 
@@ -71,6 +95,15 @@ def renderAttribute(out, attribute):
 
 
 
+def renderConst(out, const):
+  assert(not const.extended_attributes)
+
+  print >>out, "    static %s %s;" % ( \
+    emitType(const.type),
+    const.name)
+
+
+
 def renderInterfaceMember(out, member):
   print >>out
 
@@ -78,6 +111,8 @@ def renderInterfaceMember(out, member):
     renderOperation(out, member)
   elif isinstance(member, pywidl.Attribute):
     renderAttribute(out, member)
+  elif isinstance(member, pywidl.Const):
+    renderConst(out, member)
   else:
     raise RuntimeError("Unknown member type %s" % member)
 
@@ -176,7 +211,8 @@ def render(definitions=[], source=None, output=None, template=None,
       if isinstance(definition, pywidl.Interface):
         for member in definition.members:
           if isinstance(member, pywidl.Attribute):
-            if isinstance(member.type, pywidl.InterfaceType):
+            if isinstance(member.type, pywidl.InterfaceType) \
+            and member.type.name != definition.name:
               forwards.add(member.type.name)
 
     renderForwardDeclarations(out, forwards)

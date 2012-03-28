@@ -1,3 +1,6 @@
+CSSRule.h
+CSSRule.hpp
+CSSRule.cpp
 CSSStyleDeclaration.h
 CSSStyleDeclaration.hpp
 CSSStyleDeclaration.cpp

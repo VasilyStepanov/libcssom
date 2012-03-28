@@ -30,7 +30,7 @@ static void test_CSSOM_basics() {
   cssRule = CSSOM_CSSRuleList_at(cssRules, 0);
   assert(cssRule != NULL);
 
-  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_STYLE_RULE);
+  assert(CSSOM_CSSRule_type(cssRule) == CSSOM_CSSRule_STYLE_RULE);
 
   ASSERT_EQUAL_STRINGS("p",
     CSSOM_CSSStyleRule_selectorText((CSSOM_CSSStyleRule*)cssRule));
