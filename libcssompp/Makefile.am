@@ -46,6 +46,7 @@ clean-local:
 	$(RM) $(top_idldir)/*.hpp $(top_idldir)/*.cpp
 
 
+
 if ENABLE_TESTS
 test: all
 	make -C $(top_srcdir)/tests test

@@ -10,7 +10,3 @@ RUN_PYWIDL = $(PYWIDL_PYTHONPATH) $(PYWIDL) -n
 
 
 $(top_srcdir)/idl/*.h: $(top_srcdir)/template/*.py $(PYWIDL)
-
-
-
-$(top_srcdir)/idl/*.c: $(top_srcdir)/template/*.py $(PYWIDL)
