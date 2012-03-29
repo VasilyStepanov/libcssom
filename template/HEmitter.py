@@ -167,18 +167,20 @@ def renderInterface(out, interface):
 
 
 def renderInclude(out, definition):
-  hppincludes = []
+  types = []
   if isinstance(definition, pywidl.Interface):
     if isinstance(definition, pywidl.Interface):
       for member in definition.members:
         if isinstance(member, pywidl.Attribute):
-          if isinstance(member.type, pywidl.InterfaceType) \
-          and member.type.name != definition.name:
-            hppincludes.append(member.type.name)
+          types.append(member.type)
         elif isinstance(member, pywidl.Operation):
-          if isinstance(member.return_type, pywidl.InterfaceType) \
-          and member.return_type.name != definition.name:
-            hppincludes.append(member.return_type.name)
+          types.append(member.return_type)
+
+  hppincludes = set()
+  for type in types:
+    if isinstance(type, pywidl.InterfaceType) \
+    and type.name != definition.name:
+      hppincludes.add(type.name)
 
   if hppincludes: print >>out
   for include in hppincludes:
