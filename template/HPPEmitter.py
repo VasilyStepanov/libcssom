@@ -4,60 +4,17 @@ from Emitter import filename
 from Emitter import headerDefine
 from Emitter import friends
 from Emitter import emitSimpleType
+from CPPEmitter import emitArgument
+from CPPEmitter import emitType
+from CPPEmitter import attributeGetterSignature
+from CPPEmitter import attributeSetterSignature
+from CPPEmitter import operationSignature
+from CPPEmitter import attributeSetterName
+from CPPEmitter import renderDefinitionSourceFile
 
 import pywidl
 
-
-
-def operationSignature(operation):
-  return "%s(%s)" % ( \
-    operation.name,
-    ", ".join([emitArgument(arg) for arg in operation.arguments]))
-
-
-
-def attributeSetterName(name):
-  assert(name)
-  return "set%s%s" % (name[0].upper(), name[1:])
-
-
-
-def attributeGetterSignature(attribute):
-  return "%s() const" % attribute.name
-
-
-
-def attributeSetterSignature(attribute):
-  return "%s(%s %s)" % ( \
-        attributeSetterName(attribute.name),
-        emitType(attribute.type),
-        attribute.name,
-      )
-
-
-
-def emitInterfaceType(typedef):
-  return "cssom::%s" % typedef.name
-
-
-
-def emitType(typedef):
-  if isinstance(typedef, pywidl.SimpleType):
-    return emitSimpleType(typedef)
-  elif isinstance(typedef, pywidl.InterfaceType):
-    return emitInterfaceType(typedef)
-  else:
-    raise RuntimeError("Unknown type: %s" % typedef)
-
-
-
-def emitArgument(argument):
-  assert(not argument.optional)
-  assert(not argument.default)
-  assert(not argument.ellipsis)
-  assert(not argument.extended_attributes)
-
-  return "%s %s" % (emitType(argument.type), argument.name)
+import os
 
 
 
@@ -198,43 +155,54 @@ def renderForwardDeclarations(out, declarations):
 
 
 
-def render(definitions=[], source=None, output=None, template=None,
-  template_type=None, **kwargs):
-
-  with open(output, 'w') as out:
-    define = headerDefine("cssompp", filename(source), "hpp")
+def renderDefinitionHeaderFile(outputdir, definition):
+  with open(os.path.join(outputdir, "%s.hpp" % definition.name), 'w') as out:
+    define = headerDefine("cssompp", definition.name, "hpp")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
 
-    for definition in definitions:
-      renderInclude(out, definition)
+    renderInclude(out, definition)
 
     print >>out
 
     forwards = set()
 
-    for definition in definitions:
-      forwards.update(friends.get(definition.name, []))
+    forwards.update(friends.get(definition.name, []))
 
-    for definition in definitions:
-      if isinstance(definition, pywidl.Interface):
-        for member in definition.members:
-          if isinstance(member, pywidl.Attribute):
-            if isinstance(member.type, pywidl.InterfaceType) \
-            and member.type.name != definition.name:
-              forwards.add(member.type.name)
+    if isinstance(definition, pywidl.Interface):
+      for member in definition.members:
+        if isinstance(member, pywidl.Attribute):
+          if isinstance(member.type, pywidl.InterfaceType) \
+          and member.type.name != definition.name:
+            forwards.add(member.type.name)
 
     renderForwardDeclarations(out, forwards)
 
     print >>out
     print >>out, """namespace cssom {"""
 
-    for definition in definitions:
-      renderDefinition(out, definition)
+    renderDefinition(out, definition)
 
     print >>out
     print >>out
     print >>out
     print >>out, "} // cssom"
     print >>out
-    print >>out, "#endif // %s""" % define
+    print >>out, "#endif // %s""" % define  
+
+
+
+def render(definitions=[], source=None, output=None, template=None,
+  template_type=None, srcdir=None, includedir=None, **kwargs):
+
+  assert(srcdir)
+  assert(includedir)
+
+  for definition in definitions:
+    renderDefinitionHeaderFile(includedir, definition)
+
+  for definition in definitions:
+    renderDefinitionSourceFile(srcdir, definition)
+
+  with open(output, 'w') as out:
+    pass

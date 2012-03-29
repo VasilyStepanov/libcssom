@@ -6,17 +6,9 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic \
 
 AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
-top_idldir = $(top_srcdir)/idl
-top_cssompp_includedir = $(top_srcdir)/include/cssompp
-
-
-
-BUILT_SOURCES = $(top_idldir)/CSSRule.cpp \
-                $(top_idldir)/CSSRule.hpp \
-                $(top_idldir)/CSSStyleDeclaration.cpp \
-                $(top_idldir)/CSSStyleDeclaration.hpp \
-                $(top_idldir)/CSSStyleRule.cpp \
-                $(top_idldir)/CSSStyleRule.hpp
+BUILT_SOURCES = $(top_idldir)/CSSRule.idl.hpp \
+                $(top_idldir)/CSSStyleDeclaration.idl.hpp \
+                $(top_idldir)/CSSStyleRule.idl.hpp
 
 
 
@@ -26,18 +18,20 @@ libcssompp_base_la_HEADERS = $(top_srcdir)/include/cssompp.hpp
 
 libcssompp_ladir = $(includedir)/cssom
 
-libcssompp_la_HEADERS = $(top_cssompp_includedir)/CSSOM.hpp \
-                        $(top_cssompp_includedir)/CSSRule.hpp \
-                        $(top_cssompp_includedir)/CSSStyleDeclaration.hpp \
-                        $(top_cssompp_includedir)/CSSStyleRule.hpp
+libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp \
+                        \
+                        $(top_srcdir)/include/cssompp/CSSRule.hpp \
+                        $(top_srcdir)/include/cssompp/CSSStyleDeclaration.hpp \
+                        $(top_srcdir)/include/cssompp/CSSStyleRule.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSProperty.cpp \
                         CSSRuleList.cpp \
                         CSSStyleSheet.cpp \
-                        $(top_idldir)/CSSRule.idl \
-                        $(top_idldir)/CSSStyleDeclaration.idl \
-                        $(top_idldir)/CSSStyleRule.idl
+                        \
+                        CSSRule.cpp \
+                        CSSStyleDeclaration.cpp \
+                        CSSStyleRule.cpp
 
 libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
 
@@ -47,19 +41,7 @@ pkgconfig_DATA = cssompp.pc
 
 
 
-$(top_cssompp_includedir)/CSSStyleDeclaration.hpp: $(top_idldir)/CSSStyleDeclaration.hpp
-	cp $(top_idldir)/CSSStyleDeclaration.hpp $(top_cssompp_includedir)/CSSStyleDeclaration.hpp
-
-$(top_cssompp_includedir)/CSSRule.hpp: $(top_idldir)/CSSRule.hpp
-	cp $(top_idldir)/CSSRule.hpp $(top_cssompp_includedir)/CSSRule.hpp
-
-$(top_cssompp_includedir)/CSSStyleRule.hpp: $(top_idldir)/CSSStyleRule.hpp
-	cp $(top_idldir)/CSSStyleRule.hpp $(top_cssompp_includedir)/CSSStyleRule.hpp
-
-
-
-clean-local:
-	$(RM) $(top_idldir)/*.hpp $(top_idldir)/*.cpp
+CLEANFILES = $(BUILT_SOURCES)
 
 
 

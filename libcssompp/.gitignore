@@ -1,2 +1,5 @@
 libcssompp.la
 cssompp.pc
+CSSRule.cpp
+CSSStyleDeclaration.cpp
+CSSStyleRule.cpp

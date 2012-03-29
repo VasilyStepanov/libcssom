@@ -1,7 +1,2 @@
 *.idl.h
-CSSRule.cpp
-CSSRule.hpp
-CSSStyleDeclaration.cpp
-CSSStyleDeclaration.hpp
-CSSStyleRule.cpp
-CSSStyleRule.hpp
+*.idl.hpp

@@ -1,15 +1,12 @@
 # -*- coding: UTF-8 -*-
 
 from Emitter import filename
-from HPPEmitter import emitArgument
-from HPPEmitter import emitType
-from HPPEmitter import attributeGetterSignature
-from HPPEmitter import attributeSetterSignature
-from HPPEmitter import operationSignature
-from HPPEmitter import attributeSetterName
+from Emitter import emitSimpleType
 from HEmitter import interfaceMemberName
 
 import pywidl
+
+import os
 
 
 
@@ -17,6 +14,58 @@ def implArgument(interface):
   if not interface.parent: return "_impl"
 
   return "reinterpret_cast<CSSOM_%s*>(_impl)" % interface.name
+
+
+
+def attributeSetterName(name):
+  assert(name)
+  return "set%s%s" % (name[0].upper(), name[1:])
+
+
+
+def attributeGetterSignature(attribute):
+  return "%s() const" % attribute.name
+
+
+
+def attributeSetterSignature(attribute):
+  return "%s(%s %s)" % ( \
+        attributeSetterName(attribute.name),
+        emitType(attribute.type),
+        attribute.name,
+      )
+
+
+
+def operationSignature(operation):
+  return "%s(%s)" % ( \
+    operation.name,
+    ", ".join([emitArgument(arg) for arg in operation.arguments]))
+
+
+
+def emitType(typedef):
+  if isinstance(typedef, pywidl.SimpleType):
+    return emitSimpleType(typedef)
+  elif isinstance(typedef, pywidl.InterfaceType):
+    return emitInterfaceType(typedef)
+  else:
+    raise RuntimeError("Unknown type: %s" % typedef)
+
+
+
+def emitInterfaceType(typedef):
+  return "cssom::%s" % typedef.name
+
+
+
+def emitArgument(argument):
+  assert(not argument.optional)
+  assert(not argument.default)
+  assert(not argument.ellipsis)
+  assert(not argument.extended_attributes)
+
+  return "%s %s" % (emitType(argument.type), argument.name)
 
 
 
@@ -201,22 +250,18 @@ def renderInclude(out, definition):
 
 
 
-def render(definitions=[], source=None, output=None, template=None,
-  template_type=None, **kwargs):
+def renderDefinitionSourceFile(outputdir, definition):
+  with open(os.path.join(outputdir, "%s.cpp" % definition.name), 'w') as out:
+    print >>out, "#include <cssompp/%s.hpp>" % definition.name
 
-  with open(output, 'w') as out:
-    print >>out, "#include <cssompp/%s.hpp>" % filename(source)
-
-    for definition in definitions:
-      renderInclude(out, definition)
+    renderInclude(out, definition)
 
     print >>out
     print >>out, "#include <utility>"
     print >>out
     print >>out, "namespace cssom {"
 
-    for definition in definitions:
-      renderDefinition(out, definition)
+    renderDefinition(out, definition)
 
     print >>out
     print >>out

@@ -199,8 +199,8 @@ def renderDefinition(out, definition):
 
 
 
-def renderDefinitionFile(includedir, definition):
-  with open(os.path.join(includedir, "%s.h" % definition.name), 'w') as out:
+def renderDefinitionFile(outputdir, definition):
+  with open(os.path.join(outputdir, "%s.h" % definition.name), 'w') as out:
     define = headerDefine("cssom", definition.name, "h")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
