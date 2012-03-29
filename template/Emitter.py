@@ -88,8 +88,8 @@ def filename(source):
 
 
 
-def headerDefine(prefix, source, suffix):
+def headerDefine(prefix, name, suffix):
   return "%s_%s_%s" % ( \
     capitalizeCamelCase(prefix),
-    capitalizeCamelCase(filename(source)),
+    capitalizeCamelCase(name),
     capitalizeCamelCase(suffix))

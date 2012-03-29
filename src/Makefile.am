@@ -6,14 +6,9 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
 
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
-top_idldir = $(top_srcdir)/idl
-top_cssom_includedir = $(top_srcdir)/include/cssom
-
-
-
-BUILT_SOURCES = $(top_idldir)/CSSRule.h \
-                $(top_idldir)/CSSStyleDeclaration.h \
-                $(top_idldir)/CSSStyleRule.h
+BUILT_SOURCES = $(top_idldir)/CSSRule.idl.h \
+                $(top_idldir)/CSSStyleDeclaration.idl.h \
+                $(top_idldir)/CSSStyleRule.idl.h
 
 
 
@@ -23,13 +18,14 @@ libcssom_base_la_HEADERS = $(top_srcdir)/include/cssom.h
 
 libcssom_ladir = $(includedir)/cssom
 
-libcssom_la_HEADERS = $(top_cssom_includedir)/CSSOM.h \
-                      $(top_cssom_includedir)/CSSProperty.h \
-                      $(top_cssom_includedir)/CSSRule.h \
-                      $(top_cssom_includedir)/CSSRuleList.h \
-                      $(top_cssom_includedir)/CSSStyleDeclaration.h \
-                      $(top_cssom_includedir)/CSSStyleRule.h \
-                      $(top_cssom_includedir)/CSSStyleSheet.h
+libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
+                      $(top_srcdir)/include/cssom/CSSProperty.h \
+                      $(top_srcdir)/include/cssom/CSSRuleList.h \
+                      $(top_srcdir)/include/cssom/CSSStyleSheet.h \
+                      \
+                      $(top_srcdir)/include/cssom/CSSRule.h \
+                      $(top_srcdir)/include/cssom/CSSStyleDeclaration.h \
+                      $(top_srcdir)/include/cssom/CSSStyleRule.h
 
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
@@ -41,9 +37,6 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       FSM_CSSProperty.c \
                       CSSStyleDeclaration.c
 
-libcssom_la_DEPENDENCIES = $(top_idldir)/CSSRule.idl \
-                           $(top_idldir)/CSSStyleDeclaration.idl
-
 libcssom_la_LIBADD = $(SACC_LIBS)
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -52,19 +45,7 @@ pkgconfig_DATA = cssom.pc
 
 
 
-$(top_cssom_includedir)/CSSStyleDeclaration.h: $(top_idldir)/CSSStyleDeclaration.h
-	cp $(top_idldir)/CSSStyleDeclaration.h $(top_cssom_includedir)/CSSStyleDeclaration.h
-
-$(top_cssom_includedir)/CSSRule.h: $(top_idldir)/CSSRule.h
-	cp $(top_idldir)/CSSRule.h $(top_cssom_includedir)/CSSRule.h
-
-$(top_cssom_includedir)/CSSStyleRule.h: $(top_idldir)/CSSStyleRule.h
-	cp $(top_idldir)/CSSStyleRule.h $(top_cssom_includedir)/CSSStyleRule.h
-
-
-
-clean-local:
-	$(RM) $(top_idldir)/*.h
+CLEANFILES = $(BUILT_SOURCES)
 
 
 

@@ -1,9 +1,7 @@
+*.idl.h
 CSSRule.cpp
-CSSRule.h
 CSSRule.hpp
 CSSStyleDeclaration.cpp
-CSSStyleDeclaration.h
 CSSStyleDeclaration.hpp
-CSSStyleRule.h
 CSSStyleRule.cpp
 CSSStyleRule.hpp

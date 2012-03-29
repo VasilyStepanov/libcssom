@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+from Emitter import filename
 from Emitter import headerDefine
 from Emitter import friends
 from Emitter import emitSimpleType
@@ -201,7 +202,7 @@ def render(definitions=[], source=None, output=None, template=None,
   template_type=None, **kwargs):
 
   with open(output, 'w') as out:
-    define = headerDefine("cssompp", source, "hpp")
+    define = headerDefine("cssompp", filename(source), "hpp")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
 

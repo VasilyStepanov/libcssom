@@ -7,6 +7,8 @@ from Emitter import instanceName
 
 import pywidl
 
+import os
+
 
 
 def interfaceMemberName(interface, member):
@@ -164,17 +166,6 @@ def renderInterface(out, interface):
 
 
 
-def renderDefinition(out, definition):
-  print >>out
-  print >>out
-  print >>out
-  if isinstance(definition, pywidl.Interface):
-    renderInterface(out, definition)
-  else:
-    raise RuntimeError("Unknown definition type %s" % definition)
-
-
-
 def renderInclude(out, definition):
   hppincludes = []
   if isinstance(definition, pywidl.Interface):
@@ -195,24 +186,31 @@ def renderInclude(out, definition):
 
 
 
-def render(definitions=[], source=None, output=None, template=None,
-  template_type=None, **kwargs):
+def renderDefinition(out, definition):
+  print >>out
+  print >>out
+  print >>out
+  if isinstance(definition, pywidl.Interface):
+    renderInterface(out, definition)
+  else:
+    raise RuntimeError("Unknown definition type %s" % definition)
 
-  with open(output, 'w') as out:
-    define = headerDefine("cssom", source, "h")
+
+
+def renderDefinitionFile(includedir, definition):
+  with open(os.path.join(includedir, "%s.h" % definition.name), 'w') as out:
+    define = headerDefine("cssom", definition.name, "h")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
 
-    for definition in definitions:
-      renderInclude(out, definition)
+    renderInclude(out, definition)
 
     print >>out
     print >>out, "#ifdef __cplusplus"
     print >>out, "extern \"C\" {"
     print >>out, "#endif"
 
-    for definition in definitions:
-      renderDefinition(out, definition)
+    renderDefinition(out, definition)
 
     print >>out
     print >>out
@@ -222,3 +220,15 @@ def render(definitions=[], source=None, output=None, template=None,
     print >>out, "#endif"
     print >>out
     print >>out, "#endif"
+
+
+def render(definitions=[], source=None, output=None, template=None,
+  template_type=None, includedir=None, **kwargs):
+
+  assert(includedir)
+
+  for definition in definitions:
+    renderDefinitionFile(includedir, definition)
+
+  with open(output, 'w') as out:
+    pass

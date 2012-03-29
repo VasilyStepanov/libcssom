@@ -3,9 +3,16 @@ RUN_PYWIDL = $(PYWIDL_PYTHONPATH) $(PYWIDL) -n
 
 
 
-.idl.h:
+top_idldir = $(top_srcdir)/idl
+
+
+SUFFIXES = .idl .idl.h
+
+
+
+.idl.idl.h:
 	@$(RM) $@
-	$(RUN_PYWIDL) -t template.HEmitter -o $@ $<
+	$(RUN_PYWIDL) -t template.HEmitter -o $@ $< -- --includedir=$(top_srcdir)/include/cssom
 
 
 
