@@ -11,6 +11,15 @@ top_cssompp_includedir = $(top_srcdir)/include/cssompp
 
 
 
+BUILT_SOURCES = $(top_idldir)/CSSRule.cpp \
+                $(top_idldir)/CSSRule.hpp \
+                $(top_idldir)/CSSStyleDeclaration.cpp \
+                $(top_idldir)/CSSStyleDeclaration.hpp \
+                $(top_idldir)/CSSStyleRule.cpp \
+                $(top_idldir)/CSSStyleRule.hpp
+
+
+
 libcssompp_base_ladir = $(includedir)
 
 libcssompp_base_la_HEADERS = $(top_srcdir)/include/cssompp.hpp
@@ -38,7 +47,6 @@ pkgconfig_DATA = cssompp.pc
 
 
 
-
 $(top_cssompp_includedir)/CSSStyleDeclaration.hpp: $(top_idldir)/CSSStyleDeclaration.hpp
 	cp $(top_idldir)/CSSStyleDeclaration.hpp $(top_cssompp_includedir)/CSSStyleDeclaration.hpp
 
@@ -47,10 +55,6 @@ $(top_cssompp_includedir)/CSSRule.hpp: $(top_idldir)/CSSRule.hpp
 
 $(top_cssompp_includedir)/CSSStyleRule.hpp: $(top_idldir)/CSSStyleRule.hpp
 	cp $(top_idldir)/CSSStyleRule.hpp $(top_cssompp_includedir)/CSSStyleRule.hpp
-
-
-
-$(top_idldir)/CSSStyleRule.cpp: $(top_cssompp_includedir)/CSSStyleRule.hpp
 
 
 

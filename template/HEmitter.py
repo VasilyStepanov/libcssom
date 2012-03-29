@@ -175,6 +175,26 @@ def renderDefinition(out, definition):
 
 
 
+def renderInclude(out, definition):
+  hppincludes = []
+  if isinstance(definition, pywidl.Interface):
+    if isinstance(definition, pywidl.Interface):
+      for member in definition.members:
+        if isinstance(member, pywidl.Attribute):
+          if isinstance(member.type, pywidl.InterfaceType) \
+          and member.type.name != definition.name:
+            hppincludes.append(member.type.name)
+        elif isinstance(member, pywidl.Operation):
+          if isinstance(member.return_type, pywidl.InterfaceType) \
+          and member.return_type.name != definition.name:
+            hppincludes.append(member.return_type.name)
+
+  if hppincludes: print >>out
+  for include in hppincludes:
+    print >>out, "#include <cssom/%s.h>" % include
+
+
+
 def render(definitions=[], source=None, output=None, template=None,
   template_type=None, **kwargs):
 
@@ -182,6 +202,10 @@ def render(definitions=[], source=None, output=None, template=None,
     define = headerDefine("cssom", source, "h")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
+
+    for definition in definitions:
+      renderInclude(out, definition)
+
     print >>out
     print >>out, "#ifdef __cplusplus"
     print >>out, "extern \"C\" {"

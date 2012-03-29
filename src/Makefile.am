@@ -11,6 +11,12 @@ top_cssom_includedir = $(top_srcdir)/include/cssom
 
 
 
+BUILT_SOURCES = $(top_idldir)/CSSRule.h \
+                $(top_idldir)/CSSStyleDeclaration.h \
+                $(top_idldir)/CSSStyleRule.h
+
+
+
 libcssom_base_ladir = $(includedir)
 
 libcssom_base_la_HEADERS = $(top_srcdir)/include/cssom.h
@@ -51,6 +57,9 @@ $(top_cssom_includedir)/CSSStyleDeclaration.h: $(top_idldir)/CSSStyleDeclaration
 
 $(top_cssom_includedir)/CSSRule.h: $(top_idldir)/CSSRule.h
 	cp $(top_idldir)/CSSRule.h $(top_cssom_includedir)/CSSRule.h
+
+$(top_cssom_includedir)/CSSStyleRule.h: $(top_idldir)/CSSStyleRule.h
+	cp $(top_idldir)/CSSStyleRule.h $(top_cssom_includedir)/CSSStyleRule.h
 
 
 

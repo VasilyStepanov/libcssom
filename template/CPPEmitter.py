@@ -182,21 +182,21 @@ def renderInclude(out, definition):
   print >>out
   print >>out, "#include \"src/%s.h\"" % definition.name
 
-  cppincludes = []
+  hppincludes = []
   if isinstance(definition, pywidl.Interface):
     if isinstance(definition, pywidl.Interface):
       for member in definition.members:
         if isinstance(member, pywidl.Attribute):
           if isinstance(member.type, pywidl.InterfaceType) \
           and member.type.name != definition.name:
-            cppincludes.append(member.type.name)
+            hppincludes.append(member.type.name)
         elif isinstance(member, pywidl.Operation):
           if isinstance(member.return_type, pywidl.InterfaceType) \
           and member.return_type.name != definition.name:
-            cppincludes.append(member.return_type.name)
+            hppincludes.append(member.return_type.name)
 
-  if cppincludes: print >>out
-  for include in cppincludes:
+  if hppincludes: print >>out
+  for include in hppincludes:
     print >>out, "#include <cssompp/%s.hpp>" % include
 
 
