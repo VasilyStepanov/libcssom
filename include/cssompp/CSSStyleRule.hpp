@@ -1,9 +1,18 @@
-#ifndef CSSOMPP_CSSSTYLERULE_HPP
-#define CSSOMPP_CSSSTYLERULE_HPP
+#ifndef CSSOMPP_CSS_STYLE_RULE_HPP
+#define CSSOMPP_CSS_STYLE_RULE_HPP
 
-#include <cssompp/CSSStyleDeclaration.hpp>
-
+#include <cssom/CSSStyleRule.h>
 #include <cssompp/CSSRule.hpp>
+
+namespace cssom {
+
+
+
+class CSSStyleDeclaration;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -11,12 +20,14 @@ namespace cssom {
 
 class CSSStyleRule : public cssom::CSSRule {
   public:
-    const char* selectorText() const;
-    cssom::CSSStyleDeclaration style();
+
+    const char * selectorText() const;
+
+    cssom::CSSStyleDeclaration style() const;
 };
 
 
 
-}
+} // cssom
 
-#endif // CSSOMPP_CSSSTYLERULE_HPP
+#endif // CSSOMPP_CSS_STYLE_RULE_HPP

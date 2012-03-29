@@ -19,15 +19,16 @@ libcssompp_ladir = $(includedir)/cssom
 
 libcssompp_la_HEADERS = $(top_cssompp_includedir)/CSSOM.hpp \
                         $(top_cssompp_includedir)/CSSRule.hpp \
-                        $(top_cssompp_includedir)/CSSStyleDeclaration.hpp
+                        $(top_cssompp_includedir)/CSSStyleDeclaration.hpp \
+                        $(top_cssompp_includedir)/CSSStyleRule.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSProperty.cpp \
                         CSSRuleList.cpp \
-                        CSSStyleRule.cpp \
                         CSSStyleSheet.cpp \
                         $(top_idldir)/CSSRule.idl \
-                        $(top_idldir)/CSSStyleDeclaration.idl
+                        $(top_idldir)/CSSStyleDeclaration.idl \
+                        $(top_idldir)/CSSStyleRule.idl
 
 libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
 
@@ -43,6 +44,13 @@ $(top_cssompp_includedir)/CSSStyleDeclaration.hpp: $(top_idldir)/CSSStyleDeclara
 
 $(top_cssompp_includedir)/CSSRule.hpp: $(top_idldir)/CSSRule.hpp
 	cp $(top_idldir)/CSSRule.hpp $(top_cssompp_includedir)/CSSRule.hpp
+
+$(top_cssompp_includedir)/CSSStyleRule.hpp: $(top_idldir)/CSSStyleRule.hpp
+	cp $(top_idldir)/CSSStyleRule.hpp $(top_cssompp_includedir)/CSSStyleRule.hpp
+
+
+
+$(top_idldir)/CSSStyleRule.cpp: $(top_cssompp_includedir)/CSSStyleRule.hpp
 
 
 

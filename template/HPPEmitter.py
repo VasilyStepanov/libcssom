@@ -36,7 +36,7 @@ def attributeSetterSignature(attribute):
 
 
 def emitInterfaceType(typedef):
-  return "%s*" % typedef.name
+  return "cssom::%s" % typedef.name
 
 
 
@@ -120,33 +120,38 @@ def renderInterfaceMember(out, member):
 
 def renderInterface(out, interface):
   assert(not interface.extended_attributes)
-  assert(not interface.parent)
   assert(not interface.callback)
 
-  template = { 'name' : interface.name }
-  print >>out, "class %(name)s {" % template
+  classDef = interface.name
+  if interface.parent: classDef = "%s : public cssom::%s" % ( \
+    classDef, interface.parent)
+
+  print >>out, "class %s {" % classDef
   print >>out, "  public:"
-  print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
-  print >>out, "    ~%(name)s();" % template
-  print >>out
-  print >>out, "    cssom::%(name)s& operator=(" % template
-  print >>out, "     const cssom::%(name)s &rhs);" % template
-  print >>out
-  print >>out, "    void swap(cssom::%(name)s &rhs);" % template
+
+  if not interface.parent:
+    template = { 'name' : interface.name }
+    print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
+    print >>out, "    ~%(name)s();" % template
+    print >>out
+    print >>out, "    cssom::%(name)s& operator=(" % template
+    print >>out, "     const cssom::%(name)s &rhs);" % template
+    print >>out
+    print >>out, "    void swap(cssom::%(name)s &rhs);" % template
 
   for member in interface.members:
     renderInterfaceMember(out, member)
   
-  print >>out
-  print >>out, "  private:"
-
   for declaration in friends.get(interface.name, []):
     renderFriend(out, declaration)
 
-  print >>out
-  print >>out, "    CSSOM_%(name)s * _impl;" % template
-  print >>out
-  print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
+  if not interface.parent:
+    print >>out
+    print >>out, "  private:"
+    print >>out
+    print >>out, "    CSSOM_%(name)s * _impl;" % template
+    print >>out
+    print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   print >>out, "};"
 
 
@@ -165,6 +170,9 @@ def renderDefinition(out, definition):
 def renderInclude(out, definition):
   print >>out
   print >>out, "#include <cssom/%s.h>" % definition.name
+  if isinstance(definition, pywidl.Interface):
+    if definition.parent:
+      print >>out, "#include <cssompp/%s.hpp>" % definition.parent
 
 
 
