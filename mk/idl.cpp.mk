@@ -9,7 +9,7 @@ SUFFIXES = .idl .idl.hpp
 
 .idl.idl.hpp:
 	@$(RM) $@
-	$(RUN_PYWIDL) -t template.HPPEmitter -o $@ $< -- --srcdir=$(top_srcdir)/libcssompp --includedir=$(top_srcdir)/include/cssompp
+	$(RUN_PYWIDL) -t gen.HPPEmitter -o $@ $< -- --srcdir=$(top_srcdir)/libcssompp --includedir=$(top_srcdir)/include/cssompp
 
 
 

@@ -12,8 +12,8 @@ SUFFIXES = .idl .idl.h
 
 .idl.idl.h:
 	@$(RM) $@
-	$(RUN_PYWIDL) -t template.HEmitter -o $@ $< -- --includedir=$(top_srcdir)/include/cssom
+	$(RUN_PYWIDL) -t gen.HEmitter -o $@ $< -- --includedir=$(top_srcdir)/include/cssom
 
 
 
-$(top_idldir)/idl/*.idl.h: $(top_srcdir)/template/*.py $(PYWIDL)
+$(top_idldir)/idl/*.idl.h: $(top_srcdir)/gen/*.py $(PYWIDL)
