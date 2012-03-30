@@ -2,6 +2,7 @@
 #define CSSOM_CSSRULELIST_H
 
 #include <cssom/CSSRule.h>
+#include <cssom/Sequence.h>
 
 #include <stddef.h>
 
@@ -11,14 +12,15 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_CSSRuleList CSSOM_CSSRuleList;
+typedef CSSOM_Sequence CSSOM_CSSRuleList;
 
 
 
-size_t CSSOM_CSSRuleList_size(const CSSOM_CSSRuleList *cssRules);
+#define CSSOM_CSSRuleList_size(cssRules) \
+  CSSOM_Sequence_size((cssRules))
 
-CSSOM_CSSRule* CSSOM_CSSRuleList_at(const CSSOM_CSSRuleList *cssRules,
-  size_t index);
+#define CSSOM_CSSRuleList_at(cssRules, index) \
+  (CSSOM_CSSRule*)CSSOM_Sequence_at((cssRules), (index))
 
 
 

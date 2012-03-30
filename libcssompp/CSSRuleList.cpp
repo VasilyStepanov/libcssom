@@ -1,6 +1,7 @@
 #include <cssompp/CSSRuleList.hpp>
 
 #include "src/CSSRuleList.h"
+#include "src/Sequence.h"
 
 #include <utility>
 
@@ -17,13 +18,13 @@ CSSRuleList::CSSRuleList(CSSOM_CSSRuleList *impl) :
 CSSRuleList::CSSRuleList(const cssom::CSSRuleList &copy) :
   _impl(copy._impl)
 {
-  CSSOM_CSSRuleList__acquire(_impl);
+  CSSOM_Sequence__acquire(_impl);
 }
 
 
 
 CSSRuleList::~CSSRuleList() {
-  CSSOM_CSSRuleList__release(_impl);
+  CSSOM_Sequence__release(_impl);
 }
 
 

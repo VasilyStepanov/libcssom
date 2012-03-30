@@ -1,8 +1,8 @@
 #include "CSSStyleSheet.h"
 
-#include "Deque_CSSRule.h"
 #include "CSSRuleList.h"
 #include "CSSRule.h"
+#include "Sequence.h"
 
 #include <sacc.h>
 
@@ -28,7 +28,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
 
   styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    CSSOM_CSSRuleList__release(cssRules);
+    CSSOM_Sequence__release(cssRules);
     return NULL;
   }
 
@@ -54,7 +54,7 @@ void CSSOM_CSSStyleSheet__release(CSSOM_CSSStyleSheet *styleSheet) {
   --styleSheet->handles;
   if (styleSheet->handles > 0) return;
 
-  CSSOM_CSSRuleList__release(styleSheet->cssRules);
+  CSSOM_Sequence__release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
   free(styleSheet);
 }
@@ -78,6 +78,6 @@ CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
 CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(
   CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
 {
-  return CSSOM_CSSRuleList__append(styleSheet->cssRules, cssRule);
+  return CSSOM_Sequence__append(styleSheet->cssRules, cssRule);
 }
 

@@ -11,13 +11,6 @@ extern "C" {
 
 CSSOM_CSSRuleList* CSSOM_CSSRuleList__alloc();
 
-void CSSOM_CSSRuleList__acquire(CSSOM_CSSRuleList *cssRules);
-
-void CSSOM_CSSRuleList__release(CSSOM_CSSRuleList *cssRules);
-
-CSSOM_CSSRule* CSSOM_CSSRuleList__append(CSSOM_CSSRuleList *cssRules,
-  CSSOM_CSSRule *cssRule);
-
 
 
 #ifdef __cplusplus
