@@ -4,3 +4,4 @@ CSSRule.cpp
 CSSRuleList.cpp
 CSSStyleDeclaration.cpp
 CSSStyleRule.cpp
+CSSStyleSheet.cpp

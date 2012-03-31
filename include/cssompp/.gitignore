@@ -2,3 +2,4 @@ CSSRule.hpp
 CSSRuleList.hpp
 CSSStyleDeclaration.hpp
 CSSStyleRule.hpp
+CSSStyleSheet.hpp

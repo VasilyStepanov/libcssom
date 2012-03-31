@@ -21,6 +21,8 @@ void CSSOM_dispose(CSSOM *cssom);
 
 CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText, int len);
 
+void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet);
+
 
 
 #ifdef __cplusplus
