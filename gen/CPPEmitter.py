@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
-from Emitter import filename
 from Emitter import emitSimpleType
+from Emitter import forwards
 from HEmitter import interfaceMemberName
 
 import pywidl
@@ -231,18 +231,7 @@ def renderInclude(out, definition):
   print >>out
   print >>out, "#include \"src/%s.h\"" % definition.name
 
-  hppincludes = []
-  if isinstance(definition, pywidl.Interface):
-    if isinstance(definition, pywidl.Interface):
-      for member in definition.members:
-        if isinstance(member, pywidl.Attribute):
-          if isinstance(member.type, pywidl.InterfaceType) \
-          and member.type.name != definition.name:
-            hppincludes.append(member.type.name)
-        elif isinstance(member, pywidl.Operation):
-          if isinstance(member.return_type, pywidl.InterfaceType) \
-          and member.return_type.name != definition.name:
-            hppincludes.append(member.return_type.name)
+  hppincludes = forwards.get(definition.name, [])
 
   if hppincludes: print >>out
   for include in hppincludes:

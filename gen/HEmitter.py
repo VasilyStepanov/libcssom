@@ -4,6 +4,8 @@ from Emitter import headerDefine
 from Emitter import emitSimpleType
 from Emitter import splitCamelCase
 from Emitter import instanceName
+from Emitter import includes
+from Emitter import forwards
 
 import pywidl
 
@@ -167,20 +169,9 @@ def renderInterface(out, interface):
 
 
 def renderInclude(out, definition):
-  types = []
-  if isinstance(definition, pywidl.Interface):
-    if isinstance(definition, pywidl.Interface):
-      for member in definition.members:
-        if isinstance(member, pywidl.Attribute):
-          types.append(member.type)
-        elif isinstance(member, pywidl.Operation):
-          types.append(member.return_type)
-
   hppincludes = set()
-  for type in types:
-    if isinstance(type, pywidl.InterfaceType) \
-    and type.name != definition.name:
-      hppincludes.add(type.name)
+  hppincludes.update(includes.get(definition.name, []))
+  hppincludes.update(forwards.get(definition.name, []))
 
   if hppincludes: print >>out
   for include in hppincludes:

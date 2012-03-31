@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 
-from Emitter import filename
 from Emitter import headerDefine
-from Emitter import friends
+from Emitter import forwards
+from Emitter import includes
 from Emitter import emitSimpleType
 from CPPEmitter import emitArgument
 from CPPEmitter import emitType
@@ -15,12 +15,6 @@ from CPPEmitter import renderDefinitionSourceFile
 import pywidl
 
 import os
-
-
-
-def renderFriend(out, declaration):
-  print >>out
-  print >>out, "    friend class %s;" % declaration;
 
 
 
@@ -84,11 +78,14 @@ def renderInterface(out, interface):
   if interface.parent: classDef = "%s : public cssom::%s" % ( \
     classDef, interface.parent)
 
+  template = { 'name' : interface.name }
   print >>out, "class %s {" % classDef
   print >>out, "  public:"
+  print >>out, "    typedef CSSOM_%(name)s * C;" % template;
+  print >>out
 
   if not interface.parent:
-    template = { 'name' : interface.name }
+    print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
     print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
     print >>out, "    ~%(name)s();" % template
     print >>out
@@ -100,16 +97,10 @@ def renderInterface(out, interface):
   for member in interface.members:
     renderInterfaceMember(out, member)
   
-  for declaration in friends.get(interface.name, []):
-    renderFriend(out, declaration)
-
   if not interface.parent:
     print >>out
-    print >>out, "  private:"
-    print >>out
+    print >>out, "  protected:"
     print >>out, "    CSSOM_%(name)s * _impl;" % template
-    print >>out
-    print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   print >>out, "};"
 
 
@@ -126,27 +117,28 @@ def renderDefinition(out, definition):
 
 
 def renderInclude(out, definition):
+  hppincludes = includes.get(definition.name, [])
+  if hppincludes: print >>out
+
+  for include in hppincludes:
+    print >>out, "#include <cssompp/%s.hpp>" % include
+
   print >>out
   print >>out, "#include <cssom/%s.h>" % definition.name
-  if isinstance(definition, pywidl.Interface):
-    if definition.parent:
-      print >>out, "#include <cssompp/%s.hpp>" % definition.parent
 
-
-
-def renderForwardDeclaration(out, declaration):
-  print >>out
-  print >>out
-  print >>out
-  print >>out, "class %s;" % declaration
 
 
 
 def renderForwardDeclarations(out, declarations):
+  if not declarations: return
+
   print >>out, "namespace cssom {"
 
   for declaration in declarations:
-    renderForwardDeclaration(out, declaration)
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "class %s;" % declaration
 
   print >>out
   print >>out
@@ -165,18 +157,7 @@ def renderDefinitionHeaderFile(outputdir, definition):
 
     print >>out
 
-    forwards = set()
-
-    forwards.update(friends.get(definition.name, []))
-
-    if isinstance(definition, pywidl.Interface):
-      for member in definition.members:
-        if isinstance(member, pywidl.Attribute):
-          if isinstance(member.type, pywidl.InterfaceType) \
-          and member.type.name != definition.name:
-            forwards.add(member.type.name)
-
-    renderForwardDeclarations(out, forwards)
+    renderForwardDeclarations(out, forwards.get(definition.name, []))
 
     print >>out
     print >>out, """namespace cssom {"""

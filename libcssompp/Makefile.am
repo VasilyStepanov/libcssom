@@ -26,7 +26,6 @@ libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp \
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSProperty.cpp \
-                        CSSRuleList.cpp \
                         CSSStyleSheet.cpp \
                         \
                         CSSRule.cpp \

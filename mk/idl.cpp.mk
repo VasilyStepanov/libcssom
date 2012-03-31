@@ -13,4 +13,4 @@ SUFFIXES = .idl .idl.hpp
 
 
 
-$(top_idldir)/idl/*.idl.hpp: $(top_srcdir)/template/*.py $(PYWIDL)
+$(top_idldir)/*.idl.hpp: $(top_srcdir)/gen/*.py $(PYWIDL)

@@ -1,6 +1,7 @@
 #ifndef CSSOM_CSS_STYLE_RULE_H
 #define CSSOM_CSS_STYLE_RULE_H
 
+#include <cssom/CSSRule.h>
 #include <cssom/CSSStyleDeclaration.h>
 
 #ifdef __cplusplus

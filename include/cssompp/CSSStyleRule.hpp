@@ -1,8 +1,9 @@
 #ifndef CSSOMPP_CSS_STYLE_RULE_HPP
 #define CSSOMPP_CSS_STYLE_RULE_HPP
 
-#include <cssom/CSSStyleRule.h>
 #include <cssompp/CSSRule.hpp>
+
+#include <cssom/CSSStyleRule.h>
 
 namespace cssom {
 
@@ -20,6 +21,8 @@ namespace cssom {
 
 class CSSStyleRule : public cssom::CSSRule {
   public:
+    typedef CSSOM_CSSStyleRule * C;
+
 
     const char * selectorText() const;
 

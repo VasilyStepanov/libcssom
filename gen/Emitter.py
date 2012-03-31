@@ -2,13 +2,16 @@
 
 import pywidl
 
-import os.path
+
+
+forwards = { \
+  'CSSStyleRule' : ('CSSStyleDeclaration', ),
+}
 
 
 
-friends = { \
-  'CSSStyleDeclaration' : ('CSSStyleRule', ),
-  'CSSRule' : ('CSSRuleList', 'CSSStyleRule'),
+includes = { \
+  'CSSStyleRule' : ('CSSRule', ),
 }
 
 
@@ -78,13 +81,6 @@ def instanceName(className):
   words[0] = words[0].lower()
 
   return "".join(words)
-
-
-
-def filename(source):
-  filename = os.path.basename(source)
-  assert(filename.endswith(".idl"))
-  return filename.rsplit('.', 1)[0]
 
 
 
