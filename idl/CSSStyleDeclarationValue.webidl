@@ -1,0 +1,6 @@
+interface CSSStyleDeclarationValue {
+  // ...
+
+  // CSS Properties
+
+};
