@@ -9,7 +9,7 @@ extern "C" {
 
 
 
-CSSOM_Sequence* CSSOM_Sequence__alloc();
+CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*));
 
 void* CSSOM_Sequence__append(CSSOM_Sequence *sequence, void *ptr);
 

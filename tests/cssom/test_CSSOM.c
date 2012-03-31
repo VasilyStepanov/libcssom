@@ -10,7 +10,7 @@
 
 
 
-static void test_CSSOM_basics() {
+static void test_CSSOM_basics(void) {
   const char *css =
 "p {\n"
 "  color : green\n"
@@ -52,6 +52,6 @@ static void test_CSSOM_basics() {
 
 
 
-void test_CSSOM() {
+void test_CSSOM(void) {
   test_CSSOM_basics();
 }

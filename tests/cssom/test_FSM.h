@@ -3,7 +3,7 @@
 
 
 
-void test_FSM();
+void test_FSM(void);
 
 
 

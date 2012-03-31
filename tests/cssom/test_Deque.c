@@ -13,7 +13,7 @@ CSSOM_DEQUE_DEFINE(int, Int)
 
 
 
-static void test_Deque_basics() {
+static void test_Deque_basics(void) {
   CSSOM_Deque_Int *d;
   CSSOM_DequeIter_Int it;
 
@@ -62,7 +62,7 @@ static void test_Deque_basics() {
 
 
 
-static void test_Deque_append() {
+static void test_Deque_append(void) {
   CSSOM_Deque_Int *d;
   CSSOM_DequeIter_Int it;
 
@@ -124,7 +124,7 @@ static void test_Deque_append() {
 
 
 
-static void test_Deque_insert() {
+static void test_Deque_insert(void) {
   CSSOM_Deque_Int *d;
   CSSOM_DequeIter_Int it;
 
@@ -187,7 +187,7 @@ static void test_Deque_insert() {
 
 
 
-static void test_Deque_erase() {
+static void test_Deque_erase(void) {
   CSSOM_Deque_Int *d;
   CSSOM_DequeIter_Int it;
 
@@ -271,7 +271,7 @@ static void test_Deque_erase() {
 
 
 
-void test_Deque() {
+void test_Deque(void) {
   test_Deque_basics();
   test_Deque_append();
   test_Deque_insert();

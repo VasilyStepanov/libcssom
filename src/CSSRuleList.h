@@ -13,7 +13,7 @@ extern "C" {
 
 
 #define CSSOM_CSSRuleList__alloc() \
-  CSSOM_Sequence__alloc(CSSOM_CSSRule__release);
+  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule__release);
 
 
 

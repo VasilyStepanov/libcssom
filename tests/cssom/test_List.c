@@ -13,7 +13,7 @@ CSSOM_LIST_DEFINE(int, Int)
 
 
 
-void test_List_basics() {
+void test_List_basics(void) {
   CSSOM_List_Int *l;
   CSSOM_ListIter_Int it;
   CSSOM_ListConstIter_Int cit;
@@ -74,7 +74,7 @@ void test_List_basics() {
 
 
 
-void test_List_insert() {
+void test_List_insert(void) {
   CSSOM_List_Int *l;
   CSSOM_ListIter_Int it;
 
@@ -128,7 +128,7 @@ void test_List_insert() {
 
 
 
-void test_List_erase() {
+void test_List_erase(void) {
   CSSOM_List_Int *l;
   CSSOM_ListIter_Int it;
 
@@ -181,7 +181,7 @@ void test_List_erase() {
 
 
 
-void test_List() {
+void test_List(void) {
   test_List_basics();
   test_List_insert();
   test_List_erase();

@@ -9,7 +9,7 @@
 
 
 
-int main() {
+int main(void) {
   test_Vector();
   test_List();
   test_Deque();

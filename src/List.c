@@ -13,7 +13,7 @@
   \
   \
   \
-  static struct _CSSOM_ListItem_##suffix* ListItem_##suffix##_alloc() { \
+  static struct _CSSOM_ListItem_##suffix* ListItem_##suffix##_alloc(void) { \
     struct _CSSOM_ListItem_##suffix *item; \
     \
     item = (struct _CSSOM_ListItem_##suffix*)malloc( \
@@ -57,7 +57,7 @@
   \
   \
   \
-  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc() { \
+  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc(void) { \
     CSSOM_List_##suffix *list; \
     struct _CSSOM_ListItem_##suffix *item; \
     \

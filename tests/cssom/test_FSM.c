@@ -16,7 +16,7 @@ CSSOM_FSM_DEFINE(int, Int)
 
 
 
-static void test_FSM_add() {
+static void test_FSM_add(void) {
   const char *map[] = {
     "a",
     "b",
@@ -94,7 +94,7 @@ static void test_FSM_add() {
 
 
 
-static void test_FSM_iterate() {
+static void test_FSM_iterate(void) {
   const char *map[] = {
     "a",
     "b",
@@ -146,7 +146,7 @@ static void test_FSM_iterate() {
 
 
 
-static void test_FSM_ffind() {
+static void test_FSM_ffind(void) {
   const char *map[] = {
     "a",
     "b",
@@ -232,7 +232,7 @@ static void test_FSM_ffind() {
 
 
 
-static void test_FSM_order() {
+static void test_FSM_order(void) {
   const char *map[] = {
     "a",
     "b",
@@ -358,7 +358,7 @@ static void test_FSM_order() {
 
 
 
-static void test_FSM_erase_first() {
+static void test_FSM_erase_first(void) {
   const char *map[] = {
     "background",
     "background-color",
@@ -423,7 +423,7 @@ static void test_FSM_erase_first() {
 
 
 
-static void test_FSM_erase_last() {
+static void test_FSM_erase_last(void) {
   const char *map[] = {
     "background",
     "background-color",
@@ -488,7 +488,7 @@ static void test_FSM_erase_last() {
 
 
 
-void test_FSM() {
+void test_FSM(void) {
   test_FSM_add();
   test_FSM_iterate();
   test_FSM_ffind();

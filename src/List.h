@@ -14,7 +14,7 @@ extern "C" {
   typedef T* CSSOM_ListIter_##suffix; \
   typedef T const * CSSOM_ListConstIter_##suffix; \
   \
-  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc(); \
+  CSSOM_List_##suffix* CSSOM_List_##suffix##_alloc(void); \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list); \
   CSSOM_ListIter_##suffix CSSOM_List_##suffix##_append( \
     CSSOM_List_##suffix *list, T value); \

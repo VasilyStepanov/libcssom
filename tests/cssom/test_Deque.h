@@ -3,7 +3,7 @@
 
 
 
-void test_Deque();
+void test_Deque(void);
 
 
 

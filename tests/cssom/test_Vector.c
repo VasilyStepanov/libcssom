@@ -13,7 +13,7 @@ CSSOM_VECTOR_DEFINE(int, Int)
 
 
 
-void test_Vector_basics() {
+void test_Vector_basics(void) {
   CSSOM_Vector_Int *v;
   CSSOM_VectorIter_Int it;
   CSSOM_VectorConstIter_Int cit;
@@ -63,7 +63,7 @@ void test_Vector_basics() {
 
 
 
-void test_Vector_append() {
+void test_Vector_append(void) {
   CSSOM_Vector_Int *v;
   CSSOM_VectorConstIter_Int cit;
 
@@ -142,7 +142,7 @@ void test_Vector_append() {
 
 
 
-void test_Vector_insert() {
+void test_Vector_insert(void) {
   CSSOM_Vector_Int *v;
   CSSOM_VectorIter_Int it;
 
@@ -182,7 +182,7 @@ void test_Vector_insert() {
 
 
 
-void test_Vector_erase() {
+void test_Vector_erase(void) {
   CSSOM_Vector_Int *v;
   CSSOM_VectorIter_Int it;
 
@@ -223,7 +223,7 @@ void test_Vector_erase() {
 
 
 
-void test_Vector_pop() {
+void test_Vector_pop(void) {
   CSSOM_Vector_Int *v;
 
   v = CSSOM_Vector_Int_alloc(3);
@@ -262,7 +262,7 @@ void test_Vector_pop() {
 
 
 
-void test_Vector() {
+void test_Vector(void) {
   test_Vector_basics();
   test_Vector_append();
   test_Vector_insert();

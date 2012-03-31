@@ -3,7 +3,7 @@
 
 
 
-void test_CSSOM();
+void test_CSSOM(void);
 
 
 

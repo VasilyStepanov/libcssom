@@ -8,7 +8,7 @@
 
 
 
-static void test_CSSRule_alloc() {
+static void test_CSSRule_alloc(void) {
   const char *map[] = {
     NULL
   };
@@ -26,6 +26,6 @@ static void test_CSSRule_alloc() {
 
 
 
-void test_CSSRule() {
+void test_CSSRule(void) {
   test_CSSRule_alloc();
 }

@@ -3,7 +3,7 @@
 
 
 
-void test_CSSRule();
+void test_CSSRule(void);
 
 
 
