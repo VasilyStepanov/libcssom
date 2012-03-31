@@ -168,6 +168,38 @@ def renderInterface(out, interface):
 
 
 
+def renderTypedef(out, typedef):
+  if isinstance(typedef.type, pywidl.Sequence):
+    renderTypedefSequence(out, typedef)
+  else:
+    raise RuntimeError("Unknown type %s" % typedef.type)
+
+
+
+
+def renderTypedefSequence(out, typedef):
+  assert(not typedef.extended_attributes)
+  assert(not typedef.type_extended_attributes)
+
+  template = { \
+    'type' : typedef.name,
+    'name' : instanceName(typedef.name),
+    't' : emitType(typedef.type.t)}
+
+  print >>out, "typedef CSSOM_Sequence CSSOM_%(type)s;" % template;
+  print >>out
+  print >>out
+  print >>out
+  print >>out, "#define CSSOM_%(type)s_size(%(name)s) \\" % template
+  print >>out, "  (CSSOM_Sequence_size((%(name)s)))" % template
+  print >>out
+  print >>out
+  print >>out
+  print >>out, "#define CSSOM_%(type)s_at(%(name)s, index) \\" % template
+  print >>out, "  ((%(t)s)CSSOM_Sequence_at((%(name)s), (index)))" % template
+
+
+
 def renderInclude(out, definition):
   hppincludes = set()
   hppincludes.update(includes.get(definition.name, []))
@@ -185,6 +217,8 @@ def renderDefinition(out, definition):
   print >>out
   if isinstance(definition, pywidl.Interface):
     renderInterface(out, definition)
+  elif isinstance(definition, pywidl.Typedef):
+    renderTypedef(out, definition)
   else:
     raise RuntimeError("Unknown definition type %s" % definition)
 

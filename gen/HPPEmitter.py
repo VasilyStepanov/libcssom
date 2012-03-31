@@ -105,14 +105,24 @@ def renderInterface(out, interface):
 
 
 
+def renderTypedef(out, typedef):
+  assert(not typedef.extended_attributes)
+  assert(not typedef.type_extended_attributes)
+
+  print >>out, "typedef %s %s;" % (emitType(typedef.type), typedef.name)
+
+
+
 def renderDefinition(out, definition):
   print >>out
   print >>out
   print >>out
   if isinstance(definition, pywidl.Interface):
     renderInterface(out, definition)
+  elif isinstance(definition, pywidl.Typedef):
+    renderTypedef(out, definition)
   else:
-    print >>out, "/* unknown definition type %s */" % definition
+    raise RuntimeError("Unknown definition type %s" % definition)
 
 
 

@@ -6,12 +6,14 @@ import pywidl
 
 forwards = { \
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
+  'CSSRuleList' : ('CSSRule', ),
 }
 
 
 
 includes = { \
   'CSSStyleRule' : ('CSSRule', ),
+  'CSSRuleList' : ('Sequence', ),
 }
 
 

@@ -1,0 +1,1 @@
+typedef sequence<CSSRule> CSSRuleList;

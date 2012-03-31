@@ -49,13 +49,24 @@ def emitType(typedef):
     return emitSimpleType(typedef)
   elif isinstance(typedef, pywidl.InterfaceType):
     return emitInterfaceType(typedef)
+  elif isinstance(typedef, pywidl.Sequence):
+    return emitSequenceType(typedef)
   else:
     raise RuntimeError("Unknown type: %s" % typedef)
 
 
 
-def emitInterfaceType(typedef):
-  return "cssom::%s" % typedef.name
+def emitInterfaceType(interface):
+  assert(not interface.nullable)
+
+  return "cssom::%s" % interface.name
+
+
+
+def emitSequenceType(sequence):
+  assert(not sequence.nullable)
+
+  return "cssom::Sequence<%s>" % emitType(sequence.t)
 
 
 
@@ -240,6 +251,8 @@ def renderInclude(out, definition):
 
 
 def renderDefinitionSourceFile(outputdir, definition):
+  if isinstance(definition, pywidl.Typedef): return
+
   with open(os.path.join(outputdir, "%s.cpp" % definition.name), 'w') as out:
     print >>out, "#include <cssompp/%s.hpp>" % definition.name
 
