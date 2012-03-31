@@ -3,13 +3,17 @@
 
 #include <cssom/CSSRuleList.h>
 
+#include "CSSRule.h"
+#include "Sequence.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 
-CSSOM_CSSRuleList* CSSOM_CSSRuleList__alloc();
+#define CSSOM_CSSRuleList__alloc() \
+  CSSOM_Sequence__alloc(CSSOM_CSSRule__release);
 
 
 
