@@ -6,10 +6,11 @@ from Emitter import splitCamelCase
 from Emitter import instanceName
 from Emitter import includes
 from Emitter import forwards
+from Emitter import renderWarning
 
 import pywidl
 
-import os
+import os.path
 
 
 
@@ -224,11 +225,13 @@ def renderDefinition(out, definition):
 
 
 
-def renderDefinitionFile(outputdir, definition):
+def renderDefinitionFile(outputdir, source, definition):
   with open(os.path.join(outputdir, "%s.h" % definition.name), 'w') as out:
     define = headerDefine("cssom", definition.name, "h")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
+
+    renderWarning(out, source)
 
     renderInclude(out, definition)
 
@@ -255,7 +258,7 @@ def render(definitions=[], source=None, output=None, template=None,
   assert(includedir)
 
   for definition in definitions:
-    renderDefinitionFile(includedir, definition)
+    renderDefinitionFile(includedir, source, definition)
 
   with open(output, 'w') as out:
     pass

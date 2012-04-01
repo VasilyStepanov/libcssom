@@ -4,6 +4,7 @@ from Emitter import headerDefine
 from Emitter import forwards
 from Emitter import includes
 from Emitter import emitSimpleType
+from Emitter import renderWarning
 from CPPEmitter import emitArgument
 from CPPEmitter import emitType
 from CPPEmitter import attributeGetterSignature
@@ -14,7 +15,7 @@ from CPPEmitter import renderDefinitionSourceFile
 
 import pywidl
 
-import os
+import os.path
 
 
 
@@ -157,11 +158,13 @@ def renderForwardDeclarations(out, declarations):
 
 
 
-def renderDefinitionHeaderFile(outputdir, definition):
+def renderDefinitionHeaderFile(outputdir, source, definition):
   with open(os.path.join(outputdir, "%s.hpp" % definition.name), 'w') as out:
     define = headerDefine("cssompp", definition.name, "hpp")
     print >>out, "#ifndef %s" % define
     print >>out, "#define %s" % define
+
+    renderWarning(out, source)
 
     renderInclude(out, definition)
 
@@ -190,10 +193,10 @@ def render(definitions=[], source=None, output=None, template=None,
   assert(includedir)
 
   for definition in definitions:
-    renderDefinitionHeaderFile(includedir, definition)
+    renderDefinitionHeaderFile(includedir, source, definition)
 
   for definition in definitions:
-    renderDefinitionSourceFile(srcdir, definition)
+    renderDefinitionSourceFile(srcdir, source, definition)
 
   with open(output, 'w') as out:
     pass

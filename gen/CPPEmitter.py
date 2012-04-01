@@ -2,11 +2,12 @@
 
 from Emitter import emitSimpleType
 from Emitter import forwards
+from Emitter import renderWarning
 from HEmitter import interfaceMemberName
 
 import pywidl
 
-import os
+import os.path
 
 
 
@@ -250,11 +251,13 @@ def renderInclude(out, definition):
 
 
 
-def renderDefinitionSourceFile(outputdir, definition):
+def renderDefinitionSourceFile(outputdir, source, definition):
   if isinstance(definition, pywidl.Typedef): return
 
   with open(os.path.join(outputdir, "%s.cpp" % definition.name), 'w') as out:
     print >>out, "#include <cssompp/%s.hpp>" % definition.name
+
+    renderWarning(out, source)
 
     renderInclude(out, definition)
 
