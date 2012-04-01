@@ -1,5 +1,6 @@
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
+#include "CSSNamespaceRule.h"
 
 #include "CSSStyleDeclaration.h"
 #include "CSSEmitter.h"
@@ -34,6 +35,10 @@ unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
 
 
 
+/**
+ * CSSRule
+ */
+
 struct _CSSOM_CSSRule_vtable {
   void (*release)(CSSOM_CSSRule *cssRule);
 };
@@ -44,31 +49,6 @@ struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
   unsigned short type;
-};
-
-
-
-struct _CSSOM_CSSStyleRule {
-  CSSOM_CSSRule super;
-  char *selectorText;
-  const SAC_Selector **selectors;
-  CSSOM_CSSStyleDeclaration *style;
-};
-
-
-
-static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
-  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
-  --((CSSOM_CSSRule*)cssRule)->handles;
-  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
-
-  CSSOM_CSSStyleDeclaration__release(cssRule->style);
-  free(cssRule->selectorText);
-  free(cssRule);
-}
-
-static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
-  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release
 };
 
 
@@ -98,6 +78,37 @@ void CSSOM_CSSRule__release(CSSOM_CSSRule *cssRule) {
 unsigned short CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
   return cssRule->type;
 }
+
+
+
+/**
+ * CSSStyleRule
+ */
+
+struct _CSSOM_CSSStyleRule {
+  CSSOM_CSSRule super;
+  char *selectorText;
+  const SAC_Selector **selectors;
+  CSSOM_CSSStyleDeclaration *style;
+};
+
+
+
+static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
+  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
+  --((CSSOM_CSSRule*)cssRule)->handles;
+  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
+
+  CSSOM_CSSStyleDeclaration__release(cssRule->style);
+  free(cssRule->selectorText);
+  free(cssRule);
+}
+
+
+
+static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
+  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release
+};
 
 
 
@@ -161,4 +172,44 @@ const char* CSSOM_CSSStyleRule_selectorText(
     ((CSSOM_CSSStyleRule*)cssRule)->selectorText = buf;
   }
   return cssRule->selectorText;
+}
+
+
+
+/**
+ * CSSNamespaceRule
+ */
+
+struct _CSSOM_CSSNamespaceRule {
+  CSSOM_CSSRule super;
+};
+
+
+
+static void CSSNamespaceRule_release(CSSOM_CSSNamespaceRule *cssRule) {
+  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
+  --((CSSOM_CSSRule*)cssRule)->handles;
+  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
+
+  free(cssRule);
+}
+
+
+
+static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
+  (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_release
+};
+
+
+
+CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void) {
+  CSSOM_CSSNamespaceRule *cssRule;
+
+  cssRule = (CSSOM_CSSNamespaceRule*)malloc(sizeof(CSSOM_CSSNamespaceRule));
+  if (cssRule == NULL) return NULL;
+
+  CSSRule_init((CSSOM_CSSRule*)cssRule,
+    &CSSNamespaceRule_vtable, CSSOM_CSSRule_NAMESPACE_RULE);
+
+  return cssRule;
 }
