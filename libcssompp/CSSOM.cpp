@@ -46,6 +46,24 @@ void CSSOM::swap(cssom::CSSOM &rhs) {
 
 
 
+void * CSSOM::getUserData() const {
+  return CSSOM_getUserData(_impl);
+}
+
+
+
+void CSSOM::setUserData(void * userData) {
+  CSSOM_setUserData(_impl, userData);
+}
+
+
+
+void CSSOM::setErrorHandler(SAC_ErrorHandler handler) {
+  CSSOM_setErrorHandler(_impl, handler);
+}
+
+
+
 cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
   CSSOM_CSSStyleSheet *styleSheet = CSSOM_parseStyleSheet(_impl, cssText, len);
 

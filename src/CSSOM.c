@@ -19,14 +19,16 @@
 
 struct _CSSOM {
   size_t handles;
-  char **properties;
-  CSSOM_FSMTable_CSSProperty *table;
+  char * * properties;
+  CSSOM_FSMTable_CSSProperty * table;
+  SAC_ErrorHandler errorHandler;
+  void * userData;
 };
 
 
 
 struct _CSSOM_ParserStack {
-  const CSSOM_FSMTable_CSSProperty *table;
+  const CSSOM * cssom;
   CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule *curCSSRule;
 };
@@ -75,7 +77,8 @@ static int startStyleHandler(void *userData, const SAC_Selector *selectors[])
   
   stack = (struct _CSSOM_ParserStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->table, selectors);
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(
+    stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet__append(stack->styleSheet, cssRule) == NULL) {
@@ -103,7 +106,20 @@ static void freeProperties(char **properties) {
 
 
 
-CSSOM* CSSOM_create(const char **properties) {
+static void errorHandler(void * userData, const SAC_Error * error) {
+  struct _CSSOM_ParserStack *stack;
+  const CSSOM * cssom;
+  
+  stack = (struct _CSSOM_ParserStack*)userData;
+  cssom = stack->cssom;
+
+  if (cssom->errorHandler != NULL)
+    cssom->errorHandler(cssom->userData, error);
+}
+
+
+
+CSSOM* CSSOM_create(const char * * properties) {
   char **propertiesCopy;
   CSSOM_FSMTable_CSSProperty *table;
   CSSOM *cssom;
@@ -150,6 +166,8 @@ CSSOM* CSSOM_create(const char **properties) {
   cssom->handles = 1;
   cssom->properties = propertiesCopy;
   cssom->table = table;
+  cssom->errorHandler = NULL;
+  cssom->userData = NULL;
 
   return cssom;
 }
@@ -174,7 +192,25 @@ void CSSOM_release(CSSOM *cssom) {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(CSSOM *cssom,
+void * CSSOM_getUserData(const CSSOM * cssom) {
+  return cssom->userData;
+}
+
+
+
+void CSSOM_setUserData(CSSOM * cssom, void * userData) {
+  cssom->userData = userData;
+}
+
+
+
+void CSSOM_setErrorHandler(CSSOM * cssom, SAC_ErrorHandler handler) {
+  cssom->errorHandler = handler;
+}
+
+
+
+CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(const CSSOM *cssom,
   const char *cssText, int len)
 {
   SAC_Parser parser;
@@ -192,11 +228,12 @@ CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(CSSOM *cssom,
 
   parserStack.styleSheet = styleSheet;
   parserStack.curCSSRule = NULL;
-  parserStack.table = cssom->table;
+  parserStack.cssom = cssom;
 
   SAC_SetStyleHandler(parser,startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
   SAC_SetUserData(parser, &parserStack);
+  SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseStyleSheet(parser, cssText, len);
 
   return parserStack.styleSheet;

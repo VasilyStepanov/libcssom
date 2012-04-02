@@ -20,6 +20,11 @@ class CSSOM {
     cssom::CSSOM& operator=(const cssom::CSSOM &rhs);
 
     void swap(cssom::CSSOM &rhs);
+
+    void * getUserData() const;
+    void setUserData(void * userData);
+    void setErrorHandler(SAC_ErrorHandler handler);
+
     cssom::CSSStyleSheet parseStyleSheet(const char *cssText, int len);
     cssom::CSSStyleSheet parseStyleSheet(const std::string &cssText);
 
