@@ -19,7 +19,8 @@ CSSOM* CSSOM_create(const char **properties);
 
 void CSSOM_dispose(CSSOM *cssom);
 
-CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText, int len);
+CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(CSSOM *cssom,
+  const char *cssText, int len);
 
 void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet);
 

@@ -46,8 +46,8 @@ void CSSOM::swap(cssom::CSSOM &rhs) {
 
 
 
-cssom::CSSStyleSheet CSSOM::parse(const char *cssText, int len) {
-  CSSOM_CSSStyleSheet *styleSheet = CSSOM_parse(_impl, cssText, len);
+cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
+  CSSOM_CSSStyleSheet *styleSheet = CSSOM_parseStyleSheet(_impl, cssText, len);
 
   // TODO: Add error handler.
   if (styleSheet == NULL) throw std::bad_alloc();
@@ -57,8 +57,8 @@ cssom::CSSStyleSheet CSSOM::parse(const char *cssText, int len) {
 
 
 
-cssom::CSSStyleSheet CSSOM::parse(const std::string &cssText) {
-  return parse(cssText.data(), cssText.length());
+cssom::CSSStyleSheet CSSOM::parseStyleSheet(const std::string &cssText) {
+  return parseStyleSheet(cssText.data(), cssText.length());
 }
 
 

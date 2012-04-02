@@ -179,7 +179,9 @@ void CSSOM__release(CSSOM *cssom) {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_parse(CSSOM *cssom, const char *cssText, int len) { 
+CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(CSSOM *cssom,
+  const char *cssText, int len)
+{
   SAC_Parser parser;
   CSSOM_CSSStyleSheet *styleSheet;
   struct _CSSOM_ParserStack parserStack;
