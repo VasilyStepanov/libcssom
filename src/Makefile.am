@@ -40,7 +40,8 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Deque_void.c \
                       FSM_CSSProperty.c \
                       CSSStyleDeclaration.c \
-                      Sequence.c
+                      Sequence.c \
+                      memory.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)
 

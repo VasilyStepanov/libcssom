@@ -1,8 +1,8 @@
 #include "Sequence.h"
 
 #include "Deque_void.h"
+#include "memory.h"
 
-#include <stdlib.h>
 #include <assert.h>
 
 
@@ -22,12 +22,13 @@ CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*)) {
   data = CSSOM_Deque_void_alloc(0);
   if (data == NULL) return NULL;
 
-  sequence = (CSSOM_Sequence*)malloc(sizeof(CSSOM_Sequence));
+  sequence = (CSSOM_Sequence*)CSSOM_malloc(sizeof(CSSOM_Sequence));
   if (sequence == NULL) {
     CSSOM_Deque_void_free(data);
     return NULL;
   }
 
+  sequence->handles = 1;
   sequence->data = data;
   sequence->releaseItem = releaseItem;
 
@@ -56,7 +57,7 @@ void CSSOM_Sequence_release(CSSOM_Sequence *sequence) {
     sequence->releaseItem(*it);
   }
 
-  free(sequence);
+  CSSOM_free(sequence);
 }
 
 

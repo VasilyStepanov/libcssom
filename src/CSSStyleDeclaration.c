@@ -2,9 +2,9 @@
 
 #include "CSSProperty.h"
 #include "CSSEmitter.h"
+#include "memory.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
 
 
@@ -26,7 +26,8 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   fsm = CSSOM_FSM_CSSProperty_alloc(table);
   if (fsm == NULL) return NULL;
 
-  style = (CSSOM_CSSStyleDeclaration*)malloc(sizeof(CSSOM_CSSStyleDeclaration));
+  style = (CSSOM_CSSStyleDeclaration*)CSSOM_malloc(
+    sizeof(CSSOM_CSSStyleDeclaration));
   if (style == NULL) {
     CSSOM_FSM_CSSProperty_free(fsm);
     return NULL;
@@ -62,9 +63,9 @@ void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
     CSSOM_CSSProperty_release(it->value);
   }
 
-  free(style->cssText);
+  CSSOM_free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
-  free(style);
+  CSSOM_free(style);
 }
 
 
@@ -93,7 +94,7 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
     return NULL;
   }
 
-  free(style->cssText);
+  CSSOM_free(style->cssText);
   style->cssText = NULL;
 
   CSSOM_CSSProperty__setName(prop, it->key);
@@ -171,12 +172,12 @@ const char* CSSOM_CSSStyleDeclaration_cssText(
 
     if (emit_cssStyleDeclaration(out, style) != 0) {
       fclose(out);
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 

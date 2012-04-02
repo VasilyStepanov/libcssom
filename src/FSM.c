@@ -4,8 +4,8 @@
 #include "Vector.c"
 #include "Deque.h"
 #include "Deque.c"
+#include "memory.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 
@@ -41,7 +41,7 @@
     int *row; \
     CSSOM_DequeIter_FSMTableRow_##suffix it; \
     \
-    row = (int*)malloc(sizeof(int) * 256); \
+    row = (int*)CSSOM_malloc(sizeof(int) * 256); \
     if (row == NULL) return CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
     \
     memset(row, 0, sizeof(int) * 256); \
@@ -107,7 +107,7 @@
       it != CSSOM_Deque_FSMTableRow_##suffix##_end(data); \
       it = CSSOM_DequeIter_FSMTableRow_##suffix##_next(it)) \
     { \
-      free(*it); \
+      CSSOM_free(*it); \
     } \
     \
     CSSOM_Deque_FSMTableRow_##suffix##_free(data); \
@@ -143,7 +143,8 @@
       } \
     } \
     \
-    table = (CSSOM_FSMTable_##suffix*)malloc(sizeof(CSSOM_FSMTable_##suffix)); \
+    table = (CSSOM_FSMTable_##suffix*)CSSOM_malloc( \
+      sizeof(CSSOM_FSMTable_##suffix)); \
     if (table == NULL) { \
       FSMTableData_##suffix##_free(data); \
       return NULL; \
@@ -161,7 +162,7 @@
   \
   void CSSOM_FSMTable_##suffix##_free(CSSOM_FSMTable_##suffix *table) { \
     FSMTableData_##suffix##_free(table->data); \
-    free(table); \
+    CSSOM_free(table); \
   } \
   \
   \
@@ -282,7 +283,7 @@
     CSSOM_FSM_##suffix *fsm; \
     CSSOM_VectorIter_FSMItemPtr_##suffix refsit; \
     \
-    state = (int*)malloc(sizeof(int) * FSMTable_##suffix##_size(table)); \
+    state = (int*)CSSOM_malloc(sizeof(int) * FSMTable_##suffix##_size(table)); \
     if (state == NULL) return NULL; \
     \
     memset(state, 0, sizeof(int) * FSMTable_##suffix##_size(table)); \
@@ -290,7 +291,7 @@
     refs = CSSOM_Vector_FSMItemPtr_##suffix##_alloc( \
       FSMTable_##suffix##_amount(table)); \
     if (refs == NULL) { \
-      free(state); \
+      CSSOM_free(state); \
       return NULL; \
     } \
     \
@@ -298,15 +299,15 @@
       FSMTable_##suffix##_amount(table)); \
     if (data == NULL) { \
       CSSOM_Vector_FSMItemPtr_##suffix##_free(refs); \
-      free(state); \
+      CSSOM_free(state); \
       return NULL; \
     } \
     \
-    fsm = (CSSOM_FSM_##suffix*)malloc(sizeof(CSSOM_FSM_##suffix)); \
+    fsm = (CSSOM_FSM_##suffix*)CSSOM_malloc(sizeof(CSSOM_FSM_##suffix)); \
     if (fsm == NULL) { \
       CSSOM_Vector_FSMItemPtr_##suffix##_free(refs); \
       CSSOM_Deque_FSMItem_##suffix##_free(data); \
-      free(state); \
+      CSSOM_free(state); \
       return NULL; \
     } \
     \
@@ -331,8 +332,8 @@
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm) { \
     CSSOM_Deque_FSMItem_##suffix##_free(fsm->data); \
     CSSOM_Vector_FSMItemPtr_##suffix##_free(fsm->refs); \
-    free(fsm->state); \
-    free(fsm); \
+    CSSOM_free(fsm->state); \
+    CSSOM_free(fsm); \
   } \
   \
   \

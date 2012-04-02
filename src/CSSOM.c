@@ -6,12 +6,12 @@
 #include "CSSStyleSheet.h"
 #include "FSM_CSSProperty.h"
 #include "gcc.h"
+#include "memory.h"
 
 #include <cssom/CSSRule.h>
 
 #include <sacc.h>
 
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -99,9 +99,9 @@ static void freeProperties(char **properties) {
   if (properties == (char**)CSSOM_CSSProperties) return;
 
   for (it = properties; *it != NULL; ++it)
-    free(*it);
+    CSSOM_free(*it);
 
-  free(properties);
+  CSSOM_free(properties);
 }
 
 
@@ -131,7 +131,7 @@ CSSOM* CSSOM_create(const char * * properties) {
 
     for (itrhs = properties, size = 0; *itrhs != NULL; ++itrhs, ++size);
 
-    propertiesCopy = (char**)malloc(sizeof(char*) * (size + 1));
+    propertiesCopy = (char**)CSSOM_malloc(sizeof(char*) * (size + 1));
     if (propertiesCopy == NULL) return NULL;
 
     for (
@@ -156,7 +156,7 @@ CSSOM* CSSOM_create(const char * * properties) {
     return NULL;
   }
 
-  cssom = (CSSOM*)malloc(sizeof(CSSOM));
+  cssom = (CSSOM*)CSSOM_malloc(sizeof(CSSOM));
   if (cssom == NULL) {
     freeProperties(propertiesCopy);
     CSSOM_FSMTable_CSSProperty_free(table);
@@ -187,7 +187,7 @@ void CSSOM_release(CSSOM *cssom) {
 
   CSSOM_FSMTable_CSSProperty_free(cssom->table);
   freeProperties(cssom->properties);
-  free(cssom);
+  CSSOM_free(cssom);
 }
 
 

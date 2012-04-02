@@ -2,8 +2,8 @@
 
 #include "Vector.h"
 #include "Vector.c"
+#include "memory.h"
 
-#include <stdlib.h>
 
 
 
@@ -28,7 +28,7 @@
   { \
     struct _CSSOM_DequeItem_##suffix *item; \
     \
-    item = (struct _CSSOM_DequeItem_##suffix*)malloc( \
+    item = (struct _CSSOM_DequeItem_##suffix*)CSSOM_malloc( \
       sizeof(struct _CSSOM_DequeItem_##suffix)); \
     if (item == NULL) return NULL; \
     \
@@ -44,7 +44,7 @@
   static void DequeItem_##suffix##_free( \
     struct _CSSOM_DequeItem_##suffix *item) \
   { \
-    free(item); \
+    CSSOM_free(item); \
   } \
   \
   \
@@ -110,7 +110,7 @@
       at->next->prev = at; \
     } \
     \
-    deque = (CSSOM_Deque_##suffix*)malloc(sizeof(CSSOM_Deque_##suffix)); \
+    deque = (CSSOM_Deque_##suffix*)CSSOM_malloc(sizeof(CSSOM_Deque_##suffix)); \
     if (deque == NULL) { \
       CSSOM_Vector_DequeItem_##suffix##_free(refs); \
       DequeItem_##suffix##_freeAll(item); \
@@ -129,7 +129,7 @@
   void CSSOM_Deque_##suffix##_free(CSSOM_Deque_##suffix *deque) { \
     CSSOM_Vector_DequeItem_##suffix##_free(deque->refs); \
     DequeItem_##suffix##_freeAll(deque->head); \
-    free(deque); \
+    CSSOM_free(deque); \
   } \
   \
   \

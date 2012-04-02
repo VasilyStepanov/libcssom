@@ -1,8 +1,8 @@
 #include "CSSProperty.h"
 
 #include "CSSEmitter.h"
+#include "memory.h"
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -152,7 +152,7 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
 {
   CSSOM_CSSProperty *property;
 
-  property = (CSSOM_CSSProperty*)malloc(sizeof(CSSOM_CSSProperty));
+  property = (CSSOM_CSSProperty*)CSSOM_malloc(sizeof(CSSOM_CSSProperty));
   if (property == NULL) return NULL;
 
   property->handles = 1;
@@ -176,15 +176,15 @@ void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property) {
   --property->handles;
   if (property->handles > 0) return;
 
-  free(property->cssText);
-  free(property);
+  CSSOM_free(property->cssText);
+  CSSOM_free(property);
 }
 
 
 
 void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name) {
   property->name = name;
-  free(property->cssText);
+  CSSOM_free(property->cssText);
   property->cssText = NULL;
 }
 
@@ -208,12 +208,12 @@ const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property) {
 
     if (CSSOM_CSSEmitter_lexicalUnit(out, property->value) != 0) {
       fclose(out);
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 

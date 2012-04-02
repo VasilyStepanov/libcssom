@@ -4,8 +4,8 @@
 
 #include "CSSStyleDeclaration.h"
 #include "CSSEmitter.h"
+#include "memory.h"
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
@@ -100,8 +100,8 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
-  free(cssRule->selectorText);
-  free(cssRule);
+  CSSOM_free(cssRule->selectorText);
+  CSSOM_free(cssRule);
 }
 
 
@@ -121,7 +121,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   style = CSSOM_CSSStyleDeclaration__alloc(table);
   if (style == NULL) return NULL;
 
-  cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));
+  cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
     CSSOM_CSSStyleDeclaration_release(style);
     return NULL;
@@ -160,12 +160,12 @@ const char* CSSOM_CSSStyleRule_selectorText(
 
     if (CSSOM_CSSEmitter_selectors(out, cssRule->selectors) != 0) {
       fclose(out);
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      free(buf);
+      CSSOM_free(buf);
       return NULL;
     }
 
@@ -191,7 +191,7 @@ static void CSSNamespaceRule_release(CSSOM_CSSNamespaceRule *cssRule) {
   --((CSSOM_CSSRule*)cssRule)->handles;
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
-  free(cssRule);
+  CSSOM_free(cssRule);
 }
 
 
@@ -205,7 +205,7 @@ static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void) {
   CSSOM_CSSNamespaceRule *cssRule;
 
-  cssRule = (CSSOM_CSSNamespaceRule*)malloc(sizeof(CSSOM_CSSNamespaceRule));
+  cssRule = (CSSOM_CSSNamespaceRule*)CSSOM_malloc(sizeof(CSSOM_CSSNamespaceRule));
   if (cssRule == NULL) return NULL;
 
   CSSRule_init((CSSOM_CSSRule*)cssRule,

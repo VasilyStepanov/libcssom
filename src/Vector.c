@@ -1,6 +1,7 @@
 #include "Vector.h"
 
-#include <stdlib.h>
+#include "memory.h"
+
 #include <string.h>
 
 
@@ -50,13 +51,13 @@
     T *data; \
     CSSOM_Vector_##suffix *vector; \
     \
-    data = (T*)malloc(sizeof(T) * capacity); \
+    data = (T*)CSSOM_malloc(sizeof(T) * capacity); \
     if (capacity != 0 && data == NULL) return NULL; \
     \
-    vector = (CSSOM_Vector_##suffix*)malloc( \
+    vector = (CSSOM_Vector_##suffix*)CSSOM_malloc( \
       sizeof(CSSOM_Vector_##suffix)); \
     if (vector == NULL) { \
-      free(data); \
+      CSSOM_free(data); \
       return NULL; \
     } \
     \
@@ -71,8 +72,8 @@
   \
   \
   void CSSOM_Vector_##suffix##_free(CSSOM_Vector_##suffix *vector) { \
-    free(vector->data); \
-    free(vector); \
+    CSSOM_free(vector->data); \
+    CSSOM_free(vector); \
   }\
   \
   \

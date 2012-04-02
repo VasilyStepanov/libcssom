@@ -2,12 +2,12 @@
 
 #include "CSSRuleList.h"
 #include "Sequence.h"
+#include "memory.h"
 
 #include <cssom/CSSRule.h>
 
 #include <sacc.h>
 
-#include <stdlib.h>
 #include <assert.h>
 
 
@@ -27,7 +27,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
   cssRules = CSSOM_CSSRuleList__alloc();
   if (cssRules == NULL) return NULL;
 
-  styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
+  styleSheet = (CSSOM_CSSStyleSheet*)CSSOM_malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
     CSSOM_Sequence_release(cssRules);
     return NULL;
@@ -57,7 +57,7 @@ void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
 
   CSSOM_Sequence_release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
-  free(styleSheet);
+  CSSOM_free(styleSheet);
 }
 
 

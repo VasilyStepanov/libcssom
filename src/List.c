@@ -1,6 +1,6 @@
 #include "List.h"
 
-#include <stdlib.h>
+#include "memory.h"
 
 
 
@@ -16,7 +16,7 @@
   static struct _CSSOM_ListItem_##suffix* ListItem_##suffix##_alloc(void) { \
     struct _CSSOM_ListItem_##suffix *item; \
     \
-    item = (struct _CSSOM_ListItem_##suffix*)malloc( \
+    item = (struct _CSSOM_ListItem_##suffix*)CSSOM_malloc( \
       sizeof(struct _CSSOM_ListItem_##suffix)); \
     if (item == NULL) return NULL; \
     \
@@ -31,7 +31,7 @@
   static void ListItem_##suffix##_free( \
     struct _CSSOM_ListItem_##suffix *item) \
   { \
-    free(item); \
+    CSSOM_free(item); \
   } \
   \
   \
@@ -64,7 +64,7 @@
     item = ListItem_##suffix##_alloc(); \
     if (item == NULL) return NULL; \
     \
-    list = (CSSOM_List_##suffix*)malloc( \
+    list = (CSSOM_List_##suffix*)CSSOM_malloc( \
       sizeof(CSSOM_List_##suffix)); \
     if (list == NULL) { \
       ListItem_##suffix##_free(item); \
@@ -82,7 +82,7 @@
   \
   void CSSOM_List_##suffix##_free(CSSOM_List_##suffix *list) { \
     ListItem_##suffix##_freeAll(list->head); \
-    free(list); \
+    CSSOM_free(list); \
   } \
   \
   \
