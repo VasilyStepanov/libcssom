@@ -47,7 +47,9 @@ pkgconfig_DATA = cssompp.pc
 
 
 
+if ENABLE_PYWIDL
 CLEANFILES = $(BUILT_SOURCES)
+endif
 
 
 

@@ -50,7 +50,9 @@ pkgconfig_DATA = cssom.pc
 
 
 
+if ENABLE_PYWIDL
 CLEANFILES = $(BUILT_SOURCES)
+endif
 
 
 
