@@ -36,4 +36,9 @@ void myfree(const char * file, int line, void * ptr);
 
 
 
+#define CSSOM_native_free(ptr) \
+  free((ptr))
+
+
+
 #endif

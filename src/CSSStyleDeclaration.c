@@ -63,7 +63,7 @@ void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
     CSSOM_CSSProperty_release(it->value);
   }
 
-  CSSOM_free(style->cssText);
+  CSSOM_native_free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
   CSSOM_free(style);
 }
@@ -94,7 +94,7 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
     return NULL;
   }
 
-  CSSOM_free(style->cssText);
+  CSSOM_native_free(style->cssText);
   style->cssText = NULL;
 
   CSSOM_CSSProperty__setName(prop, it->key);

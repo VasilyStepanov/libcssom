@@ -176,7 +176,7 @@ void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property) {
   --property->handles;
   if (property->handles > 0) return;
 
-  CSSOM_free(property->cssText);
+  CSSOM_native_free(property->cssText);
   CSSOM_free(property);
 }
 
@@ -184,7 +184,7 @@ void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property) {
 
 void CSSOM_CSSProperty__setName(CSSOM_CSSProperty *property, const char *name) {
   property->name = name;
-  CSSOM_free(property->cssText);
+  CSSOM_native_free(property->cssText);
   property->cssText = NULL;
 }
 

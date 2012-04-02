@@ -100,7 +100,7 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
-  CSSOM_free(cssRule->selectorText);
+  CSSOM_native_free(cssRule->selectorText);
   CSSOM_free(cssRule);
 }
 
