@@ -156,12 +156,6 @@ CSSOM* CSSOM_create(const char **properties) {
 
 
 
-void CSSOM_dispose(CSSOM *cssom) {
-  CSSOM_release(cssom);
-}
-
-
-
 void CSSOM_acquire(CSSOM *cssom) {
   ++cssom->handles;
 }

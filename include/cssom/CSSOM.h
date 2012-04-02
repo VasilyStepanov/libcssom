@@ -15,14 +15,14 @@ typedef struct _CSSOM CSSOM;
 
 
 
-CSSOM* CSSOM_create(const char **properties);
+CSSOM* CSSOM_create(const char * * properties);
 
-void CSSOM_dispose(CSSOM *cssom);
+void CSSOM_acquire(CSSOM * cssom);
+
+void CSSOM_release(CSSOM * cssom);
 
 CSSOM_CSSStyleSheet* CSSOM_parseStyleSheet(CSSOM *cssom,
-  const char *cssText, int len);
-
-void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet);
+  const char * cssText, int len);
 
 
 

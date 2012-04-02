@@ -62,12 +62,6 @@ void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
 
 
 
-void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
-  CSSOM_CSSStyleSheet_release(styleSheet);
-}
-
-
-
 CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
