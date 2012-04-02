@@ -10,7 +10,7 @@
 
 
 
-#include "src/CSSRule.h"
+#include <cssom/CSSRule.h>
 
 #include <utility>
 
@@ -27,13 +27,13 @@ CSSRule::CSSRule(CSSOM_CSSRule * impl) :
 CSSRule::CSSRule(const cssom::CSSRule &copy) :
   _impl(copy._impl)
 {
-  CSSOM_CSSRule__acquire(_impl);
+  CSSOM_CSSRule_acquire(_impl);
 }
 
 
 
 CSSRule::~CSSRule() {
-  CSSOM_CSSRule__release(_impl);
+  CSSOM_CSSRule_release(_impl);
 }
 
 

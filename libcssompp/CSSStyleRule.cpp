@@ -10,7 +10,7 @@
 
 
 
-#include "src/CSSStyleRule.h"
+#include <cssom/CSSStyleRule.h>
 
 #include <cssompp/CSSStyleDeclaration.hpp>
 

@@ -160,8 +160,24 @@ def renderInterface(out, interface):
   assert(not interface.extended_attributes)
   assert(not interface.callback)
 
-  print >>out, "typedef struct _CSSOM_%(name)s CSSOM_%(name)s;" % { \
-    "name" : interface.name }
+  template = { \
+    'iface' : interface.name,
+    'inst' : instanceName(interface.name) }
+
+  print >>out, "typedef struct _CSSOM_%(iface)s CSSOM_%(iface)s;" % template
+
+  if not interface.parent:
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "void CSSOM_%(iface)s_acquire(" % template
+    print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
+
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "void CSSOM_%(iface)s_release(" % template
+    print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
 
   for member in interface.members:
     renderInterfaceMember(out, interface, member)
@@ -188,6 +204,16 @@ def renderTypedefSequence(out, typedef):
     't' : emitType(typedef.type.t)}
 
   print >>out, "typedef CSSOM_Sequence CSSOM_%(type)s;" % template;
+  print >>out
+  print >>out
+  print >>out
+  print >>out, "#define CSSOM_%(type)s_acquire(%(name)s) \\" % template
+  print >>out, "  (CSSOM_Sequence_acquire((%(name)s)))" % template
+  print >>out
+  print >>out
+  print >>out
+  print >>out, "#define CSSOM_%(type)s_release(%(name)s, index) \\" % template
+  print >>out, "  (CSSOM_Sequence_release((%(name)s)))" % template
   print >>out
   print >>out
   print >>out

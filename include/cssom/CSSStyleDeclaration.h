@@ -21,6 +21,16 @@ typedef struct _CSSOM_CSSStyleDeclaration CSSOM_CSSStyleDeclaration;
 
 
 
+void CSSOM_CSSStyleDeclaration_acquire(
+  CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_release(
+  CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_cssText(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

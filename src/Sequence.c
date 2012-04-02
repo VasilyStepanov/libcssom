@@ -36,13 +36,13 @@ CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*)) {
 
 
 
-void CSSOM_Sequence__acquire(CSSOM_Sequence *sequence) {
+void CSSOM_Sequence_acquire(CSSOM_Sequence *sequence) {
   ++sequence->handles;
 }
 
 
 
-void CSSOM_Sequence__release(CSSOM_Sequence *sequence) {
+void CSSOM_Sequence_release(CSSOM_Sequence *sequence) {
   CSSOM_DequeIter_void it;
 
   assert(sequence->handles > 0);

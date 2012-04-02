@@ -10,7 +10,7 @@
 
 
 
-#include "src/CSSNamespaceRule.h"
+#include <cssom/CSSNamespaceRule.h>
 
 #include <utility>
 

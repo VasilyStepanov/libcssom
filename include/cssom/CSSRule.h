@@ -21,6 +21,16 @@ typedef struct _CSSOM_CSSRule CSSOM_CSSRule;
 
 
 
+void CSSOM_CSSRule_acquire(
+  CSSOM_CSSRule * cssRule);
+
+
+
+void CSSOM_CSSRule_release(
+  CSSOM_CSSRule * cssRule);
+
+
+
 extern unsigned short CSSOM_CSSRule_STYLE_RULE;
 
 

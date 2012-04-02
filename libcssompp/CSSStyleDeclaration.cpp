@@ -10,7 +10,7 @@
 
 
 
-#include "src/CSSStyleDeclaration.h"
+#include <cssom/CSSStyleDeclaration.h>
 
 #include <utility>
 
@@ -27,13 +27,13 @@ CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
 CSSStyleDeclaration::CSSStyleDeclaration(const cssom::CSSStyleDeclaration &copy) :
   _impl(copy._impl)
 {
-  CSSOM_CSSStyleDeclaration__acquire(_impl);
+  CSSOM_CSSStyleDeclaration_acquire(_impl);
 }
 
 
 
 CSSStyleDeclaration::~CSSStyleDeclaration() {
-  CSSOM_CSSStyleDeclaration__release(_impl);
+  CSSOM_CSSStyleDeclaration_release(_impl);
 }
 
 

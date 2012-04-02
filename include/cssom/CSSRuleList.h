@@ -24,6 +24,16 @@ typedef CSSOM_Sequence CSSOM_CSSRuleList;
 
 
 
+#define CSSOM_CSSRuleList_acquire(cssRuleList) \
+  (CSSOM_Sequence_acquire((cssRuleList)))
+
+
+
+#define CSSOM_CSSRuleList_release(cssRuleList, index) \
+  (CSSOM_Sequence_release((cssRuleList)))
+
+
+
 #define CSSOM_CSSRuleList_size(cssRuleList) \
   (CSSOM_Sequence_size((cssRuleList)))
 

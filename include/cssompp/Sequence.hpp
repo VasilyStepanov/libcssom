@@ -40,14 +40,14 @@ template <typename T>
 Sequence<T>::Sequence(const cssom::Sequence<T> &copy) :
   _impl(copy._impl)
 {
-  CSSOM_Sequence__acquire(_impl);
+  CSSOM_Sequence_acquire(_impl);
 }
 
 
 
 template <typename T>
 Sequence<T>::~Sequence() {
-  CSSOM_Sequence__release(_impl);
+  CSSOM_Sequence_release(_impl);
 }
 
 

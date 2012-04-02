@@ -9,9 +9,9 @@ extern "C" {
 
 
 
-void CSSOM__acquire(CSSOM *cssom);
+void CSSOM_acquire(CSSOM *cssom);
 
-void CSSOM__release(CSSOM *cssom);
+void CSSOM_release(CSSOM *cssom);
 
 
 

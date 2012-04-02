@@ -165,13 +165,13 @@ CSSOM_CSSProperty* CSSOM_CSSProperty__alloc(
 
 
 
-void CSSOM_CSSProperty__acquire(CSSOM_CSSProperty *property) {
+void CSSOM_CSSProperty_acquire(CSSOM_CSSProperty *property) {
   ++property->handles;
 }
 
 
 
-void CSSOM_CSSProperty__release(CSSOM_CSSProperty *property) {
+void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property) {
   assert(property->handles > 0);
   --property->handles;
   if (property->handles > 0) return;

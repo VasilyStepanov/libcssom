@@ -10,7 +10,7 @@
 
 
 
-#include "src/CSSStyleSheet.h"
+#include <cssom/CSSStyleSheet.h>
 
 #include <cssompp/CSSRule.hpp>
 
@@ -29,13 +29,13 @@ CSSStyleSheet::CSSStyleSheet(CSSOM_CSSStyleSheet * impl) :
 CSSStyleSheet::CSSStyleSheet(const cssom::CSSStyleSheet &copy) :
   _impl(copy._impl)
 {
-  CSSOM_CSSStyleSheet__acquire(_impl);
+  CSSOM_CSSStyleSheet_acquire(_impl);
 }
 
 
 
 CSSStyleSheet::~CSSStyleSheet() {
-  CSSOM_CSSStyleSheet__release(_impl);
+  CSSOM_CSSStyleSheet_release(_impl);
 }
 
 

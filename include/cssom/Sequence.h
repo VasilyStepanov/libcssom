@@ -17,9 +17,9 @@ size_t CSSOM_Sequence_size(const CSSOM_Sequence *sequence);
 
 void* CSSOM_Sequence_at(const CSSOM_Sequence *sequence, size_t index);
 
-void CSSOM_Sequence__acquire(CSSOM_Sequence *sequence);
+void CSSOM_Sequence_acquire(CSSOM_Sequence *sequence);
 
-void CSSOM_Sequence__release(CSSOM_Sequence *sequence);
+void CSSOM_Sequence_release(CSSOM_Sequence *sequence);
 
 
 

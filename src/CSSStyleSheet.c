@@ -1,8 +1,9 @@
 #include "CSSStyleSheet.h"
 
 #include "CSSRuleList.h"
-#include "CSSRule.h"
 #include "Sequence.h"
+
+#include <cssom/CSSRule.h>
 
 #include <sacc.h>
 
@@ -28,7 +29,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
 
   styleSheet = (CSSOM_CSSStyleSheet*)malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    CSSOM_Sequence__release(cssRules);
+    CSSOM_Sequence_release(cssRules);
     return NULL;
   }
 
@@ -41,20 +42,20 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
 
 
 
-void CSSOM_CSSStyleSheet__acquire(CSSOM_CSSStyleSheet *styleSheet) {
+void CSSOM_CSSStyleSheet_acquire(CSSOM_CSSStyleSheet *styleSheet) {
   ++styleSheet->handles;
 }
 
 
 
-void CSSOM_CSSStyleSheet__release(CSSOM_CSSStyleSheet *styleSheet) {
+void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
   if (styleSheet == NULL) return;
 
   assert(styleSheet->handles > 0);
   --styleSheet->handles;
   if (styleSheet->handles > 0) return;
 
-  CSSOM_Sequence__release(styleSheet->cssRules);
+  CSSOM_Sequence_release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
   free(styleSheet);
 }
@@ -62,7 +63,7 @@ void CSSOM_CSSStyleSheet__release(CSSOM_CSSStyleSheet *styleSheet) {
 
 
 void CSSOM_CSSStyleSheet_dispose(CSSOM_CSSStyleSheet *styleSheet) {
-  CSSOM_CSSStyleSheet__release(styleSheet);
+  CSSOM_CSSStyleSheet_release(styleSheet);
 }
 
 

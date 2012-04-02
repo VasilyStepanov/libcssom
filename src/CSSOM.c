@@ -1,12 +1,13 @@
 #include "CSSOM.h"
 
 #include "CSSProperty.h"
-#include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
 #include "FSM_CSSProperty.h"
 #include "gcc.h"
+
+#include <cssom/CSSRule.h>
 
 #include <sacc.h>
 
@@ -78,7 +79,7 @@ static int startStyleHandler(void *userData, const SAC_Selector *selectors[])
   if (cssRule == NULL) return 1;
 
   if (CSSOM_CSSStyleSheet__append(stack->styleSheet, cssRule) == NULL) {
-    CSSOM_CSSRule__release(cssRule);
+    CSSOM_CSSRule_release(cssRule);
     return 1;
   }
 
@@ -133,7 +134,7 @@ CSSOM* CSSOM_create(const char **properties) {
   }
 
   table = CSSOM_FSMTable_CSSProperty_alloc(properties, 
-    CSSOM_CSSProperty__release);
+    CSSOM_CSSProperty_release);
   if (table == NULL) {
     freeProperties(propertiesCopy);
     return NULL;
@@ -156,18 +157,18 @@ CSSOM* CSSOM_create(const char **properties) {
 
 
 void CSSOM_dispose(CSSOM *cssom) {
-  CSSOM__release(cssom);
+  CSSOM_release(cssom);
 }
 
 
 
-void CSSOM__acquire(CSSOM *cssom) {
+void CSSOM_acquire(CSSOM *cssom) {
   ++cssom->handles;
 }
 
 
 
-void CSSOM__release(CSSOM *cssom) {
+void CSSOM_release(CSSOM *cssom) {
   assert(cssom->handles > 0);
   --cssom->handles;
   if (cssom->handles > 0) return;

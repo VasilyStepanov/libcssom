@@ -41,13 +41,13 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 
-void CSSOM_CSSStyleDeclaration__acquire(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration_acquire(CSSOM_CSSStyleDeclaration *style) {
   ++style->handles;
 }
 
 
 
-void CSSOM_CSSStyleDeclaration__release(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
   CSSOM_FSMIter_CSSProperty it;
 
   assert(style->handles > 0);
@@ -59,7 +59,7 @@ void CSSOM_CSSStyleDeclaration__release(CSSOM_CSSStyleDeclaration *style) {
     it != CSSOM_FSM_CSSProperty_end(style->fsm);
     it = CSSOM_FSMIter_CSSProperty_next(it))
   {
-    CSSOM_CSSProperty__release(it->value);
+    CSSOM_CSSProperty_release(it->value);
   }
 
   free(style->cssText);
@@ -89,7 +89,7 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
 
   it = CSSOM_FSM_CSSProperty_add(style->fsm, property, prop);
   if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) {
-    CSSOM_CSSProperty__release(prop);
+    CSSOM_CSSProperty_release(prop);
     return NULL;
   }
 

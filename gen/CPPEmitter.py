@@ -196,14 +196,14 @@ def renderInterface(out, interface):
     print >>out, "%(name)s::%(name)s(const cssom::%(name)s &copy) :" % template
     print >>out, "  _impl(copy._impl)"
     print >>out, "{"
-    print >>out, "  CSSOM_%(name)s__acquire(_impl);" % template
+    print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
     print >>out, "}"
 
     print >>out
     print >>out
     print >>out
     print >>out, "%(name)s::~%(name)s() {" % template
-    print >>out, "  CSSOM_%(name)s__release(_impl);" % template
+    print >>out, "  CSSOM_%(name)s_release(_impl);" % template
     print >>out, "}"
 
     print >>out
@@ -241,7 +241,7 @@ def renderDefinition(out, definition):
 
 def renderInclude(out, definition):
   print >>out
-  print >>out, "#include \"src/%s.h\"" % definition.name
+  print >>out, "#include <cssom/%s.h>" % definition.name
 
   hppincludes = forwards.get(definition.name, [])
 

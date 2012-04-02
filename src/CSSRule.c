@@ -1,4 +1,4 @@
-#include "CSSRule.h"
+#include <cssom/CSSRule.h>
 #include "CSSStyleRule.h"
 #include "CSSNamespaceRule.h"
 
@@ -63,13 +63,13 @@ static void CSSRule_init(CSSOM_CSSRule *cssRule,
 
 
 
-void CSSOM_CSSRule__acquire(CSSOM_CSSRule *cssRule) {
+void CSSOM_CSSRule_acquire(CSSOM_CSSRule *cssRule) {
   ++cssRule->handles;
 }
 
 
 
-void CSSOM_CSSRule__release(CSSOM_CSSRule *cssRule) {
+void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
   cssRule->vtable->release(cssRule);
 }
 
@@ -99,7 +99,7 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
   --((CSSOM_CSSRule*)cssRule)->handles;
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
-  CSSOM_CSSStyleDeclaration__release(cssRule->style);
+  CSSOM_CSSStyleDeclaration_release(cssRule->style);
   free(cssRule->selectorText);
   free(cssRule);
 }
@@ -123,7 +123,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
   cssRule = (CSSOM_CSSStyleRule*)malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration__release(style);
+    CSSOM_CSSStyleDeclaration_release(style);
     return NULL;
   }
 

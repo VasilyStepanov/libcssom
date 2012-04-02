@@ -19,13 +19,13 @@ CSSOM::CSSOM(const char **properties) :
 CSSOM::CSSOM(const cssom::CSSOM &copy) :
   _impl(copy._impl)
 {
-  CSSOM__acquire(_impl);
+  CSSOM_acquire(_impl);
 }
 
 
 
 CSSOM::~CSSOM() {
-  CSSOM__release(_impl);
+  CSSOM_release(_impl);
 }
 
 
