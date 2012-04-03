@@ -67,14 +67,13 @@ void CSSOM::setErrorHandler(SAC_ErrorHandler handler) {
 cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
   CSSOM_CSSStyleSheet *styleSheet = CSSOM_parseStyleSheet(_impl, cssText, len);
 
-  // TODO: Add error handler.
   if (styleSheet == NULL) throw std::bad_alloc();
 
-  cssom::CSSStyleSheet ret(styleSheet);
+  cssom::CSSStyleSheet wrap(styleSheet);
 
   CSSOM_CSSStyleSheet_release(styleSheet);
 
-  return ret;
+  return wrap;
 }
 
 
