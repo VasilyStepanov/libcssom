@@ -10,7 +10,7 @@ namespace {
 
 
 void basics() {
-  cssom::CSSOM cssom(CSSOM_CSSProperties);
+  cssom::CSSOM cssom;
 
   cssom::CSSStyleSheet styleSheet = cssom.parseStyleSheet(
 "p {\n"

@@ -4,6 +4,7 @@
 #include <cssompp/CSSStyleSheet.hpp>
 
 #include <cssom/CSSOM.h>
+#include <cssom/CSSProperty.h>
 
 #include <string>
 
@@ -13,7 +14,7 @@ namespace cssom {
 
 class CSSOM {
   public:
-    explicit CSSOM(const char **properties);
+    explicit CSSOM(const char **properties = CSSOM_CSSProperties);
     CSSOM(const cssom::CSSOM &copy);
     ~CSSOM();
 
