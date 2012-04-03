@@ -12,6 +12,9 @@ test_suite_LDADD = $(top_srcdir)/libcssompp/libcssompp.la
 
 
 test: all
-	./test_suite
+	$(RM) malloc free
+	-./test_suite
+	cat malloc | sort > smalloc
+	cat free | sort > sfree
 
 .PHONY: test
