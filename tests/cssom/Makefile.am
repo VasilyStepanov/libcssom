@@ -16,7 +16,27 @@ test_suite_LDADD = $(top_srcdir)/src/libcssom.la
 
 
 
+if ENABLE_MEMORY_TRACE
+
+
+
+test: all
+	$(RM) malloc free
+	-./test_suite
+	cat malloc | sort > smalloc
+	cat free | sort > sfree
+
+
+
+else
+
+
+
 test: all
 	./test_suite
+
+
+
+endif
 
 .PHONY: test

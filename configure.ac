@@ -18,6 +18,19 @@ AC_ARG_ENABLE([tests], [AS_HELP_STRING([--enable-tests],
   [tests_enabled='no'])
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$tests_enabled" != "xno"])
 
+
+
+AC_ARG_ENABLE([memory-trace], [AS_HELP_STRING([--enable-memory-trace],
+  [enable memory trace (DEVELOPERS ONLY)])],
+  [memory_trace_enabled=$enableval],
+  [memory_trace_enabled='no'])
+AM_CONDITIONAL([ENABLE_MEMORY_TRACE], [test "x$memory_trace_enabled" != "xno"])
+if test "x$memory_trace_enabled" != "xno"; then
+  AC_DEFINE([ENABLE_MEMORY_TRACE], 1, [Memory trace (DEVELOPERS ONLY)])
+fi
+
+
+
 AC_ARG_ENABLE([pywidl], [AS_HELP_STRING([--enable-pywidl],
   [enable pywidl generator])],
   [pywidl_enabled=$enableval],
@@ -26,6 +39,8 @@ if test "x$pywidl_enabled" != "xno"; then
   AC_CHECK_PYWIDL([0.1])
 fi
 AM_CONDITIONAL([ENABLE_PYWIDL], [test "x$pywidl_enabled" != "xno"])
+
+
 
 PKG_CHECK_MODULES(SACC, sacc)
 
