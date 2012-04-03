@@ -12,7 +12,7 @@ namespace {
 void basics() {
   cssom::CSSOM cssom;
 
-  cssom::CSSStyleSheet styleSheet = cssom.parseStyleSheet(
+  cssom::CSSStyleSheet styleSheet = cssom.parseCSSStyleSheet(
 "p {\n"
 "  color : green\n"
 "}\n"
@@ -42,7 +42,7 @@ namespace test {
 
 
 
-void CSSOM() {
+void cssom() {
   basics();
 }
 

@@ -2,6 +2,9 @@
 
 #include "src/CSSOM.h"
 
+#include <cssompp/CSSStyleRule.hpp>
+#include <cssompp/CSSStyleSheet.hpp>
+
 #include <new>
 #include <utility>
 
@@ -64,7 +67,9 @@ void CSSOM::setErrorHandler(SAC_ErrorHandler handler) {
 
 
 
-cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
+cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
+  const char *cssText, int len) const
+{
   CSSOM_CSSStyleSheet *styleSheet = CSSOM_parseStyleSheet(_impl, cssText, len);
 
   if (styleSheet == NULL) throw std::bad_alloc();
@@ -78,8 +83,10 @@ cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
 
 
 
-cssom::CSSStyleSheet CSSOM::parseStyleSheet(const std::string &cssText) {
-  return parseStyleSheet(cssText.data(), cssText.length());
+cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
+  const std::string &cssText) const
+{
+  return parseCSSStyleSheet(cssText.data(), cssText.length());
 }
 
 

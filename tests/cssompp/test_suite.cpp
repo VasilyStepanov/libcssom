@@ -1,6 +1,10 @@
+#include "test_CSSStyleRule.hpp"
 #include "test_CSSOM.hpp"
 
+
+
 int main() {
-  test::CSSOM();
+  test::cssStyleRule();
+  test::cssom();
   return 0;
 }

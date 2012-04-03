@@ -5,7 +5,7 @@ namespace test {
 
 
 
-void CSSOM();
+void cssom();
 
 
 

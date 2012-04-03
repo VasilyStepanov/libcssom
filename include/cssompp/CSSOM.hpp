@@ -1,12 +1,22 @@
 #ifndef CSSOMPP_CSSOM_HPP
 #define CSSOMPP_CSSOM_HPP
 
-#include <cssompp/CSSStyleSheet.hpp>
-
 #include <cssom/CSSOM.h>
 #include <cssom/CSSProperty.h>
 
 #include <string>
+
+namespace cssom {
+
+
+
+class CSSStyleRule;
+
+class CSSStyleSheet;
+
+
+
+}
 
 namespace cssom {
 
@@ -26,8 +36,10 @@ class CSSOM {
     void setUserData(void * userData);
     void setErrorHandler(SAC_ErrorHandler handler);
 
-    cssom::CSSStyleSheet parseStyleSheet(const char *cssText, int len);
-    cssom::CSSStyleSheet parseStyleSheet(const std::string &cssText);
+    cssom::CSSStyleSheet parseCSSStyleSheet(const char *cssText, int len) const;
+    cssom::CSSStyleSheet parseCSSStyleSheet(const std::string &cssText) const;
+    cssom::CSSStyleRule parseCSSStyleRule(const char *cssText, int len) const;
+    cssom::CSSStyleRule parseCSSStyleRule(const std::string &cssText) const;
 
   private:
     ::CSSOM *_impl;
