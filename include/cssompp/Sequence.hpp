@@ -32,7 +32,9 @@ class Sequence {
 template <typename T>
 Sequence<T>::Sequence(CSSOM_Sequence * impl) :
   _impl(impl)
-{}
+{
+  CSSOM_Sequence_acquire(_impl);
+}
 
 
 

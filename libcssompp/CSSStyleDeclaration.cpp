@@ -20,7 +20,9 @@ namespace cssom {
 
 CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
   _impl(impl)
-{}
+{
+  CSSOM_CSSStyleDeclaration_acquire(_impl);
+}
 
 
 

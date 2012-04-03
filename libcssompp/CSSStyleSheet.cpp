@@ -22,7 +22,9 @@ namespace cssom {
 
 CSSStyleSheet::CSSStyleSheet(CSSOM_CSSStyleSheet * impl) :
   _impl(impl)
-{}
+{
+  CSSOM_CSSStyleSheet_acquire(_impl);
+}
 
 
 

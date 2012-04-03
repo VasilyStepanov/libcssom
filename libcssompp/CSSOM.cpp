@@ -70,7 +70,11 @@ cssom::CSSStyleSheet CSSOM::parseStyleSheet(const char *cssText, int len) {
   // TODO: Add error handler.
   if (styleSheet == NULL) throw std::bad_alloc();
 
-  return cssom::CSSStyleSheet(styleSheet);
+  cssom::CSSStyleSheet ret(styleSheet);
+
+  CSSOM_CSSStyleSheet_release(styleSheet);
+
+  return ret;
 }
 
 

@@ -57,6 +57,7 @@ void CSSOM_Sequence_release(CSSOM_Sequence *sequence) {
     sequence->releaseItem(*it);
   }
 
+  CSSOM_Deque_void_free(sequence->data);
   CSSOM_free(sequence);
 }
 

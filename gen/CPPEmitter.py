@@ -188,7 +188,9 @@ def renderInterface(out, interface):
     print >>out
     print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
     print >>out, "  _impl(impl)"
-    print >>out, "{}"
+    print >>out, "{"
+    print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
+    print >>out, "}"
 
     print >>out
     print >>out

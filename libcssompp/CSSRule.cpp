@@ -20,7 +20,9 @@ namespace cssom {
 
 CSSRule::CSSRule(CSSOM_CSSRule * impl) :
   _impl(impl)
-{}
+{
+  CSSOM_CSSRule_acquire(_impl);
+}
 
 
 
