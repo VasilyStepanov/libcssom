@@ -32,10 +32,10 @@ void CSSOM_setErrorHandler(CSSOM * cssom, SAC_ErrorHandler handler);
 
 void CSSOM_setFatalErrorHandler(CSSOM * cssom, SAC_FatalErrorHandler handler);
 
-CSSOM_CSSStyleSheet * CSSOM_parseStyleSheet(const CSSOM *cssom,
+CSSOM_CSSStyleSheet * CSSOM_parseCSSStyleSheet(const CSSOM *cssom,
   const char * cssText, int len);
 
-CSSOM_CSSStyleRule * CSSOM_parseStyleRule(const CSSOM *cssom,
+CSSOM_CSSStyleRule * CSSOM_parseCSSStyleRule(const CSSOM *cssom,
   const char * cssText, int len);
 
 
