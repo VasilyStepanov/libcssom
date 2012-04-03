@@ -24,6 +24,7 @@ class CSSNamespaceRule : public cssom::CSSRule {
   public:
     typedef CSSOM_CSSNamespaceRule * C;
 
+    explicit CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl);
 };
 
 

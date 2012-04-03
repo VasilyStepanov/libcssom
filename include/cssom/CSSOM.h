@@ -2,6 +2,7 @@
 #define CSSOM_CSSOM_H
 
 #include <cssom/CSSStyleSheet.h>
+#include <cssom/CSSStyleRule.h>
 
 #include <sacc.h>
 
@@ -32,6 +33,9 @@ void CSSOM_setErrorHandler(CSSOM * cssom, SAC_ErrorHandler handler);
 void CSSOM_setFatalErrorHandler(CSSOM * cssom, SAC_FatalErrorHandler handler);
 
 CSSOM_CSSStyleSheet * CSSOM_parseStyleSheet(const CSSOM *cssom,
+  const char * cssText, int len);
+
+CSSOM_CSSStyleRule * CSSOM_parseStyleRule(const CSSOM *cssom,
   const char * cssText, int len);
 
 

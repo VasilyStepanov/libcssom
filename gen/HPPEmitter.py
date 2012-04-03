@@ -85,8 +85,8 @@ def renderInterface(out, interface):
   print >>out, "    typedef CSSOM_%(name)s * C;" % template;
   print >>out
 
+  print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   if not interface.parent:
-    print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
     print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
     print >>out, "    ~%(name)s();" % template
     print >>out

@@ -20,6 +20,12 @@ namespace cssom {
 
 
 
+CSSStyleRule::CSSStyleRule(CSSOM_CSSStyleRule * impl) :
+  CSSRule((CSSOM_CSSRule *)impl)
+{}
+
+
+
 const char * CSSStyleRule::selectorText() const {
   return CSSOM_CSSStyleRule_selectorText(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl));
 }

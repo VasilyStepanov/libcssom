@@ -33,6 +33,7 @@ class CSSStyleRule : public cssom::CSSRule {
   public:
     typedef CSSOM_CSSStyleRule * C;
 
+    explicit CSSStyleRule(CSSOM_CSSStyleRule * impl);
 
     const char * selectorText() const;
 

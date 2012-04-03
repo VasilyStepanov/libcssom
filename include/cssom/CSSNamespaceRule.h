@@ -23,6 +23,16 @@ typedef struct _CSSOM_CSSNamespaceRule CSSOM_CSSNamespaceRule;
 
 
 
+#define CSSOM_CSSNamespaceRule_acquire(cssNamespaceRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssNamespaceRule))
+
+
+
+#define CSSOM_CSSNamespaceRule_release(cssNamespaceRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssNamespaceRule))
+
+
+
 #ifdef __cplusplus
 }
 #endif

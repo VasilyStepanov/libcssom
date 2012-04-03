@@ -18,4 +18,10 @@ namespace cssom {
 
 
 
+CSSNamespaceRule::CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl) :
+  CSSRule((CSSOM_CSSRule *)impl)
+{}
+
+
+
 } // cssom

@@ -227,6 +227,14 @@ def renderInterface(out, interface):
     print >>out, "void %(name)s::swap(cssom::%(name)s &rhs) {" % template
     print >>out, "  std::swap(_impl, rhs._impl);"
     print >>out, "}"
+  else:
+    template['parent'] = interface.parent
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
+    print >>out, "  %(parent)s((CSSOM_%(parent)s *)impl)" % template
+    print >>out, "{}"
 
   for member in interface.members:
     renderInterfaceMember(out, interface, member)
