@@ -28,7 +28,7 @@
       capacity = 4; \
     } \
     \
-    data = (T*)realloc(vector->data, sizeof(T) * capacity); \
+    data = (T*)CSSOM_realloc(vector->data, sizeof(T) * capacity); \
     if (data == NULL) return NULL; \
     \
     vector->capacity = capacity; \
