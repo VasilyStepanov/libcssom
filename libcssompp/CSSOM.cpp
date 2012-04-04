@@ -92,27 +92,23 @@ cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
 
 
 
-cssom::CSSStyleRule CSSOM::parseCSSStyleRule(
-  const char *cssText, int len) const
-{
-  CSSOM_CSSStyleRule *cssRule;
+cssom::CSSRule CSSOM::parseCSSRule(const char *cssText, int len) const {
+  CSSOM_CSSRule *cssRule;
   
-  cssRule = CSSOM_parseCSSStyleRule(_impl, cssText, len);
+  cssRule = CSSOM_parseCSSRule(_impl, cssText, len);
   if (cssRule == NULL) throw std::bad_alloc();
 
-  cssom::CSSStyleRule wrap(cssRule);
+  cssom::CSSRule wrap(cssRule);
 
-  CSSOM_CSSStyleRule_release(cssRule);
+  CSSOM_CSSRule_release(cssRule);
 
   return wrap;
 }
 
 
 
-cssom::CSSStyleRule CSSOM::parseCSSStyleRule(
-  const std::string &cssText) const
-{
-  return parseCSSStyleRule(cssText.data(), cssText.length());
+cssom::CSSRule CSSOM::parseCSSRule(const std::string &cssText) const {
+  return parseCSSRule(cssText.data(), cssText.length());
 }
 
 

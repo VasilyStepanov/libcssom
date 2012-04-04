@@ -10,7 +10,7 @@ namespace cssom {
 
 
 
-class CSSStyleRule;
+class CSSRule;
 
 class CSSStyleSheet;
 
@@ -38,8 +38,8 @@ class CSSOM {
 
     cssom::CSSStyleSheet parseCSSStyleSheet(const char *cssText, int len) const;
     cssom::CSSStyleSheet parseCSSStyleSheet(const std::string &cssText) const;
-    cssom::CSSStyleRule parseCSSStyleRule(const char *cssText, int len) const;
-    cssom::CSSStyleRule parseCSSStyleRule(const std::string &cssText) const;
+    cssom::CSSRule parseCSSRule(const char *cssText, int len) const;
+    cssom::CSSRule parseCSSRule(const std::string &cssText) const;
 
   private:
     ::CSSOM *_impl;

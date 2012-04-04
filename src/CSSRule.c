@@ -176,16 +176,20 @@ static void CSSStyleRule_swap(
 static void CSSStyleRule_setCSSText(CSSOM_CSSStyleRule *cssRule,
   const char *cssText)
 {
-  CSSOM_CSSStyleRule *newCSSRule;
+  CSSOM_CSSRule *newCSSRule;
 
-  newCSSRule = CSSOM_parseCSSStyleRule(
+  newCSSRule = CSSOM_parseCSSRule(
     ((CSSOM_CSSRule*)cssRule)->cssom, cssText, strlen(cssText));
   if (newCSSRule == NULL) return;
+
+  if (CSSOM_CSSRule_type(newCSSRule) != CSSOM_CSSRule_STYLE_RULE) {
+    return;
+  }
   
   CSSOM_native_free(cssRule->cssText);
   cssRule->cssText = NULL;
 
-  CSSStyleRule_swap(cssRule, newCSSRule);
+  CSSStyleRule_swap(cssRule, (CSSOM_CSSStyleRule*)newCSSRule);
 
   CSSOM_CSSStyleRule_release(newCSSRule);
 }

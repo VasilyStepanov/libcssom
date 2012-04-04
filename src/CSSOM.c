@@ -35,9 +35,9 @@ struct _CSSOM_CSSStyleSheetStack {
 
 
 
-struct _CSSOM_CSSStyleRuleStack {
+struct _CSSOM_CSSRuleStack {
   const CSSOM * cssom;
-  CSSOM_CSSStyleRule * cssRule;
+  CSSOM_CSSRule * cssRule;
 };
 
 
@@ -256,16 +256,16 @@ CSSOM_CSSStyleSheet* CSSOM_parseCSSStyleSheet(const CSSOM *cssom,
 
 
 
-static int cssStyleRule_propertyHandler(void *userData,
+static int cssRule_propertyHandler(void *userData,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  struct _CSSOM_CSSStyleRuleStack *stack;
+  struct _CSSOM_CSSRuleStack *stack;
   CSSOM_CSSStyleDeclaration *cssRule;
   CSSOM_CSSProperty *property;
   
-  stack = (struct _CSSOM_CSSStyleRuleStack*)userData;
+  stack = (struct _CSSOM_CSSRuleStack*)userData;
   cssRule = CSSOM_CSSStyleRule_style((CSSOM_CSSStyleRule*)stack->cssRule);
 
   property = CSSOM_CSSStyleDeclaration__setProperty(cssRule,
@@ -277,31 +277,31 @@ static int cssStyleRule_propertyHandler(void *userData,
 
 
 
-static int cssStyleRule_startStyleHandler(void *userData,
+static int cssRule_startStyleHandler(void *userData,
   const SAC_Selector *selectors[])
 {
-  struct _CSSOM_CSSStyleRuleStack *stack;
+  struct _CSSOM_CSSRuleStack *stack;
   CSSOM_CSSStyleRule *cssRule;
   
-  stack = (struct _CSSOM_CSSStyleRuleStack*)userData;
+  stack = (struct _CSSOM_CSSRuleStack*)userData;
 
   cssRule = CSSOM_CSSStyleRule__alloc(stack->cssom,
     stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
   assert(stack->cssRule == NULL);
-  stack->cssRule = cssRule;
+  stack->cssRule = (CSSOM_CSSRule*)cssRule;
 
   return 0;
 }
 
 
 
-CSSOM_CSSStyleRule* CSSOM_parseCSSStyleRule(const CSSOM *cssom,
+CSSOM_CSSRule* CSSOM_parseCSSRule(const CSSOM *cssom,
   const char *cssText, int len)
 {
   SAC_Parser parser;
-  struct _CSSOM_CSSStyleRuleStack stack;
+  struct _CSSOM_CSSRuleStack stack;
 
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
@@ -309,9 +309,8 @@ CSSOM_CSSStyleRule* CSSOM_parseCSSStyleRule(const CSSOM *cssom,
   stack.cssRule = NULL;
   stack.cssom = cssom;
 
-  SAC_SetStyleHandler(parser,
-    cssStyleRule_startStyleHandler, NULL);
-  SAC_SetPropertyHandler(parser, cssStyleRule_propertyHandler);
+  SAC_SetStyleHandler(parser, cssRule_startStyleHandler, NULL);
+  SAC_SetPropertyHandler(parser, cssRule_propertyHandler);
   SAC_SetUserData(parser, &stack);
   SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseRule(parser, cssText, len);
