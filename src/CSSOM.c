@@ -21,7 +21,7 @@ struct _CSSOM {
   size_t handles;
   char * * properties;
   CSSOM_FSMTable_CSSProperty * table;
-  SAC_ErrorHandler errorHandler;
+  CSSOM_ErrorHandler errorHandler;
   void * userData;
 };
 
@@ -121,8 +121,14 @@ static void errorHandler(void * userData, const SAC_Error * error) {
   stack = (struct _CSSOM_CSSStyleSheetStack*)userData;
   cssom = stack->cssom;
 
-  if (cssom->errorHandler != NULL)
-    cssom->errorHandler(cssom->userData, error);
+  if (cssom->errorHandler != NULL) {
+    CSSOM_Error cssomError;
+    cssomError.line = error->line;
+    cssomError.column = error->column;
+    cssomError.code = error->code;
+    cssomError.data = error->data;
+    cssom->errorHandler(cssom->userData, &cssomError);
+  }
 }
 
 
@@ -212,7 +218,7 @@ void CSSOM_setUserData(CSSOM * cssom, void * userData) {
 
 
 
-void CSSOM_setErrorHandler(CSSOM * cssom, SAC_ErrorHandler handler) {
+void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler) {
   cssom->errorHandler = handler;
 }
 

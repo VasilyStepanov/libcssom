@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdio.h>
+
 
 
 static void test_CSSOM_basics(void) {
@@ -53,10 +55,10 @@ static void test_CSSOM_basics(void) {
 
 
 
-static void errorHandler(void *userData, const SAC_Error * error) {
+static void errorHandler(void *userData, const CSSOM_Error * error) {
   size_t *errors = (size_t*)userData;
 
-  if (error->code ==  SAC_ERROR_SYNTAX) ++(*errors);
+  if (error->code == CSSOM_ERROR_SYNTAX) ++(*errors);
 }
 
 

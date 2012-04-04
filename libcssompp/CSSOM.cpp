@@ -61,7 +61,7 @@ void CSSOM::setUserData(void * userData) {
 
 
 
-void CSSOM::setErrorHandler(SAC_ErrorHandler handler) {
+void CSSOM::setErrorHandler(CSSOM_ErrorHandler handler) {
   CSSOM_setErrorHandler(_impl, handler);
 }
 

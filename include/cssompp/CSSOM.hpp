@@ -34,7 +34,7 @@ class CSSOM {
 
     void * getUserData() const;
     void setUserData(void * userData);
-    void setErrorHandler(SAC_ErrorHandler handler);
+    void setErrorHandler(CSSOM_ErrorHandler handler);
 
     cssom::CSSStyleSheet parseCSSStyleSheet(const char *cssText, int len) const;
     cssom::CSSStyleSheet parseCSSStyleSheet(const std::string &cssText) const;
