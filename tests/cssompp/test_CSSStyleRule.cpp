@@ -47,7 +47,7 @@ namespace test {
 
 void cssStyleRule() {
   consts();
-  // type();
+  type();
 }
 
 
