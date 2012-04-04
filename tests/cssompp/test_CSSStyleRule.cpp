@@ -23,12 +23,11 @@ struct Errors {
 
 
 cssom::CSSStyleRule styleRule(const cssom::CSSOM &cssom) {
-  cssom::CSSRule cssRule = cssom.parseCSSRule(
+  return cssom::CSSStyleRule::cast(cssom.parseCSSRule(
 "p {\n"
 " color : green;\n"
 "}\n"
-  );
-  return cssom::CSSStyleRule(static_cast<cssom::CSSStyleRule&>(cssRule));
+  ));
 }
 
 

@@ -20,6 +20,22 @@ namespace cssom {
 
 
 
+CSSStyleRule CSSStyleRule::cast(
+  const cssom::CSSRule & cssRule)
+{
+  return static_cast<const cssom::CSSStyleRule &>(cssRule);
+}
+
+
+
+CSSStyleRule & CSSStyleRule::cast(
+  cssom::CSSRule & cssRule)
+{
+  return static_cast<cssom::CSSStyleRule&>(cssRule);
+}
+
+
+
 CSSStyleRule::CSSStyleRule(CSSOM_CSSStyleRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}

@@ -4,6 +4,7 @@ from Emitter import emitSimpleType
 from Emitter import forwards
 from Emitter import renderWarning
 from Emitter import splitCamelCase
+from Emitter import instanceName
 from HEmitter import interfaceMemberName
 
 import pywidl
@@ -233,7 +234,29 @@ def renderInterface(out, interface):
     print >>out, "  std::swap(_impl, rhs._impl);"
     print >>out, "}"
   else:
-    template['parent'] = interface.parent
+    template.update({
+      'parent' : interface.parent,
+      'inst': instanceName(interface.parent)})
+
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%(name)s %(name)s::cast(" % template
+    print >>out, "  const cssom::%(parent)s & %(inst)s)" % template
+    print >>out, "{"
+    print >>out, "  return static_cast<const cssom::%(name)s &>(" \
+      "%(inst)s);" % template
+    print >>out, "}"
+
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%(name)s & %(name)s::cast(" % template
+    print >>out, "  cssom::%(parent)s & %(inst)s)" % template
+    print >>out, "{"
+    print >>out, "  return static_cast<cssom::%(name)s&>(%(inst)s);" % template
+    print >>out, "}"
+
     print >>out
     print >>out
     print >>out

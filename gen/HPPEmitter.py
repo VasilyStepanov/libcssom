@@ -5,6 +5,7 @@ from Emitter import forwards
 from Emitter import includes
 from Emitter import emitSimpleType
 from Emitter import renderWarning
+from Emitter import instanceName
 from CPPEmitter import emitArgument
 from CPPEmitter import emitType
 from CPPEmitter import attributeGetterSignature
@@ -84,6 +85,16 @@ def renderInterface(out, interface):
   print >>out, "  public:"
   print >>out, "    typedef CSSOM_%(name)s * C;" % template;
   print >>out
+
+  if interface.parent:
+    template.update({
+      'inst' : instanceName(interface.parent),
+      'parent' : interface.parent})
+    print >>out, "    static cssom::%(name)s cast(" \
+      "const cssom::%(parent)s & %(inst)s);" % template
+    print >>out, "    static cssom::%(name)s & cast(" \
+      "cssom::%(parent)s & %(inst)s);" % template
+    print >>out
 
   print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   if not interface.parent:

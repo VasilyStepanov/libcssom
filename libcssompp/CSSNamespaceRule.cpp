@@ -18,6 +18,22 @@ namespace cssom {
 
 
 
+CSSNamespaceRule CSSNamespaceRule::cast(
+  const cssom::CSSRule & cssRule)
+{
+  return static_cast<const cssom::CSSNamespaceRule &>(cssRule);
+}
+
+
+
+CSSNamespaceRule & CSSNamespaceRule::cast(
+  cssom::CSSRule & cssRule)
+{
+  return static_cast<cssom::CSSNamespaceRule&>(cssRule);
+}
+
+
+
 CSSNamespaceRule::CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}
