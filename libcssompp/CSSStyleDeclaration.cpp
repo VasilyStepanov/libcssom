@@ -12,6 +12,8 @@
 
 #include <cssom/CSSStyleDeclaration.h>
 
+#include "checks.hpp"
+
 #include <utility>
 
 namespace cssom {

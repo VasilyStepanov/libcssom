@@ -14,6 +14,8 @@
 
 #include <cssompp/CSSRule.hpp>
 
+#include "checks.hpp"
+
 #include <utility>
 
 namespace cssom {

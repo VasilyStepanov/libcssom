@@ -244,6 +244,10 @@ def renderInterface(out, interface):
     print >>out, "%(name)s %(name)s::cast(" % template
     print >>out, "  const cssom::%(parent)s & %(inst)s)" % template
     print >>out, "{"
+    print >>out, "#ifndef NDEBUG"
+    print >>out, "  cssom::checkCast<cssom::%(parent)s, cssom::%(name)s>(" \
+      "%(inst)s);" % template
+    print >>out, "#endif // NDEBUG"
     print >>out, "  return static_cast<const cssom::%(name)s &>(" \
       "%(inst)s);" % template
     print >>out, "}"
@@ -254,7 +258,12 @@ def renderInterface(out, interface):
     print >>out, "%(name)s & %(name)s::cast(" % template
     print >>out, "  cssom::%(parent)s & %(inst)s)" % template
     print >>out, "{"
-    print >>out, "  return static_cast<cssom::%(name)s&>(%(inst)s);" % template
+    print >>out, "#ifndef NDEBUG"
+    print >>out, "  cssom::checkCast<cssom::%(parent)s, cssom::%(name)s>(" \
+      "%(inst)s);" % template
+    print >>out, "#endif // NDEBUG"
+    print >>out, "  return static_cast<cssom::%(name)s &>(" \
+      "%(inst)s);" % template
     print >>out, "}"
 
     print >>out
@@ -299,6 +308,8 @@ def renderDefinitionSourceFile(outputdir, source, definition):
 
     renderInclude(out, definition)
 
+    print >>out
+    print >>out, "#include \"checks.hpp\""
     print >>out
     print >>out, "#include <utility>"
     print >>out

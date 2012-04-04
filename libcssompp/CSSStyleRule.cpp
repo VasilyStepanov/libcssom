@@ -14,6 +14,8 @@
 
 #include <cssompp/CSSStyleDeclaration.hpp>
 
+#include "checks.hpp"
+
 #include <utility>
 
 namespace cssom {
@@ -23,6 +25,9 @@ namespace cssom {
 CSSStyleRule CSSStyleRule::cast(
   const cssom::CSSRule & cssRule)
 {
+#ifndef NDEBUG
+  cssom::checkCast<cssom::CSSRule, cssom::CSSStyleRule>(cssRule);
+#endif // NDEBUG
   return static_cast<const cssom::CSSStyleRule &>(cssRule);
 }
 
@@ -31,7 +36,10 @@ CSSStyleRule CSSStyleRule::cast(
 CSSStyleRule & CSSStyleRule::cast(
   cssom::CSSRule & cssRule)
 {
-  return static_cast<cssom::CSSStyleRule&>(cssRule);
+#ifndef NDEBUG
+  cssom::checkCast<cssom::CSSRule, cssom::CSSStyleRule>(cssRule);
+#endif // NDEBUG
+  return static_cast<cssom::CSSStyleRule &>(cssRule);
 }
 
 

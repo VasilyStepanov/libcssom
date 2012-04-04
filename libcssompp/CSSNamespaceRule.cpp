@@ -12,6 +12,8 @@
 
 #include <cssom/CSSNamespaceRule.h>
 
+#include "checks.hpp"
+
 #include <utility>
 
 namespace cssom {
@@ -21,6 +23,9 @@ namespace cssom {
 CSSNamespaceRule CSSNamespaceRule::cast(
   const cssom::CSSRule & cssRule)
 {
+#ifndef NDEBUG
+  cssom::checkCast<cssom::CSSRule, cssom::CSSNamespaceRule>(cssRule);
+#endif // NDEBUG
   return static_cast<const cssom::CSSNamespaceRule &>(cssRule);
 }
 
@@ -29,7 +34,10 @@ CSSNamespaceRule CSSNamespaceRule::cast(
 CSSNamespaceRule & CSSNamespaceRule::cast(
   cssom::CSSRule & cssRule)
 {
-  return static_cast<cssom::CSSNamespaceRule&>(cssRule);
+#ifndef NDEBUG
+  cssom::checkCast<cssom::CSSRule, cssom::CSSNamespaceRule>(cssRule);
+#endif // NDEBUG
+  return static_cast<cssom::CSSNamespaceRule &>(cssRule);
 }
 
 
