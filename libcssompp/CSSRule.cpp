@@ -88,4 +88,10 @@ unsigned short CSSRule::type() const {
 
 
 
+const char * CSSRule::cssText() const {
+  return CSSOM_CSSRule_cssText(_impl);
+}
+
+
+
 } // cssom

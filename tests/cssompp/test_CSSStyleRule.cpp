@@ -3,6 +3,8 @@
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSStyleRule.hpp>
 
+#include <iostream>
+
 #include <assert.h>
 
 namespace {
@@ -39,6 +41,16 @@ void type() {
 
 
 
+void cssText() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleRule style = styleRule(cssom);
+
+  std::string cssText = "p { color : green; }";
+  assert(style.cssText() == cssText);
+}
+
+
+
 void selectorText() {
   cssom::CSSOM cssom;
   cssom::CSSStyleRule style = styleRule(cssom);
@@ -58,6 +70,7 @@ void cssStyleRule() {
   consts();
   type();
   selectorText();
+  cssText();
 }
 
 

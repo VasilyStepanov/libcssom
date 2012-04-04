@@ -18,6 +18,11 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
 
 
+const SAC_Selector** CSSOM_CSSStyleRule__selectors(
+  const CSSOM_CSSStyleRule *cssRule);
+
+
+
 #ifdef __cplusplus
 }
 #endif

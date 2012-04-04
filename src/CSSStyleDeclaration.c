@@ -132,32 +132,6 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
 
 
 
-static int emit_cssStyleDeclaration(FILE *out,
-  const CSSOM_CSSStyleDeclaration *style)
-{
-  CSSOM_FSMConstIter_CSSProperty it;
-
-  it = CSSOM_FSM_CSSProperty_cbegin(style->fsm);
-  if (it != CSSOM_FSM_CSSProperty_cend(style->fsm)) {
-    if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
-    if (fprintf(out, ";") < 0) return 1;
-
-    for (
-      it = CSSOM_FSMConstIter_CSSProperty_next(it);
-      it != CSSOM_FSM_CSSProperty_cend(style->fsm);
-      it = CSSOM_FSMConstIter_CSSProperty_next(it))
-    {
-      if (fprintf(out, " ") < 0) return 1;
-      if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
-      if (fprintf(out, ";") < 0) return 1;
-    }
-  }
-
-  return 0;
-}
-
-
-
 const char* CSSOM_CSSStyleDeclaration_cssText(
   const CSSOM_CSSStyleDeclaration *style)
 {
@@ -170,18 +144,68 @@ const char* CSSOM_CSSStyleDeclaration_cssText(
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (emit_cssStyleDeclaration(out, style) != 0) {
+    if (CSSOM_CSSEmitter_cssStyleDeclaration(out, style) != 0) {
       fclose(out);
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
     ((CSSOM_CSSStyleDeclaration*)style)->cssText = buf;
   }
   return style->cssText;
+}
+
+
+
+CSSOM_CSSStyleDeclarationIter CSSOM_CSSStyleDeclaration__begin(
+  CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_FSM_CSSProperty_begin(style->fsm);
+}
+
+
+
+CSSOM_CSSStyleDeclarationIter CSSOM_CSSStyleDeclaration__end(
+  CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_FSM_CSSProperty_end(style->fsm);
+}
+
+
+
+CSSOM_CSSStyleDeclarationIter
+CSSOM_CSSStyleDeclarationIter_next(
+  CSSOM_CSSStyleDeclarationIter iter)
+{
+  return CSSOM_FSMIter_CSSProperty_next(iter);
+}
+
+
+
+CSSOM_CSSStyleDeclarationConstIter CSSOM_CSSStyleDeclaration__cbegin(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_FSM_CSSProperty_cbegin(style->fsm);
+}
+
+
+
+CSSOM_CSSStyleDeclarationConstIter CSSOM_CSSStyleDeclaration__cend(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_FSM_CSSProperty_cend(style->fsm);
+}
+
+
+
+CSSOM_CSSStyleDeclarationConstIter
+CSSOM_CSSStyleDeclarationConstIter_next(
+  CSSOM_CSSStyleDeclarationConstIter iter)
+{
+  return CSSOM_FSMConstIter_CSSProperty_next(iter);
 }

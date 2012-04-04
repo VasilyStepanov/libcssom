@@ -59,6 +59,10 @@ unsigned short CSSOM_CSSRule_type(const CSSOM_CSSRule * cssRule);
 
 
 
+const char * CSSOM_CSSRule_cssText(const CSSOM_CSSRule * cssRule);
+
+
+
 #ifdef __cplusplus
 }
 #endif

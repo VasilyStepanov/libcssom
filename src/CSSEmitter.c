@@ -1,5 +1,8 @@
 #include "CSSEmitter.h"
 
+#include "CSSStyleRule.h"
+#include "CSSStyleDeclaration.h"
+
 
 
 static int emit_selector(FILE *out, const SAC_Selector *selector);
@@ -423,13 +426,20 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
 
 int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property) {
-  if (fprintf(out, "%s : %s",
-    CSSOM_CSSProperty_name(property), CSSOM_CSSProperty_cssText(property)) < 0)
-  {
-      return 1;
-  }
-  if (CSSOM_CSSProperty_important(property)) {
-    if (fprintf(out, "!important") < 0) return 1;
+  if (!CSSOM_CSSProperty_important(property)) {
+    if (fprintf(out, "%s : %s;",
+      CSSOM_CSSProperty_name(property),
+      CSSOM_CSSProperty_cssText(property)) < 0)
+    {
+        return 1;
+    }
+  } else {
+    if (fprintf(out, "%s : %s !important;",
+      CSSOM_CSSProperty_name(property),
+      CSSOM_CSSProperty_cssText(property)) < 0)
+    {
+        return 1;
+    }
   }
   return 0;
 }
@@ -447,5 +457,46 @@ int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
       if (emit_selector(out, *it) != 0) return 1;
     }
   }
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  CSSOM_CSSStyleDeclarationConstIter it;
+
+  it = CSSOM_CSSStyleDeclaration__cbegin(style);
+  if (it == CSSOM_CSSStyleDeclaration__cend(style)) return 0;
+
+  if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
+
+  for (
+    it = CSSOM_CSSStyleDeclarationConstIter_next(it);
+    it != CSSOM_CSSStyleDeclaration__cend(style);
+    it = CSSOM_CSSStyleDeclarationConstIter_next(it))
+  {
+    if (fprintf(out, " ") < 0) return 1;
+    if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssStyleRule(FILE *out,
+  const CSSOM_CSSStyleRule *cssRule)
+{
+  if (CSSOM_CSSEmitter_selectors(out, CSSOM_CSSStyleRule__selectors(cssRule)))
+    return 1;
+  if (fprintf(out, " { ") < 0) return 1;
+  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+    CSSOM_CSSStyleRule_style(cssRule)))
+  {
+    return 1;
+  }
+  if (fprintf(out, " }") < 0) return 1;
   return 0;
 }

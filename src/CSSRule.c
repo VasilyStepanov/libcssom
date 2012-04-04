@@ -41,6 +41,7 @@ unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
 
 struct _CSSOM_CSSRule_vtable {
   void (*release)(CSSOM_CSSRule *cssRule);
+  const char* (*cssText)(const CSSOM_CSSRule *cssRule);
 };
 
 
@@ -75,6 +76,12 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
 
 
 
+const char* CSSOM_CSSRule_cssText(const CSSOM_CSSRule *cssRule) {
+  return cssRule->vtable->cssText(cssRule);
+}
+
+
+
 unsigned short CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
   return cssRule->type;
 }
@@ -90,6 +97,7 @@ struct _CSSOM_CSSStyleRule {
   char *selectorText;
   const SAC_Selector **selectors;
   CSSOM_CSSStyleDeclaration *style;
+  char *cssText;
 };
 
 
@@ -99,6 +107,7 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
   --((CSSOM_CSSRule*)cssRule)->handles;
   if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
 
+  CSSOM_native_free(cssRule->cssText);
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
   CSSOM_free(cssRule);
@@ -106,8 +115,37 @@ static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
 
 
 
+static const char* CSSStyleRule_cssText(const CSSOM_CSSStyleRule *cssRule) {
+  if (cssRule->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_cssStyleRule(out, cssRule) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_CSSStyleRule*)cssRule)->cssText = buf;
+  }
+  return cssRule->cssText;
+}
+
+
+
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
-  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release
+  (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release,
+  (const char*(*)(const CSSOM_CSSRule*))&CSSStyleRule_cssText
 };
 
 
@@ -134,6 +172,14 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   cssRule->style = style;
 
   return cssRule;
+}
+
+
+
+const SAC_Selector** CSSOM_CSSStyleRule__selectors(
+  const CSSOM_CSSStyleRule *cssRule)
+{
+  return cssRule->selectors;
 }
 
 
@@ -197,7 +243,8 @@ static void CSSNamespaceRule_release(CSSOM_CSSNamespaceRule *cssRule) {
 
 
 static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
-  (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_release
+  (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_release,
+  NULL
 };
 
 
