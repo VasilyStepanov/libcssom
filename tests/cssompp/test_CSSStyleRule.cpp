@@ -39,6 +39,15 @@ void type() {
 
 
 
+void selectorText() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleRule style = styleRule(cssom);
+
+  assert(style.selectorText() == std::string("p"));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -48,6 +57,7 @@ namespace test {
 void cssStyleRule() {
   consts();
   type();
+  selectorText();
 }
 
 
