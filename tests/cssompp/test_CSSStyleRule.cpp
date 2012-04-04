@@ -12,6 +12,16 @@ namespace {
 
 
 
+struct Errors {
+  size_t invalidModificationErrors;
+
+  Errors() :
+    invalidModificationErrors(0)
+  {}
+};
+
+
+
 cssom::CSSStyleRule styleRule(const cssom::CSSOM &cssom) {
   return cssom.parseCSSStyleRule(
 "p {\n"
@@ -42,8 +52,27 @@ void type() {
 
 
 
+void errorHandler(void *userData, const CSSOM_Error *error) {
+  Errors *errors = static_cast<Errors*>(userData);
+
+  switch (error->code) {
+    case CSSOM_ERROR_NOT_SUPPORTED:
+      break;
+    case CSSOM_ERROR_SYNTAX:
+      break;
+    case CSSOM_ERROR_INVALID_MODIFICATION_ERR:
+      ++errors->invalidModificationErrors;
+      break;
+  }
+}
+
+
+
 void cssText() {
+  Errors errors;
   cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(errorHandler);
   cssom::CSSStyleRule style = styleRule(cssom);
   std::string cssText;
 
@@ -76,6 +105,14 @@ void cssText() {
   style.setCSSText("invalid");
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
   assert(style.cssText() == cssText);
+
+
+
+  assert(errors.invalidModificationErrors == 0);
+  style.setCSSText("@page ident;");
+  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
+  assert(style.cssText() == cssText);
+  assert(errors.invalidModificationErrors == 1);
 }
 
 
