@@ -205,7 +205,8 @@ static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void) {
   CSSOM_CSSNamespaceRule *cssRule;
 
-  cssRule = (CSSOM_CSSNamespaceRule*)CSSOM_malloc(sizeof(CSSOM_CSSNamespaceRule));
+  cssRule = (CSSOM_CSSNamespaceRule*)CSSOM_malloc(
+    sizeof(CSSOM_CSSNamespaceRule));
   if (cssRule == NULL) return NULL;
 
   CSSRule_init((CSSOM_CSSRule*)cssRule,
