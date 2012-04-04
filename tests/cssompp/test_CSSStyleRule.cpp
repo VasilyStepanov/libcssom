@@ -4,6 +4,7 @@
 #include <cssompp/CSSStyleRule.hpp>
 
 #include <iostream>
+#include <stdexcept>
 
 #include <assert.h>
 
@@ -44,8 +45,36 @@ void type() {
 void cssText() {
   cssom::CSSOM cssom;
   cssom::CSSStyleRule style = styleRule(cssom);
+  std::string cssText;
 
-  std::string cssText = "p { color : green; }";
+
+
+  /**
+   * cssText()
+   */
+
+  cssText = "p { color : green; }";
+  assert(style.cssText() == cssText);
+
+
+
+  /**
+   * setCSSText()
+   */
+
+  style.setCSSText(
+"div {\n"
+" background-color : green;\n"
+"}\n"
+  );
+  cssText = "div { background-color : green; }";
+  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
+  assert(style.cssText() == cssText);
+
+
+
+  style.setCSSText("invalid");
+  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
   assert(style.cssText() == cssText);
 }
 

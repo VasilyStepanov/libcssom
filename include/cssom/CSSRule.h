@@ -63,6 +63,10 @@ const char * CSSOM_CSSRule_cssText(const CSSOM_CSSRule * cssRule);
 
 
 
+void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule * cssRule, const char * cssText);
+
+
+
 #ifdef __cplusplus
 }
 #endif

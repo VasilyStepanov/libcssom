@@ -7,6 +7,7 @@
 #include "memory.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 
@@ -35,6 +36,15 @@ unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
 
 
 
+#define swap(lhs, rhs) \
+  do { \
+    void *t = (void*)lhs; \
+    lhs = rhs; \
+    rhs = t; \
+  } while (0)
+
+
+
 /**
  * CSSRule
  */
@@ -42,6 +52,7 @@ unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
 struct _CSSOM_CSSRule_vtable {
   void (*release)(CSSOM_CSSRule *cssRule);
   const char* (*cssText)(const CSSOM_CSSRule *cssRule);
+  void (*setCSSText)(CSSOM_CSSRule *cssRule, const char *cssText);
 };
 
 
@@ -49,16 +60,18 @@ struct _CSSOM_CSSRule_vtable {
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
+  const CSSOM *cssom;
   unsigned short type;
 };
 
 
 
 static void CSSRule_init(CSSOM_CSSRule *cssRule,
-  struct _CSSOM_CSSRule_vtable *vtable, unsigned short type)
+  struct _CSSOM_CSSRule_vtable *vtable, const CSSOM *cssom, unsigned short type)
 {
   cssRule->vtable = vtable;
   cssRule->handles = 1;
+  cssRule->cssom = cssom;
   cssRule->type = type;
 }
 
@@ -78,6 +91,12 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
 
 const char* CSSOM_CSSRule_cssText(const CSSOM_CSSRule *cssRule) {
   return cssRule->vtable->cssText(cssRule);
+}
+
+
+
+void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
+  cssRule->vtable->setCSSText(cssRule, cssText);
 }
 
 
@@ -143,14 +162,45 @@ static const char* CSSStyleRule_cssText(const CSSOM_CSSStyleRule *cssRule) {
 
 
 
+static void CSSStyleRule_swap(
+  CSSOM_CSSStyleRule *lhs, CSSOM_CSSStyleRule *rhs)
+{
+  swap(lhs->selectorText, rhs->selectorText);
+  swap(lhs->selectors, rhs->selectors);
+  swap(lhs->style, rhs->style);
+  swap(lhs->cssText, rhs->cssText);
+}
+
+
+
+static void CSSStyleRule_setCSSText(CSSOM_CSSStyleRule *cssRule,
+  const char *cssText)
+{
+  CSSOM_CSSStyleRule *newCSSRule;
+
+  newCSSRule = CSSOM_parseCSSStyleRule(
+    ((CSSOM_CSSRule*)cssRule)->cssom, cssText, strlen(cssText));
+  if (newCSSRule == NULL) return;
+  
+  CSSOM_native_free(cssRule->cssText);
+  cssRule->cssText = NULL;
+
+  CSSStyleRule_swap(cssRule, newCSSRule);
+
+  CSSOM_CSSStyleRule_release(newCSSRule);
+}
+
+
+
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSStyleRule_release,
-  (const char*(*)(const CSSOM_CSSRule*))&CSSStyleRule_cssText
+  (const char*(*)(const CSSOM_CSSRule*))&CSSStyleRule_cssText,
+  (void(*)(CSSOM_CSSRule*, const char *cssText))&CSSStyleRule_setCSSText
 };
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(const CSSOM *cssom,
   const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
@@ -166,10 +216,11 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   }
 
   CSSRule_init((CSSOM_CSSRule*)cssRule,
-    &CSSStyleRule_vtable, CSSOM_CSSRule_STYLE_RULE);
+    &CSSStyleRule_vtable, cssom, CSSOM_CSSRule_STYLE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
   cssRule->style = style;
+  cssRule->cssText = NULL;
 
   return cssRule;
 }
@@ -244,12 +295,13 @@ static void CSSNamespaceRule_release(CSSOM_CSSNamespaceRule *cssRule) {
 
 static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_release,
+  NULL,
   NULL
 };
 
 
 
-CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void) {
+CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(const CSSOM *cssom) {
   CSSOM_CSSNamespaceRule *cssRule;
 
   cssRule = (CSSOM_CSSNamespaceRule*)CSSOM_malloc(
@@ -257,7 +309,7 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void) {
   if (cssRule == NULL) return NULL;
 
   CSSRule_init((CSSOM_CSSRule*)cssRule,
-    &CSSNamespaceRule_vtable, CSSOM_CSSRule_NAMESPACE_RULE);
+    &CSSNamespaceRule_vtable, cssom, CSSOM_CSSRule_NAMESPACE_RULE);
 
   return cssRule;
 }

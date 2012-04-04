@@ -71,7 +71,7 @@ static int cssStyleSheet_startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_CSSStyleSheetStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->cssom,
     stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
@@ -279,7 +279,8 @@ static int cssStyleRule_startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_CSSStyleRuleStack*)userData;
 
-  cssRule = CSSOM_CSSStyleRule__alloc(stack->cssom->table, selectors);
+  cssRule = CSSOM_CSSStyleRule__alloc(stack->cssom,
+    stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
   assert(stack->cssRule == NULL);

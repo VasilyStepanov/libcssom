@@ -5,6 +5,8 @@
 
 #include "FSM_CSSProperty.h"
 
+#include <cssom/CSSOM.h>
+
 #include <sacc.h>
 
 #ifdef __cplusplus
@@ -13,7 +15,7 @@ extern "C" {
 
 
 
-CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
+CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(const CSSOM *cssom,
   const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[]);
 
 

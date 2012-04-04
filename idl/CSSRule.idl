@@ -9,7 +9,7 @@ interface CSSRule {
   readonly attribute unsigned short type;
 
   // Parsing and serialization
-  readonly attribute DOMString cssText;
+           attribute DOMString cssText;
 
   // Context
   // readonly attribute CSSRule parentRule;

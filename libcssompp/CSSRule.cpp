@@ -94,4 +94,10 @@ const char * CSSRule::cssText() const {
 
 
 
+void CSSRule::setCSSText(const char * cssText) {
+  CSSOM_CSSRule_setCSSText(_impl, cssText);
+}
+
+
+
 } // cssom

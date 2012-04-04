@@ -9,7 +9,7 @@ extern "C" {
 
 
 
-CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(void);
+CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(const CSSOM *cssom);
 
 
 

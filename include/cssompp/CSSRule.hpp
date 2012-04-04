@@ -46,6 +46,7 @@ class CSSRule {
     unsigned short type() const;
 
     const char * cssText() const;
+    void setCSSText(const char * cssText);
 
   protected:
     CSSOM_CSSRule * _impl;
