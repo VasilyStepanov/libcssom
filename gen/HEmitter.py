@@ -29,6 +29,10 @@ def interfaceMemberName(interface, member):
 
 def attributeSetterName(name):
   assert(name)
+  name = splitCamelCase(name)
+  if name[0] == "css":
+    name[0] = name[0].upper()
+  name = "".join(name)
   return "set%s%s" % (name[0].upper(), name[1:])
 
 

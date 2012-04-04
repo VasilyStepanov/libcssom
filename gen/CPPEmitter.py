@@ -3,6 +3,7 @@
 from Emitter import emitSimpleType
 from Emitter import forwards
 from Emitter import renderWarning
+from Emitter import splitCamelCase
 from HEmitter import interfaceMemberName
 
 import pywidl
@@ -20,6 +21,10 @@ def implArgument(interface):
 
 def attributeSetterName(name):
   assert(name)
+  name = splitCamelCase(name)
+  if name[0] == "css":
+    name[0] = name[0].upper()
+  name = "".join(name)
   return "set%s%s" % (name[0].upper(), name[1:])
 
 
