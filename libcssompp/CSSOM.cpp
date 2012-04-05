@@ -43,6 +43,12 @@ cssom::CSSOM& CSSOM::operator=(const cssom::CSSOM &rhs) {
 
 
 
+bool CSSOM::operator==(const cssom::CSSOM &rhs) const {
+  return _impl == rhs._impl;
+}
+
+
+
 void CSSOM::swap(cssom::CSSOM &rhs) {
   std::swap(_impl, rhs._impl);
 }

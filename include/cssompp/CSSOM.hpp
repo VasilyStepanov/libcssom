@@ -30,6 +30,8 @@ class CSSOM {
 
     cssom::CSSOM& operator=(const cssom::CSSOM &rhs);
 
+    bool operator==(const cssom::CSSOM &rhs) const;
+
     void swap(cssom::CSSOM &rhs);
 
     void * getUserData() const;
