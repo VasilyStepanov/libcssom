@@ -1,0 +1,4 @@
+interface CSSPageRule : CSSRule {
+  readonly attribute DOMString selectorText;
+  readonly attribute CSSStyleDeclaration style;
+};

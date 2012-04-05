@@ -26,12 +26,12 @@ struct Errors {
 
 
 void consts() {
-  assert(cssom::CSSStyleRule::STYLE_RULE == 1);
-  assert(cssom::CSSStyleRule::IMPORT_RULE == 3);
-  assert(cssom::CSSStyleRule::MEDIA_RULE == 4);
-  assert(cssom::CSSStyleRule::FONT_FACE_RULE == 5);
-  assert(cssom::CSSStyleRule::PAGE_RULE == 6);
-  assert(cssom::CSSStyleRule::NAMESPACE_RULE == 10);
+  assert(cssom::CSSRule::STYLE_RULE == 1);
+  assert(cssom::CSSRule::IMPORT_RULE == 3);
+  assert(cssom::CSSRule::MEDIA_RULE == 4);
+  assert(cssom::CSSRule::FONT_FACE_RULE == 5);
+  assert(cssom::CSSRule::PAGE_RULE == 6);
+  assert(cssom::CSSRule::NAMESPACE_RULE == 10);
 }
 
 

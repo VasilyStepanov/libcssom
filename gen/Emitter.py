@@ -8,6 +8,7 @@ import os.path
 
 forwards = { \
   'CSSRule' : ('CSSStyleSheet', ),
+  'CSSPageRule' : ('CSSStyleDeclaration', ),
   'CSSRuleList' : ('CSSRule', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
 }
@@ -16,8 +17,9 @@ forwards = { \
 
 includes = { \
   'CSSNamespaceRule' : ('CSSRule', ),
-  'CSSStyleRule' : ('CSSRule', ),
+  'CSSPageRule' : ('CSSRule', ),
   'CSSRuleList' : ('Sequence', ),
+  'CSSStyleRule' : ('CSSRule', ),
   'CSSStyleSheet' : ('CSSRuleList', ),
 }
 
