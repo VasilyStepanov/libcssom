@@ -16,6 +16,8 @@ void CSSOM_release(CSSOM *cssom);
 CSSOM_CSSRule * CSSOM__parseCSSRule(const CSSOM *cssom,
   const char * cssText, int len);
 
+void CSSOM__invalidModificationErr(const CSSOM *cssom);
+
 
 
 #ifdef __cplusplus

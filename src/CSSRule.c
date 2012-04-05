@@ -184,6 +184,7 @@ static void CSSStyleRule_setCSSText(CSSOM_CSSStyleRule *cssRule,
   if (newCSSRule == NULL) return;
 
   if (CSSOM_CSSRule_type(newCSSRule) != CSSOM_CSSRule_STYLE_RULE) {
+    CSSOM__invalidModificationErr(((CSSOM_CSSRule*)cssRule)->cssom);
     return;
   }
   

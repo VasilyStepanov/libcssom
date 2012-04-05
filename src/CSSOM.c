@@ -14,6 +14,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 
 
@@ -220,6 +221,20 @@ void CSSOM_setUserData(CSSOM * cssom, void * userData) {
 
 void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler) {
   cssom->errorHandler = handler;
+}
+
+
+
+void CSSOM__invalidModificationErr(const CSSOM * cssom) {
+  printf("CSSOM_ERROR_INVALID_MODIFICATION_ERR\n");
+  if (cssom->errorHandler != NULL) {
+    CSSOM_Error error;
+    error.line = -1;
+    error.column = -1;
+    error.code = CSSOM_ERROR_INVALID_MODIFICATION_ERR;
+    error.data = "Invalid modification error";
+    cssom->errorHandler(cssom->userData, &error);
+  }
 }
 
 
