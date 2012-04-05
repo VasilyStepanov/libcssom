@@ -3,9 +3,8 @@
 
 #include <cssom/CSSRuleList.h>
 
+#include "CSSRule.h"
 #include "Sequence.h"
-
-#include <cssom/CSSRule.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +13,7 @@ extern "C" {
 
 
 #define CSSOM_CSSRuleList__alloc() \
-  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule_release);
+  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule__free);
 
 
 

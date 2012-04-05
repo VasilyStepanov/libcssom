@@ -23,13 +23,6 @@ class CSSRule {
     typedef CSSOM_CSSRule * C;
 
     explicit CSSRule(CSSOM_CSSRule * impl);
-    CSSRule(const cssom::CSSRule &copy);
-    ~CSSRule();
-
-    cssom::CSSRule& operator=(
-     const cssom::CSSRule &rhs);
-
-    void swap(cssom::CSSRule &rhs);
 
     static unsigned short STYLE_RULE;
 

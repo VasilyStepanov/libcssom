@@ -22,41 +22,7 @@ namespace cssom {
 
 CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
   _impl(impl)
-{
-  CSSOM_CSSStyleDeclaration_acquire(_impl);
-}
-
-
-
-CSSStyleDeclaration::CSSStyleDeclaration(const cssom::CSSStyleDeclaration &copy) :
-  _impl(copy._impl)
-{
-  CSSOM_CSSStyleDeclaration_acquire(_impl);
-}
-
-
-
-CSSStyleDeclaration::~CSSStyleDeclaration() {
-  CSSOM_CSSStyleDeclaration_release(_impl);
-}
-
-
-
-cssom::CSSStyleDeclaration& CSSStyleDeclaration::operator=(
-  const cssom::CSSStyleDeclaration &rhs)
-{
-  if (&rhs == this) return *this;
-
-  cssom::CSSStyleDeclaration(rhs).swap(*this);
-
-  return *this;
-}
-
-
-
-void CSSStyleDeclaration::swap(cssom::CSSStyleDeclaration &rhs) {
-  std::swap(_impl, rhs._impl);
-}
+{}
 
 
 

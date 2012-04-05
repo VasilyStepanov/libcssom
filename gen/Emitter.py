@@ -23,6 +23,12 @@ includes = { \
 
 
 
+shared = [
+  'CSSStyleSheet'
+]
+
+
+
 def emitSimpleType(typedef):
   if typedef.type == typedef.DOMSTRING:
     return "const char *"

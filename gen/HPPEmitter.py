@@ -3,6 +3,7 @@
 from Emitter import headerDefine
 from Emitter import forwards
 from Emitter import includes
+from Emitter import shared
 from Emitter import emitSimpleType
 from Emitter import renderWarning
 from Emitter import instanceName
@@ -98,13 +99,14 @@ def renderInterface(out, interface):
 
   print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   if not interface.parent:
-    print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
-    print >>out, "    ~%(name)s();" % template
-    print >>out
-    print >>out, "    cssom::%(name)s& operator=(" % template
-    print >>out, "     const cssom::%(name)s &rhs);" % template
-    print >>out
-    print >>out, "    void swap(cssom::%(name)s &rhs);" % template
+    if interface.name in shared:
+      print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
+      print >>out, "    ~%(name)s();" % template
+      print >>out
+      print >>out, "    cssom::%(name)s& operator=(" % template
+      print >>out, "     const cssom::%(name)s &rhs);" % template
+      print >>out
+      print >>out, "    void swap(cssom::%(name)s &rhs);" % template
 
   for member in interface.members:
     renderInterfaceMember(out, member)

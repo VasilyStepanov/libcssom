@@ -23,13 +23,6 @@ class CSSStyleDeclaration {
     typedef CSSOM_CSSStyleDeclaration * C;
 
     explicit CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl);
-    CSSStyleDeclaration(const cssom::CSSStyleDeclaration &copy);
-    ~CSSStyleDeclaration();
-
-    cssom::CSSStyleDeclaration& operator=(
-     const cssom::CSSStyleDeclaration &rhs);
-
-    void swap(cssom::CSSStyleDeclaration &rhs);
 
     const char * cssText() const;
 

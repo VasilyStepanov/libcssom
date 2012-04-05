@@ -1,4 +1,4 @@
-#include <cssom/CSSRule.h>
+#include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSNamespaceRule.h"
 
@@ -60,7 +60,6 @@ struct _CSSOM_CSSRule_vtable {
 
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
-  size_t handles;
   const CSSOM *cssom;
   unsigned short type;
 };
@@ -71,20 +70,13 @@ static void CSSRule_init(CSSOM_CSSRule *cssRule,
   struct _CSSOM_CSSRule_vtable *vtable, const CSSOM *cssom, unsigned short type)
 {
   cssRule->vtable = vtable;
-  cssRule->handles = 1;
   cssRule->cssom = cssom;
   cssRule->type = type;
 }
 
 
 
-void CSSOM_CSSRule_acquire(CSSOM_CSSRule *cssRule) {
-  ++cssRule->handles;
-}
-
-
-
-void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
+void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule) {
   cssRule->vtable->release(cssRule);
 }
 
@@ -123,12 +115,8 @@ struct _CSSOM_CSSStyleRule {
 
 
 static void CSSStyleRule_release(CSSOM_CSSStyleRule *cssRule) {
-  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
-  --((CSSOM_CSSRule*)cssRule)->handles;
-  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
-
   CSSOM_native_free(cssRule->cssText);
-  CSSOM_CSSStyleDeclaration_release(cssRule->style);
+  CSSOM_CSSStyleDeclaration__free(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
   CSSOM_free(cssRule);
 }
@@ -193,7 +181,7 @@ static void CSSStyleRule_setCSSText(CSSOM_CSSStyleRule *cssRule,
 
   CSSStyleRule_swap(cssRule, (CSSOM_CSSStyleRule*)newCSSRule);
 
-  CSSOM_CSSStyleRule_release(newCSSRule);
+  CSSOM_CSSRule__free(newCSSRule);
 }
 
 
@@ -217,7 +205,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(const CSSOM *cssom,
 
   cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration_release(style);
+    CSSOM_CSSStyleDeclaration__free(style);
     return NULL;
   }
 
@@ -290,10 +278,6 @@ struct _CSSOM_CSSNamespaceRule {
 
 
 static void CSSNamespaceRule_release(CSSOM_CSSNamespaceRule *cssRule) {
-  assert(((CSSOM_CSSRule*)cssRule)->handles > 0);
-  --((CSSOM_CSSRule*)cssRule)->handles;
-  if (((CSSOM_CSSRule*)cssRule)->handles > 0) return;
-
   CSSOM_free(cssRule);
 }
 

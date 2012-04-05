@@ -29,7 +29,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser) {
 
   styleSheet = (CSSOM_CSSStyleSheet*)CSSOM_malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    CSSOM_Sequence_release(cssRules);
+    CSSOM_Sequence__free(cssRules);
     return NULL;
   }
 
@@ -55,7 +55,7 @@ void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
   --styleSheet->handles;
   if (styleSheet->handles > 0) return;
 
-  CSSOM_Sequence_release(styleSheet->cssRules);
+  CSSOM_Sequence__free(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
   CSSOM_free(styleSheet);
 }

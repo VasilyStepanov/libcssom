@@ -8,7 +8,6 @@
 
 
 struct _CSSOM_Sequence {
-  size_t handles;
   CSSOM_Deque_void *data;
   void (*releaseItem)(void*);
 };
@@ -28,7 +27,6 @@ CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*)) {
     return NULL;
   }
 
-  sequence->handles = 1;
   sequence->data = data;
   sequence->releaseItem = releaseItem;
 
@@ -37,18 +35,8 @@ CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*)) {
 
 
 
-void CSSOM_Sequence_acquire(CSSOM_Sequence *sequence) {
-  ++sequence->handles;
-}
-
-
-
-void CSSOM_Sequence_release(CSSOM_Sequence *sequence) {
+void CSSOM_Sequence__free(CSSOM_Sequence *sequence) {
   CSSOM_DequeIter_void it;
-
-  assert(sequence->handles > 0);
-  --sequence->handles;
-  if (sequence->handles > 0) return;
 
   for (it = CSSOM_Deque_void_begin(sequence->data);
     it != CSSOM_Deque_void_end(sequence->data);

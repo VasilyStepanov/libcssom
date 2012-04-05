@@ -13,10 +13,6 @@ template <typename T>
 class Sequence {
   public:
     explicit Sequence(CSSOM_Sequence * impl);
-    Sequence(const cssom::Sequence<T> &copy);
-    ~Sequence();
-
-    cssom::Sequence<T>& operator=(const cssom::Sequence<T> &rhs);
 
     void swap(cssom::Sequence<T> &rhs);
 
@@ -32,36 +28,7 @@ class Sequence {
 template <typename T>
 Sequence<T>::Sequence(CSSOM_Sequence * impl) :
   _impl(impl)
-{
-  CSSOM_Sequence_acquire(_impl);
-}
-
-
-
-template <typename T>
-Sequence<T>::Sequence(const cssom::Sequence<T> &copy) :
-  _impl(copy._impl)
-{
-  CSSOM_Sequence_acquire(_impl);
-}
-
-
-
-template <typename T>
-Sequence<T>::~Sequence() {
-  CSSOM_Sequence_release(_impl);
-}
-
-
-
-template <typename T>
-cssom::Sequence<T>& Sequence<T>::operator=(const cssom::Sequence<T> &rhs) {
-  if (&rhs == this) return *this;
-
-  cssom::Sequence<T>(rhs).swap(*this);
-
-  return *this;
-}
+{}
 
 
 

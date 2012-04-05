@@ -24,6 +24,8 @@ typedef CSSOM_FSMConstIter_CSSProperty CSSOM_CSSStyleDeclarationConstIter;
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   const CSSOM_FSMTable_CSSProperty *table);
 
+void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration * style);
+
 CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
   CSSOM_CSSStyleDeclaration *style,
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);

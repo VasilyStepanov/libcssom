@@ -2,6 +2,7 @@
 
 from Emitter import emitSimpleType
 from Emitter import forwards
+from Emitter import shared
 from Emitter import renderWarning
 from Emitter import splitCamelCase
 from Emitter import instanceName
@@ -189,50 +190,60 @@ def renderInterface(out, interface):
   template = { "name" : interface.name }
 
   if not interface.parent:
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
-    print >>out, "  _impl(impl)"
-    print >>out, "{"
-    print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
-    print >>out, "}"
+    if interface.name in shared:
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
+      print >>out, "  _impl(impl)"
+      print >>out, "{"
+      print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
+      print >>out, "}"
 
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "%(name)s::%(name)s(const cssom::%(name)s &copy) :" % template
-    print >>out, "  _impl(copy._impl)"
-    print >>out, "{"
-    print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
-    print >>out, "}"
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "%(name)s::%(name)s(const cssom::%(name)s &copy) :" % template
+      print >>out, "  _impl(copy._impl)"
+      print >>out, "{"
+      print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
+      print >>out, "}"
 
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "%(name)s::~%(name)s() {" % template
-    print >>out, "  CSSOM_%(name)s_release(_impl);" % template
-    print >>out, "}"
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "%(name)s::~%(name)s() {" % template
+      print >>out, "  CSSOM_%(name)s_release(_impl);" % template
+      print >>out, "}"
 
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "cssom::%(name)s& %(name)s::operator=(" % template
-    print >>out, "  const cssom::%(name)s &rhs)" % template
-    print >>out, "{"
-    print >>out, "  if (&rhs == this) return *this;"
-    print >>out
-    print >>out, "  cssom::%(name)s(rhs).swap(*this);" % template
-    print >>out
-    print >>out, "  return *this;"
-    print >>out, "}"
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "cssom::%(name)s& %(name)s::operator=(" % template
+      print >>out, "  const cssom::%(name)s &rhs)" % template
+      print >>out, "{"
+      print >>out, "  if (&rhs == this) return *this;"
+      print >>out
+      print >>out, "  cssom::%(name)s(rhs).swap(*this);" % template
+      print >>out
+      print >>out, "  return *this;"
+      print >>out, "}"
 
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "void %(name)s::swap(cssom::%(name)s &rhs) {" % template
-    print >>out, "  std::swap(_impl, rhs._impl);"
-    print >>out, "}"
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "void %(name)s::swap(cssom::%(name)s &rhs) {" % template
+      print >>out, "  std::swap(_impl, rhs._impl);"
+      print >>out, "}"
+
+    else:
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
+      print >>out, "  _impl(impl)"
+      print >>out, "{}"
+
   else:
     template.update({
       'parent' : interface.parent,
