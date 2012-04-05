@@ -54,6 +54,14 @@ cssom::CSSStyleSheet& CSSStyleSheet::operator=(
 
 
 
+bool CSSStyleSheet::operator==(
+  const cssom::CSSStyleSheet &rhs) const
+{
+  return _impl == rhs._impl;
+}
+
+
+
 void CSSStyleSheet::swap(cssom::CSSStyleSheet &rhs) {
   std::swap(_impl, rhs._impl);
 }

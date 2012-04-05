@@ -58,6 +58,10 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule * cssRule, const char * cssText);
 
 
 
+CSSOM_CSSStyleSheet* CSSOM_CSSRule_parentStyleSheet(const CSSOM_CSSRule * cssRule);
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -71,7 +71,7 @@ static int cssStyleSheet_startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_CSSStyleSheetStack*)userData;
 
-  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->cssom,
+  cssRule = (CSSOM_CSSRule*)CSSOM_CSSStyleRule__alloc(stack->styleSheet,
     stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
@@ -248,7 +248,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  styleSheet = CSSOM_CSSStyleSheet__alloc(parser);
+  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser);
   if (styleSheet == NULL) {
     SAC_DisposeParser(parser);
     return NULL;
@@ -303,8 +303,7 @@ static int cssRule_startStyleHandler(void *userData,
   
   stack = (struct _CSSOM_CSSRuleStack*)userData;
 
-  cssRule = CSSOM_CSSStyleRule__alloc(stack->cssom,
-    stack->cssom->table, selectors);
+  cssRule = CSSOM_CSSStyleRule__alloc(NULL, stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
   assert(stack->cssRule == NULL);

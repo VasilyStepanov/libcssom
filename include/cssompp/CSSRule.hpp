@@ -13,6 +13,15 @@
 
 #include <cssom/CSSRule.h>
 
+namespace cssom {
+
+
+
+class CSSStyleSheet;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -40,6 +49,8 @@ class CSSRule {
 
     const char * cssText() const;
     void setCSSText(const char * cssText);
+
+    cssom::CSSStyleSheet parentStyleSheet() const;
 
   protected:
     CSSOM_CSSRule * _impl;

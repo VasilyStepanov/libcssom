@@ -232,6 +232,15 @@ def renderInterface(out, interface):
       print >>out
       print >>out
       print >>out
+      print >>out, "bool %(name)s::operator==(" % template
+      print >>out, "  const cssom::%(name)s &rhs) const" % template
+      print >>out, "{"
+      print >>out, "  return _impl == rhs._impl;"
+      print >>out, "}"
+
+      print >>out
+      print >>out
+      print >>out
       print >>out, "void %(name)s::swap(cssom::%(name)s &rhs) {" % template
       print >>out, "  std::swap(_impl, rhs._impl);"
       print >>out, "}"

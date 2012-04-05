@@ -9,7 +9,8 @@ extern "C" {
 
 
 
-CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(const CSSOM *cssom);
+CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
+  CSSOM_CSSStyleSheet *parentStyleSheet);
 
 
 

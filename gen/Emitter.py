@@ -7,6 +7,7 @@ import os.path
 
 
 forwards = { \
+  'CSSRule' : ('CSSStyleSheet', ),
   'CSSRuleList' : ('CSSRule', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
 }

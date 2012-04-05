@@ -13,5 +13,5 @@ interface CSSRule {
 
   // Context
   // readonly attribute CSSRule parentRule;
-  // readonly attribute CSSStyleSheet parentStyleSheet;
+  readonly attribute CSSStyleSheet parentStyleSheet;
 };

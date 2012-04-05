@@ -11,10 +11,13 @@ extern "C" {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(SAC_Parser parser);
+CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
+  SAC_Parser parser);
 
 CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(CSSOM_CSSStyleSheet *styleSheet,
   CSSOM_CSSRule *cssRule);
+
+const CSSOM* CSSOM_CSSStyleSheet__cssom(const CSSOM_CSSStyleSheet *styleSheet);
 
 
 

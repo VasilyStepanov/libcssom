@@ -105,6 +105,8 @@ def renderInterface(out, interface):
       print >>out
       print >>out, "    cssom::%(name)s& operator=(" % template
       print >>out, "     const cssom::%(name)s &rhs);" % template
+      print >>out, "    bool operator==(" % template
+      print >>out, "     const cssom::%(name)s &rhs) const;" % template
       print >>out
       print >>out, "    void swap(cssom::%(name)s &rhs);" % template
 

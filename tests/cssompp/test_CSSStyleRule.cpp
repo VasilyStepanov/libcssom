@@ -137,6 +137,34 @@ void selectorText() {
 
 
 
+void parentStyleSheet() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assert(style.parentStyleSheet() == styleSheet);
+
+
+  /**
+   * Test on swap.
+   */
+
+  style.setCSSText(
+"div {\n"
+" background-color : green;\n"
+"}\n"
+  );
+
+  assert(style.parentStyleSheet() == styleSheet);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -148,6 +176,7 @@ void cssStyleRule() {
   type();
   selectorText();
   cssText();
+  parentStyleSheet();
 }
 
 

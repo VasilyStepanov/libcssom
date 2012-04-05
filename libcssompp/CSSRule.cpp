@@ -12,6 +12,8 @@
 
 #include <cssom/CSSRule.h>
 
+#include <cssompp/CSSStyleSheet.hpp>
+
 #include "checks.hpp"
 
 #include <utility>
@@ -64,6 +66,12 @@ const char * CSSRule::cssText() const {
 
 void CSSRule::setCSSText(const char * cssText) {
   CSSOM_CSSRule_setCSSText(_impl, cssText);
+}
+
+
+
+cssom::CSSStyleSheet CSSRule::parentStyleSheet() const {
+  return cssom::CSSStyleSheet(CSSOM_CSSRule_parentStyleSheet(_impl));
 }
 
 
