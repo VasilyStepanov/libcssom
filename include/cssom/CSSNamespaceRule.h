@@ -11,6 +11,8 @@
 
 
 
+#include <cssom/typedefs.h>
+
 #include <cssom/CSSRule.h>
 
 #ifdef __cplusplus
@@ -19,7 +21,6 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_CSSNamespaceRule CSSOM_CSSNamespaceRule;
 
 
 

@@ -1,15 +1,13 @@
 #ifndef CSSOM_SEQUENCE_H
 #define CSSOM_SEQUENCE_H
 
+#include <cssom/typedefs.h>
+
 #include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-typedef struct _CSSOM_Sequence CSSOM_Sequence;
 
 
 

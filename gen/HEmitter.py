@@ -169,13 +169,8 @@ def renderInterface(out, interface):
     'iface' : interface.name,
     'inst' : instanceName(interface.name) }
 
-  print >>out, "typedef struct _CSSOM_%(iface)s CSSOM_%(iface)s;" % template
-
   if interface.name in shared:
     if not interface.parent:
-      print >>out
-      print >>out
-      print >>out
       print >>out, "void CSSOM_%(iface)s_acquire(" % template
       print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
 
@@ -187,9 +182,6 @@ def renderInterface(out, interface):
     else:
       template['parent'] = interface.parent
 
-      print >>out
-      print >>out
-      print >>out
       print >>out, "#define CSSOM_%(iface)s_acquire(%(inst)s) \\" % template
       print >>out, "  CSSOM_%(parent)s_acquire((CSSOM_%(parent)s*)(%(inst)s))" % \
         template
@@ -225,10 +217,6 @@ def renderTypedefSequence(out, typedef):
     'name' : instanceName(typedef.name),
     't' : emitType(typedef.type.t)}
 
-  print >>out, "typedef CSSOM_Sequence CSSOM_%(type)s;" % template;
-  print >>out
-  print >>out
-  print >>out
   print >>out, "#define CSSOM_%(type)s_acquire(%(name)s) \\" % template
   print >>out, "  (CSSOM_Sequence_acquire((%(name)s)))" % template
   print >>out
@@ -252,7 +240,9 @@ def renderTypedefSequence(out, typedef):
 def renderInclude(out, definition):
   hppincludes = set()
   hppincludes.update(includes.get(definition.name, []))
-  hppincludes.update(forwards.get(definition.name, []))
+
+  print >>out
+  print >>out, "#include <cssom/typedefs.h>"
 
   if hppincludes: print >>out
   for include in hppincludes:

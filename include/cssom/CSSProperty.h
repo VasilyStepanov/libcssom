@@ -1,6 +1,8 @@
 #ifndef CSSOM_CSSPROPERTY_H
 #define CSSOM_CSSPROPERTY_H
 
+#include <cssom/typedefs.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -135,10 +137,6 @@ typedef enum _CSSOM_CSSPropertyType {
 
 
 extern const char *CSSOM_CSSProperties[];
-
-
-
-typedef struct _CSSOM_CSSProperty CSSOM_CSSProperty;
 
 
 

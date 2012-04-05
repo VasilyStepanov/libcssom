@@ -11,16 +11,13 @@
 
 
 
-#include <cssom/CSSRule.h>
+#include <cssom/typedefs.h>
+
 #include <cssom/Sequence.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-typedef CSSOM_Sequence CSSOM_CSSRuleList;
 
 
 

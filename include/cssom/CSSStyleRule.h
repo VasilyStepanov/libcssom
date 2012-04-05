@@ -11,8 +11,9 @@
 
 
 
+#include <cssom/typedefs.h>
+
 #include <cssom/CSSRule.h>
-#include <cssom/CSSStyleDeclaration.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,7 +21,6 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_CSSStyleRule CSSOM_CSSStyleRule;
 
 
 

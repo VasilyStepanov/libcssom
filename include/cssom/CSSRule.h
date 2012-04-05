@@ -11,13 +11,14 @@
 
 
 
+#include <cssom/typedefs.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 
-typedef struct _CSSOM_CSSRule CSSOM_CSSRule;
 
 
 

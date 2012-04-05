@@ -11,15 +11,13 @@
 
 
 
+#include <cssom/typedefs.h>
+
 #include <cssom/CSSRuleList.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-typedef struct _CSSOM_CSSStyleSheet CSSOM_CSSStyleSheet;
 
 
 

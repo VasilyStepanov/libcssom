@@ -22,9 +22,9 @@ includes = { \
 
 
 
-shared = [
-  'CSSStyleSheet'
-]
+shared = (
+  'CSSStyleSheet',
+)
 
 
 
