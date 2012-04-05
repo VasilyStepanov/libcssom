@@ -251,6 +251,10 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseStyleSheet(parser, cssText, len);
 
+  /**
+   * TODO: SAC_DisposeParser here
+   */
+
   return styleSheet;
 }
 
@@ -314,6 +318,10 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   SAC_SetUserData(parser, &stack);
   SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseRule(parser, cssText, len);
+
+  /**
+   * TODO: SAC_DisposeParser here
+   */
 
   return stack.cssRule;
 }
