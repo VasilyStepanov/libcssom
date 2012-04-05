@@ -3,6 +3,8 @@
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
 
+#include <cssom/CSSProperty.h>
+
 
 
 static int emit_selector(FILE *out, const SAC_Selector *selector);

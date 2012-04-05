@@ -3,7 +3,7 @@
 
 #include "FSM.h"
 
-#include <cssom/CSSProperty.h>
+#include <cssom/typedefs.h>
 
 #ifdef __cplusplus
 extern "C" {

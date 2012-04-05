@@ -1,8 +1,7 @@
 #ifndef CSSOM_CSSEMITTER_H
 #define CSSOM_CSSEMITTER_H
 
-#include <cssom/CSSProperty.h>
-#include <cssom/CSSStyleRule.h>
+#include <cssom/typedefs.h>
 
 #include <sacc.h>
 

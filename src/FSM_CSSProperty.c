@@ -1,7 +1,8 @@
 #include "FSM_CSSProperty.h"
 
 #include "FSM.c"
-#include "CSSProperty.h"
+
+#include <cssom/typedefs.h>
 
 
 

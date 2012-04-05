@@ -5,7 +5,7 @@
 
 #include "FSM_CSSProperty.h"
 
-#include <cssom/CSSProperty.h>
+#include <cssom/typedefs.h>
 
 #include <sacc.h>
 

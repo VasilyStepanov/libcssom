@@ -4,8 +4,6 @@
 #include "Sequence.h"
 #include "memory.h"
 
-#include <cssom/CSSRule.h>
-
 #include <sacc.h>
 
 #include <assert.h>

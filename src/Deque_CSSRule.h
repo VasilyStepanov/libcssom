@@ -3,7 +3,7 @@
 
 #include "Deque.h"
 
-#include <cssom/CSSRule.h>
+#include <cssom/typedefs.h>
 
 #ifdef __cplusplus
 extern "C" {
