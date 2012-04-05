@@ -41,16 +41,6 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
-  CSSOM_FSMIter_CSSProperty it;
-
-  for (
-    it = CSSOM_FSM_CSSProperty_begin(style->fsm);
-    it != CSSOM_FSM_CSSProperty_end(style->fsm);
-    it = CSSOM_FSMIter_CSSProperty_next(it))
-  {
-    CSSOM_CSSProperty__free(it->value);
-  }
-
   CSSOM_native_free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
   CSSOM_free(style);

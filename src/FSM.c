@@ -330,6 +330,18 @@
   \
   \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm) { \
+    CSSOM_DequeIter_FSMItem_##suffix it; \
+    \
+    if (fsm->table->release != NULL) { \
+      for ( \
+        it = CSSOM_Deque_FSMItem_##suffix##_begin(fsm->data); \
+        it != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data); \
+        it = CSSOM_DequeIter_FSMItem_##suffix##_next(it)) \
+      { \
+        fsm->table->release(it->value); \
+      } \
+    } \
+    \
     CSSOM_Deque_FSMItem_##suffix##_free(fsm->data); \
     CSSOM_Vector_FSMItemPtr_##suffix##_free(fsm->refs); \
     CSSOM_free(fsm->state); \
