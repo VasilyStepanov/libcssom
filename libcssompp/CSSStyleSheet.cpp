@@ -20,6 +20,12 @@ namespace cssom {
 
 
 
+CSSStyleSheet::CSSStyleSheet() :
+  _impl(NULL)
+{}
+
+
+
 CSSStyleSheet::CSSStyleSheet(CSSOM_CSSStyleSheet * impl) :
   _impl(impl)
 {

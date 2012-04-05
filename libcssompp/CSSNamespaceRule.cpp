@@ -42,6 +42,12 @@ CSSNamespaceRule & CSSNamespaceRule::cast(
 
 
 
+CSSNamespaceRule::CSSNamespaceRule() :
+  CSSRule()
+{}
+
+
+
 CSSNamespaceRule::CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}

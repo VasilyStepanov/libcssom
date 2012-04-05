@@ -20,6 +20,12 @@ namespace cssom {
 
 
 
+CSSStyleDeclaration::CSSStyleDeclaration() :
+  _impl(NULL)
+{}
+
+
+
 CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
   _impl(impl)
 {}

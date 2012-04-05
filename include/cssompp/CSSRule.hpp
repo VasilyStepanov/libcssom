@@ -31,6 +31,7 @@ class CSSRule {
   public:
     typedef CSSOM_CSSRule * C;
 
+    CSSRule();
     explicit CSSRule(CSSOM_CSSRule * impl);
 
     static unsigned short STYLE_RULE;

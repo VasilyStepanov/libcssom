@@ -25,7 +25,7 @@ void selectorText() {
   cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
 
-  assert(style.selectorText() == std::string("p"));
+  assertEquals(std::string("p"), style.selectorText());
 }
 
 

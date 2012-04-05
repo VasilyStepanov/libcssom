@@ -12,6 +12,7 @@ namespace cssom {
 template <typename T>
 class Sequence {
   public:
+    Sequence();
     explicit Sequence(CSSOM_Sequence * impl);
 
     void swap(cssom::Sequence<T> &rhs);
@@ -22,6 +23,13 @@ class Sequence {
   private:
     CSSOM_Sequence * _impl;
 };
+
+
+
+template <typename T>
+Sequence<T>::Sequence() :
+  _impl(NULL)
+{}
 
 
 

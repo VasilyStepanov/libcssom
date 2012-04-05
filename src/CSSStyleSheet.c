@@ -45,6 +45,8 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
 
 
 void CSSOM_CSSStyleSheet_acquire(CSSOM_CSSStyleSheet *styleSheet) {
+  if (styleSheet == NULL) return;
+
   ++styleSheet->handles;
 }
 

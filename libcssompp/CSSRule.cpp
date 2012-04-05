@@ -22,6 +22,12 @@ namespace cssom {
 
 
 
+CSSRule::CSSRule() :
+  _impl(NULL)
+{}
+
+
+
 CSSRule::CSSRule(CSSOM_CSSRule * impl) :
   _impl(impl)
 {}

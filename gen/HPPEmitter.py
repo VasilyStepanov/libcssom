@@ -97,6 +97,7 @@ def renderInterface(out, interface):
       "cssom::%(parent)s & %(inst)s);" % template
     print >>out
 
+  print >>out, "    %(name)s();" % template
   print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
   if not interface.parent:
     if interface.name in shared:

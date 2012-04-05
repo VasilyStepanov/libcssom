@@ -44,6 +44,12 @@ CSSPageRule & CSSPageRule::cast(
 
 
 
+CSSPageRule::CSSPageRule() :
+  CSSRule()
+{}
+
+
+
 CSSPageRule::CSSPageRule(CSSOM_CSSPageRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}

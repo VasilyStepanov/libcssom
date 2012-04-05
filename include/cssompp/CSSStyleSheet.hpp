@@ -24,6 +24,7 @@ class CSSStyleSheet {
   public:
     typedef CSSOM_CSSStyleSheet * C;
 
+    CSSStyleSheet();
     explicit CSSStyleSheet(CSSOM_CSSStyleSheet * impl);
     CSSStyleSheet(const cssom::CSSStyleSheet &copy);
     ~CSSStyleSheet();

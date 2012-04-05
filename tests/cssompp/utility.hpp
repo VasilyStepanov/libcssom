@@ -11,7 +11,8 @@
   do { \
     bool match = (lhs) == (rhs); \
     if (!match) { \
-      std::cerr << (lhs) << " != " << (rhs) << std::endl; \
+      std::cerr << "'" << (lhs) << "'" << " != " \
+        << "'" << (rhs) << "'" << std::endl; \
       assert((lhs) == (rhs)); \
     } \
   } while (0)

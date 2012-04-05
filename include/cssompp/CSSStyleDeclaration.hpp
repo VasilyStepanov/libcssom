@@ -22,6 +22,7 @@ class CSSStyleDeclaration {
   public:
     typedef CSSOM_CSSStyleDeclaration * C;
 
+    CSSStyleDeclaration();
     explicit CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl);
 
     const char * cssText() const;

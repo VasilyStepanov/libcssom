@@ -44,6 +44,12 @@ CSSStyleRule & CSSStyleRule::cast(
 
 
 
+CSSStyleRule::CSSStyleRule() :
+  CSSRule()
+{}
+
+
+
 CSSStyleRule::CSSStyleRule(CSSOM_CSSStyleRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}

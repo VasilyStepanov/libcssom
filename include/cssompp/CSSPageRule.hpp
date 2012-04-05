@@ -36,6 +36,7 @@ class CSSPageRule : public cssom::CSSRule {
     static cssom::CSSPageRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSPageRule & cast(cssom::CSSRule & cssRule);
 
+    CSSPageRule();
     explicit CSSPageRule(CSSOM_CSSPageRule * impl);
 
     const char * selectorText() const;

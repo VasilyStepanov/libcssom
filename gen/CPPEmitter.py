@@ -190,6 +190,13 @@ def renderInterface(out, interface):
   template = { "name" : interface.name }
 
   if not interface.parent:
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%(name)s::%(name)s() :" % template
+    print >>out, "  _impl(NULL)"
+    print >>out, "{}"
+
     if interface.name in shared:
       print >>out
       print >>out
@@ -285,6 +292,13 @@ def renderInterface(out, interface):
     print >>out, "  return static_cast<cssom::%(name)s &>(" \
       "%(inst)s);" % template
     print >>out, "}"
+
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%(name)s::%(name)s() :" % template
+    print >>out, "  %(parent)s()" % template
+    print >>out, "{}"
 
     print >>out
     print >>out
