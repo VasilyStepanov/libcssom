@@ -34,6 +34,9 @@ class CSSRule {
     CSSRule();
     explicit CSSRule(CSSOM_CSSRule * impl);
 
+    bool operator==(
+     const cssom::CSSRule &rhs) const;
+
     static unsigned short STYLE_RULE;
 
     static unsigned short IMPORT_RULE;

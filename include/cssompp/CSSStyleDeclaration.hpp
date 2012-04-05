@@ -25,6 +25,9 @@ class CSSStyleDeclaration {
     CSSStyleDeclaration();
     explicit CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl);
 
+    bool operator==(
+     const cssom::CSSStyleDeclaration &rhs) const;
+
     const char * cssText() const;
 
     unsigned long length() const;

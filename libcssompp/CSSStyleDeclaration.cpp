@@ -26,6 +26,14 @@ CSSStyleDeclaration::CSSStyleDeclaration() :
 
 
 
+bool CSSStyleDeclaration::operator==(
+  const cssom::CSSStyleDeclaration &rhs) const
+{
+  return _impl == rhs._impl;
+}
+
+
+
 CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
   _impl(impl)
 {}

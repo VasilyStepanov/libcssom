@@ -28,6 +28,14 @@ CSSRule::CSSRule() :
 
 
 
+bool CSSRule::operator==(
+  const cssom::CSSRule &rhs) const
+{
+  return _impl == rhs._impl;
+}
+
+
+
 CSSRule::CSSRule(CSSOM_CSSRule * impl) :
   _impl(impl)
 {}

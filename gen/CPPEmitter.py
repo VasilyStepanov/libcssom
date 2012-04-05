@@ -236,15 +236,16 @@ def renderInterface(out, interface):
       print >>out, "  return *this;"
       print >>out, "}"
 
-      print >>out
-      print >>out
-      print >>out
-      print >>out, "bool %(name)s::operator==(" % template
-      print >>out, "  const cssom::%(name)s &rhs) const" % template
-      print >>out, "{"
-      print >>out, "  return _impl == rhs._impl;"
-      print >>out, "}"
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "bool %(name)s::operator==(" % template
+    print >>out, "  const cssom::%(name)s &rhs) const" % template
+    print >>out, "{"
+    print >>out, "  return _impl == rhs._impl;"
+    print >>out, "}"
 
+    if interface.name in shared:
       print >>out
       print >>out
       print >>out

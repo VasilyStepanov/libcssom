@@ -31,6 +31,7 @@ class CSSStyleSheet {
 
     cssom::CSSStyleSheet& operator=(
      const cssom::CSSStyleSheet &rhs);
+
     bool operator==(
      const cssom::CSSStyleSheet &rhs) const;
 
