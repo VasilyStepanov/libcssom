@@ -67,12 +67,10 @@ void CSSOM::setErrorHandler(CSSOM_ErrorHandler handler) {
 
 
 
-cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
-  const char *cssText, int len) const
-{
+cssom::CSSStyleSheet CSSOM::parse(const char *cssText, int len) const {
   CSSOM_CSSStyleSheet *styleSheet;
   
-  styleSheet = CSSOM_parseCSSStyleSheet(_impl, cssText, len);
+  styleSheet = CSSOM_parse(_impl, cssText, len);
   if (styleSheet == NULL) throw std::bad_alloc();
 
   cssom::CSSStyleSheet wrap(styleSheet);
@@ -84,31 +82,8 @@ cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
 
 
 
-cssom::CSSStyleSheet CSSOM::parseCSSStyleSheet(
-  const std::string &cssText) const
-{
-  return parseCSSStyleSheet(cssText.data(), cssText.length());
-}
-
-
-
-cssom::CSSRule CSSOM::parseCSSRule(const char *cssText, int len) const {
-  CSSOM_CSSRule *cssRule;
-  
-  cssRule = CSSOM_parseCSSRule(_impl, cssText, len);
-  if (cssRule == NULL) throw std::bad_alloc();
-
-  cssom::CSSRule wrap(cssRule);
-
-  CSSOM_CSSRule_release(cssRule);
-
-  return wrap;
-}
-
-
-
-cssom::CSSRule CSSOM::parseCSSRule(const std::string &cssText) const {
-  return parseCSSRule(cssText.data(), cssText.length());
+cssom::CSSStyleSheet CSSOM::parse(const std::string &cssText) const {
+  return parse(cssText.data(), cssText.length());
 }
 
 

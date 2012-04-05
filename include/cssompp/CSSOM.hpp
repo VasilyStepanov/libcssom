@@ -36,10 +36,8 @@ class CSSOM {
     void setUserData(void * userData);
     void setErrorHandler(CSSOM_ErrorHandler handler);
 
-    cssom::CSSStyleSheet parseCSSStyleSheet(const char *cssText, int len) const;
-    cssom::CSSStyleSheet parseCSSStyleSheet(const std::string &cssText) const;
-    cssom::CSSRule parseCSSRule(const char *cssText, int len) const;
-    cssom::CSSRule parseCSSRule(const std::string &cssText) const;
+    cssom::CSSStyleSheet parse(const char *cssText, int len) const;
+    cssom::CSSStyleSheet parse(const std::string &cssText) const;
 
   private:
     ::CSSOM *_impl;

@@ -224,7 +224,7 @@ void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler) {
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_parseCSSStyleSheet(const CSSOM *cssom,
+CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   const char *cssText, int len)
 {
   SAC_Parser parser;
@@ -297,7 +297,7 @@ static int cssRule_startStyleHandler(void *userData,
 
 
 
-CSSOM_CSSRule* CSSOM_parseCSSRule(const CSSOM *cssom,
+CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   const char *cssText, int len)
 {
   SAC_Parser parser;

@@ -4,6 +4,7 @@
 
 #include "CSSStyleDeclaration.h"
 #include "CSSEmitter.h"
+#include "CSSOM.h"
 #include "memory.h"
 
 #include <stdio.h>
@@ -178,7 +179,7 @@ static void CSSStyleRule_setCSSText(CSSOM_CSSStyleRule *cssRule,
 {
   CSSOM_CSSRule *newCSSRule;
 
-  newCSSRule = CSSOM_parseCSSRule(
+  newCSSRule = CSSOM__parseCSSRule(
     ((CSSOM_CSSRule*)cssRule)->cssom, cssText, strlen(cssText));
   if (newCSSRule == NULL) return;
 

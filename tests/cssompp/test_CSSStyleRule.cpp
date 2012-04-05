@@ -1,7 +1,10 @@
 #include "test_CSSStyleRule.hpp"
 
+#include "utility.hpp"
+
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSStyleRule.hpp>
+#include <cssompp/CSSStyleSheet.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -22,16 +25,6 @@ struct Errors {
 
 
 
-cssom::CSSStyleRule styleRule(const cssom::CSSOM &cssom) {
-  return cssom::CSSStyleRule::cast(cssom.parseCSSRule(
-"p {\n"
-" color : green;\n"
-"}\n"
-  ));
-}
-
-
-
 void consts() {
   assert(cssom::CSSStyleRule::STYLE_RULE == 1);
   assert(cssom::CSSStyleRule::IMPORT_RULE == 3);
@@ -45,7 +38,13 @@ void consts() {
 
 void type() {
   cssom::CSSOM cssom;
-  cssom::CSSStyleRule style = styleRule(cssom);
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
 
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
 }
@@ -73,7 +72,13 @@ void cssText() {
   cssom::CSSOM cssom;
   cssom.setUserData(&errors);
   cssom.setErrorHandler(errorHandler);
-  cssom::CSSStyleRule style = styleRule(cssom);
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
   std::string cssText;
 
 
@@ -83,7 +88,7 @@ void cssText() {
    */
 
   cssText = "p { color : green; }";
-  assert(style.cssText() == cssText);
+  assertEquals(cssText, style.cssText());
 
 
 
@@ -98,20 +103,20 @@ void cssText() {
   );
   cssText = "div { background-color : green; }";
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assert(style.cssText() == cssText);
+  assertEquals(cssText, style.cssText());
 
 
 
   style.setCSSText("invalid");
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assert(style.cssText() == cssText);
+  assertEquals(cssText, style.cssText());
 
 
 
   assert(errors.invalidModificationErrors == 0);
   style.setCSSText("@page ident;");
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assert(style.cssText() == cssText);
+  assertEquals(cssText, style.cssText());
   // assert(errors.invalidModificationErrors == 1);
 }
 
@@ -119,7 +124,13 @@ void cssText() {
 
 void selectorText() {
   cssom::CSSOM cssom;
-  cssom::CSSStyleRule style = styleRule(cssom);
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
 
   assert(style.selectorText() == std::string("p"));
 }
