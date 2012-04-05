@@ -12,8 +12,6 @@
 
 #include <cssom/CSSStyleSheet.h>
 
-#include <cssompp/CSSRule.hpp>
-
 #include "checks.hpp"
 
 #include <utility>

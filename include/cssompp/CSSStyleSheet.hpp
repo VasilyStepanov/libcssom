@@ -15,15 +15,6 @@
 
 #include <cssom/CSSStyleSheet.h>
 
-namespace cssom {
-
-
-
-class CSSRule;
-
-
-
-} // cssom
 
 namespace cssom {
 

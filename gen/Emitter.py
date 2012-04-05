@@ -9,7 +9,6 @@ import os.path
 forwards = { \
   'CSSRuleList' : ('CSSRule', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
-  'CSSStyleSheet' : ('CSSRule', ),
 }
 
 

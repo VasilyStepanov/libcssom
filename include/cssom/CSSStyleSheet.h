@@ -11,7 +11,6 @@
 
 
 
-#include <cssom/CSSRule.h>
 #include <cssom/CSSRuleList.h>
 
 #ifdef __cplusplus
