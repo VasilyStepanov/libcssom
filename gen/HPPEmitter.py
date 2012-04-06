@@ -153,7 +153,7 @@ def renderInclude(out, definition):
     print >>out, "#include <cssompp/%s.hpp>" % include
 
   print >>out
-  print >>out, "#include <cssom/%s.h>" % definition.name
+  print >>out, "#include <cssom/typedefs.h>"
 
 
 

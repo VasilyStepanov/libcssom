@@ -1,6 +1,5 @@
 #include "test_CSSOM.hpp"
 
-#include <cssom/CSSProperty.h>
 #include <cssompp.hpp>
 
 #include <assert.h>
@@ -22,7 +21,7 @@ void basics() {
   assert(cssRules.size() == 1);
 
   cssom::CSSRule cssRule = cssRules[0];
-  assert(cssRule.type() == CSSOM_CSSRule_STYLE_RULE);
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
 
   cssom::CSSStyleRule &styleRule = static_cast<cssom::CSSStyleRule&>(cssRule);
 

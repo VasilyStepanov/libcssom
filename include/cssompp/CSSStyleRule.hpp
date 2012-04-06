@@ -13,7 +13,7 @@
 
 #include <cssompp/CSSRule.hpp>
 
-#include <cssom/CSSStyleRule.h>
+#include <cssom/typedefs.h>
 
 namespace cssom {
 

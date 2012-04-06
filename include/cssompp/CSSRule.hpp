@@ -11,7 +11,7 @@
 
 
 
-#include <cssom/CSSRule.h>
+#include <cssom/typedefs.h>
 
 namespace cssom {
 

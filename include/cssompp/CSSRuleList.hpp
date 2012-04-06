@@ -13,7 +13,7 @@
 
 #include <cssompp/Sequence.hpp>
 
-#include <cssom/CSSRuleList.h>
+#include <cssom/typedefs.h>
 
 namespace cssom {
 

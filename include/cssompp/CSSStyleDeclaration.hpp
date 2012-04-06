@@ -11,7 +11,7 @@
 
 
 
-#include <cssom/CSSStyleDeclaration.h>
+#include <cssom/typedefs.h>
 
 
 namespace cssom {

@@ -4,6 +4,7 @@
 
 #include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
+#include <cssom/CSSStyleSheet.h>
 
 #include <new>
 #include <utility>
