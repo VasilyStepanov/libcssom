@@ -7,6 +7,7 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
 BUILT_SOURCES = $(top_idldir)/CSSNamespaceRule.idl.h \
+                $(top_idldir)/CSSMediaRule.idl.h \
                 $(top_idldir)/CSSPageRule.idl.h \
                 $(top_idldir)/CSSRule.idl.h \
                 $(top_idldir)/CSSRuleList.idl.h \

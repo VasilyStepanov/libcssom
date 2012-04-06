@@ -17,6 +17,7 @@ forwards = { \
 
 includes = { \
   'CSSNamespaceRule' : ('CSSRule', ),
+  'CSSMediaRule' : ('CSSRule', ),
   'CSSPageRule' : ('CSSRule', ),
   'CSSRuleList' : ('Sequence', ),
   'CSSStyleRule' : ('CSSRule', ),

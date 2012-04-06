@@ -1,6 +1,7 @@
 #include "checks.hpp"
 
 #include <cssompp/CSSRule.hpp>
+#include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSNamespaceRule.hpp>
 #include <cssompp/CSSPageRule.hpp>
 #include <cssompp/CSSStyleRule.hpp>
@@ -26,6 +27,16 @@ void checkCast<cssom::CSSRule, cssom::CSSNamespaceRule>(
   const cssom::CSSRule &cssRule)
 {
   assert(cssRule.type() == cssom::CSSRule::NAMESPACE_RULE);
+}
+
+
+
+
+template <>
+void checkCast<cssom::CSSRule, cssom::CSSMediaRule>(
+  const cssom::CSSRule &cssRule)
+{
+  assert(cssRule.type() == cssom::CSSRule::MEDIA_RULE);
 }
 
 
