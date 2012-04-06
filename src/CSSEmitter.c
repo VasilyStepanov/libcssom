@@ -5,6 +5,8 @@
 
 #include <cssom/CSSProperty.h>
 
+#include <stdio.h>
+
 
 
 static int emit_selector(FILE *out, const SAC_Selector *selector);
@@ -38,7 +40,7 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ATTRIBUTE_CONDITION:
     case SAC_CLASS_CONDITION:
     case SAC_ID_CONDITION:
-      if (fprintf(out, "[")) return 1;
+      if (fprintf(out, "[") < 0) return 1;
       if (emit_name(out,
         condition->desc.attribute.namespaceURI,
         condition->desc.attribute.localName) != 0)
@@ -48,40 +50,42 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
 
       switch (condition->conditionType) {
         case SAC_ID_CONDITION:
-          if (fprintf(out, "\"id\"")) return 1;
+          if (fprintf(out, "\"id\"") < 0) return 1;
           break;
         case SAC_CLASS_CONDITION:
-          if (fprintf(out, "\"class\"")) return 1;
+          if (fprintf(out, "\"class\"") < 0) return 1;
           break;
         case SAC_PREFIX_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"prefix\"")) return 1;
+          if (fprintf(out, "\"prefix\"") < 0) return 1;
           break;
         case SAC_SUFFIX_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"suffix\"")) return 1;
+          if (fprintf(out, "\"suffix\"") < 0) return 1;
           break;
         case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"substr\"")) return 1;
+          if (fprintf(out, "\"substr\"") < 0) return 1;
           break;
         case SAC_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"attr\"")) return 1;
+          if (fprintf(out, "\"attr\"") < 0) return 1;
           break;
         case SAC_ONE_OF_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"one_of\"")) return 1;
+          if (fprintf(out, "\"one_of\"") < 0) return 1;
           break;
         case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"begin_hypen\"")) return 1;
+          if (fprintf(out, "\"begin_hypen\"") < 0) return 1;
           break;
         default:
-          if (fprintf(out, "\"unknown_%d\"", condition->conditionType))
+          if (fprintf(out, "\"unknown_%d\"", condition->conditionType) < 0)
             return 1;
           break;
       }
 
       if (condition->desc.attribute.value != NULL) {
-        if (fprintf(out, "=\"%s\"", condition->desc.attribute.value)) return 1;
+        if (fprintf(out, "=\"%s\"", condition->desc.attribute.value) < 0) {
+          return 1;
+        }
       }
 
-      if (fprintf(out, "]")) return 1;
+      if (fprintf(out, "]") < 0) return 1;
 
       break;
     case SAC_PSEUDO_CLASS_CONDITION:
@@ -89,13 +93,13 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
       {
         switch (condition->conditionType) {
           case SAC_PSEUDO_CLASS_CONDITION:
-            if (fprintf(out, ":")) return 1;
+            if (fprintf(out, ":") < 0) return 1;
             break;
           case SAC_PSEUDO_ELEMENT_CONDITION:
-            if (fprintf(out, "::")) return 1;
+            if (fprintf(out, "::") < 0) return 1;
             break;
           default:
-            if (fprintf(out, "?")) return 1;
+            if (fprintf(out, "?") < 0) return 1;
             break;
         }
         if (CSSOM_CSSEmitter_lexicalUnit(out, condition->desc.pseudo) != 0)
@@ -103,15 +107,15 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
       }
       break;
     case SAC_AND_CONDITION:
-      if (emit_condition(out, condition->desc.combinator.firstCondition))
+      if (emit_condition(out, condition->desc.combinator.firstCondition) != 0)
         return 1;
-      if (emit_condition(out, condition->desc.combinator.secondCondition))
+      if (emit_condition(out, condition->desc.combinator.secondCondition) != 0)
         return 1;
       break;
     case SAC_NEGATIVE_CONDITION:
-      if (fprintf(out, "not(")) return 1;
-      if (emit_selector(out, condition->desc.selector)) return 1;
-      if (fprintf(out, ")")) return 1;
+      if (fprintf(out, "not(") < 0) return 1;
+      if (emit_selector(out, condition->desc.selector) != 0) return 1;
+      if (fprintf(out, ")") < 0) return 1;
       break;
     case SAC_OR_CONDITION:
     case SAC_POSITIONAL_CONDITION:
@@ -119,7 +123,7 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ONLY_CHILD_CONDITION:
     case SAC_ONLY_TYPE_CONDITION:
     case SAC_CONTENT_CONDITION:
-      if (fprintf(out, "?")) return 1;
+      if (fprintf(out, "?") < 0) return 1;
       break;
   }
   return 0;
@@ -130,8 +134,15 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
 static int emit_selector(FILE *out, const SAC_Selector *selector) {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
-      if (emit_selector(out, selector->desc.conditional.simpleSelector) != 0)
-        return 1;
+      if (selector->desc.conditional.simpleSelector->selectorType !=
+        SAC_ANY_NODE_SELECTOR)
+      {
+        if (emit_selector(out,
+          selector->desc.conditional.simpleSelector) != 0)
+        {
+          return 1;
+        }
+      }
       if (emit_condition(out, selector->desc.conditional.condition) != 0)
         return 1;
       break;

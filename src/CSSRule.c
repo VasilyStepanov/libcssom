@@ -333,8 +333,7 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
 struct _CSSOM_CSSPageRule {
   CSSOM_CSSRule super;
   char *selectorText;
-  const SAC_STRING name;
-  const SAC_STRING pseudoPage;
+  const SAC_Selector **selectors;
   CSSOM_CSSStyleDeclaration *style;
 };
 
@@ -358,8 +357,7 @@ static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
 
 CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSStyleSheet *parentStyleSheet,
-  const CSSOM_FSMTable_CSSProperty *table, const SAC_STRING name,
-  const SAC_STRING pseudoPage)
+  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSPageRule *cssRule;
@@ -377,8 +375,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSPageRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_PAGE_RULE);
   cssRule->selectorText = NULL;
-  cssRule->name = name;
-  cssRule->pseudoPage = pseudoPage;
+  cssRule->selectors = selectors;
   cssRule->style = style;
 
   return cssRule;
@@ -390,25 +387,6 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSPageRule_style(
   const CSSOM_CSSPageRule *cssRule)
 {
   return cssRule->style;
-}
-
-
-
-static int emitPageSelector(FILE *out, const CSSOM_CSSPageRule *cssRule) {
-  if (cssRule->name == NULL && cssRule->pseudoPage == NULL) {
-    if (fprintf(out, "@page") < 0)
-      return 1;
-  } else if (cssRule->name != NULL && cssRule->pseudoPage == NULL) {
-    if (fprintf(out, "@page %s", cssRule->name) < 0)
-      return 1;
-  } else if (cssRule->name == NULL && cssRule->pseudoPage != NULL) {
-    if (fprintf(out, "@page :%s", cssRule->pseudoPage) < 0)
-      return 1;
-  } else if (cssRule->name != NULL && cssRule->pseudoPage != NULL) {
-    if (fprintf(out, "@page %s:%s", cssRule->name, cssRule->pseudoPage) < 0)
-      return 1;
-  }
-  return 0;
 }
 
 
@@ -425,10 +403,14 @@ const char* CSSOM_CSSPageRule_selectorText(
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (emitPageSelector(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_free(buf);
-      return NULL;
+    if (!(cssRule->selectors[0] != NULL && cssRule->selectors[1] == NULL &&
+      cssRule->selectors[0]->selectorType == SAC_ANY_NODE_SELECTOR))
+    {
+      if (CSSOM_CSSEmitter_selectors(out, cssRule->selectors) != 0) {
+        fclose(out);
+        CSSOM_free(buf);
+        return NULL;
+      }
     }
 
     if (fclose(out) != 0) {

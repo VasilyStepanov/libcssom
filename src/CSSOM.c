@@ -60,7 +60,7 @@ static int propertyHandler(void *userData,
 
 
 static int startPageHandler(void *userData,
-  const SAC_STRING name, const SAC_STRING pseudoPage)
+  const SAC_Selector *selectors[])
 {
   struct _CSSOM_ParserStack *stack;
   CSSOM_CSSPageRule *cssRule;
@@ -68,7 +68,7 @@ static int startPageHandler(void *userData,
   stack = (struct _CSSOM_ParserStack*)userData;
 
   cssRule = CSSOM_CSSPageRule__alloc(stack->styleSheet,
-    stack->cssom->table, name, pseudoPage);
+    stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
   stack->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -80,7 +80,7 @@ static int startPageHandler(void *userData,
 
 
 static int endPageHandler(void *userData,
-  const SAC_STRING name CSSOM_UNUSED, const SAC_STRING pseudoPage CSSOM_UNUSED)
+  const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
 

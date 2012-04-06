@@ -15,8 +15,7 @@ extern "C" {
 
 CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSStyleSheet *parentStyleSheet,
-  const CSSOM_FSMTable_CSSProperty *table, const SAC_STRING name,
-  const SAC_STRING pseudoPage);
+  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[]);
 
 
 

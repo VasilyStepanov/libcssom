@@ -15,13 +15,6 @@ namespace {
 
 
 
-/**
-@page { color : green }
-@page :left { color : green }
-@page :right { color : green  }
-@page LandscapeTable { color : green }
-@page CompanyLetterHead:first { color : green }
- */
 void selectorText() {
   cssom::CSSOM cssom;
   cssom::CSSStyleSheet styleSheet;
@@ -40,7 +33,7 @@ void selectorText() {
   cssRule = cssom::CSSPageRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("@page"), cssRule.selectorText());
+  assertEquals(std::string(""), cssRule.selectorText());
 
 
 
@@ -57,7 +50,7 @@ void selectorText() {
   cssRule = cssom::CSSPageRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("@page :left"), cssRule.selectorText());
+  assertEquals(std::string(":left"), cssRule.selectorText());
 
 
 
@@ -74,7 +67,7 @@ void selectorText() {
   cssRule = cssom::CSSPageRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("@page LandscapeTable"), cssRule.selectorText());
+  assertEquals(std::string("LandscapeTable"), cssRule.selectorText());
 
 
 
@@ -91,8 +84,7 @@ void selectorText() {
   cssRule = cssom::CSSPageRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("@page CompanyLetterHead:first"),
-    cssRule.selectorText());
+  assertEquals(std::string("CompanyLetterHead:first"), cssRule.selectorText());
 }
 
 
