@@ -1,6 +1,7 @@
 #ifndef CSSOM_H
 #define CSSOM_H
 
+#include <cssom/CSSMediaRule.h>
 #include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSOM.h>
 #include <cssom/CSSPageRule.h>

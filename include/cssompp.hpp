@@ -1,6 +1,7 @@
 #ifndef CSSOMPP_H
 #define CSSOMPP_H
 
+#include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSNamespaceRule.hpp>
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSPageRule.hpp>
