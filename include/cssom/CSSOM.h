@@ -41,7 +41,7 @@ typedef struct {
   const char * data; /* NULL if it is not relevant */
 } CSSOM_Error;
 
-typedef void (*CSSOM_ErrorHandler)(void *userData,
+typedef int (*CSSOM_ErrorHandler)(void *userData,
   const CSSOM_Error *error);
 
 

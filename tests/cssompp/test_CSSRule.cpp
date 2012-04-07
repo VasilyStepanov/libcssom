@@ -51,7 +51,7 @@ void type() {
 
 
 
-void errorHandler(void *userData, const CSSOM_Error *error) {
+int errorHandler(void *userData, const CSSOM_Error *error) {
   Errors *errors = static_cast<Errors*>(userData);
 
   switch (error->code) {
@@ -63,6 +63,8 @@ void errorHandler(void *userData, const CSSOM_Error *error) {
       ++errors->invalidModificationErrors;
       break;
   }
+
+  return 0;
 }
 
 

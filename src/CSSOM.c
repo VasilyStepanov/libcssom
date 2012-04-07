@@ -192,21 +192,21 @@ static void freeProperties(char **properties) {
 
 
 
-static void errorHandler(void * userData, const SAC_Error * error) {
+static int errorHandler(void * userData, const SAC_Error * error) {
   struct _CSSOM_ParserStack *stack;
   const CSSOM * cssom;
-  
+  CSSOM_Error cssomError;
+
   stack = (struct _CSSOM_ParserStack*)userData;
   cssom = stack->cssom;
 
-  if (cssom->errorHandler != NULL) {
-    CSSOM_Error cssomError;
-    cssomError.line = error->line;
-    cssomError.column = error->column;
-    cssomError.code = error->code;
-    cssomError.data = error->data;
-    cssom->errorHandler(cssom->userData, &cssomError);
-  }
+  if (cssom->errorHandler == NULL) return 0;
+
+  cssomError.line = error->line;
+  cssomError.column = error->column;
+  cssomError.code = error->code;
+  cssomError.data = error->data;
+  return cssom->errorHandler(cssom->userData, &cssomError);
 }
 
 

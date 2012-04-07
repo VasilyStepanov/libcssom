@@ -55,10 +55,12 @@ static void test_CSSOM_basics(void) {
 
 
 
-static void errorHandler(void *userData, const CSSOM_Error * error) {
+static int errorHandler(void *userData, const CSSOM_Error * error) {
   size_t *errors = (size_t*)userData;
 
   if (error->code == CSSOM_ERROR_SYNTAX) ++(*errors);
+
+  return 0;
 }
 
 
