@@ -11,6 +11,7 @@
 
 
 
+#include <cssompp/CSSRuleList.hpp>
 #include <cssompp/CSSRule.hpp>
 
 #include <cssom/typedefs.h>
@@ -29,6 +30,8 @@ class CSSMediaRule : public cssom::CSSRule {
 
     CSSMediaRule();
     explicit CSSMediaRule(CSSOM_CSSMediaRule * impl);
+
+    cssom::CSSRuleList cssRules() const;
 };
 
 

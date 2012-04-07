@@ -54,4 +54,10 @@ CSSMediaRule::CSSMediaRule(CSSOM_CSSMediaRule * impl) :
 
 
 
+cssom::CSSRuleList CSSMediaRule::cssRules() const {
+  return cssom::CSSRuleList(CSSOM_CSSMediaRule_cssRules(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl)));
+}
+
+
+
 } // cssom

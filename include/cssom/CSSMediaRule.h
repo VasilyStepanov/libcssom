@@ -14,6 +14,7 @@
 #include <cssom/typedefs.h>
 
 #include <cssom/CSSRule.h>
+#include <cssom/CSSRuleList.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +22,10 @@ extern "C" {
 
 
 
+
+
+
+CSSOM_CSSRuleList* CSSOM_CSSMediaRule_cssRules(const CSSOM_CSSMediaRule * cssMediaRule);
 
 
 

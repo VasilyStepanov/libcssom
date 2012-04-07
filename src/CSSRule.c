@@ -3,6 +3,7 @@
 #include "CSSPageRule.h"
 #include "CSSStyleRule.h"
 
+#include "CSSRuleList.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
 #include "CSSEmitter.h"
@@ -280,6 +281,25 @@ const char* CSSOM_CSSStyleRule_selectorText(
     ((CSSOM_CSSStyleRule*)cssRule)->selectorText = buf;
   }
   return cssRule->selectorText;
+}
+
+
+
+/**
+ * CSSMediaRule
+ */
+
+struct _CSSOM_CSSMediaRule {
+  CSSOM_CSSRule super;
+  CSSOM_CSSRuleList *cssRules;
+};
+
+
+
+CSSOM_CSSRuleList* CSSOM_CSSMediaRule_cssRules(
+  const CSSOM_CSSMediaRule *cssRule)
+{
+  return cssRule->cssRules;
 }
 
 
