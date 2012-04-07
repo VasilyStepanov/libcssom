@@ -1,5 +1,6 @@
 #include "CSSOM.h"
 
+#include "CSSMediaRule.h"
 #include "CSSPageRule.h"
 #include "CSSProperty.h"
 #include "CSSRule.h"
@@ -81,6 +82,45 @@ static int startPageHandler(void *userData,
 
 static int endPageHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
+{
+  struct _CSSOM_ParserStack *stack;
+
+  stack = (struct _CSSOM_ParserStack*)userData;
+
+  if (CSSOM_CSSStyleSheet__append(stack->styleSheet, stack->cssRule) == NULL) {
+    CSSOM_CSSRule__free(stack->cssRule);
+    return 1;
+  }
+
+  stack->style = NULL;
+  stack->cssRule = NULL;
+
+  return 0;
+}
+
+
+
+static int startMediaHandler(void *userData,
+  const SAC_MediaQuery *media[] CSSOM_UNUSED)
+{
+  struct _CSSOM_ParserStack *stack;
+  CSSOM_CSSMediaRule *cssRule;
+  
+  stack = (struct _CSSOM_ParserStack*)userData;
+
+  cssRule = CSSOM_CSSMediaRule__alloc(stack->styleSheet);
+  if (cssRule == NULL) return 1;
+
+  stack->cssRule = (CSSOM_CSSRule*)cssRule;
+  stack->style = NULL;
+
+  return 0;
+}
+
+
+
+static int endMediaHandler(void *userData,
+  const SAC_MediaQuery *media[] CSSOM_UNUSED)
 {
   struct _CSSOM_ParserStack *stack;
 
@@ -297,6 +337,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   stack.cssom = cssom;
 
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
+  SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
   SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
   SAC_SetUserData(parser, &stack);
@@ -327,6 +368,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   stack.cssom = cssom;
 
   SAC_SetPageHandler(parser, startPageHandler, NULL);
+  SAC_SetMediaHandler(parser, startMediaHandler, NULL);
   SAC_SetStyleHandler(parser, startStyleHandler, NULL);
   SAC_SetPropertyHandler(parser, propertyHandler);
   SAC_SetUserData(parser, &stack);

@@ -15,6 +15,23 @@ namespace {
 
 
 
+void cssRules() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assert(cssRule.type() == cssom::CSSRule::MEDIA_RULE);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -22,6 +39,7 @@ namespace test {
 
 
 void cssMediaRule() {
+  // cssRules();
 }
 
 

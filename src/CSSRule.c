@@ -296,6 +296,46 @@ struct _CSSOM_CSSMediaRule {
 
 
 
+static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
+  CSSOM_Sequence__free(cssRule->cssRules);
+  CSSOM_free(cssRule);
+}
+
+
+
+static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
+  (void(*)(CSSOM_CSSRule*))&CSSMediaRule_free,
+  NULL,
+  NULL
+};
+
+
+
+CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
+  CSSOM_CSSStyleSheet *parentStyleSheet)
+{
+  CSSOM_CSSRuleList *cssRules;
+  CSSOM_CSSMediaRule *cssRule;
+
+  cssRules = CSSOM_CSSRuleList__alloc();
+  if (cssRules == NULL) return NULL;
+
+  cssRule = (CSSOM_CSSMediaRule*)CSSOM_malloc(sizeof(CSSOM_CSSMediaRule));
+  if (cssRule == NULL) {
+    CSSOM_Sequence__free(cssRules);
+    return NULL;
+  }
+
+  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
+    parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
+
+  cssRule->cssRules = cssRules;
+
+  return cssRule;
+}
+
+
+
 CSSOM_CSSRuleList* CSSOM_CSSMediaRule_cssRules(
   const CSSOM_CSSMediaRule *cssRule)
 {

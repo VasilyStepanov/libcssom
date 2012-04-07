@@ -33,6 +33,7 @@ void selectorText() {
   cssRule = cssom::CSSPageRule::cast(
     styleSheet.cssRules()[0]);
 
+  assert(cssRule.type() == cssom::CSSRule::PAGE_RULE);
   assertEquals(std::string(""), cssRule.selectorText());
 
 
