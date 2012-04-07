@@ -263,7 +263,6 @@ void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler) {
 
 
 void CSSOM__invalidModificationErr(const CSSOM * cssom) {
-  printf("CSSOM_ERROR_INVALID_MODIFICATION_ERR\n");
   if (cssom->errorHandler != NULL) {
     CSSOM_Error error;
     error.line = -1;

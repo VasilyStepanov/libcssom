@@ -114,10 +114,10 @@ void cssText() {
 
 
   assert(errors.invalidModificationErrors == 0);
-  style.setCSSText("@page ident;");
+  style.setCSSText("@page {}");
   assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
   assertEquals(cssText, style.cssText());
-  // assert(errors.invalidModificationErrors == 1);
+  assert(errors.invalidModificationErrors == 1);
 }
 
 
