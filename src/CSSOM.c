@@ -30,31 +30,19 @@ struct _CSSOM {
 
 
 
-struct _CSSOM_ParserStack {
-  const CSSOM * cssom;
-  CSSOM_CSSStyleSheet * styleSheet;
-  CSSOM_CSSRule * cssRule;
-  CSSOM_CSSStyleDeclaration * style;
-};
-
-
-
 static int propertyHandler(void *userData,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
   CSSOM_CSSProperty *property;
   
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  property = CSSOM_CSSStyleDeclaration__setProperty(stack->style,
+  property = CSSOM_ParserState_setProperty(state,
     propertyName, value, important);
-  if (property == NULL) {
-    CSSOM_CSSRule__free(stack->cssRule);
-    return 1;
-  }
+  if (property == NULL) return 1;
 
   return 0;
 }
@@ -64,17 +52,13 @@ static int propertyHandler(void *userData,
 static int startPageHandler(void *userData,
   const SAC_Selector *selectors[])
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
   CSSOM_CSSPageRule *cssRule;
   
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  cssRule = CSSOM_CSSPageRule__alloc(stack->styleSheet,
-    stack->cssom->table, selectors);
+  cssRule = CSSOM_ParserState_pushCSSPageRule(state, selectors);
   if (cssRule == NULL) return 1;
-
-  stack->cssRule = (CSSOM_CSSRule*)cssRule;
-  stack->style = CSSOM_CSSPageRule_style(cssRule);
 
   return 0;
 }
@@ -84,17 +68,11 @@ static int startPageHandler(void *userData,
 static int endPageHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
 
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  if (CSSOM_CSSStyleSheet__append(stack->styleSheet, stack->cssRule) == NULL) {
-    CSSOM_CSSRule__free(stack->cssRule);
-    return 1;
-  }
-
-  stack->style = NULL;
-  stack->cssRule = NULL;
+  CSSOM_ParserState_pop(state);
 
   return 0;
 }
@@ -104,16 +82,13 @@ static int endPageHandler(void *userData,
 static int startMediaHandler(void *userData,
   const SAC_MediaQuery *media[] CSSOM_UNUSED)
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
   CSSOM_CSSMediaRule *cssRule;
   
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  cssRule = CSSOM_CSSMediaRule__alloc(stack->styleSheet);
+  cssRule = CSSOM_ParserState_pushCSSMediaRule(state);
   if (cssRule == NULL) return 1;
-
-  stack->cssRule = (CSSOM_CSSRule*)cssRule;
-  stack->style = NULL;
 
   return 0;
 }
@@ -123,17 +98,11 @@ static int startMediaHandler(void *userData,
 static int endMediaHandler(void *userData,
   const SAC_MediaQuery *media[] CSSOM_UNUSED)
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
 
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  if (CSSOM_CSSStyleSheet__append(stack->styleSheet, stack->cssRule) == NULL) {
-    CSSOM_CSSRule__free(stack->cssRule);
-    return 1;
-  }
-
-  stack->style = NULL;
-  stack->cssRule = NULL;
+  CSSOM_ParserState_pop(state);
 
   return 0;
 }
@@ -148,11 +117,8 @@ static int startStyleHandler(void *userData,
   
   state = (CSSOM_ParserState*)userData;
 
-  cssRule = CSSOM_CSSStyleRule__alloc(stack->styleSheet,
-    stack->cssom->table, selectors);
+  cssRule = CSSOM_ParserState_pushCSSStyleRule(state, selectors);
   if (cssRule == NULL) return 1;
-
-
 
   return 0;
 }
@@ -162,17 +128,11 @@ static int startStyleHandler(void *userData,
 static int endStyleHandler(void *userData,
   const SAC_Selector *selectors[] CSSOM_UNUSED)
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
 
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
-  if (CSSOM_CSSStyleSheet__append(stack->styleSheet, stack->cssRule) == NULL) {
-    CSSOM_CSSRule__free(stack->cssRule);
-    return 1;
-  }
-
-  stack->style = NULL;
-  stack->cssRule = NULL;
+  CSSOM_ParserState_pop(state);
 
   return 0;
 }
@@ -192,21 +152,12 @@ static void freeProperties(char **properties) {
 
 
 
-static int errorHandler(void * userData, const SAC_Error * error) {
-  struct _CSSOM_ParserStack *stack;
-  const CSSOM * cssom;
-  CSSOM_Error cssomError;
+static int errorHandler(void *userData, const SAC_Error *error) {
+  CSSOM_ParserState *state;
 
-  stack = (struct _CSSOM_ParserStack*)userData;
-  cssom = stack->cssom;
+  state = (CSSOM_ParserState*)userData;
 
-  if (cssom->errorHandler == NULL) return 0;
-
-  cssomError.line = error->line;
-  cssomError.column = error->column;
-  cssomError.code = error->code;
-  cssomError.data = error->data;
-  return cssom->errorHandler(cssom->userData, &cssomError);
+  return CSSOM_ParserState_error(state, userData, error);
 }
 
 
@@ -338,6 +289,13 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
+  if (CSSOM_ParserState_pushCSSStyleSheetHolder(state, styleSheet) == NULL) {
+    CSSOM_CSSStyleSheet_release(styleSheet);
+    CSSOM_ParserState_free(state);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
   SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
   SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
@@ -374,7 +332,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
   }
 
   cssRule = NULL;
-  if (CSSOM_ParserState_pushCSSRuleCatcher(&cssRule) == NULL) {
+  if (CSSOM_ParserState_pushCSSRuleCatcher(state, &cssRule) == NULL) {
     CSSOM_ParserState_free(state);
     SAC_DisposeParser(parser);
     return NULL;
