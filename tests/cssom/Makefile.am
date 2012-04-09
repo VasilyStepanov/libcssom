@@ -9,6 +9,7 @@ test_suite_SOURCES = test_CSSOM.c \
                      test_Deque.c \
                      test_List.c \
                      test_FSM.c \
+                     test_Stack.c \
                      test_Vector.c \
                      test_suite.c
 
