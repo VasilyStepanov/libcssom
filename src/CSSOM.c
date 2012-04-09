@@ -8,6 +8,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
 #include "FSM_CSSProperty.h"
+#include "ParserState.h"
 #include "gcc.h"
 #include "memory.h"
 
@@ -142,17 +143,16 @@ static int endMediaHandler(void *userData,
 static int startStyleHandler(void *userData,
   const SAC_Selector *selectors[])
 {
-  struct _CSSOM_ParserStack *stack;
+  CSSOM_ParserState *state;
   CSSOM_CSSStyleRule *cssRule;
   
-  stack = (struct _CSSOM_ParserStack*)userData;
+  state = (CSSOM_ParserState*)userData;
 
   cssRule = CSSOM_CSSStyleRule__alloc(stack->styleSheet,
     stack->cssom->table, selectors);
   if (cssRule == NULL) return 1;
 
-  stack->cssRule = (CSSOM_CSSRule*)cssRule;
-  stack->style = CSSOM_CSSStyleRule_style(cssRule);
+
 
   return 0;
 }
@@ -319,28 +319,30 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   const char *cssText, int len)
 {
   SAC_Parser parser;
+  CSSOM_ParserState *state;
   CSSOM_CSSStyleSheet *styleSheet;
-  struct _CSSOM_ParserStack stack;
 
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser);
-  if (styleSheet == NULL) {
+  state = CSSOM_ParserState_alloc();
+  if (state == NULL) {
     SAC_DisposeParser(parser);
     return NULL;
   }
 
-  stack.styleSheet = styleSheet;
-  stack.cssRule = NULL;
-  stack.style = NULL;
-  stack.cssom = cssom;
+  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser);
+  if (styleSheet == NULL) {
+    CSSOM_ParserState_free(state);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
 
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
   SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
   SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
-  SAC_SetUserData(parser, &stack);
+  SAC_SetUserData(parser, state);
   SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseStyleSheet(parser, cssText, len);
 
@@ -348,30 +350,41 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
    * TODO: SAC_DisposeParser here
    */
 
+  CSSOM_ParserState_free(state);
+
   return styleSheet;
 }
 
 
 
-CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
+CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
   const char *cssText, int len)
 {
   SAC_Parser parser;
-  struct _CSSOM_ParserStack stack;
+  CSSOM_ParserState *state;
+  CSSOM_CSSRule *cssRule;
 
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  stack.styleSheet = NULL;
-  stack.cssRule = NULL;
-  stack.style = NULL;
-  stack.cssom = cssom;
+  state = CSSOM_ParserState_alloc();
+  if (state == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
 
-  SAC_SetPageHandler(parser, startPageHandler, NULL);
-  SAC_SetMediaHandler(parser, startMediaHandler, NULL);
-  SAC_SetStyleHandler(parser, startStyleHandler, NULL);
+  cssRule = NULL;
+  if (CSSOM_ParserState_pushCSSRuleCatcher(&cssRule) == NULL) {
+    CSSOM_ParserState_free(state);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
+  SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
+  SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
-  SAC_SetUserData(parser, &stack);
+  SAC_SetUserData(parser, state);
   SAC_SetErrorHandler(parser, errorHandler);
   SAC_ParseRule(parser, cssText, len);
 
@@ -379,5 +392,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
    * TODO: SAC_DisposeParser here
    */
 
-  return stack.cssRule;
+  CSSOM_ParserState_free(state);
+
+  return cssRule;
 }
