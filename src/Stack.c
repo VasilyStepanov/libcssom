@@ -81,7 +81,7 @@
   \
   \
   \
-  const T* CSSOM_Stack_##suffix##_ctop(const CSSOM_Stack_##suffix *stack) { \
+  T const * CSSOM_Stack_##suffix##_ctop(const CSSOM_Stack_##suffix *stack) { \
     return stack->head; \
   } \
   \

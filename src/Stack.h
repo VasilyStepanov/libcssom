@@ -17,7 +17,7 @@ extern "C" {
   T* CSSOM_Stack_##suffix##_push(CSSOM_Stack_##suffix *stack, T value); \
   void CSSOM_Stack_##suffix##_pop(CSSOM_Stack_##suffix *stack); \
   T* CSSOM_Stack_##suffix##_top(CSSOM_Stack_##suffix *stack); \
-  const T* CSSOM_Stack_##suffix##_ctop(const CSSOM_Stack_##suffix *stack);
+  T const * CSSOM_Stack_##suffix##_ctop(const CSSOM_Stack_##suffix *stack);
 
 
 
