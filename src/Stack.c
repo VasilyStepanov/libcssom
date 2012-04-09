@@ -57,6 +57,19 @@
   \
   \
   void CSSOM_Stack_##suffix##_free(CSSOM_Stack_##suffix *stack) { \
+    struct _CSSOM_StackItem_##suffix *i; \
+    \
+    for ( \
+      i = (struct _CSSOM_StackItem_##suffix*) \
+        CSSOM_Stack_##suffix##_top(stack); \
+      i != NULL; \
+      CSSOM_Stack_##suffix##_pop(stack), \
+      i = (struct _CSSOM_StackItem_##suffix*) \
+        CSSOM_Stack_##suffix##_top(stack)) \
+    { \
+      StackItem_##suffix##_free(i); \
+    } \
+    \
     CSSOM_free(stack); \
   } \
   \
