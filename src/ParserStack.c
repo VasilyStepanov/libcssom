@@ -19,6 +19,104 @@ static void ParserState_free(struct _CSSOM_ParserState *state) {
 
 
 
+CSSOM_CSSProperty* ParserState_setProperty(
+  struct _CSSOM_ParserState *state,
+  const SAC_STRING propertyName,
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important);
+
+
+
+CSSOM_CSSPageRule* ParserState_appendCSSPageRule(
+  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[]);
+
+
+
+CSSOM_CSSMediaRule* ParserState_appendCSSMediaRule(
+  struct _CSSOM_ParserState *state);
+
+
+
+CSSOM_CSSStyleRule* ParserState_appendCSSStyleRule(
+  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[]);
+
+
+
+/**
+ * CSSRuleCatcher
+ */
+
+struct _CSSOM_ParserCSSRuleCatcherState {
+  struct _CSSOM_ParserState super;
+};
+
+
+
+struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
+  CSSOM_CSSRule **cssRule);
+
+
+
+/**
+ * CSSStyleSheetHolder
+ */
+
+struct _CSSOM_ParserCSSStyleSheetHolderState {
+  struct _CSSOM_ParserState super;
+};
+
+
+
+struct _CSSOM_ParserCSSStyleSheetHolderState*
+ParserCSSStyleSheetHolderState_alloc(CSSOM_CSSStyleSheet *styleSheet);
+
+
+
+/**
+ * CSSPageRule
+ */
+
+struct _CSSOM_ParserCSSPageRuleState {
+  struct _CSSOM_ParserState super;
+};
+
+
+
+struct _CSSOM_ParserCSSPageRuleState* ParserCSSPageRuleState_alloc(
+  CSSOM_CSSPageRule *cssRule);
+
+
+
+/**
+ * CSSMediaRule
+ */
+
+struct _CSSOM_ParserCSSMediaRuleState {
+  struct _CSSOM_ParserState super;
+};
+
+
+
+struct _CSSOM_ParserCSSMediaRuleState* ParserCSSMediaRuleState_alloc(
+  CSSOM_CSSMediaRule *cssRule);
+
+
+
+/**
+ * CSSStyleRule
+ */
+
+struct _CSSOM_ParserCSSStyleRuleState {
+  struct _CSSOM_ParserState super;
+};
+
+
+
+struct _CSSOM_ParserCSSStyleRuleState* ParserCSSStyleRuleState_alloc(
+  CSSOM_CSSStyleRule *cssRule);
+
+
+
 CSSOM_STACK_DECLARE(struct _CSSOM_ParserState *, ParserState)
 
 CSSOM_STACK_DEFINE(struct _CSSOM_ParserState *, ParserState)
@@ -81,4 +179,130 @@ int CSSOM_ParserStack_error(const CSSOM_ParserStack *stack,
   const SAC_Error *error)
 {
   return CSSOM__error(stack->cssom, error);
+}
+
+
+
+CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
+  const SAC_STRING propertyName,
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important)
+{
+  return ParserState_setProperty(*CSSOM_Stack_ParserState_top(stack->state),
+    propertyName, value, important);
+}
+
+
+
+CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
+  CSSOM_CSSRule **cssRule)
+{
+  struct _CSSOM_ParserCSSRuleCatcherState *state;
+
+  state = ParserCSSRuleCatcherState_alloc(cssRule);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheetHolder(
+  CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet)
+{
+  struct _CSSOM_ParserCSSStyleSheetHolderState *state;
+
+  state = ParserCSSStyleSheetHolderState_alloc(styleSheet);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return styleSheet;
+}
+
+
+
+CSSOM_CSSPageRule* CSSOM_ParserStack_pushCSSPageRule(
+  CSSOM_ParserStack *stack, const SAC_Selector *selectors[])
+{
+  CSSOM_CSSPageRule *cssRule;
+  struct _CSSOM_ParserCSSPageRuleState *state;
+
+  cssRule = ParserState_appendCSSPageRule(
+    *CSSOM_Stack_ParserState_top(stack->state), selectors);
+  if (cssRule == NULL) return NULL;
+
+  state = ParserCSSPageRuleState_alloc(cssRule);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSMediaRule* CSSOM_ParserStack_pushCSSMediaRule(
+  CSSOM_ParserStack *stack)
+{
+  CSSOM_CSSMediaRule *cssRule;
+  struct _CSSOM_ParserCSSMediaRuleState *state;
+
+  cssRule = ParserState_appendCSSMediaRule(
+    *CSSOM_Stack_ParserState_top(stack->state));
+  if (cssRule == NULL) return NULL;
+
+  state = ParserCSSMediaRuleState_alloc(cssRule);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSStyleRule* CSSOM_ParserStack_pushCSSStyleRule(
+  CSSOM_ParserStack *stack, const SAC_Selector *selectors[])
+{
+  CSSOM_CSSStyleRule *cssRule;
+  struct _CSSOM_ParserCSSStyleRuleState *state;
+
+  cssRule = ParserState_appendCSSStyleRule(
+    *CSSOM_Stack_ParserState_top(stack->state), selectors);
+  if (cssRule == NULL) return NULL;
+
+  state = ParserCSSStyleRuleState_alloc(cssRule);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return cssRule;
 }
