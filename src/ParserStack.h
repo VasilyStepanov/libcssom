@@ -42,7 +42,7 @@ CSSOM_CSSStyleRule* CSSOM_ParserStack_pushCSSStyleRule(
   CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);
 
 int CSSOM_ParserStack_error(const CSSOM_ParserStack *stack,
-  void *userData, const SAC_Error *error);
+  const SAC_Error *error);
 
 
 

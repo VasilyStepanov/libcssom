@@ -1,5 +1,6 @@
 #include "ParserStack.h"
 
+#include "CSSOM.h"
 #include "Stack.h"
 #include "Stack.c"
 #include "memory.h"
@@ -66,4 +67,18 @@ void CSSOM_ParserStack_free(CSSOM_ParserStack *stack) {
 
   CSSOM_Stack_ParserState_free(stack->state);
   CSSOM_free(stack);
+}
+
+
+
+void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack) {
+  CSSOM_Stack_ParserState_pop(stack->state);
+}
+
+
+
+int CSSOM_ParserStack_error(const CSSOM_ParserStack *stack,
+  const SAC_Error *error)
+{
+  return CSSOM__error(stack->cssom, error);
 }

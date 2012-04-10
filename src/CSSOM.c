@@ -157,7 +157,7 @@ static int errorHandler(void *userData, const SAC_Error *error) {
 
   stack = (CSSOM_ParserStack*)userData;
 
-  return CSSOM_ParserStack_error(stack, userData, error);
+  return CSSOM_ParserStack_error(stack, error);
 }
 
 
@@ -253,15 +253,29 @@ void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler) {
 
 
 
-void CSSOM__invalidModificationErr(const CSSOM * cssom) {
+void CSSOM__invalidModificationErr(const CSSOM *cssom) {
   if (cssom->errorHandler != NULL) {
-    CSSOM_Error error;
-    error.line = -1;
-    error.column = -1;
-    error.code = CSSOM_ERROR_INVALID_MODIFICATION_ERR;
-    error.data = "Invalid modification error";
-    cssom->errorHandler(cssom->userData, &error);
+    CSSOM_Error e;
+    e.line = -1;
+    e.column = -1;
+    e.code = CSSOM_ERROR_INVALID_MODIFICATION_ERR;
+    e.data = "Invalid modification error";
+    cssom->errorHandler(cssom->userData, &e);
   }
+}
+
+
+
+int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
+  if (cssom->errorHandler != NULL) {
+    CSSOM_Error e;
+    e.line = error->line;
+    e.column = error->column;
+    e.code = error->code;
+    e.data = error->data;
+    return cssom->errorHandler(cssom->userData, &e);
+  }
+  return 0;
 }
 
 
