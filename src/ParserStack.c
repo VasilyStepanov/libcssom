@@ -134,12 +134,37 @@ static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
 
 struct _CSSOM_ParserCSSStyleSheetHolderState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSStyleSheet *styleSheet;
 };
 
 
 
-struct _CSSOM_ParserCSSStyleSheetHolderState*
-ParserCSSStyleSheetHolderState_alloc(CSSOM_CSSStyleSheet *styleSheet);
+static struct _CSSOM_ParserState_vtable
+ParserCSSStyleSheetHolderState_vtable = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSStyleSheetHolderState*
+ParserCSSStyleSheetHolderState_alloc(CSSOM_CSSStyleSheet *styleSheet)
+{
+  struct _CSSOM_ParserCSSStyleSheetHolderState *state;
+
+  state = (struct _CSSOM_ParserCSSStyleSheetHolderState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSStyleSheetHolderState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSStyleSheetHolderState_vtable);
+  state->styleSheet = styleSheet;
+
+  return state;
+}
 
 
 
@@ -149,12 +174,36 @@ ParserCSSStyleSheetHolderState_alloc(CSSOM_CSSStyleSheet *styleSheet);
 
 struct _CSSOM_ParserCSSPageRuleState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSPageRule *cssRule;
 };
 
 
 
-struct _CSSOM_ParserCSSPageRuleState* ParserCSSPageRuleState_alloc(
-  CSSOM_CSSPageRule *cssRule);
+static struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSPageRuleState* ParserCSSPageRuleState_alloc(
+  CSSOM_CSSPageRule *cssRule)
+{
+  struct _CSSOM_ParserCSSPageRuleState *state;
+
+  state = (struct _CSSOM_ParserCSSPageRuleState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSPageRuleState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSPageRuleState_vtable);
+  state->cssRule = cssRule;
+
+  return state;
+}
 
 
 
@@ -164,12 +213,36 @@ struct _CSSOM_ParserCSSPageRuleState* ParserCSSPageRuleState_alloc(
 
 struct _CSSOM_ParserCSSMediaRuleState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSMediaRule *cssRule;
 };
 
 
 
-struct _CSSOM_ParserCSSMediaRuleState* ParserCSSMediaRuleState_alloc(
-  CSSOM_CSSMediaRule *cssRule);
+static struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSMediaRuleState* ParserCSSMediaRuleState_alloc(
+  CSSOM_CSSMediaRule *cssRule)
+{
+  struct _CSSOM_ParserCSSMediaRuleState *state;
+
+  state = (struct _CSSOM_ParserCSSMediaRuleState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSMediaRuleState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSMediaRuleState_vtable);
+  state->cssRule = cssRule;
+
+  return state;
+}
 
 
 
@@ -179,12 +252,36 @@ struct _CSSOM_ParserCSSMediaRuleState* ParserCSSMediaRuleState_alloc(
 
 struct _CSSOM_ParserCSSStyleRuleState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSStyleRule *cssRule;
 };
 
 
 
-struct _CSSOM_ParserCSSStyleRuleState* ParserCSSStyleRuleState_alloc(
-  CSSOM_CSSStyleRule *cssRule);
+static struct _CSSOM_ParserState_vtable ParserCSSStyleRuleState_vtable = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSStyleRuleState* ParserCSSStyleRuleState_alloc(
+  CSSOM_CSSStyleRule *cssRule)
+{
+  struct _CSSOM_ParserCSSStyleRuleState *state;
+
+  state = (struct _CSSOM_ParserCSSStyleRuleState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSStyleRuleState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSStyleRuleState_vtable);
+  state->cssRule = cssRule;
+
+  return state;
+}
 
 
 
