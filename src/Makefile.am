@@ -46,7 +46,6 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       FSM_CSSProperty.c \
                       ParserState.c \
                       Sequence.c \
-                      Stack_ParserState.c \
                       memory.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)

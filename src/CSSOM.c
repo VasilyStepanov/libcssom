@@ -276,7 +276,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  state = CSSOM_ParserState_alloc();
+  state = CSSOM_ParserState_alloc(cssom);
   if (state == NULL) {
     SAC_DisposeParser(parser);
     return NULL;
@@ -325,7 +325,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
   parser = SAC_CreateParser();
   if (parser == NULL) return NULL;
 
-  state = CSSOM_ParserState_alloc();
+  state = CSSOM_ParserState_alloc(cssom);
   if (state == NULL) {
     SAC_DisposeParser(parser);
     return NULL;

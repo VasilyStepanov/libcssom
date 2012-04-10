@@ -15,7 +15,7 @@ typedef struct _CSSOM_ParserState CSSOM_ParserState;
 
 
 
-CSSOM_ParserState* CSSOM_ParserState_alloc(void);
+CSSOM_ParserState* CSSOM_ParserState_alloc(const CSSOM *cssom);
 
 void CSSOM_ParserState_free(CSSOM_ParserState *state);
 
