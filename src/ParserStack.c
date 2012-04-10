@@ -3,7 +3,12 @@
 #include "CSSOM.h"
 #include "Stack.h"
 #include "Stack.c"
+#include "CSSStyleDeclaration.h"
 #include "memory.h"
+
+#include <cssom/CSSStyleRule.h>
+
+#include <sacc.h>
 
 
 
@@ -28,8 +33,6 @@ struct _CSSOM_ParserState_vtable {
   CSSOM_CSSStyleRule* (*appendCSSStyleRule)(
     struct _CSSOM_ParserState *, const SAC_Selector *[]);
 
-  void (*free)(struct _CSSOM_ParserState *);
-
 };
 
 
@@ -49,18 +52,18 @@ static void ParserState_ctor(struct _CSSOM_ParserState *state,
 
 
 static void ParserState_free(struct _CSSOM_ParserState *state) {
-  state->vtable->free(state);
+  CSSOM_free(state);
 }
 
 
 
 static CSSOM_CSSProperty* ParserState_setProperty(
   struct _CSSOM_ParserState *state,
-  const SAC_STRING propertyName,
+  const SAC_STRING property,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  return state->vtable->setProperty(state, propertyName, value, important);
+  return state->vtable->setProperty(state, property, value, important);
 }
 
 
@@ -104,7 +107,6 @@ static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
   NULL,
   NULL,
   NULL,
-  NULL,
   NULL
 };
 
@@ -141,7 +143,6 @@ struct _CSSOM_ParserCSSStyleSheetHolderState {
 
 static struct _CSSOM_ParserState_vtable
 ParserCSSStyleSheetHolderState_vtable = {
-  NULL,
   NULL,
   NULL,
   NULL,
@@ -183,7 +184,6 @@ static struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
   NULL,
   NULL,
   NULL,
-  NULL,
   NULL
 };
 
@@ -222,7 +222,6 @@ static struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
   NULL,
   NULL,
   NULL,
-  NULL,
   NULL
 };
 
@@ -257,9 +256,23 @@ struct _CSSOM_ParserCSSStyleRuleState {
 
 
 
+static CSSOM_CSSProperty* ParserCSSStyleRuleState_setProperty(
+  struct _CSSOM_ParserCSSStyleRuleState *state,
+  const SAC_STRING property,
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important)
+{
+  return CSSOM_CSSStyleDeclaration__setProperty(
+    CSSOM_CSSStyleRule_style(state->cssRule),
+    property, value, important);
+}
+
+
+
 static struct _CSSOM_ParserState_vtable ParserCSSStyleRuleState_vtable = {
-  NULL,
-  NULL,
+  (CSSOM_CSSProperty* (*)(struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_LexicalUnit *, SAC_Boolean))
+  ParserCSSStyleRuleState_setProperty,
   NULL,
   NULL,
   NULL
@@ -352,12 +365,12 @@ int CSSOM_ParserStack_error(const CSSOM_ParserStack *stack,
 
 
 CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
-  const SAC_STRING propertyName,
+  const SAC_STRING property,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
   return ParserState_setProperty(*CSSOM_Stack_ParserState_top(stack->state),
-    propertyName, value, important);
+    property, value, important);
 }
 
 
