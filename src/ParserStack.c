@@ -7,38 +7,85 @@
 
 
 
-struct _CSSOM_ParserState {
-  int dummy;
+struct _CSSOM_ParserState;
+
+
+
+struct _CSSOM_ParserState_vtable {
+
+  CSSOM_CSSProperty* (*setProperty)(
+    struct _CSSOM_ParserState *,
+    const SAC_STRING,
+    const SAC_LexicalUnit *,
+    SAC_Boolean);
+
+  CSSOM_CSSPageRule* (*appendCSSPageRule)(
+    struct _CSSOM_ParserState *, const SAC_Selector *[]);
+
+  CSSOM_CSSMediaRule* (*appendCSSMediaRule)(
+    struct _CSSOM_ParserState *state);
+
+  CSSOM_CSSStyleRule* (*appendCSSStyleRule)(
+    struct _CSSOM_ParserState *, const SAC_Selector *[]);
+
+  void (*free)(struct _CSSOM_ParserState *);
+
 };
 
 
 
-static void ParserState_free(struct _CSSOM_ParserState *state) {
-  CSSOM_free(state);
+struct _CSSOM_ParserState {
+  struct _CSSOM_ParserState_vtable *vtable;
+};
+
+
+
+static void ParserState_ctor(struct _CSSOM_ParserState *state,
+  struct _CSSOM_ParserState_vtable *vtable)
+{
+  state->vtable = vtable;
 }
 
 
 
-CSSOM_CSSProperty* ParserState_setProperty(
+static void ParserState_free(struct _CSSOM_ParserState *state) {
+  state->vtable->free(state);
+}
+
+
+
+static CSSOM_CSSProperty* ParserState_setProperty(
   struct _CSSOM_ParserState *state,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
-  SAC_Boolean important);
+  SAC_Boolean important)
+{
+  return state->vtable->setProperty(state, propertyName, value, important);
+}
 
 
 
-CSSOM_CSSPageRule* ParserState_appendCSSPageRule(
-  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[]);
+static CSSOM_CSSPageRule* ParserState_appendCSSPageRule(
+  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[])
+{
+  return state->vtable->appendCSSPageRule(state, selectors);
+}
 
 
 
-CSSOM_CSSMediaRule* ParserState_appendCSSMediaRule(
-  struct _CSSOM_ParserState *state);
+static CSSOM_CSSMediaRule* ParserState_appendCSSMediaRule(
+  struct _CSSOM_ParserState *state)
+{
+  return state->vtable->appendCSSMediaRule(state);
+}
 
 
 
-CSSOM_CSSStyleRule* ParserState_appendCSSStyleRule(
-  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[]);
+static CSSOM_CSSStyleRule* ParserState_appendCSSStyleRule(
+  struct _CSSOM_ParserState *state, const SAC_Selector *selectors[])
+{
+  return state->vtable->appendCSSStyleRule(state, selectors);
+}
 
 
 
@@ -48,12 +95,36 @@ CSSOM_CSSStyleRule* ParserState_appendCSSStyleRule(
 
 struct _CSSOM_ParserCSSRuleCatcherState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSRule **cssRule;
 };
 
 
 
-struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
-  CSSOM_CSSRule **cssRule);
+static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
+  CSSOM_CSSRule **cssRule)
+{
+  struct _CSSOM_ParserCSSRuleCatcherState *state;
+
+  state = (struct _CSSOM_ParserCSSRuleCatcherState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSRuleCatcherState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSRuleCatcherState_vtable);
+  state->cssRule = cssRule;
+
+  return state;
+}
 
 
 
