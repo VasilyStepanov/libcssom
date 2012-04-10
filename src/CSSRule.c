@@ -69,7 +69,7 @@ struct _CSSOM_CSSRule {
 
 
 
-static void CSSRule_init(CSSOM_CSSRule *cssRule,
+static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
   struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSStyleSheet *parentStyleSheet,
   unsigned short type)
 {
@@ -228,7 +228,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
     return NULL;
   }
 
-  CSSRule_init((CSSOM_CSSRule*)cssRule,
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
     &CSSStyleRule_vtable, parentStyleSheet, CSSOM_CSSRule_STYLE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
@@ -326,7 +326,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
     return NULL;
   }
 
-  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
   cssRule->cssRules = cssRules;
@@ -377,7 +377,7 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
     sizeof(CSSOM_CSSNamespaceRule));
   if (cssRule == NULL) return NULL;
 
-  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSNamespaceRule_vtable,
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSNamespaceRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_NAMESPACE_RULE);
 
   return cssRule;
@@ -431,7 +431,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
     return NULL;
   }
 
-  CSSRule_init((CSSOM_CSSRule*)cssRule, &CSSPageRule_vtable,
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSPageRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_PAGE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
