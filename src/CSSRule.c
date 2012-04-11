@@ -126,7 +126,8 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(cssRule->parentStyleSheet);
-  newCSSRule = CSSOM__parseCSSRule(cssom, cssText, strlen(cssText));
+  newCSSRule = CSSOM__parseCSSRule(cssom, cssRule->parentStyleSheet,
+    cssText, strlen(cssText));
   if (newCSSRule == NULL) return;
 
   if (CSSOM_CSSRule_type(newCSSRule) != CSSOM_CSSRule_type(cssRule)) {

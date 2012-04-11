@@ -329,7 +329,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
 
 
 CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
-  const char *cssText, int len)
+  CSSOM_CSSStyleSheet *styleSheet, const char *cssText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -345,7 +345,9 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
   }
 
   cssRule = NULL;
-  if (CSSOM_ParserStack_pushCSSRuleCatcher(stack, &cssRule) == NULL) {
+  if (CSSOM_ParserStack_pushCSSRuleCatcher(stack,
+    styleSheet, &cssRule) == NULL)
+  {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
     return NULL;

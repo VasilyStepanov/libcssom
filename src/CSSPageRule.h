@@ -3,8 +3,6 @@
 
 #include <cssom/CSSPageRule.h>
 
-#include "FSM_CSSProperty.h"
-
 #include <sacc.h>
 
 #ifdef __cplusplus

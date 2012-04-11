@@ -277,8 +277,23 @@ struct _CSSOM_ParserCSSPageRuleState {
 
 
 
+static CSSOM_CSSProperty* ParserCSSPageRuleState_setProperty(
+  struct _CSSOM_ParserCSSPageRuleState *state,
+  const SAC_STRING property,
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important)
+{
+  return CSSOM_CSSStyleDeclaration__setProperty(
+    CSSOM_CSSPageRule_style(state->cssRule),
+    property, value, important);
+}
+
+
+
 static struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
-  NULL,
+  (CSSOM_CSSProperty* (*)(struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_LexicalUnit *, SAC_Boolean))
+  ParserCSSPageRuleState_setProperty,
   NULL,
   NULL,
   NULL
@@ -473,11 +488,11 @@ CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
 
 
 CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
-  CSSOM_CSSRule **cssRule)
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule **cssRule)
 {
   struct _CSSOM_ParserCSSRuleCatcherState *state;
 
-  state = ParserCSSRuleCatcherState_alloc(NULL, cssRule);
+  state = ParserCSSRuleCatcherState_alloc(styleSheet, cssRule);
   if (state == NULL) return NULL;
 
   if (CSSOM_Stack_ParserState_push(stack->state,

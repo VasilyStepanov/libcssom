@@ -16,7 +16,7 @@ void CSSOM_acquire(CSSOM *cssom);
 void CSSOM_release(CSSOM *cssom);
 
 CSSOM_CSSRule * CSSOM__parseCSSRule(const CSSOM *cssom,
-  const char * cssText, int len);
+  CSSOM_CSSStyleSheet *styleSheet, const char * cssText, int len);
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 
