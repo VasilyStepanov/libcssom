@@ -1,6 +1,9 @@
 #include "ParserStack.h"
 
+#include "CSSMediaRule.h"
 #include "CSSOM.h"
+#include "CSSPageRule.h"
+#include "CSSStyleRule.h"
 #include "Stack.h"
 #include "Stack.c"
 #include "CSSStyleDeclaration.h"
@@ -10,6 +13,8 @@
 #include <cssom/CSSStyleRule.h>
 
 #include <sacc.h>
+
+#include <assert.h>
 
 
 
@@ -99,22 +104,81 @@ static CSSOM_CSSStyleRule* ParserState_appendCSSStyleRule(
 
 struct _CSSOM_ParserCSSRuleCatcherState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSStyleSheet *styleSheet;
   CSSOM_CSSRule **cssRule;
 };
 
 
 
+static CSSOM_CSSPageRule* ParserCSSRuleCatcherState_appendCSSPageRule(
+  struct _CSSOM_ParserCSSRuleCatcherState *state,
+  const SAC_Selector *selectors[])
+{
+  CSSOM_CSSPageRule *cssRule;
+
+  assert(*state->cssRule == NULL);
+
+  cssRule = CSSOM_CSSPageRule__alloc(state->styleSheet, selectors);
+  if (cssRule == NULL) return NULL;
+
+  *state->cssRule = (CSSOM_CSSRule*)cssRule;
+
+  return cssRule;
+}
+
+
+
+static CSSOM_CSSMediaRule* ParserCSSRuleCatcherState_appendCSSMediaRule(
+  struct _CSSOM_ParserCSSRuleCatcherState *state)
+{
+  CSSOM_CSSMediaRule *cssRule;
+
+  assert(*state->cssRule == NULL);
+
+  cssRule = CSSOM_CSSMediaRule__alloc(state->styleSheet);
+  if (cssRule == NULL) return NULL;
+
+  *state->cssRule = (CSSOM_CSSRule*)cssRule;
+
+  return cssRule;
+}
+
+
+
+static CSSOM_CSSStyleRule* ParserCSSRuleCatcherState_appendCSSStyleRule(
+  struct _CSSOM_ParserCSSRuleCatcherState *state,
+  const SAC_Selector *selectors[])
+{
+  CSSOM_CSSStyleRule *cssRule;
+
+  assert(*state->cssRule == NULL);
+
+  cssRule = CSSOM_CSSStyleRule__alloc(state->styleSheet, selectors);
+  if (cssRule == NULL) return NULL;
+
+  *state->cssRule = (CSSOM_CSSRule*)cssRule;
+
+  return cssRule;
+}
+
+
+
 static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
   NULL,
-  NULL,
-  NULL,
-  NULL
+  (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSRuleCatcherState_appendCSSPageRule,
+  (CSSOM_CSSMediaRule* (*)(struct _CSSOM_ParserState *))
+  ParserCSSRuleCatcherState_appendCSSMediaRule,
+  (CSSOM_CSSStyleRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSRuleCatcherState_appendCSSStyleRule
 };
 
 
 
 static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
-  CSSOM_CSSRule **cssRule)
+  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule **cssRule)
 {
   struct _CSSOM_ParserCSSRuleCatcherState *state;
 
@@ -124,6 +188,7 @@ static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
 
   ParserState_ctor((struct _CSSOM_ParserState*)state,
     &ParserCSSRuleCatcherState_vtable);
+  state->styleSheet = styleSheet;
   state->cssRule = cssRule;
 
   return state;
@@ -412,7 +477,7 @@ CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
 {
   struct _CSSOM_ParserCSSRuleCatcherState *state;
 
-  state = ParserCSSRuleCatcherState_alloc(cssRule);
+  state = ParserCSSRuleCatcherState_alloc(NULL, cssRule);
   if (state == NULL) return NULL;
 
   if (CSSOM_Stack_ParserState_push(stack->state,

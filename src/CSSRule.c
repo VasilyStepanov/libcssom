@@ -213,13 +213,13 @@ static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
-  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[])
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
 
-  style = CSSOM_CSSStyleDeclaration__alloc(table);
+  style = CSSOM_CSSStyleDeclaration__alloc(
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
   if (style == NULL) return NULL;
 
   cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
@@ -415,13 +415,13 @@ static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
 
 
 CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
-  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[])
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSPageRule *cssRule;
 
-  style = CSSOM_CSSStyleDeclaration__alloc(table);
+  style = CSSOM_CSSStyleDeclaration__alloc(
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
   if (style == NULL) return NULL;
 
   cssRule = (CSSOM_CSSPageRule*)CSSOM_malloc(

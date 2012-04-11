@@ -89,8 +89,7 @@ CSSOM_CSSPageRule* CSSOM_CSSStyleSheet__appendCSSPageRule(
 {
   CSSOM_CSSPageRule *cssRule;
 
-  cssRule = CSSOM_CSSPageRule__alloc(styleSheet,
-    CSSOM__table(styleSheet->cssom), selectors);
+  cssRule = CSSOM_CSSPageRule__alloc(styleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(styleSheet->cssRules,
@@ -130,8 +129,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleSheet__appendCSSStyleRule(
 {
   CSSOM_CSSStyleRule *cssRule;
 
-  cssRule = CSSOM_CSSStyleRule__alloc(styleSheet,
-    CSSOM__table(styleSheet->cssom), selectors);
+  cssRule = CSSOM_CSSStyleRule__alloc(styleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(styleSheet->cssRules,

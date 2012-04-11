@@ -3,8 +3,6 @@
 
 #include <cssom/CSSStyleRule.h>
 
-#include "FSM_CSSProperty.h"
-
 #include <sacc.h>
 
 #ifdef __cplusplus
@@ -14,8 +12,7 @@ extern "C" {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
-  const CSSOM_FSMTable_CSSProperty *table, const SAC_Selector *selectors[]);
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[]);
 
 
 

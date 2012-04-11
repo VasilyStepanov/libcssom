@@ -5,7 +5,6 @@ AM_CFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
             $(SACC_CFLAGS)
 
 test_suite_SOURCES = test_CSSOM.c \
-                     test_CSSRule.c \
                      test_Deque.c \
                      test_List.c \
                      test_FSM.c \
