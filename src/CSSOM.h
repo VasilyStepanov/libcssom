@@ -3,6 +3,8 @@
 
 #include <cssom/CSSOM.h>
 
+#include "FSM_CSSProperty.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,6 +21,8 @@ CSSOM_CSSRule * CSSOM__parseCSSRule(const CSSOM *cssom,
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 
 int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);
+
+const CSSOM_FSMTable_CSSProperty* CSSOM__table(const CSSOM *cssom);
 
 
 

@@ -29,7 +29,7 @@ void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack);
 CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
   CSSOM_CSSRule **cssRule);
 
-CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheetHolder(
+CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
   CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet);
 
 CSSOM_CSSPageRule* CSSOM_ParserStack_pushCSSPageRule(

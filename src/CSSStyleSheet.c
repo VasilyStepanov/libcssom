@@ -1,6 +1,10 @@
 #include "CSSStyleSheet.h"
 
+#include "CSSMediaRule.h"
+#include "CSSOM.h"
+#include "CSSPageRule.h"
 #include "CSSRuleList.h"
+#include "CSSStyleRule.h"
 #include "Sequence.h"
 #include "memory.h"
 
@@ -80,9 +84,63 @@ CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
 
 
 
-CSSOM_CSSRule* CSSOM_CSSStyleSheet__append(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule *cssRule)
+CSSOM_CSSPageRule* CSSOM_CSSStyleSheet__appendCSSPageRule(
+  CSSOM_CSSStyleSheet *styleSheet, const SAC_Selector *selectors[])
 {
-  return CSSOM_Sequence__append(styleSheet->cssRules, cssRule);
+  CSSOM_CSSPageRule *cssRule;
+
+  cssRule = CSSOM_CSSPageRule__alloc(styleSheet,
+    CSSOM__table(styleSheet->cssom), selectors);
+  if (cssRule == NULL) return NULL;
+
+  if (CSSOM_Sequence__append(styleSheet->cssRules,
+    (CSSOM_CSSRule*)cssRule) == NULL)
+  {
+    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSMediaRule* CSSOM_CSSStyleSheet__appendCSSMediaRule(
+  CSSOM_CSSStyleSheet *styleSheet)
+{
+  CSSOM_CSSMediaRule *cssRule;
+
+  cssRule = CSSOM_CSSMediaRule__alloc(styleSheet);
+  if (cssRule == NULL) return NULL;
+
+  if (CSSOM_Sequence__append(styleSheet->cssRules,
+    (CSSOM_CSSRule*)cssRule) == NULL)
+  {
+    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSStyleRule* CSSOM_CSSStyleSheet__appendCSSStyleRule(
+  CSSOM_CSSStyleSheet *styleSheet, const SAC_Selector *selectors[])
+{
+  CSSOM_CSSStyleRule *cssRule;
+
+  cssRule = CSSOM_CSSStyleRule__alloc(styleSheet,
+    CSSOM__table(styleSheet->cssom), selectors);
+  if (cssRule == NULL) return NULL;
+
+  if (CSSOM_Sequence__append(styleSheet->cssRules,
+    (CSSOM_CSSRule*)cssRule) == NULL)
+  {
+    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
+  return cssRule;
 }
 

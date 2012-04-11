@@ -7,7 +7,6 @@
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleSheet.h"
-#include "FSM_CSSProperty.h"
 #include "ParserStack.h"
 #include "gcc.h"
 #include "memory.h"
@@ -303,7 +302,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
-  if (CSSOM_ParserStack_pushCSSStyleSheetHolder(stack, styleSheet) == NULL) {
+  if (CSSOM_ParserStack_pushCSSStyleSheet(stack, styleSheet) == NULL) {
     CSSOM_CSSStyleSheet_release(styleSheet);
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -367,4 +366,10 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
   CSSOM_ParserStack_free(stack);
 
   return cssRule;
+}
+
+
+
+const CSSOM_FSMTable_CSSProperty* CSSOM__table(const CSSOM *cssom) {
+  return cssom->table;
 }

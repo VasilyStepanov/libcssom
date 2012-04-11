@@ -4,6 +4,7 @@
 #include "Stack.h"
 #include "Stack.c"
 #include "CSSStyleDeclaration.h"
+#include "CSSStyleSheet.h"
 #include "memory.h"
 
 #include <cssom/CSSStyleRule.h>
@@ -28,7 +29,7 @@ struct _CSSOM_ParserState_vtable {
     struct _CSSOM_ParserState *, const SAC_Selector *[]);
 
   CSSOM_CSSMediaRule* (*appendCSSMediaRule)(
-    struct _CSSOM_ParserState *state);
+    struct _CSSOM_ParserState *);
 
   CSSOM_CSSStyleRule* (*appendCSSStyleRule)(
     struct _CSSOM_ParserState *, const SAC_Selector *[]);
@@ -131,37 +132,68 @@ static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
 
 
 /**
- * CSSStyleSheetHolder
+ * CSSStyleSheet
  */
 
-struct _CSSOM_ParserCSSStyleSheetHolderState {
+struct _CSSOM_ParserCSSStyleSheetState {
   struct _CSSOM_ParserState super;
   CSSOM_CSSStyleSheet *styleSheet;
 };
 
 
 
+static CSSOM_CSSPageRule* ParserCSSStyleSheetState_appendCSSPageRule(
+  struct _CSSOM_ParserCSSStyleSheetState *state,
+  const SAC_Selector *selectors[])
+{
+  return CSSOM_CSSStyleSheet__appendCSSPageRule(state->styleSheet, selectors);
+}
+
+
+
+static CSSOM_CSSMediaRule* ParserCSSStyleSheetState_appendCSSMediaRule(
+  struct _CSSOM_ParserCSSStyleSheetState *state)
+{
+  return CSSOM_CSSStyleSheet__appendCSSMediaRule(state->styleSheet);
+}
+
+
+
+static CSSOM_CSSStyleRule* ParserCSSStyleSheetState_appendCSSStyleRule(
+  struct _CSSOM_ParserCSSStyleSheetState *state,
+  const SAC_Selector *selectors[])
+{
+  return CSSOM_CSSStyleSheet__appendCSSStyleRule(state->styleSheet, selectors);
+}
+
+
+
 static struct _CSSOM_ParserState_vtable
-ParserCSSStyleSheetHolderState_vtable = {
+ParserCSSStyleSheetState_vtable = {
   NULL,
-  NULL,
-  NULL,
-  NULL
+  (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSStyleSheetState_appendCSSPageRule,
+  (CSSOM_CSSMediaRule* (*)(struct _CSSOM_ParserState *))
+  ParserCSSStyleSheetState_appendCSSMediaRule,
+  (CSSOM_CSSStyleRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSStyleSheetState_appendCSSStyleRule
 };
 
 
 
-static struct _CSSOM_ParserCSSStyleSheetHolderState*
-ParserCSSStyleSheetHolderState_alloc(CSSOM_CSSStyleSheet *styleSheet)
+static struct _CSSOM_ParserCSSStyleSheetState*
+ParserCSSStyleSheetState_alloc(CSSOM_CSSStyleSheet *styleSheet)
 {
-  struct _CSSOM_ParserCSSStyleSheetHolderState *state;
+  struct _CSSOM_ParserCSSStyleSheetState *state;
 
-  state = (struct _CSSOM_ParserCSSStyleSheetHolderState*)CSSOM_malloc(
-    sizeof(struct _CSSOM_ParserCSSStyleSheetHolderState));
+  state = (struct _CSSOM_ParserCSSStyleSheetState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSStyleSheetState));
   if (state == NULL) return NULL;
 
   ParserState_ctor((struct _CSSOM_ParserState*)state,
-    &ParserCSSStyleSheetHolderState_vtable);
+    &ParserCSSStyleSheetState_vtable);
   state->styleSheet = styleSheet;
 
   return state;
@@ -395,12 +427,12 @@ CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
 
 
 
-CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheetHolder(
+CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
   CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet)
 {
-  struct _CSSOM_ParserCSSStyleSheetHolderState *state;
+  struct _CSSOM_ParserCSSStyleSheetState *state;
 
-  state = ParserCSSStyleSheetHolderState_alloc(styleSheet);
+  state = ParserCSSStyleSheetState_alloc(styleSheet);
   if (state == NULL) return NULL;
 
   if (CSSOM_Stack_ParserState_push(stack->state,
