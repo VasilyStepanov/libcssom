@@ -279,6 +279,17 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
 
 
 
+static void parserSetup(SAC_Parser parser, CSSOM_ParserStack *stack) {
+  SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
+  SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
+  SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
+  SAC_SetPropertyHandler(parser, propertyHandler);
+  SAC_SetUserData(parser, stack);
+  SAC_SetErrorHandler(parser, errorHandler);
+}
+
+
+
 CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
   const char *cssText, int len)
 {
@@ -309,12 +320,8 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
-  SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
-  SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
-  SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
-  SAC_SetPropertyHandler(parser, propertyHandler);
-  SAC_SetUserData(parser, stack);
-  SAC_SetErrorHandler(parser, errorHandler);
+  parserSetup(parser, stack);
+
   SAC_ParseStyleSheet(parser, cssText, len);
 
   /**
@@ -328,7 +335,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
 
 
 
-CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
+CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   CSSOM_CSSStyleSheet *styleSheet, const char *cssText, int len)
 {
   SAC_Parser parser;
@@ -353,12 +360,8 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom CSSOM_UNUSED,
     return NULL;
   }
 
-  SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
-  SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
-  SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
-  SAC_SetPropertyHandler(parser, propertyHandler);
-  SAC_SetUserData(parser, stack);
-  SAC_SetErrorHandler(parser, errorHandler);
+  parserSetup(parser, stack);
+
   SAC_ParseRule(parser, cssText, len);
 
   /**
