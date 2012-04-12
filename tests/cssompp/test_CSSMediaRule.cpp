@@ -39,7 +39,7 @@ namespace test {
 
 
 void cssMediaRule() {
-  // cssRules();
+  cssRules();
 }
 
 

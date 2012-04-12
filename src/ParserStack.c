@@ -337,11 +337,50 @@ struct _CSSOM_ParserCSSMediaRuleState {
 
 
 
+static CSSOM_CSSPageRule* ParserCSSMediaRuleState_appendCSSPageRule(
+  struct _CSSOM_ParserCSSMediaRuleState *state,
+  const SAC_Selector *selectors[])
+{
+  return CSSOM_CSSRuleList__appendCSSPageRule(
+    CSSOM_CSSMediaRule_cssRules(state->cssRule),
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)state->cssRule),
+    selectors);
+}
+
+
+
+static CSSOM_CSSMediaRule* ParserCSSMediaRuleState_appendCSSMediaRule(
+  struct _CSSOM_ParserCSSMediaRuleState *state)
+{
+  return CSSOM_CSSRuleList__appendCSSMediaRule(
+    CSSOM_CSSMediaRule_cssRules(state->cssRule),
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)state->cssRule));
+}
+
+
+
+static CSSOM_CSSStyleRule* ParserCSSMediaRuleState_appendCSSStyleRule(
+  struct _CSSOM_ParserCSSMediaRuleState *state,
+  const SAC_Selector *selectors[])
+{
+  return CSSOM_CSSRuleList__appendCSSStyleRule(
+    CSSOM_CSSMediaRule_cssRules(state->cssRule),
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)state->cssRule),
+    selectors);
+}
+
+
+
 static struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
   NULL,
-  NULL,
-  NULL,
-  NULL
+  (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSMediaRuleState_appendCSSPageRule,
+  (CSSOM_CSSMediaRule* (*)(struct _CSSOM_ParserState *))
+  ParserCSSMediaRuleState_appendCSSMediaRule,
+  (CSSOM_CSSStyleRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_Selector *[]))
+  ParserCSSMediaRuleState_appendCSSStyleRule
 };
 
 
