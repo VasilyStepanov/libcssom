@@ -39,6 +39,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
                       CSSProperty.c \
                       CSSRule.c \
+                      CSSRuleList.c \
                       CSSStyleDeclaration.c \
                       CSSStyleSheet.c \
                       Deque_CSSRule.c \

@@ -3,6 +3,7 @@
 #include "CSSMediaRule.h"
 #include "CSSOM.h"
 #include "CSSPageRule.h"
+#include "CSSRuleList.h"
 #include "CSSStyleRule.h"
 #include "Stack.h"
 #include "Stack.c"
@@ -211,7 +212,9 @@ static CSSOM_CSSPageRule* ParserCSSStyleSheetState_appendCSSPageRule(
   struct _CSSOM_ParserCSSStyleSheetState *state,
   const SAC_Selector *selectors[])
 {
-  return CSSOM_CSSStyleSheet__appendCSSPageRule(state->styleSheet, selectors);
+  return CSSOM_CSSRuleList__appendCSSPageRule(
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet),
+    state->styleSheet, selectors);
 }
 
 
@@ -219,7 +222,9 @@ static CSSOM_CSSPageRule* ParserCSSStyleSheetState_appendCSSPageRule(
 static CSSOM_CSSMediaRule* ParserCSSStyleSheetState_appendCSSMediaRule(
   struct _CSSOM_ParserCSSStyleSheetState *state)
 {
-  return CSSOM_CSSStyleSheet__appendCSSMediaRule(state->styleSheet);
+  return CSSOM_CSSRuleList__appendCSSMediaRule(
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet),
+    state->styleSheet);
 }
 
 
@@ -228,7 +233,9 @@ static CSSOM_CSSStyleRule* ParserCSSStyleSheetState_appendCSSStyleRule(
   struct _CSSOM_ParserCSSStyleSheetState *state,
   const SAC_Selector *selectors[])
 {
-  return CSSOM_CSSStyleSheet__appendCSSStyleRule(state->styleSheet, selectors);
+  return CSSOM_CSSRuleList__appendCSSStyleRule(
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet),
+    state->styleSheet, selectors);
 }
 
 
