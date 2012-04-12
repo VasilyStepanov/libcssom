@@ -22,10 +22,10 @@ void selectorText() {
 " color : green;\n"
 "}\n"
   );
-  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("p"), style.selectorText());
+  assertEquals(std::string("p"), cssRule.selectorText());
 }
 
 

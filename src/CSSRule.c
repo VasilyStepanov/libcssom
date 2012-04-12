@@ -304,10 +304,47 @@ static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
 
 
 
+static void CSSMediaRule_swap(
+  CSSOM_CSSMediaRule *lhs, CSSOM_CSSMediaRule *rhs)
+{
+  CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->cssRules, rhs->cssRules);
+}
+
+
+
+static const char* CSSMediaRule_cssText(const CSSOM_CSSMediaRule *cssRule) {
+  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_cssMediaRule(out, cssRule) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+  }
+  return ((CSSOM_CSSRule*)cssRule)->cssText;
+}
+
+
+
 static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSMediaRule_free,
-  NULL,
-  NULL
+  (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSMediaRule_swap,
+  (const char*(*)(const CSSOM_CSSRule*))&CSSMediaRule_cssText
 };
 
 

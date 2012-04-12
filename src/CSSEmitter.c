@@ -1,9 +1,11 @@
 #include "CSSEmitter.h"
 
-#include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
+#include "CSSStyleRule.h"
 
+#include <cssom/CSSMediaRule.h>
 #include <cssom/CSSProperty.h>
+#include <cssom/CSSRuleList.h>
 
 #include <stdio.h>
 
@@ -494,6 +496,60 @@ int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
     if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
   }
 
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
+  unsigned short type = CSSOM_CSSRule_type(cssRule);
+
+  if (type == CSSOM_CSSRule_STYLE_RULE) {
+    if (CSSOM_CSSEmitter_cssStyleRule(out, (CSSOM_CSSStyleRule*)cssRule) != 0) {
+      return 1;
+    }
+  } else if (type == CSSOM_CSSRule_MEDIA_RULE) {
+    if (CSSOM_CSSEmitter_cssMediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
+  size_t size;
+  size_t i;
+
+  size = CSSOM_CSSRuleList_size(cssRules);
+  if (size != 0) {
+    CSSOM_CSSRule *cssRule;
+
+    cssRule = CSSOM_CSSRuleList_at(cssRules, 0);
+    CSSOM_CSSEmitter_cssRule(out, cssRule);
+
+    for (i = 1; i < size; ++i) {
+      if (fprintf(out, " ") < 0) return 1;
+
+      cssRule = CSSOM_CSSRuleList_at(cssRules, i);
+      CSSOM_CSSEmitter_cssRule(out, cssRule);
+    }
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
+  const CSSOM_CSSMediaRule *cssRule)
+{
+  if (fprintf(out, "@media ") < 0) return 1;
+  if (fprintf(out, "{ ") < 0) return 1;
+  CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule));
+  if (fprintf(out, " }") < 0) return 1;
   return 0;
 }
 

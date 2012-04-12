@@ -43,10 +43,10 @@ void type() {
 " color : green;\n"
 "}\n"
   );
-  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
 
-  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
 }
 
 
@@ -79,7 +79,7 @@ void cssText() {
 " color : green;\n"
 "}\n"
   );
-  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
   std::string cssText;
 
@@ -90,7 +90,7 @@ void cssText() {
    */
 
   cssText = "p { color : green; }";
-  assertEquals(cssText, style.cssText());
+  assertEquals(cssText, cssRule.cssText());
 
 
 
@@ -98,27 +98,27 @@ void cssText() {
    * setCSSText()
    */
 
-  style.setCSSText(
+  cssRule.setCSSText(
 "div {\n"
 " background-color : green;\n"
 "}\n"
   );
   cssText = "div { background-color : green; }";
-  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assertEquals(cssText, style.cssText());
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
+  assertEquals(cssText, cssRule.cssText());
 
 
 
-  style.setCSSText("invalid");
-  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assertEquals(cssText, style.cssText());
+  cssRule.setCSSText("invalid");
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
+  assertEquals(cssText, cssRule.cssText());
 
 
 
   assert(errors.invalidModificationErrors == 0);
-  style.setCSSText("@page {}");
-  assert(style.type() == cssom::CSSStyleRule::STYLE_RULE);
-  assertEquals(cssText, style.cssText());
+  cssRule.setCSSText("@page {}");
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
+  assertEquals(cssText, cssRule.cssText());
   assert(errors.invalidModificationErrors == 1);
 }
 
@@ -131,10 +131,10 @@ void selectorText() {
 " color : green;\n"
 "}\n"
   );
-  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
 
-  assertEquals(std::string("p"), style.selectorText());
+  assertEquals(std::string("p"), cssRule.selectorText());
 }
 
 
@@ -146,23 +146,23 @@ void parentStyleSheet() {
 " color : green;\n"
 "}\n"
   );
-  cssom::CSSStyleRule style = cssom::CSSStyleRule::cast(
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
     styleSheet.cssRules()[0]);
 
-  assert(style.parentStyleSheet() == styleSheet);
+  assert(cssRule.parentStyleSheet() == styleSheet);
 
 
   /**
    * Test on swap.
    */
 
-  style.setCSSText(
+  cssRule.setCSSText(
 "div {\n"
 " background-color : green;\n"
 "}\n"
   );
 
-  assert(style.parentStyleSheet() == styleSheet);
+  assert(cssRule.parentStyleSheet() == styleSheet);
 }
 
 
