@@ -32,6 +32,10 @@ class CSSMediaRule : public cssom::CSSRule {
     explicit CSSMediaRule(CSSOM_CSSMediaRule * impl);
 
     cssom::CSSRuleList cssRules() const;
+
+    unsigned long insertRule(const char * rule, unsigned long index);
+
+    void deleteRule(unsigned long index);
 };
 
 

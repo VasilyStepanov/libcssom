@@ -15,7 +15,7 @@ extern "C" {
 
 
 #define CSSOM_CSSRuleList__alloc() \
-  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule__free);
+  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule__free)
 
 CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
   CSSOM_CSSRuleList *cssRules,

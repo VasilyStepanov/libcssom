@@ -60,4 +60,16 @@ cssom::CSSRuleList CSSMediaRule::cssRules() const {
 
 
 
+unsigned long CSSMediaRule::insertRule(const char * rule, unsigned long index) {
+  return CSSOM_CSSMediaRule_insertRule(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), rule, index);
+}
+
+
+
+void CSSMediaRule::deleteRule(unsigned long index) {
+  return CSSOM_CSSMediaRule_deleteRule(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), index);
+}
+
+
+
 } // cssom

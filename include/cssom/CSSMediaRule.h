@@ -29,6 +29,14 @@ CSSOM_CSSRuleList* CSSOM_CSSMediaRule_cssRules(const CSSOM_CSSMediaRule * cssMed
 
 
 
+unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssMediaRule, const char * rule, unsigned long index);
+
+
+
+void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssMediaRule, unsigned long index);
+
+
+
 #ifdef __cplusplus
 }
 #endif

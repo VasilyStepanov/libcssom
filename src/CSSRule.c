@@ -137,7 +137,6 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   
   CSSOM_native_free(cssRule->cssText);
   cssRule->cssText = NULL;
-  newCSSRule->parentStyleSheet = cssRule->parentStyleSheet;
   CSSRule_swap(cssRule, newCSSRule);
 
   CSSOM_CSSRule__free(newCSSRule);
@@ -519,3 +518,54 @@ const char* CSSOM_CSSPageRule_selectorText(
   }
   return cssRule->selectorText;
 }
+
+
+
+unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
+  const char * rule, unsigned long index)
+{
+  CSSOM_CSSRule *newCSSRule;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
+  if (index > CSSOM_Sequence_size(cssRule->cssRules)) {
+    CSSOM__invalidModificationErr(cssom);
+    return (unsigned long)-1;
+  }
+
+  newCSSRule = CSSOM__parseCSSRule(cssom,
+    ((CSSOM_CSSRule*)cssRule)->parentStyleSheet, rule, strlen(rule));
+  if (newCSSRule == NULL) return (unsigned long)-1;
+
+  /**
+   * TODO: HIERARCHY_REQUEST_ERR
+   */
+
+  CSSOM_native_free(((CSSOM_CSSRule*)cssRule)->cssText);
+  ((CSSOM_CSSRule*)cssRule)->cssText = NULL;
+  if (CSSOM_Sequence__insert(cssRule->cssRules, index, newCSSRule) == NULL) {
+    CSSOM_CSSRule__free(newCSSRule);
+    return (unsigned long)-1;
+  }
+
+  return index;
+}
+
+
+
+void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
+  unsigned long index)
+{
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
+  if (index >= CSSOM_Sequence_size(cssRule->cssRules)) {
+    CSSOM__invalidModificationErr(cssom);
+    return;
+  }
+
+  CSSOM_Sequence__remove(cssRule->cssRules, index);
+}
+
