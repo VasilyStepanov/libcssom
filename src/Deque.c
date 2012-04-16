@@ -6,7 +6,6 @@
 
 
 
-
 #define CSSOM_DEQUE_DEFINE(T, suffix) \
   struct _CSSOM_DequeItem_##suffix { \
     T value; \
@@ -194,7 +193,7 @@
     at->prev = item; \
     item->next = at; \
     \
-    for (; \
+    for (refit = CSSOM_VectorIter_DequeItem_##suffix##_next(refit); \
       refit != CSSOM_Vector_DequeItem_##suffix##_end(deque->refs); \
       refit = CSSOM_VectorIter_DequeItem_##suffix##_next(refit)) \
     { \
