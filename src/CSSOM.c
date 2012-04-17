@@ -265,6 +265,19 @@ void CSSOM__invalidModificationErr(const CSSOM *cssom) {
 
 
 
+void CSSOM__indexSizeErr(const CSSOM *cssom) {
+  if (cssom->errorHandler != NULL) {
+    CSSOM_Error e;
+    e.line = -1;
+    e.column = -1;
+    e.code = CSSOM_ERROR_INDEX_SIZE_ERR;
+    e.data = "Index size error";
+    cssom->errorHandler(cssom->userData, &e);
+  }
+}
+
+
+
 int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
   if (cssom->errorHandler != NULL) {
     CSSOM_Error e;

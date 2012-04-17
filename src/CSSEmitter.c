@@ -562,7 +562,7 @@ int CSSOM_CSSEmitter_cssStyleRule(FILE *out,
     return 1;
   if (fprintf(out, " { ") < 0) return 1;
   if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
-    CSSOM_CSSStyleRule_style(cssRule)))
+    CSSOM_CSSStyleRule_style(cssRule)) != 0)
   {
     return 1;
   }

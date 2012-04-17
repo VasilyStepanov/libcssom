@@ -71,3 +71,26 @@ size_t CSSOM_Sequence_size(const CSSOM_Sequence *sequence) {
 void* CSSOM_Sequence_at(const CSSOM_Sequence *sequence, size_t index) {
   return *CSSOM_Deque_void_at(sequence->data, index);
 }
+
+
+
+void* CSSOM_Sequence__insert(CSSOM_Sequence *sequence,
+  size_t index, void *ptr)
+{
+  CSSOM_DequeIter_void it;
+
+  it = CSSOM_Deque_void_at(sequence->data, index);
+
+  return CSSOM_Deque_void_insert(sequence->data, it, ptr);
+}
+
+
+
+void CSSOM_Sequence__remove(CSSOM_Sequence *sequence, size_t index) {
+  CSSOM_DequeIter_void it;
+
+  it = CSSOM_Deque_void_at(sequence->data, index);
+
+  if (it != CSSOM_Deque_void_end(sequence->data))
+    CSSOM_Deque_void_erase(sequence->data, it);
+}

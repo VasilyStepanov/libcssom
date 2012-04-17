@@ -59,6 +59,8 @@ int errorHandler(void *userData, const CSSOM_Error *error) {
       break;
     case CSSOM_ERROR_SYNTAX:
       break;
+    case CSSOM_ERROR_INDEX_SIZE_ERR:
+      break;
     case CSSOM_ERROR_INVALID_MODIFICATION_ERR:
       ++errors->invalidModificationErrors;
       break;

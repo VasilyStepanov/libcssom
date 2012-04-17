@@ -11,6 +11,8 @@ int main() {
   test::cssStyleRule();
   test::cssPageRule();
   test::cssMediaRule();
+/*
   test::cssom();
+*/
   return 0;
 }
