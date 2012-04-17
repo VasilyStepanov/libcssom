@@ -39,6 +39,10 @@ class CSSStyleSheet {
 
     cssom::CSSRuleList cssRules() const;
 
+    unsigned long insertRule(const char * rule, unsigned long index);
+
+    void deleteRule(unsigned long index);
+
   protected:
     CSSOM_CSSStyleSheet * _impl;
 };

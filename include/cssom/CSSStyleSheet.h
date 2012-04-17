@@ -35,6 +35,14 @@ CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(const CSSOM_CSSStyleSheet * cssS
 
 
 
+unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet * cssStyleSheet, const char * rule, unsigned long index);
+
+
+
+void CSSOM_CSSStyleSheet_deleteRule(CSSOM_CSSStyleSheet * cssStyleSheet, unsigned long index);
+
+
+
 #ifdef __cplusplus
 }
 #endif

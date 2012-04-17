@@ -80,4 +80,16 @@ cssom::CSSRuleList CSSStyleSheet::cssRules() const {
 
 
 
+unsigned long CSSStyleSheet::insertRule(const char * rule, unsigned long index) {
+  return CSSOM_CSSStyleSheet_insertRule(_impl, rule, index);
+}
+
+
+
+void CSSStyleSheet::deleteRule(unsigned long index) {
+  return CSSOM_CSSStyleSheet_deleteRule(_impl, index);
+}
+
+
+
 } // cssom

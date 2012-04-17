@@ -10,6 +10,7 @@
 
 #include <sacc.h>
 
+#include <string.h>
 #include <assert.h>
 
 
@@ -80,4 +81,57 @@ CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
   return styleSheet->cssRules;
+}
+
+
+
+unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
+  const char * rule, unsigned long index)
+{
+  CSSOM_CSSRule *newCSSRule;
+  size_t size;
+
+  size = CSSOM_Sequence_size(styleSheet->cssRules);
+
+  if (index > size) {
+    CSSOM__indexSizeErr(styleSheet->cssom);
+    return (unsigned long)-1;
+  }
+
+  newCSSRule = CSSOM__parseCSSRule(styleSheet->cssom,
+    styleSheet, rule, strlen(rule));
+  if (newCSSRule == NULL) return (unsigned long)-1;
+
+  /**
+   * TODO: HIERARCHY_REQUEST_ERR
+   */
+
+  if (index != size) {
+    if (CSSOM_Sequence__insert(styleSheet->cssRules,
+      index, newCSSRule) == NULL)
+    {
+      CSSOM_CSSRule__free(newCSSRule);
+      return (unsigned long)-1;
+    }
+  } else {
+    if (CSSOM_Sequence__append(styleSheet->cssRules, newCSSRule) == NULL) {
+      CSSOM_CSSRule__free(newCSSRule);
+      return (unsigned long)-1;
+    }
+  }
+
+  return index;
+}
+
+
+
+void CSSOM_CSSStyleSheet_deleteRule(CSSOM_CSSStyleSheet *styleSheet,
+  unsigned long index)
+{
+  if (index >= CSSOM_Sequence_size(styleSheet->cssRules)) {
+    CSSOM__indexSizeErr(styleSheet->cssom);
+    return;
+  }
+
+  CSSOM_Sequence__remove(styleSheet->cssRules, index);
 }

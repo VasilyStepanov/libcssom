@@ -63,8 +63,6 @@ void cssText() {
    * cssText()
    */
 
-  // TODO:
-  // cssText = "@media screen { p { color : green; } }";
   cssText = "@media { p { color : green; } }";
   assertEquals(cssText, cssRule.cssText());
 
@@ -84,7 +82,6 @@ void cssText() {
 "  }\n"
 "}\n"
   );
-  // cssText = "@media all { p { color : green; } div { color : green; } }";
   cssText = "@media { p { color : green; } div { color : green; } }";
   assert(cssRule.type() == cssom::CSSRule::MEDIA_RULE);
   assertEquals(cssText, cssRule.cssText());
@@ -138,30 +135,23 @@ void insertRule() {
 
   cssRule.insertRule("span { color : green; }", 0);
 
-  // cssText = "@media { "
-  //   "span { color : green; } "
-  //   "p { color : green; } "
-  // "}";
-  cssText = "@media { "
-    "span { color : green; } "
-    "p { color : green; } "
-  "}";
+  cssText =
+"@media { "
+  "span { color : green; } "
+  "p { color : green; } "
+"}";
   assertEquals(cssText, cssRule.cssText());
 
 
 
   cssRule.insertRule("div { color : green; }", 2);
 
-  // cssText = "@media { "
-  //   "span { color : green; } "
-  //   "p { color : green; } "
-  //   "div { color : green; } "
-  // "}";
-  cssText = "@media { "
-    "span { color : green; } "
-    "p { color : green; } "
-    "div { color : green; } "
-  "}";
+  cssText =
+"@media { "
+  "span { color : green; } "
+  "p { color : green; } "
+  "div { color : green; } "
+"}";
   assertEquals(cssText, cssRule.cssText());
 
 
@@ -206,19 +196,21 @@ void deleteRule() {
 
   cssRule.deleteRule(2);
 
-  cssText = "@media { "
-    "span { color : green; } "
-    "p { color : green; } "
-  "}";
+  cssText =
+"@media { "
+  "span { color : green; } "
+  "p { color : green; } "
+"}";
   assertEquals(cssText, cssRule.cssText());
 
 
 
   cssRule.deleteRule(0);
 
-  cssText = "@media { "
-    "p { color : green; } "
-  "}";
+  cssText =
+"@media { "
+  "p { color : green; } "
+"}";
   assertEquals(cssText, cssRule.cssText());
 
 
