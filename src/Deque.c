@@ -220,7 +220,11 @@
     refit = CSSOM_Vector_DequeItem_##suffix##_erase(deque->refs, refit); \
     \
     at->prev->next = item; \
-    if (item != NULL) item->prev = at->prev; \
+    if (item != NULL) { \
+      item->prev = at->prev; \
+    } else { \
+      deque->tail = at->prev; \
+    } \
     DequeItem_##suffix##_free(at); \
     \
     for (; \

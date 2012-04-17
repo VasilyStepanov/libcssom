@@ -298,10 +298,39 @@ static void test_Deque_erase(void) {
 
 
 
+static void test_Deque_erase_2(void) {
+  CSSOM_Deque_Int *d;
+  CSSOM_DequeIter_Int it;
+
+  d = CSSOM_Deque_Int_alloc(2);
+
+  *CSSOM_Deque_Int_at(d, 0) = 1;
+  *CSSOM_Deque_Int_at(d, 1) = 2;
+
+
+
+  it = CSSOM_Deque_Int_erase(d, CSSOM_Deque_Int_at(d, 1));
+  assert(it == CSSOM_Deque_Int_end(d));
+  assert(CSSOM_Deque_Int_size(d) == 1);
+
+
+
+  it = CSSOM_Deque_Int_erase(d, CSSOM_Deque_Int_at(d, 0));
+  assert(it == CSSOM_Deque_Int_end(d));
+  assert(CSSOM_Deque_Int_size(d) == 0);
+
+
+
+  CSSOM_Deque_Int_free(d);
+}
+
+
+
 void test_Deque(void) {
   test_Deque_basics();
   test_Deque_append();
   test_Deque_insert();
   test_Deque_insert_2();
   test_Deque_erase();
+  test_Deque_erase_2();
 }
