@@ -548,7 +548,8 @@ int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
 {
   if (fprintf(out, "@media ") < 0) return 1;
   if (fprintf(out, "{ ") < 0) return 1;
-  CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule));
+  if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
+    return 1;
   if (fprintf(out, " }") < 0) return 1;
   return 0;
 }

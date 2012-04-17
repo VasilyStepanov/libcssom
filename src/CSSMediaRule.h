@@ -3,6 +3,8 @@
 
 #include <cssom/CSSMediaRule.h>
 
+#include <sacc.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -10,7 +12,7 @@ extern "C" {
 
 
 CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet);
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_MediaQuery *media[]);
 
 
 

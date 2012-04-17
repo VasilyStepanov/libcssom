@@ -291,6 +291,7 @@ const char* CSSOM_CSSStyleRule_selectorText(
 
 struct _CSSOM_CSSMediaRule {
   CSSOM_CSSRule super;
+  const SAC_MediaQuery **media;
   CSSOM_CSSRuleList *cssRules;
 };
 
@@ -349,7 +350,7 @@ static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
 
 
 CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet)
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_MediaQuery *media[])
 {
   CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSMediaRule *cssRule;
@@ -366,6 +367,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
+  cssRule->media = media;
   cssRule->cssRules = cssRules;
 
   return cssRule;

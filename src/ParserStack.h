@@ -36,7 +36,7 @@ CSSOM_CSSPageRule* CSSOM_ParserStack_pushCSSPageRule(
   CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);
 
 CSSOM_CSSMediaRule* CSSOM_ParserStack_pushCSSMediaRule(
-  CSSOM_ParserStack *stack);
+  CSSOM_ParserStack *stack, const SAC_MediaQuery *media[]);
 
 CSSOM_CSSStyleRule* CSSOM_ParserStack_pushCSSStyleRule(
   CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);

@@ -28,11 +28,12 @@ CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
 
 
 CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet)
+  CSSOM_CSSRuleList *cssRules,
+  CSSOM_CSSStyleSheet *styleSheet, const SAC_MediaQuery *media[])
 {
   CSSOM_CSSMediaRule *cssRule;
 
-  cssRule = CSSOM_CSSMediaRule__alloc(styleSheet);
+  cssRule = CSSOM_CSSMediaRule__alloc(styleSheet, media);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,

@@ -79,14 +79,14 @@ static int endPageHandler(void *userData,
 
 
 static int startMediaHandler(void *userData,
-  const SAC_MediaQuery *media[] CSSOM_UNUSED)
+  const SAC_MediaQuery *media[])
 {
   CSSOM_ParserStack *stack;
   CSSOM_CSSMediaRule *cssRule;
   
   stack = (CSSOM_ParserStack*)userData;
 
-  cssRule = CSSOM_ParserStack_pushCSSMediaRule(stack);
+  cssRule = CSSOM_ParserStack_pushCSSMediaRule(stack, media);
   if (cssRule == NULL) return 1;
 
   return 0;

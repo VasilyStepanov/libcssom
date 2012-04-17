@@ -22,7 +22,8 @@ CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
   CSSOM_CSSStyleSheet *styleSheet, const SAC_Selector *selectors[]);
 
 CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet);
+  CSSOM_CSSRuleList *cssRules,
+  CSSOM_CSSStyleSheet *styleSheet, const SAC_MediaQuery *media[]);
 
 CSSOM_CSSStyleRule* CSSOM_CSSRuleList__appendCSSStyleRule(
   CSSOM_CSSRuleList *cssRules,
