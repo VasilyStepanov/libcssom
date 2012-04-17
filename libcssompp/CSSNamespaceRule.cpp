@@ -54,4 +54,16 @@ CSSNamespaceRule::CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl) :
 
 
 
+const char * CSSNamespaceRule::namespaceURI() const {
+  return CSSOM_CSSNamespaceRule_namespaceURI(reinterpret_cast<CSSOM_CSSNamespaceRule*>(_impl));
+}
+
+
+
+const char * CSSNamespaceRule::prefix() const {
+  return CSSOM_CSSNamespaceRule_prefix(reinterpret_cast<CSSOM_CSSNamespaceRule*>(_impl));
+}
+
+
+
 } // cssom

@@ -451,6 +451,8 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
 
 struct _CSSOM_CSSNamespaceRule {
   CSSOM_CSSRule super;
+  const SAC_STRING prefix;
+  const SAC_STRING uri;
 };
 
 
@@ -461,16 +463,57 @@ static void CSSNamespaceRule_free(CSSOM_CSSNamespaceRule *cssRule) {
 
 
 
+static void CSSNamespaceRule_swap(
+  CSSOM_CSSNamespaceRule *lhs, CSSOM_CSSNamespaceRule *rhs)
+{
+  CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->prefix, rhs->prefix);
+  SWAP(lhs->uri, rhs->uri);
+}
+
+
+
+static const char* CSSNamespaceRule_cssText(
+  const CSSOM_CSSNamespaceRule *cssRule)
+{
+  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_cssNamespaceRule(out, cssRule) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+  }
+  return ((CSSOM_CSSRule*)cssRule)->cssText;
+}
+
+
+
 static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_free,
-  NULL,
-  NULL
+  (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSNamespaceRule_swap,
+  (const char*(*)(const CSSOM_CSSRule*))&CSSNamespaceRule_cssText
 };
 
 
 
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet)
+  CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_STRING prefix, const SAC_STRING uri)
 {
   CSSOM_CSSNamespaceRule *cssRule;
 
@@ -481,7 +524,26 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSNamespaceRule_vtable,
     parentStyleSheet, CSSOM_CSSRule_NAMESPACE_RULE);
 
+  cssRule->prefix = prefix;
+  cssRule->uri = uri;
+
   return cssRule;
+}
+
+
+
+const char * CSSOM_CSSNamespaceRule_namespaceURI(
+  const CSSOM_CSSNamespaceRule * cssRule)
+{
+  return cssRule->uri;
+}
+
+
+
+const char * CSSOM_CSSNamespaceRule_prefix(
+  const CSSOM_CSSNamespaceRule * cssRule)
+{
+  return cssRule->prefix;
 }
 
 

@@ -35,13 +35,14 @@ static int propertyHandler(void *userData,
   SAC_Boolean important)
 {
   CSSOM_ParserStack *stack;
-  CSSOM_CSSProperty *property;
   
   stack = (CSSOM_ParserStack*)userData;
 
-  property = CSSOM_ParserStack_setProperty(stack,
-    propertyName, value, important);
-  if (property == NULL) return 1;
+  if (CSSOM_ParserStack_setProperty(stack,
+    propertyName, value, important) == NULL)
+  {
+    return 1;
+  }
 
   return 0;
 }
@@ -102,6 +103,21 @@ static int endMediaHandler(void *userData,
   stack = (CSSOM_ParserStack*)userData;
 
   CSSOM_ParserStack_pop(stack);
+
+  return 0;
+}
+
+
+
+static int namespaceHandler(void *userData,
+  const SAC_STRING prefix, const SAC_STRING uri)
+{
+  CSSOM_ParserStack *stack;
+  
+  stack = (CSSOM_ParserStack*)userData;
+
+  if (CSSOM_ParserStack_appendCSSNamespaceRule(stack, prefix, uri) == NULL)
+    return 1;
 
   return 0;
 }
@@ -295,6 +311,7 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
 static void parserSetup(SAC_Parser parser, CSSOM_ParserStack *stack) {
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
   SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
+  SAC_SetNamespaceHandler(parser, namespaceHandler);
   SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);
   SAC_SetPropertyHandler(parser, propertyHandler);
   SAC_SetUserData(parser, stack);

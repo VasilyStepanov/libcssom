@@ -29,6 +29,10 @@ class CSSNamespaceRule : public cssom::CSSRule {
 
     CSSNamespaceRule();
     explicit CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl);
+
+    const char * namespaceURI() const;
+
+    const char * prefix() const;
 };
 
 

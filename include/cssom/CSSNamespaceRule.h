@@ -24,6 +24,14 @@ extern "C" {
 
 
 
+const char * CSSOM_CSSNamespaceRule_namespaceURI(const CSSOM_CSSNamespaceRule * cssNamespaceRule);
+
+
+
+const char * CSSOM_CSSNamespaceRule_prefix(const CSSOM_CSSNamespaceRule * cssNamespaceRule);
+
+
+
 #ifdef __cplusplus
 }
 #endif

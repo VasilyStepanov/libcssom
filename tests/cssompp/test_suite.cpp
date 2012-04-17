@@ -1,4 +1,5 @@
 #include "test_CSSMediaRule.hpp"
+#include "test_CSSNamespaceRule.hpp"
 #include "test_CSSPageRule.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleRule.hpp"
@@ -13,6 +14,7 @@ int main() {
   test::cssStyleRule();
   test::cssPageRule();
   test::cssMediaRule();
+  test::cssNamespaceRule();
   test::cssStyleSheet();
   return 0;
 }

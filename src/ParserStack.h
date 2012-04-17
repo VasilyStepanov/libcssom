@@ -24,6 +24,10 @@ CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);
 
+CSSOM_CSSNamespaceRule* CSSOM_ParserStack_appendCSSNamespaceRule(
+  CSSOM_ParserStack *stack,
+  const SAC_STRING prefix, const SAC_STRING uri);
+
 void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack);
 
 CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,

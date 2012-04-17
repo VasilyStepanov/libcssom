@@ -3,6 +3,8 @@
 
 #include <cssom/CSSNamespaceRule.h>
 
+#include <sacc.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -10,7 +12,8 @@ extern "C" {
 
 
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet);
+  CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_STRING prefix, const SAC_STRING uri);
 
 
 

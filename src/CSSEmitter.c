@@ -3,6 +3,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleRule.h"
 
+#include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSMediaRule.h>
 #include <cssom/CSSProperty.h>
 #include <cssom/CSSRuleList.h>
@@ -512,6 +513,12 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
     if (CSSOM_CSSEmitter_cssMediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
       return 1;
     }
+  } else if (type == CSSOM_CSSRule_NAMESPACE_RULE) {
+    if (CSSOM_CSSEmitter_cssNamespaceRule(out,
+      (CSSOM_CSSNamespaceRule*)cssRule) != 0)
+    {
+      return 1;
+    }
   }
 
   return 0;
@@ -551,6 +558,25 @@ int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
   if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
     return 1;
   if (fprintf(out, " }") < 0) return 1;
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
+  const CSSOM_CSSNamespaceRule *cssRule)
+{
+  const char *prefix;
+  const char *uri;
+
+  prefix = CSSOM_CSSNamespaceRule_prefix(cssRule);
+  uri = CSSOM_CSSNamespaceRule_namespaceURI(cssRule);
+
+  if (prefix != NULL) {
+    if (fprintf(out, "@namespace %s url('%s');", prefix, uri) < 0) return 1;
+  } else {
+    if (fprintf(out, "@namespace url('%s');", uri) < 0) return 1;
+  }
   return 0;
 }
 
