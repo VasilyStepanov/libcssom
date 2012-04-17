@@ -1,5 +1,6 @@
 #include "test_CSSStyleSheet.hpp"
 
+#include "Errors.hpp"
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
@@ -12,41 +13,11 @@ namespace {
 
 
 
-struct Errors {
-  size_t indexSizeErrors;
-
-  Errors() :
-    indexSizeErrors(0)
-  {}
-};
-
-
-
-int errorHandler(void *userData, const CSSOM_Error *error) {
-  Errors *errors = static_cast<Errors*>(userData);
-
-  switch (error->code) {
-    case CSSOM_ERROR_NOT_SUPPORTED:
-      break;
-    case CSSOM_ERROR_SYNTAX:
-      break;
-    case CSSOM_ERROR_INDEX_SIZE_ERR:
-      ++errors->indexSizeErrors;
-      break;
-    case CSSOM_ERROR_INVALID_MODIFICATION_ERR:
-      break;
-  }
-
-  return 0;
-}
-
-
-
 void insertRule() {
-  Errors errors;
+  test::Errors errors;
   cssom::CSSOM cssom;
   cssom.setUserData(&errors);
-  cssom.setErrorHandler(errorHandler);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
 "  color : green;\n"
@@ -94,10 +65,10 @@ void insertRule() {
 
 
 void deleteRule() {
-  Errors errors;
+  test::Errors errors;
   cssom::CSSOM cssom;
   cssom.setUserData(&errors);
-  cssom.setErrorHandler(errorHandler);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "span {\n"
 "  color : green;\n"

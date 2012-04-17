@@ -1,5 +1,6 @@
 #include "test_CSSRule.hpp"
 
+#include "Errors.hpp"
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
@@ -12,16 +13,6 @@
 #include <assert.h>
 
 namespace {
-
-
-
-struct Errors {
-  size_t invalidModificationErrors;
-
-  Errors() :
-    invalidModificationErrors(0)
-  {}
-};
 
 
 
@@ -51,31 +42,11 @@ void type() {
 
 
 
-int errorHandler(void *userData, const CSSOM_Error *error) {
-  Errors *errors = static_cast<Errors*>(userData);
-
-  switch (error->code) {
-    case CSSOM_ERROR_NOT_SUPPORTED:
-      break;
-    case CSSOM_ERROR_SYNTAX:
-      break;
-    case CSSOM_ERROR_INDEX_SIZE_ERR:
-      break;
-    case CSSOM_ERROR_INVALID_MODIFICATION_ERR:
-      ++errors->invalidModificationErrors;
-      break;
-  }
-
-  return 0;
-}
-
-
-
 void cssText() {
-  Errors errors;
+  test::Errors errors;
   cssom::CSSOM cssom;
   cssom.setUserData(&errors);
-  cssom.setErrorHandler(errorHandler);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
 " color : green;\n"
