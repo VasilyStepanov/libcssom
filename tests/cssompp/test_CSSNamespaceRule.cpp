@@ -64,6 +64,46 @@ void cssText() {
 
 
 
+void namespaceURI() {
+  test::Errors errors;
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@namespace svg url('http://www.w3.org/2000/svg');"
+  );
+  cssom::CSSNamespaceRule cssRule = cssom::CSSNamespaceRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assertEquals(std::string("http://www.w3.org/2000/svg"),
+    cssRule.namespaceURI());
+}
+
+
+
+void prefix() {
+  test::Errors errors;
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@namespace svg url('http://www.w3.org/2000/svg');"
+  );
+  cssom::CSSNamespaceRule cssRule = cssom::CSSNamespaceRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assertEquals(std::string("svg"), cssRule.prefix());
+
+
+
+  cssRule.setCSSText(
+"@namespace url('foo');"
+  );
+
+  assert(cssRule.prefix() == NULL);
+
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -72,6 +112,8 @@ namespace test {
 
 void cssNamespaceRule() {
   cssText();
+  namespaceURI();
+  prefix();
 }
 
 
