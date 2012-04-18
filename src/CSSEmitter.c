@@ -3,6 +3,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleRule.h"
 
+#include <cssom/CSSFontFaceRule.h>
 #include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSMediaRule.h>
 #include <cssom/CSSProperty.h>
@@ -509,6 +510,12 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
     if (CSSOM_CSSEmitter_cssStyleRule(out, (CSSOM_CSSStyleRule*)cssRule) != 0) {
       return 1;
     }
+  } else if (type == CSSOM_CSSRule_FONT_FACE_RULE) {
+    if (CSSOM_CSSEmitter_cssFontFaceRule(out,
+      (CSSOM_CSSFontFaceRule*)cssRule) != 0)
+    {
+      return 1;
+    }
   } else if (type == CSSOM_CSSRule_MEDIA_RULE) {
     if (CSSOM_CSSEmitter_cssMediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
       return 1;
@@ -550,11 +557,25 @@ int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
 
 
 
+int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
+  const CSSOM_CSSFontFaceRule *cssRule)
+{
+  if (fprintf(out, "@font-face { ") < 0) return 1;
+  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+    CSSOM_CSSFontFaceRule_style(cssRule)) != 0)
+  {
+    return 1;
+  }
+  if (fprintf(out, " }") < 0) return 1;
+  return 0;
+}
+
+
+
 int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
   const CSSOM_CSSMediaRule *cssRule)
 {
-  if (fprintf(out, "@media ") < 0) return 1;
-  if (fprintf(out, "{ ") < 0) return 1;
+  if (fprintf(out, "@media { ") < 0) return 1;
   if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
     return 1;
   if (fprintf(out, " }") < 0) return 1;

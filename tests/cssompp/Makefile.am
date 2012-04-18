@@ -5,9 +5,10 @@ AM_CPPFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
               $(SACC_CFLAGS)
 
 test_suite_SOURCES = Errors.cpp \
-                     test_CSSOM.cpp \
+                     test_CSSFontFaceRule.cpp \
                      test_CSSMediaRule.cpp \
                      test_CSSNamespaceRule.cpp \
+                     test_CSSOM.cpp \
                      test_CSSPageRule.cpp \
                      test_CSSRule.cpp \
                      test_CSSStyleRule.cpp \

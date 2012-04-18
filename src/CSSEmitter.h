@@ -26,6 +26,9 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule);
 
 int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules);
 
+int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
+  const CSSOM_CSSFontFaceRule *cssRule);
+
 int CSSOM_CSSEmitter_cssMediaRule(FILE *out, const CSSOM_CSSMediaRule *cssRule);
 
 int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,

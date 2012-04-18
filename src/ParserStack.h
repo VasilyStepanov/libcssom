@@ -36,11 +36,14 @@ CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
 CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
   CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet);
 
-CSSOM_CSSPageRule* CSSOM_ParserStack_pushCSSPageRule(
-  CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);
+CSSOM_CSSFontFaceRule* CSSOM_ParserStack_pushCSSFontFaceRule(
+  CSSOM_ParserStack *stack);
 
 CSSOM_CSSMediaRule* CSSOM_ParserStack_pushCSSMediaRule(
   CSSOM_ParserStack *stack, const SAC_MediaQuery *media[]);
+
+CSSOM_CSSPageRule* CSSOM_ParserStack_pushCSSPageRule(
+  CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);
 
 CSSOM_CSSStyleRule* CSSOM_ParserStack_pushCSSStyleRule(
   CSSOM_ParserStack *stack, const SAC_Selector *selectors[]);

@@ -132,6 +132,7 @@ const char *CSSOM_CSSProperties[] = {
   "width",
   "word-spacing",
   "z-index",
+  "src",
   NULL
 };
 

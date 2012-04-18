@@ -1,4 +1,6 @@
 #include "CSSRule.h"
+#include "CSSFontFaceRule.h"
+#include "CSSMediaRule.h"
 #include "CSSNamespaceRule.h"
 #include "CSSPageRule.h"
 #include "CSSStyleRule.h"
@@ -140,6 +142,104 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   CSSRule_swap(cssRule, newCSSRule);
 
   CSSOM_CSSRule__free(newCSSRule);
+}
+
+
+
+/**
+ * CSSFontFaceRule
+ */
+
+struct _CSSOM_CSSFontFaceRule {
+  CSSOM_CSSRule super;
+  CSSOM_CSSStyleDeclaration *style;
+};
+
+
+
+static void CSSFontFaceRule_free(CSSOM_CSSFontFaceRule *cssRule) {
+  CSSOM_CSSStyleDeclaration__free(cssRule->style);
+  CSSOM_free(cssRule);
+}
+
+
+
+static const char* CSSFontFaceRule_cssText(
+  const CSSOM_CSSFontFaceRule *cssRule)
+{
+  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_cssFontFaceRule(out, cssRule) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+  }
+  return ((CSSOM_CSSRule*)cssRule)->cssText;
+}
+
+
+
+static void CSSFontFaceRule_swap(
+  CSSOM_CSSFontFaceRule *lhs, CSSOM_CSSFontFaceRule *rhs)
+{
+  CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->style, rhs->style);
+}
+
+
+
+static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
+  (void(*)(CSSOM_CSSRule*))&CSSFontFaceRule_free,
+  (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSFontFaceRule_swap,
+  (const char*(*)(const CSSOM_CSSRule*))&CSSFontFaceRule_cssText
+};
+
+
+
+CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
+  CSSOM_CSSStyleSheet *parentStyleSheet)
+{
+  CSSOM_CSSStyleDeclaration *style;
+  CSSOM_CSSFontFaceRule *cssRule;
+
+  style = CSSOM_CSSStyleDeclaration__alloc(
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  if (style == NULL) return NULL;
+
+  cssRule = (CSSOM_CSSFontFaceRule*)CSSOM_malloc(sizeof(CSSOM_CSSFontFaceRule));
+  if (cssRule == NULL) {
+    CSSOM_CSSStyleDeclaration__free(style);
+    return NULL;
+  }
+
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
+    &CSSFontFaceRule_vtable, parentStyleSheet, CSSOM_CSSRule_FONT_FACE_RULE);
+  cssRule->style = style;
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSStyleDeclaration* CSSOM_CSSFontFaceRule_style(
+  const CSSOM_CSSFontFaceRule *cssRule)
+{
+  return cssRule->style;
 }
 
 

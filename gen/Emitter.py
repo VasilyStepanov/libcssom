@@ -7,6 +7,7 @@ import os.path
 
 
 forwards = { \
+  'CSSFontFaceRule' : ('CSSStyleDeclaration', ),
   'CSSRule' : ('CSSStyleSheet', ),
   'CSSPageRule' : ('CSSStyleDeclaration', ),
   'CSSRuleList' : ('CSSRule', ),
@@ -16,6 +17,7 @@ forwards = { \
 
 
 includes = { \
+  'CSSFontFaceRule' : ('CSSRule', ),
   'CSSNamespaceRule' : ('CSSRule', ),
   'CSSMediaRule' : ('CSSRuleList', 'CSSRule', ),
   'CSSPageRule' : ('CSSRule', ),

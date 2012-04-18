@@ -79,6 +79,32 @@ static int endPageHandler(void *userData,
 
 
 
+static int startFontFaceHandler(void *userData) {
+  CSSOM_ParserStack *stack;
+  CSSOM_CSSFontFaceRule *cssRule;
+  
+  stack = (CSSOM_ParserStack*)userData;
+
+  cssRule = CSSOM_ParserStack_pushCSSFontFaceRule(stack);
+  if (cssRule == NULL) return 1;
+
+  return 0;
+}
+
+
+
+static int endFontFaceHandler(void *userData) {
+  CSSOM_ParserStack *stack;
+
+  stack = (CSSOM_ParserStack*)userData;
+
+  CSSOM_ParserStack_pop(stack);
+
+  return 0;
+}
+
+
+
 static int startMediaHandler(void *userData,
   const SAC_MediaQuery *media[])
 {
@@ -310,6 +336,7 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
 
 static void parserSetup(SAC_Parser parser, CSSOM_ParserStack *stack) {
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
+  SAC_SetFontFaceHandler(parser, startFontFaceHandler, endFontFaceHandler);
   SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);
   SAC_SetNamespaceHandler(parser, namespaceHandler);
   SAC_SetStyleHandler(parser, startStyleHandler, endStyleHandler);

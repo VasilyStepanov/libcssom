@@ -8,6 +8,7 @@ extern "C" {
 
 
 typedef struct _CSSOM CSSOM;
+typedef struct _CSSOM_CSSFontFaceRule CSSOM_CSSFontFaceRule;
 typedef struct _CSSOM_CSSMediaRule CSSOM_CSSMediaRule;
 typedef struct _CSSOM_CSSNamespaceRule CSSOM_CSSNamespaceRule;
 typedef struct _CSSOM_CSSPageRule CSSOM_CSSPageRule;
