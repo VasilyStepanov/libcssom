@@ -64,6 +64,21 @@ void cssText() {
 
 
 
+void href() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@import url(\"bluish.css\") projection, tv;"
+  );
+  cssom::CSSImportRule cssRule = cssom::CSSImportRule::cast(
+    styleSheet.cssRules()[0]);
+
+
+  assertEquals(std::string("bluish.css"), cssRule.href());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -72,6 +87,7 @@ namespace test {
 
 void cssImportRule() {
   cssText();
+  href();
 }
 
 
