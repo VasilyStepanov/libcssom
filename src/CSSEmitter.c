@@ -6,6 +6,7 @@
 #include <cssom/CSSFontFaceRule.h>
 #include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSMediaRule.h>
+#include <cssom/CSSPageRule.h>
 #include <cssom/CSSProperty.h>
 #include <cssom/CSSRuleList.h>
 
@@ -526,6 +527,10 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
     {
       return 1;
     }
+  } else if (type == CSSOM_CSSRule_PAGE_RULE) {
+    if (CSSOM_CSSEmitter_cssPageRule(out, (CSSOM_CSSPageRule*)cssRule) != 0) {
+      return 1;
+    }
   }
 
   return 0;
@@ -598,6 +603,21 @@ int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
   } else {
     if (fprintf(out, "@namespace url('%s');", uri) < 0) return 1;
   }
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssPageRule(FILE *out,
+  const CSSOM_CSSPageRule *cssRule)
+{
+  if (fprintf(out, "@page { ") < 0) return 1;
+  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+    CSSOM_CSSPageRule_style(cssRule)) != 0)
+  {
+    return 1;
+  }
+  if (fprintf(out, " }") < 0) return 1;
   return 0;
 }
 

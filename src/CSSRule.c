@@ -57,7 +57,7 @@ unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
 struct _CSSOM_CSSRule_vtable {
   void (*free)(CSSOM_CSSRule *cssRule);
   void (*swap)(CSSOM_CSSRule *lhs, CSSOM_CSSRule *rhs);
-  const char* (*cssText)(const CSSOM_CSSRule *cssRule);
+  int (*emit)(FILE *out, const CSSOM_CSSRule *cssRule);
 };
 
 
@@ -92,7 +92,29 @@ void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule) {
 
 
 const char* CSSOM_CSSRule_cssText(const CSSOM_CSSRule *cssRule) {
-  return cssRule->vtable->cssText(cssRule);
+  if (cssRule->cssText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (cssRule->vtable->emit(out, cssRule) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+  }
+  return cssRule->cssText;
 }
 
 
@@ -164,36 +186,6 @@ static void CSSFontFaceRule_free(CSSOM_CSSFontFaceRule *cssRule) {
 
 
 
-static const char* CSSFontFaceRule_cssText(
-  const CSSOM_CSSFontFaceRule *cssRule)
-{
-  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
-
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
-
-    if (CSSOM_CSSEmitter_cssFontFaceRule(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
-  }
-  return ((CSSOM_CSSRule*)cssRule)->cssText;
-}
-
-
-
 static void CSSFontFaceRule_swap(
   CSSOM_CSSFontFaceRule *lhs, CSSOM_CSSFontFaceRule *rhs)
 {
@@ -206,7 +198,7 @@ static void CSSFontFaceRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSFontFaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSFontFaceRule_swap,
-  (const char*(*)(const CSSOM_CSSRule*))&CSSFontFaceRule_cssText
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssFontFaceRule
 };
 
 
@@ -265,34 +257,6 @@ static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
 
 
 
-static const char* CSSStyleRule_cssText(const CSSOM_CSSStyleRule *cssRule) {
-  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
-
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
-
-    if (CSSOM_CSSEmitter_cssStyleRule(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
-  }
-  return ((CSSOM_CSSRule*)cssRule)->cssText;
-}
-
-
-
 static void CSSStyleRule_swap(
   CSSOM_CSSStyleRule *lhs, CSSOM_CSSStyleRule *rhs)
 {
@@ -307,7 +271,7 @@ static void CSSStyleRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSStyleRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSStyleRule_swap,
-  (const char*(*)(const CSSOM_CSSRule*))&CSSStyleRule_cssText
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssStyleRule
 };
 
 
@@ -413,38 +377,10 @@ static void CSSMediaRule_swap(
 
 
 
-static const char* CSSMediaRule_cssText(const CSSOM_CSSMediaRule *cssRule) {
-  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
-
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
-
-    if (CSSOM_CSSEmitter_cssMediaRule(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
-  }
-  return ((CSSOM_CSSRule*)cssRule)->cssText;
-}
-
-
-
 static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSMediaRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSMediaRule_swap,
-  (const char*(*)(const CSSOM_CSSRule*))&CSSMediaRule_cssText
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssMediaRule
 };
 
 
@@ -573,40 +509,10 @@ static void CSSNamespaceRule_swap(
 
 
 
-static const char* CSSNamespaceRule_cssText(
-  const CSSOM_CSSNamespaceRule *cssRule)
-{
-  if (((CSSOM_CSSRule*)cssRule)->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
-
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
-
-    if (CSSOM_CSSEmitter_cssNamespaceRule(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
-  }
-  return ((CSSOM_CSSRule*)cssRule)->cssText;
-}
-
-
-
 static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSNamespaceRule_swap,
-  (const char*(*)(const CSSOM_CSSRule*))&CSSNamespaceRule_cssText
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssNamespaceRule
 };
 
 
@@ -672,7 +578,7 @@ static void CSSPageRule_free(CSSOM_CSSPageRule *cssRule) {
 static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSPageRule_free,
   NULL,
-  NULL
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssPageRule
 };
 
 

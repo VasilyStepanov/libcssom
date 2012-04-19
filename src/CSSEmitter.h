@@ -34,6 +34,8 @@ int CSSOM_CSSEmitter_cssMediaRule(FILE *out, const CSSOM_CSSMediaRule *cssRule);
 int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
   const CSSOM_CSSNamespaceRule *cssRule);
 
+int CSSOM_CSSEmitter_cssPageRule(FILE *out, const CSSOM_CSSPageRule *cssRule);
+
 int CSSOM_CSSEmitter_cssStyleRule(FILE *out, const CSSOM_CSSStyleRule *cssRule);
 
 
