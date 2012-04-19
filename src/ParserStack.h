@@ -24,6 +24,11 @@ CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);
 
+CSSOM_CSSImportRule* CSSOM_ParserStack_appendCSSImportRule(
+  CSSOM_ParserStack *stack,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI);
+
 CSSOM_CSSNamespaceRule* CSSOM_ParserStack_appendCSSNamespaceRule(
   CSSOM_ParserStack *stack,
   const SAC_STRING prefix, const SAC_STRING uri);

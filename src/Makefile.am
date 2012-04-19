@@ -7,6 +7,7 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
 BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.h \
+                $(top_idldir)/CSSImportRule.idl.h \
                 $(top_idldir)/CSSMediaRule.idl.h \
                 $(top_idldir)/CSSNamespaceRule.idl.h \
                 $(top_idldir)/CSSPageRule.idl.h \
@@ -28,6 +29,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
                       $(top_srcdir)/include/cssom/CSSProperty.h \
                       \
                       $(top_srcdir)/include/cssom/CSSFontFaceRule.h \
+                      $(top_srcdir)/include/cssom/CSSImportRule.h \
                       $(top_srcdir)/include/cssom/CSSMediaRule.h \
                       $(top_srcdir)/include/cssom/CSSNamespaceRule.h \
                       $(top_srcdir)/include/cssom/CSSPageRule.h \

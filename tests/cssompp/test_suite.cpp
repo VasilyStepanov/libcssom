@@ -1,4 +1,5 @@
 #include "test_CSSFontFaceRule.hpp"
+#include "test_CSSImportRule.hpp"
 #include "test_CSSMediaRule.hpp"
 #include "test_CSSNamespaceRule.hpp"
 #include "test_CSSPageRule.hpp"
@@ -17,6 +18,7 @@ int main() {
   test::cssMediaRule();
   test::cssNamespaceRule();
   test::cssFontFaceRule();
+  test::cssImportRule();
   test::cssStyleSheet();
   return 0;
 }

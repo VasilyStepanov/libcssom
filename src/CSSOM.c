@@ -49,6 +49,25 @@ static int propertyHandler(void *userData,
 
 
 
+static int importHandler(void *userData,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  CSSOM_ParserStack *stack;
+  
+  stack = (CSSOM_ParserStack*)userData;
+
+  if (CSSOM_ParserStack_appendCSSImportRule(stack,
+    base, uri, media, defaultNamepaceURI) == NULL)
+  {
+    return 1;
+  }
+
+  return 0;
+}
+
+
+
 static int startPageHandler(void *userData,
   const SAC_Selector *selectors[])
 {
@@ -335,6 +354,7 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error) {
 
 
 static void parserSetup(SAC_Parser parser, CSSOM_ParserStack *stack) {
+  SAC_SetImportHandler(parser, importHandler);
   SAC_SetPageHandler(parser, startPageHandler, endPageHandler);
   SAC_SetFontFaceHandler(parser, startFontFaceHandler, endFontFaceHandler);
   SAC_SetMediaHandler(parser, startMediaHandler, endMediaHandler);

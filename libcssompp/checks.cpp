@@ -1,6 +1,7 @@
 #include "checks.hpp"
 
 #include <cssompp/CSSFontFaceRule.hpp>
+#include <cssompp/CSSImportRule.hpp>
 #include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSNamespaceRule.hpp>
 #include <cssompp/CSSPageRule.hpp>
@@ -22,7 +23,6 @@ void checkCast<cssom::CSSRule, cssom::CSSStyleRule>(
 
 
 
-
 template <>
 void checkCast<cssom::CSSRule, cssom::CSSFontFaceRule>(
   const cssom::CSSRule &cssRule)
@@ -30,6 +30,14 @@ void checkCast<cssom::CSSRule, cssom::CSSFontFaceRule>(
   assert(cssRule.type() == cssom::CSSRule::FONT_FACE_RULE);
 }
 
+
+
+template <>
+void checkCast<cssom::CSSRule, cssom::CSSImportRule>(
+  const cssom::CSSRule &cssRule)
+{
+  assert(cssRule.type() == cssom::CSSRule::IMPORT_RULE);
+}
 
 
 
@@ -42,14 +50,12 @@ void checkCast<cssom::CSSRule, cssom::CSSMediaRule>(
 
 
 
-
 template <>
 void checkCast<cssom::CSSRule, cssom::CSSNamespaceRule>(
   const cssom::CSSRule &cssRule)
 {
   assert(cssRule.type() == cssom::CSSRule::NAMESPACE_RULE);
 }
-
 
 
 

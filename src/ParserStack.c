@@ -1,6 +1,7 @@
 #include "ParserStack.h"
 
 #include "CSSFontFaceRule.h"
+#include "CSSImportRule.h"
 #include "CSSMediaRule.h"
 #include "CSSNamespaceRule.h"
 #include "CSSOM.h"
@@ -48,6 +49,11 @@ struct _CSSOM_ParserState_vtable {
   CSSOM_CSSFontFaceRule* (*appendCSSFontFaceRule)(
     struct _CSSOM_ParserState *);
 
+  CSSOM_CSSImportRule* (*appendCSSImportRule)(
+    struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_STRING,
+    const SAC_MediaQuery *[], const SAC_STRING);
+
 };
 
 
@@ -79,6 +85,17 @@ static CSSOM_CSSProperty* ParserState_setProperty(
   SAC_Boolean important)
 {
   return state->vtable->setProperty(state, property, value, important);
+}
+
+
+
+static CSSOM_CSSImportRule* ParserState_appendCSSImportRule(
+  struct _CSSOM_ParserState *state,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  return state->vtable->appendCSSImportRule(state,
+    base, uri, media, defaultNamepaceURI);
 }
 
 
@@ -224,6 +241,26 @@ static CSSOM_CSSFontFaceRule* ParserCSSRuleCatcherState_appendCSSFontFaceRule(
 
 
 
+static CSSOM_CSSImportRule* ParserCSSRuleCatcherState_appendCSSImportRule(
+  struct _CSSOM_ParserCSSRuleCatcherState *state,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  CSSOM_CSSImportRule *cssRule;
+
+  assert(*state->cssRule == NULL);
+
+  cssRule = CSSOM_CSSImportRule__alloc(state->styleSheet,
+    base, uri, media, defaultNamepaceURI);
+  if (cssRule == NULL) return NULL;
+
+  *state->cssRule = (CSSOM_CSSRule*)cssRule;
+
+  return cssRule;
+}
+
+
+
 static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
   NULL,
   (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
@@ -239,7 +276,11 @@ static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
     const SAC_STRING, const SAC_STRING))
   ParserCSSRuleCatcherState_appendCSSNamespaceRule,
   (CSSOM_CSSFontFaceRule* (*)(struct _CSSOM_ParserState *))
-  ParserCSSRuleCatcherState_appendCSSFontFaceRule
+  ParserCSSRuleCatcherState_appendCSSFontFaceRule,
+  (CSSOM_CSSImportRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_STRING,
+    const SAC_MediaQuery *[], const SAC_STRING))
+  ParserCSSRuleCatcherState_appendCSSImportRule
 };
 
 
@@ -279,6 +320,18 @@ static CSSOM_CSSFontFaceRule* ParserCSSStyleSheetState_appendCSSFontFaceRule(
 {
   return CSSOM_CSSRuleList__appendCSSFontFaceRule(
     CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet);
+}
+
+
+
+static CSSOM_CSSImportRule* ParserCSSStyleSheetState_appendCSSImportRule(
+  struct _CSSOM_ParserCSSStyleSheetState *state,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  return CSSOM_CSSRuleList__appendCSSImportRule(
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet,
+    base, uri, media, defaultNamepaceURI);
 }
 
 
@@ -342,7 +395,11 @@ ParserCSSStyleSheetState_vtable = {
     const SAC_STRING, const SAC_STRING))
   ParserCSSStyleSheetState_appendCSSNamspaceRule,
   (CSSOM_CSSFontFaceRule* (*)(struct _CSSOM_ParserState *))
-  ParserCSSStyleSheetState_appendCSSFontFaceRule
+  ParserCSSStyleSheetState_appendCSSFontFaceRule,
+  (CSSOM_CSSImportRule* (*)(struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_STRING,
+    const SAC_MediaQuery *[], const SAC_STRING))
+  ParserCSSStyleSheetState_appendCSSImportRule
 };
 
 
@@ -393,6 +450,7 @@ static struct _CSSOM_ParserState_vtable ParserCSSFontFaceRuleState_vtable = {
   (CSSOM_CSSProperty* (*)(struct _CSSOM_ParserState *,
     const SAC_STRING, const SAC_LexicalUnit *, SAC_Boolean))
   ParserCSSFontFaceRuleState_setProperty,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -453,6 +511,7 @@ static struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
   NULL,
   NULL,
   NULL,
+  NULL,
   NULL
 };
 
@@ -507,6 +566,7 @@ static struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
     const SAC_Selector *[]))
   ParserCSSMediaRuleState_appendCSSStyleRule,
   NULL,
+  NULL,
   NULL
 };
 
@@ -558,6 +618,7 @@ static struct _CSSOM_ParserState_vtable ParserCSSStyleRuleState_vtable = {
   (CSSOM_CSSProperty* (*)(struct _CSSOM_ParserState *,
     const SAC_STRING, const SAC_LexicalUnit *, SAC_Boolean))
   ParserCSSStyleRuleState_setProperty,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -658,6 +719,18 @@ CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
 {
   return ParserState_setProperty(*CSSOM_Stack_ParserState_top(stack->state),
     property, value, important);
+}
+
+
+
+CSSOM_CSSImportRule* CSSOM_ParserStack_appendCSSImportRule(
+  CSSOM_ParserStack *stack,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  return ParserState_appendCSSImportRule(
+    *CSSOM_Stack_ParserState_top(stack->state),
+    base, uri, media, defaultNamepaceURI);
 }
 
 

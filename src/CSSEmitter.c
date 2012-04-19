@@ -3,10 +3,12 @@
 #include "CSSPageRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleRule.h"
+#include "gcc.h"
 
 #include <cssom/CSSFontFaceRule.h>
-#include <cssom/CSSNamespaceRule.h>
+#include <cssom/CSSImportRule.h>
 #include <cssom/CSSMediaRule.h>
+#include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSProperty.h>
 #include <cssom/CSSRuleList.h>
 
@@ -543,6 +545,12 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
     {
       return 1;
     }
+  } else if (type == CSSOM_CSSRule_IMPORT_RULE) {
+    if (CSSOM_CSSEmitter_cssImportRule(out,
+      (CSSOM_CSSImportRule*)cssRule) != 0)
+    {
+      return 1;
+    }
   } else if (type == CSSOM_CSSRule_MEDIA_RULE) {
     if (CSSOM_CSSEmitter_cssMediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
       return 1;
@@ -598,6 +606,19 @@ int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
     return 1;
   }
   if (fprintf(out, " }") < 0) return 1;
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_cssImportRule(FILE *out,
+  const CSSOM_CSSImportRule *cssRule)
+{
+  if (fprintf(out, "@import url('%s');",
+    CSSOM_CSSImportRule_href(cssRule)) < 0)
+  {
+    return 1;
+  }
   return 0;
 }
 

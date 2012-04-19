@@ -10,6 +10,7 @@
 #include "CSSStyleSheet.h"
 #include "CSSEmitter.h"
 #include "CSSOM.h"
+#include "gcc.h"
 #include "memory.h"
 
 #include <string.h>
@@ -232,6 +233,75 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSFontFaceRule_style(
   const CSSOM_CSSFontFaceRule *cssRule)
 {
   return cssRule->style;
+}
+
+
+
+/**
+ * CSSImportRule
+ */
+
+struct _CSSOM_CSSImportRule {
+  CSSOM_CSSRule super;
+  char *href;
+  const SAC_MediaQuery **media;
+};
+
+
+
+static void CSSImportRule_free(CSSOM_CSSImportRule *cssRule) {
+  CSSOM_native_free(cssRule->href);
+  CSSOM_free(cssRule);
+}
+
+
+
+static void CSSImportRule_swap(
+  CSSOM_CSSImportRule *lhs, CSSOM_CSSImportRule *rhs)
+{
+  CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->href, rhs->href);
+  SWAP(lhs->media, rhs->media);
+}
+
+
+
+static struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
+  (void(*)(CSSOM_CSSRule*))&CSSImportRule_free,
+  (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSImportRule_swap,
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssImportRule
+};
+
+
+
+CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
+  CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_STRING base CSSOM_UNUSED, const SAC_STRING uri,
+  const SAC_MediaQuery *media[],
+  const SAC_STRING defaultNamepaceURI CSSOM_UNUSED)
+{
+  CSSOM_CSSImportRule *cssRule;
+  char *href;
+
+  cssRule = (CSSOM_CSSImportRule*)CSSOM_malloc(sizeof(CSSOM_CSSImportRule));
+  if (cssRule == NULL) return NULL;
+
+  href = strdup(uri);
+  if (href == NULL) return NULL;
+
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
+    &CSSImportRule_vtable, parentStyleSheet, CSSOM_CSSRule_IMPORT_RULE);
+
+  cssRule->href = href;
+  cssRule->media = media;
+
+  return cssRule;
+}
+
+
+
+const char* CSSOM_CSSImportRule_href(const CSSOM_CSSImportRule *cssRule) {
+  return cssRule->href;
 }
 
 

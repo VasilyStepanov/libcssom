@@ -20,6 +20,11 @@ extern "C" {
 CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
   CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet);
 
+CSSOM_CSSImportRule* CSSOM_CSSRuleList__appendCSSImportRule(
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI);
+
 CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
   CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
   const SAC_MediaQuery *media[]);

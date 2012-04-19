@@ -18,6 +18,7 @@ forwards = { \
 
 includes = { \
   'CSSFontFaceRule' : ('CSSRule', ),
+  'CSSImportRule' : ('CSSRule', ),
   'CSSNamespaceRule' : ('CSSRule', ),
   'CSSMediaRule' : ('CSSRuleList', 'CSSRule', ),
   'CSSPageRule' : ('CSSRule', ),

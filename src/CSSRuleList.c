@@ -1,6 +1,7 @@
 #include "CSSRuleList.h"
 
 #include "CSSFontFaceRule.h"
+#include "CSSImportRule.h"
 #include "CSSMediaRule.h"
 #include "CSSNamespaceRule.h"
 #include "CSSPageRule.h"
@@ -14,6 +15,29 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
   CSSOM_CSSFontFaceRule *cssRule;
 
   cssRule = CSSOM_CSSFontFaceRule__alloc(styleSheet);
+  if (cssRule == NULL) return NULL;
+
+  if (CSSOM_Sequence__append(cssRules,
+    (CSSOM_CSSRule*)cssRule) == NULL)
+  {
+    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
+  return cssRule;
+}
+
+
+
+CSSOM_CSSImportRule* CSSOM_CSSRuleList__appendCSSImportRule(
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
+  const SAC_STRING base, const SAC_STRING uri,
+  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+{
+  CSSOM_CSSImportRule *cssRule;
+
+  cssRule = CSSOM_CSSImportRule__alloc(styleSheet,
+    base, uri, media, defaultNamepaceURI);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,

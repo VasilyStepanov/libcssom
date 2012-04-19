@@ -7,6 +7,7 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic \
 AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
 BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.hpp \
+                $(top_idldir)/CSSImportRule.idl.hpp \
                 $(top_idldir)/CSSMediaRule.idl.hpp \
                 $(top_idldir)/CSSNamespaceRule.idl.hpp \
                 $(top_idldir)/CSSPageRule.idl.hpp \
@@ -27,6 +28,7 @@ libcssompp_ladir = $(includedir)/cssom
 libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp \
                         \
                         $(top_srcdir)/include/cssompp/CSSFontFaceRule.hpp \
+                        $(top_srcdir)/include/cssompp/CSSImportRule.hpp \
                         $(top_srcdir)/include/cssompp/CSSMediaRule.hpp \
                         $(top_srcdir)/include/cssompp/CSSNamespaceRule.hpp \
                         $(top_srcdir)/include/cssompp/CSSPageRule.hpp \
@@ -41,6 +43,7 @@ libcssompp_la_SOURCES = CSSOM.cpp \
                         checks.cpp \
                         \
                         CSSFontFaceRule.cpp \
+                        CSSImportRule.cpp \
                         CSSMediaRule.cpp \
                         CSSNamespaceRule.cpp \
                         CSSPageRule.cpp \
