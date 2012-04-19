@@ -41,6 +41,9 @@ CSSOM_CSSStyleRule* CSSOM_CSSRuleList__appendCSSStyleRule(
   CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
   const SAC_Selector *selectors[]);
 
+int CSSOM_CSSRuleList__testHierarchy(const CSSOM_CSSRuleList *cssRules,
+  unsigned long index, CSSOM_CSSRule *cssRule);
+
 
 
 #ifdef __cplusplus

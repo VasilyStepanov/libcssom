@@ -57,9 +57,11 @@ void insertRule() {
   assert(errors.indexSizeErrors == 2);
 
 
-  /**
-   * TODO: Add HIERARCHY_REQUEST_ERR test.
-   */
+
+  assert(errors.hierarchyRequestErrors == 0);
+  styleSheet.insertRule("@import url('foo'); }", 1);
+  assert(errors.hierarchyRequestErrors == 1);
+  assert(styleSheet.cssRules().size() == 3);
 }
 
 

@@ -20,6 +20,8 @@ CSSOM_CSSRule * CSSOM__parseCSSRule(const CSSOM *cssom,
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 
+void CSSOM__hierarchyRequestErr(const CSSOM *cssom);
+
 void CSSOM__indexSizeErr(const CSSOM *cssom);
 
 int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);

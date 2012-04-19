@@ -12,10 +12,12 @@ namespace test {
 struct Errors {
   size_t invalidModificationErrors;
   size_t indexSizeErrors;
+  size_t hierarchyRequestErrors;
 
   Errors() :
     invalidModificationErrors(0),
-    indexSizeErrors(0)
+    indexSizeErrors(0),
+    hierarchyRequestErrors(0)
   {}
 };
 

@@ -15,7 +15,6 @@
 
 #include <string.h>
 #include <assert.h>
-#include <stdio.h>
 
 
 
@@ -333,6 +332,19 @@ void CSSOM__indexSizeErr(const CSSOM *cssom) {
     e.column = -1;
     e.code = CSSOM_ERROR_INDEX_SIZE_ERR;
     e.data = "Index size error";
+    cssom->errorHandler(cssom->userData, &e);
+  }
+}
+
+
+
+void CSSOM__hierarchyRequestErr(const CSSOM *cssom) {
+  if (cssom->errorHandler != NULL) {
+    CSSOM_Error e;
+    e.line = -1;
+    e.column = -1;
+    e.code = CSSOM_ERROR_HIERARCHY_REQUEST_ERR;
+    e.data = "Hierarchy request error";
     cssom->errorHandler(cssom->userData, &e);
   }
 }

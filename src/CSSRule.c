@@ -14,6 +14,7 @@
 #include "memory.h"
 
 #include <string.h>
+#include <stdio.h>
 #include <assert.h>
 
 
@@ -509,9 +510,10 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet, rule, strlen(rule));
   if (newCSSRule == NULL) return (unsigned long)-1;
 
-  /**
-   * TODO: HIERARCHY_REQUEST_ERR
-   */
+  if (!CSSOM_CSSRuleList__testHierarchy(cssRule->cssRules, index, newCSSRule)) {
+    CSSOM__hierarchyRequestErr(cssom);
+    return (unsigned long)-1;
+  }
 
   CSSOM_native_free(((CSSOM_CSSRule*)cssRule)->cssText);
   ((CSSOM_CSSRule*)cssRule)->cssText = NULL;

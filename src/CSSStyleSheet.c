@@ -102,9 +102,12 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
     styleSheet, rule, strlen(rule));
   if (newCSSRule == NULL) return (unsigned long)-1;
 
-  /**
-   * TODO: HIERARCHY_REQUEST_ERR
-   */
+  if (!CSSOM_CSSRuleList__testHierarchy(styleSheet->cssRules,
+    index, newCSSRule))
+  {
+    CSSOM__hierarchyRequestErr(styleSheet->cssom);
+    return (unsigned long)-1;
+  }
 
   if (index != size) {
     if (CSSOM_Sequence__insert(styleSheet->cssRules,
