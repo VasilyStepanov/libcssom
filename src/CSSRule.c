@@ -575,9 +575,20 @@ static void CSSPageRule_free(CSSOM_CSSPageRule *cssRule) {
 
 
 
+static void CSSPageRule_swap(
+  CSSOM_CSSPageRule *lhs, CSSOM_CSSPageRule *rhs)
+{
+  CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->selectorText, rhs->selectorText);
+  SWAP(lhs->selectors, rhs->selectors);
+  SWAP(lhs->style, rhs->style);
+}
+
+
+
 static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSPageRule_free,
-  NULL,
+  (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSPageRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssPageRule
 };
 
@@ -619,6 +630,14 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSPageRule_style(
 
 
 
+const SAC_Selector** CSSOM_CSSPageRule__selectors(
+  const CSSOM_CSSPageRule *cssRule)
+{
+  return cssRule->selectors;
+}
+
+
+
 const char* CSSOM_CSSPageRule_selectorText(
   const CSSOM_CSSPageRule *cssRule)
 {
@@ -631,14 +650,10 @@ const char* CSSOM_CSSPageRule_selectorText(
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (!(cssRule->selectors[0] != NULL && cssRule->selectors[1] == NULL &&
-      cssRule->selectors[0]->selectorType == SAC_ANY_NODE_SELECTOR))
-    {
-      if (CSSOM_CSSEmitter_selectors(out, cssRule->selectors) != 0) {
-        fclose(out);
-        CSSOM_free(buf);
-        return NULL;
-      }
+    if (CSSOM_CSSEmitter_pageSelectors(out, cssRule->selectors) != 0) {
+      fclose(out);
+      CSSOM_free(buf);
+      return NULL;
     }
 
     if (fclose(out) != 0) {

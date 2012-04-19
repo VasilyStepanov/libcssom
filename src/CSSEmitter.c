@@ -1,12 +1,12 @@
 #include "CSSEmitter.h"
 
+#include "CSSPageRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleRule.h"
 
 #include <cssom/CSSFontFaceRule.h>
 #include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSMediaRule.h>
-#include <cssom/CSSPageRule.h>
 #include <cssom/CSSProperty.h>
 #include <cssom/CSSRuleList.h>
 
@@ -480,6 +480,32 @@ int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
 
 
 
+static int anyNodeSelector(const SAC_Selector *selectors[]) {
+  return selectors[0] != NULL
+    && selectors[1] == NULL
+    && selectors[0]->selectorType == SAC_ANY_NODE_SELECTOR;
+}
+
+
+
+int CSSOM_CSSEmitter_pageSelectors(FILE *out, const SAC_Selector *selectors[]) {
+  const SAC_Selector **it;
+
+  if (anyNodeSelector(selectors)) return 0;
+
+  it = selectors;
+  if (*it != NULL) {
+    if (emit_selector(out, *it) != 0) return 1;
+    while (*(++it) != NULL) {
+      if (fprintf(out, ", ") < 0) return 1;
+      if (emit_selector(out, *it) != 0) return 1;
+    }
+  }
+  return 0;
+}
+
+
+
 int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style)
 {
@@ -611,7 +637,17 @@ int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
 int CSSOM_CSSEmitter_cssPageRule(FILE *out,
   const CSSOM_CSSPageRule *cssRule)
 {
-  if (fprintf(out, "@page { ") < 0) return 1;
+  const SAC_Selector **selectors;
+
+  selectors = CSSOM_CSSPageRule__selectors(cssRule);
+
+  if (anyNodeSelector(selectors)) {
+    if (fprintf(out, "@page") < 0) return 1;
+  } else {
+    if (fprintf(out, "@page ") < 0) return 1;
+  }
+  if (CSSOM_CSSEmitter_pageSelectors(out, selectors) != 0) return 1;
+  if (fprintf(out, " { ") < 0) return 1;
   if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
     CSSOM_CSSPageRule_style(cssRule)) != 0)
   {

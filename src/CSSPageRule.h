@@ -14,6 +14,9 @@ extern "C" {
 CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[]);
 
+const SAC_Selector** CSSOM_CSSPageRule__selectors(
+  const CSSOM_CSSPageRule *cssRule);
+
 
 
 #ifdef __cplusplus

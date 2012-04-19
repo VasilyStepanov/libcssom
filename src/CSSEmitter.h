@@ -19,6 +19,8 @@ int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property);
 
 int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]);
 
+int CSSOM_CSSEmitter_pageSelectors(FILE *out, const SAC_Selector *selectors[]);
+
 int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style);
 
