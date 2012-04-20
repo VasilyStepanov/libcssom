@@ -28,6 +28,8 @@ class CSSStyleDeclaration {
     bool operator==(
      const cssom::CSSStyleDeclaration &rhs) const;
 
+    bool isNull() const;
+
     const char * cssText() const;
 
     unsigned long length() const;

@@ -36,6 +36,12 @@ bool CSSRule::operator==(
 
 
 
+bool CSSRule::isNull() const {
+  return _impl == NULL;
+}
+
+
+
 CSSRule::CSSRule(CSSOM_CSSRule * impl) :
   _impl(impl)
 {}

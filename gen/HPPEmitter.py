@@ -109,6 +109,8 @@ def renderInterface(out, interface):
     print >>out
     print >>out, "    bool operator==(" % template
     print >>out, "     const cssom::%(name)s &rhs) const;" % template
+    print >>out
+    print >>out, "    bool isNull() const;"
     if interface.name in shared:
       print >>out
       print >>out, "    void swap(cssom::%(name)s &rhs);" % template

@@ -37,6 +37,8 @@ class CSSRule {
     bool operator==(
      const cssom::CSSRule &rhs) const;
 
+    bool isNull() const;
+
     static unsigned short STYLE_RULE;
 
     static unsigned short IMPORT_RULE;

@@ -35,6 +35,8 @@ class CSSStyleSheet {
     bool operator==(
      const cssom::CSSStyleSheet &rhs) const;
 
+    bool isNull() const;
+
     void swap(cssom::CSSStyleSheet &rhs);
 
     cssom::CSSRuleList cssRules() const;

@@ -34,6 +34,12 @@ bool CSSStyleDeclaration::operator==(
 
 
 
+bool CSSStyleDeclaration::isNull() const {
+  return _impl == NULL;
+}
+
+
+
 CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
   _impl(impl)
 {}

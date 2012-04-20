@@ -245,6 +245,13 @@ def renderInterface(out, interface):
     print >>out, "  return _impl == rhs._impl;"
     print >>out, "}"
 
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "bool %(name)s::isNull() const {" % template
+    print >>out, "  return _impl == NULL;"
+    print >>out, "}"
+
     if interface.name in shared:
       print >>out
       print >>out

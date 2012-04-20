@@ -283,6 +283,8 @@ void CSSOM_acquire(CSSOM *cssom) {
 
 
 void CSSOM_release(CSSOM *cssom) {
+  if (cssom == NULL) return;
+
   assert(cssom->handles > 0);
   --cssom->handles;
   if (cssom->handles > 0) return;

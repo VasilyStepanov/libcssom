@@ -68,6 +68,12 @@ bool CSSStyleSheet::operator==(
 
 
 
+bool CSSStyleSheet::isNull() const {
+  return _impl == NULL;
+}
+
+
+
 void CSSStyleSheet::swap(cssom::CSSStyleSheet &rhs) {
   std::swap(_impl, rhs._impl);
 }
