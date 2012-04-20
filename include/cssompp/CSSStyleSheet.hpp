@@ -15,6 +15,15 @@
 
 #include <cssom/typedefs.h>
 
+namespace cssom {
+
+
+
+class CSSRule;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -38,6 +47,8 @@ class CSSStyleSheet {
     bool isNull() const;
 
     void swap(cssom::CSSStyleSheet &rhs);
+
+    cssom::CSSRule ownerRule() const;
 
     cssom::CSSRuleList cssRules() const;
 

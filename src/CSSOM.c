@@ -397,7 +397,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
-  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser);
+  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser, NULL);
   if (styleSheet == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);

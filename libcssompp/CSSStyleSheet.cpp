@@ -12,6 +12,8 @@
 
 #include <cssom/CSSStyleSheet.h>
 
+#include <cssompp/CSSRule.hpp>
+
 #include "checks.hpp"
 
 #include <utility>
@@ -76,6 +78,12 @@ bool CSSStyleSheet::isNull() const {
 
 void CSSStyleSheet::swap(cssom::CSSStyleSheet &rhs) {
   std::swap(_impl, rhs._impl);
+}
+
+
+
+cssom::CSSRule CSSStyleSheet::ownerRule() const {
+  return cssom::CSSRule(CSSOM_CSSStyleSheet_ownerRule(_impl));
 }
 
 

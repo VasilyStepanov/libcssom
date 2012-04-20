@@ -13,6 +13,21 @@ namespace {
 
 
 
+void ownerRule() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+"  color : green;\n"
+"}\n"
+  );
+
+  cssom::CSSRule ownerRule = styleSheet.ownerRule();
+
+  assert(ownerRule.isNull() == true);
+}
+
+
+
 void insertRule() {
   test::Errors errors;
   cssom::CSSOM cssom;
@@ -129,6 +144,7 @@ namespace test {
 
 
 void cssStyleSheet() {
+  ownerRule();
   insertRule();
   deleteRule();
 }

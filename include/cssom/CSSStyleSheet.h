@@ -31,6 +31,10 @@ void CSSOM_CSSStyleSheet_release(
 
 
 
+CSSOM_CSSRule* CSSOM_CSSStyleSheet_ownerRule(const CSSOM_CSSStyleSheet * cssStyleSheet);
+
+
+
 CSSOM_CSSRuleList* CSSOM_CSSStyleSheet_cssRules(const CSSOM_CSSStyleSheet * cssStyleSheet);
 
 

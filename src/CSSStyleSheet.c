@@ -19,13 +19,14 @@ struct _CSSOM_CSSStyleSheet {
   size_t handles;
   const CSSOM *cssom;
   SAC_Parser parser;
+  CSSOM_CSSRule *ownerRule;
   CSSOM_CSSRuleList *cssRules;
 };
 
 
 
 CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
-  SAC_Parser parser)
+  SAC_Parser parser, CSSOM_CSSRule *ownerRule)
 {
   CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSStyleSheet *styleSheet;
@@ -42,6 +43,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
   styleSheet->handles = 1;
   styleSheet->cssom = cssom;
   styleSheet->parser = parser;
+  styleSheet->ownerRule = ownerRule;
   styleSheet->cssRules = cssRules;
 
   return styleSheet;
@@ -137,4 +139,12 @@ void CSSOM_CSSStyleSheet_deleteRule(CSSOM_CSSStyleSheet *styleSheet,
   }
 
   CSSOM_Sequence__remove(styleSheet->cssRules, index);
+}
+
+
+
+CSSOM_CSSRule* CSSOM_CSSStyleSheet_ownerRule(
+  const CSSOM_CSSStyleSheet *styleSheet)
+{
+  return styleSheet->ownerRule;
 }
