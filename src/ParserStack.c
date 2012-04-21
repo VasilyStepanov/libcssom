@@ -699,6 +699,7 @@ void CSSOM_ParserStack_free(CSSOM_ParserStack *stack) {
 
 
 void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack) {
+  ParserState_free(*CSSOM_Stack_ParserState_top(stack->state));
   CSSOM_Stack_ParserState_pop(stack->state);
 }
 
