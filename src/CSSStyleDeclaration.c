@@ -2,6 +2,7 @@
 
 #include "CSSProperty.h"
 #include "CSSEmitter.h"
+#include "FSM_CSSProperty.h"
 #include "memory.h"
 
 #include <stdio.h>
@@ -10,6 +11,7 @@
 
 
 struct _CSSOM_CSSStyleDeclaration {
+  size_t handles;
   CSSOM_FSM_CSSProperty *fsm;
   char *cssText;
 };
@@ -32,6 +34,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
     return NULL;
   }
 
+  style->handles = 1;
   style->fsm = fsm;
   style->cssText = NULL;
 
@@ -40,7 +43,21 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 
 
 
-void CSSOM_CSSStyleDeclaration__free(CSSOM_CSSStyleDeclaration *style) {
+void CSSOM_CSSStyleDeclaration_acquire(CSSOM_CSSStyleDeclaration *style) {
+  if (style == NULL) return;
+
+  ++style->handles;
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
+  if (style == NULL) return;
+
+  assert(style->handles > 0);
+  --style->handles;
+  if (style->handles > 0) return;
+
   CSSOM_native_free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
   CSSOM_free(style);
@@ -68,7 +85,7 @@ CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
 
   it = CSSOM_FSM_CSSProperty_add(style->fsm, property, prop);
   if (it == CSSOM_FSM_CSSProperty_end(style->fsm)) {
-    CSSOM_CSSProperty__free(prop);
+    CSSOM_CSSProperty_release(prop);
     return NULL;
   }
 

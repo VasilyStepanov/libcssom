@@ -22,6 +22,13 @@ extern "C" {
 
 
 
+#define CSSOM_CSSMediaRule_acquire(cssMediaRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssMediaRule))
+
+
+
+#define CSSOM_CSSMediaRule_release(cssMediaRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssMediaRule))
 
 
 

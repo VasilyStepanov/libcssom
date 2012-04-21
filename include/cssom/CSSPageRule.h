@@ -21,6 +21,13 @@ extern "C" {
 
 
 
+#define CSSOM_CSSPageRule_acquire(cssPageRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssPageRule))
+
+
+
+#define CSSOM_CSSPageRule_release(cssPageRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssPageRule))
 
 
 

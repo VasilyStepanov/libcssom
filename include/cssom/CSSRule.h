@@ -19,6 +19,13 @@ extern "C" {
 
 
 
+void CSSOM_CSSRule_acquire(
+  CSSOM_CSSRule * cssRule);
+
+
+
+void CSSOM_CSSRule_release(
+  CSSOM_CSSRule * cssRule);
 
 
 

@@ -36,7 +36,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
 
   styleSheet = (CSSOM_CSSStyleSheet*)CSSOM_malloc(sizeof(CSSOM_CSSStyleSheet));
   if (styleSheet == NULL) {
-    CSSOM_Sequence__free(cssRules);
+    CSSOM_Sequence_release(cssRules);
     return NULL;
   }
 
@@ -66,7 +66,7 @@ void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
   --styleSheet->handles;
   if (styleSheet->handles > 0) return;
 
-  CSSOM_Sequence__free(styleSheet->cssRules);
+  CSSOM_Sequence_release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
   CSSOM_free(styleSheet);
 }
@@ -115,12 +115,12 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
     if (CSSOM_Sequence__insert(styleSheet->cssRules,
       index, newCSSRule) == NULL)
     {
-      CSSOM_CSSRule__free(newCSSRule);
+      CSSOM_CSSRule_release(newCSSRule);
       return (unsigned long)-1;
     }
   } else {
     if (CSSOM_Sequence__append(styleSheet->cssRules, newCSSRule) == NULL) {
-      CSSOM_CSSRule__free(newCSSRule);
+      CSSOM_CSSRule_release(newCSSRule);
       return (unsigned long)-1;
     }
   }

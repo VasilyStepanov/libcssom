@@ -14,13 +14,21 @@ class Sequence {
   public:
     Sequence();
     explicit Sequence(CSSOM_Sequence * impl);
+    Sequence(const cssom::Sequence<T> &copy);
+    ~Sequence();
+
+    cssom::Sequence<T>& operator=(const cssom::Sequence<T> &rhs);
+
+    bool operator==(const cssom::Sequence<T> &rhs) const;
+
+    bool isNull() const;
 
     void swap(cssom::Sequence<T> &rhs);
 
     size_t size() const;
     T operator[](size_t index) const;
 
-  private:
+  protected:
     CSSOM_Sequence * _impl;
 };
 
@@ -36,7 +44,50 @@ Sequence<T>::Sequence() :
 template <typename T>
 Sequence<T>::Sequence(CSSOM_Sequence * impl) :
   _impl(impl)
-{}
+{
+  CSSOM_Sequence_acquire(_impl);
+}
+
+
+
+template <typename T>
+Sequence<T>::Sequence(const cssom::Sequence<T> &copy) :
+  _impl(copy._impl)
+{
+  CSSOM_Sequence_acquire(_impl);
+}
+
+
+
+template <typename T>
+Sequence<T>::~Sequence<T>() {
+  CSSOM_Sequence_release(_impl);
+}
+
+
+
+template <typename T>
+cssom::Sequence<T>& Sequence<T>::operator=(const cssom::Sequence<T> &rhs) {
+  if (&rhs == this) return *this;
+
+  cssom::Sequence<T>(rhs).swap(*this);
+
+  return *this;
+}
+
+
+
+template <typename T>
+bool Sequence<T>::operator==(const cssom::Sequence<T> &rhs) const {
+  return _impl == rhs._impl;
+}
+
+
+
+template <typename T>
+bool Sequence<T>::isNull() const {
+  return _impl == NULL;
+}
 
 
 

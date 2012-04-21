@@ -15,7 +15,7 @@ extern "C" {
 
 
 #define CSSOM_CSSRuleList__alloc() \
-  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule__free)
+  CSSOM_Sequence__alloc((void(*)(void*))CSSOM_CSSRule_release)
 
 CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
   CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet);

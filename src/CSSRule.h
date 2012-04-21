@@ -9,10 +9,6 @@ extern "C" {
 
 
 
-void CSSOM_CSSRule__free(CSSOM_CSSRule * cssRule);
-
-
-
 #ifdef __cplusplus
 }
 #endif

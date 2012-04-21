@@ -24,11 +24,16 @@ class CSSStyleDeclaration {
 
     CSSStyleDeclaration();
     explicit CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl);
+    CSSStyleDeclaration(const cssom::CSSStyleDeclaration &copy);
+    ~CSSStyleDeclaration();
 
-    bool operator==(
-     const cssom::CSSStyleDeclaration &rhs) const;
+    cssom::CSSStyleDeclaration& operator=(const cssom::CSSStyleDeclaration &rhs);
+
+    bool operator==(const cssom::CSSStyleDeclaration &rhs) const;
 
     bool isNull() const;
+
+    void swap(cssom::CSSStyleDeclaration &rhs);
 
     const char * cssText() const;
 

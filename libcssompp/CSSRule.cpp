@@ -28,6 +28,40 @@ CSSRule::CSSRule() :
 
 
 
+CSSRule::CSSRule(CSSOM_CSSRule * impl) :
+  _impl(impl)
+{
+  CSSOM_CSSRule_acquire(_impl);
+}
+
+
+
+CSSRule::CSSRule(const cssom::CSSRule &copy) :
+  _impl(copy._impl)
+{
+  CSSOM_CSSRule_acquire(_impl);
+}
+
+
+
+CSSRule::~CSSRule() {
+  CSSOM_CSSRule_release(_impl);
+}
+
+
+
+cssom::CSSRule& CSSRule::operator=(
+  const cssom::CSSRule &rhs)
+{
+  if (&rhs == this) return *this;
+
+  cssom::CSSRule(rhs).swap(*this);
+
+  return *this;
+}
+
+
+
 bool CSSRule::operator==(
   const cssom::CSSRule &rhs) const
 {
@@ -42,9 +76,9 @@ bool CSSRule::isNull() const {
 
 
 
-CSSRule::CSSRule(CSSOM_CSSRule * impl) :
-  _impl(impl)
-{}
+void CSSRule::swap(cssom::CSSRule &rhs) {
+  std::swap(_impl, rhs._impl);
+}
 
 
 

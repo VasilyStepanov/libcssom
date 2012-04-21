@@ -11,8 +11,6 @@ extern "C" {
 
 CSSOM_Sequence* CSSOM_Sequence__alloc(void (*releaseItem)(void*));
 
-void CSSOM_Sequence__free(CSSOM_Sequence *sequence);
-
 void* CSSOM_Sequence__append(CSSOM_Sequence *sequence, void *ptr);
 
 void* CSSOM_Sequence__insert(CSSOM_Sequence *sequence, size_t index, void *ptr);

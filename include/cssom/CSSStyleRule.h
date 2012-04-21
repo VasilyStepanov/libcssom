@@ -21,6 +21,13 @@ extern "C" {
 
 
 
+#define CSSOM_CSSStyleRule_acquire(cssStyleRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssStyleRule))
+
+
+
+#define CSSOM_CSSStyleRule_release(cssStyleRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssStyleRule))
 
 
 

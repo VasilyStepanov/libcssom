@@ -66,6 +66,7 @@ struct _CSSOM_CSSRule_vtable {
 
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
+  size_t handles;
   CSSOM_CSSStyleSheet *parentStyleSheet;
   unsigned short type;
   char *cssText;
@@ -78,6 +79,7 @@ static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
   unsigned short type)
 {
   cssRule->vtable = vtable;
+  cssRule->handles = 1;
   cssRule->parentStyleSheet = parentStyleSheet;
   cssRule->type = type;
   cssRule->cssText = NULL;
@@ -85,10 +87,23 @@ static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
 
 
 
-void CSSOM_CSSRule__free(CSSOM_CSSRule *cssRule) {
-  cssRule->vtable->free(cssRule);
+void CSSOM_CSSRule_acquire(CSSOM_CSSRule *cssRule) {
+  if (cssRule == NULL) return;
+
+  ++cssRule->handles;
+}
+
+
+
+void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
+  if (cssRule == NULL) return;
+
+  assert(cssRule->handles > 0);
+  --cssRule->handles;
+  if (cssRule->handles > 0) return;
 
   CSSOM_native_free(cssRule->cssText);
+  cssRule->vtable->free(cssRule);
 }
 
 
@@ -165,7 +180,7 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   cssRule->cssText = NULL;
   CSSRule_swap(cssRule, newCSSRule);
 
-  CSSOM_CSSRule__free(newCSSRule);
+  CSSOM_CSSRule_release(newCSSRule);
 }
 
 
@@ -182,7 +197,7 @@ struct _CSSOM_CSSFontFaceRule {
 
 
 static void CSSFontFaceRule_free(CSSOM_CSSFontFaceRule *cssRule) {
-  CSSOM_CSSStyleDeclaration__free(cssRule->style);
+  CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_free(cssRule);
 }
 
@@ -217,7 +232,7 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
 
   cssRule = (CSSOM_CSSFontFaceRule*)CSSOM_malloc(sizeof(CSSOM_CSSFontFaceRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration__free(style);
+    CSSOM_CSSStyleDeclaration_release(style);
     return NULL;
   }
 
@@ -321,7 +336,7 @@ struct _CSSOM_CSSStyleRule {
 
 
 static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
-  CSSOM_CSSStyleDeclaration__free(cssRule->style);
+  CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
   CSSOM_free(cssRule);
 }
@@ -359,7 +374,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
   cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration__free(style);
+    CSSOM_CSSStyleDeclaration_release(style);
     return NULL;
   }
 
@@ -433,7 +448,7 @@ struct _CSSOM_CSSMediaRule {
 
 
 static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
-  CSSOM_Sequence__free(cssRule->cssRules);
+  CSSOM_Sequence_release(cssRule->cssRules);
   CSSOM_free(cssRule);
 }
 
@@ -467,7 +482,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
 
   cssRule = (CSSOM_CSSMediaRule*)CSSOM_malloc(sizeof(CSSOM_CSSMediaRule));
   if (cssRule == NULL) {
-    CSSOM_Sequence__free(cssRules);
+    CSSOM_Sequence_release(cssRules);
     return NULL;
   }
 
@@ -519,12 +534,12 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
   ((CSSOM_CSSRule*)cssRule)->cssText = NULL;
   if (index != size) {
     if (CSSOM_Sequence__insert(cssRule->cssRules, index, newCSSRule) == NULL) {
-      CSSOM_CSSRule__free(newCSSRule);
+      CSSOM_CSSRule_release(newCSSRule);
       return (unsigned long)-1;
     }
   } else {
     if (CSSOM_Sequence__append(cssRule->cssRules, newCSSRule) == NULL) {
-      CSSOM_CSSRule__free(newCSSRule);
+      CSSOM_CSSRule_release(newCSSRule);
       return (unsigned long)-1;
     }
   }
@@ -640,7 +655,7 @@ struct _CSSOM_CSSPageRule {
 
 
 static void CSSPageRule_free(CSSOM_CSSPageRule *cssRule) {
-  CSSOM_CSSStyleDeclaration__free(cssRule->style);
+  CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
   CSSOM_free(cssRule);
 }
@@ -679,7 +694,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   cssRule = (CSSOM_CSSPageRule*)CSSOM_malloc(
     sizeof(CSSOM_CSSPageRule));
   if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration__free(style);
+    CSSOM_CSSStyleDeclaration_release(style);
     return NULL;
   }
 

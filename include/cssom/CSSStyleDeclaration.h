@@ -19,6 +19,13 @@ extern "C" {
 
 
 
+void CSSOM_CSSStyleDeclaration_acquire(
+  CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_release(
+  CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 
 

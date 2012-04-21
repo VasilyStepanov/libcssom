@@ -6,7 +6,6 @@ from Emitter import splitCamelCase
 from Emitter import instanceName
 from Emitter import includes
 from Emitter import forwards
-from Emitter import shared
 from Emitter import renderWarning
 
 import pywidl
@@ -169,29 +168,28 @@ def renderInterface(out, interface):
     'iface' : interface.name,
     'inst' : instanceName(interface.name) }
 
-  if interface.name in shared:
-    if not interface.parent:
-      print >>out, "void CSSOM_%(iface)s_acquire(" % template
-      print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
+  if not interface.parent:
+    print >>out, "void CSSOM_%(iface)s_acquire(" % template
+    print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
 
-      print >>out
-      print >>out
-      print >>out
-      print >>out, "void CSSOM_%(iface)s_release(" % template
-      print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
-    else:
-      template['parent'] = interface.parent
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "void CSSOM_%(iface)s_release(" % template
+    print >>out, "  CSSOM_%(iface)s * %(inst)s);" % template
+  else:
+    template['parent'] = interface.parent
 
-      print >>out, "#define CSSOM_%(iface)s_acquire(%(inst)s) \\" % template
-      print >>out, "  CSSOM_%(parent)s_acquire((CSSOM_%(parent)s*)(%(inst)s))" % \
-        template
+    print >>out, "#define CSSOM_%(iface)s_acquire(%(inst)s) \\" % template
+    print >>out, "  CSSOM_%(parent)s_acquire((CSSOM_%(parent)s*)(%(inst)s))" % \
+      template
 
-      print >>out
-      print >>out
-      print >>out
-      print >>out, "#define CSSOM_%(iface)s_release(%(inst)s) \\" % template
-      print >>out, "  CSSOM_%(parent)s_release((CSSOM_%(parent)s*)(%(inst)s))" % \
-        template
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "#define CSSOM_%(iface)s_release(%(inst)s) \\" % template
+    print >>out, "  CSSOM_%(parent)s_release((CSSOM_%(parent)s*)(%(inst)s))" % \
+      template
 
   for member in interface.members:
     renderInterfaceMember(out, interface, member)

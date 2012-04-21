@@ -21,6 +21,13 @@ extern "C" {
 
 
 
+#define CSSOM_CSSImportRule_acquire(cssImportRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssImportRule))
+
+
+
+#define CSSOM_CSSImportRule_release(cssImportRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssImportRule))
 
 
 

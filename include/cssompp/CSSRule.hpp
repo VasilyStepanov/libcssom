@@ -33,11 +33,16 @@ class CSSRule {
 
     CSSRule();
     explicit CSSRule(CSSOM_CSSRule * impl);
+    CSSRule(const cssom::CSSRule &copy);
+    ~CSSRule();
 
-    bool operator==(
-     const cssom::CSSRule &rhs) const;
+    cssom::CSSRule& operator=(const cssom::CSSRule &rhs);
+
+    bool operator==(const cssom::CSSRule &rhs) const;
 
     bool isNull() const;
+
+    void swap(cssom::CSSRule &rhs);
 
     static unsigned short STYLE_RULE;
 

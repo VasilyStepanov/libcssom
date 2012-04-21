@@ -140,6 +140,10 @@ extern const char *CSSOM_CSSProperties[];
 
 
 
+void CSSOM_CSSProperty_acquire(CSSOM_CSSProperty *property);
+
+void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property);
+
 const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property);
 
 const char* CSSOM_CSSProperty_name(const CSSOM_CSSProperty *property);

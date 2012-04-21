@@ -20,7 +20,7 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 
@@ -43,7 +43,7 @@ CSSOM_CSSImportRule* CSSOM_CSSRuleList__appendCSSImportRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 
@@ -64,7 +64,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 
@@ -85,7 +85,7 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSRuleList__appendCSSNamespaceRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 
@@ -106,7 +106,7 @@ CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 
@@ -127,7 +127,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSRuleList__appendCSSStyleRule(
   if (CSSOM_Sequence__append(cssRules,
     (CSSOM_CSSRule*)cssRule) == NULL)
   {
-    CSSOM_CSSRule__free((CSSOM_CSSRule*)cssRule);
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
   }
 

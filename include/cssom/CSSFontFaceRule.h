@@ -21,6 +21,13 @@ extern "C" {
 
 
 
+#define CSSOM_CSSFontFaceRule_acquire(cssFontFaceRule) \
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)(cssFontFaceRule))
+
+
+
+#define CSSOM_CSSFontFaceRule_release(cssFontFaceRule) \
+  CSSOM_CSSRule_release((CSSOM_CSSRule*)(cssFontFaceRule))
 
 
 
