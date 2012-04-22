@@ -14,7 +14,6 @@
 #include "memory.h"
 
 #include <string.h>
-#include <stdio.h>
 #include <assert.h>
 
 
@@ -91,6 +90,7 @@ void CSSOM_CSSRule_acquire(CSSOM_CSSRule *cssRule) {
   if (cssRule == NULL) return;
 
   ++cssRule->handles;
+  CSSOM_CSSStyleSheet_acquire(cssRule->parentStyleSheet);
 }
 
 
@@ -100,7 +100,10 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
 
   assert(cssRule->handles > 0);
   --cssRule->handles;
-  if (cssRule->handles > 0) return;
+  if (cssRule->handles > 0) {
+    CSSOM_CSSStyleSheet_release(cssRule->parentStyleSheet);
+    return;
+  }
 
   CSSOM_native_free(cssRule->cssText);
   cssRule->vtable->free(cssRule);

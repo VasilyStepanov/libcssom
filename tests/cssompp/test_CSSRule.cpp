@@ -114,28 +114,35 @@ void selectorText() {
 
 void parentStyleSheet() {
   cssom::CSSOM cssom;
-  cssom::CSSStyleSheet styleSheet = cssom.parse(
+  cssom::CSSRule cssRule;
+  {
+    cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
 " color : green;\n"
 "}\n"
-  );
-  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
-    styleSheet.cssRules()[0]);
+    );
+    cssRule = cssom::CSSStyleRule::cast(styleSheet.cssRules()[0]);
 
-  assert(cssRule.parentStyleSheet() == styleSheet);
+    assert(cssRule.parentStyleSheet() == styleSheet);
 
 
-  /**
-   * Test on swap.
-   */
+    /**
+     * Test on swap.
+     */
 
-  cssRule.setCSSText(
+    cssRule.setCSSText(
 "div {\n"
 " background-color : green;\n"
 "}\n"
-  );
+    );
 
-  assert(cssRule.parentStyleSheet() == styleSheet);
+    assert(cssRule.parentStyleSheet() == styleSheet);
+  }
+  
+  /**
+   * No segfault on cssRule.parentStyleSheet().
+   */
+  assert(cssRule.parentStyleSheet().cssRules()[0] == cssRule);
 }
 
 
