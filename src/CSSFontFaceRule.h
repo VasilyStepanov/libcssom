@@ -10,7 +10,7 @@ extern "C" {
 
 
 CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet);
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet);
 
 
 

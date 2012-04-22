@@ -404,7 +404,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
-  if (CSSOM_ParserStack_pushCSSStyleSheet(stack, styleSheet) == NULL) {
+  if (CSSOM_ParserStack_pushCSSStyleSheet(stack, NULL, styleSheet) == NULL) {
     CSSOM_CSSStyleSheet_release(styleSheet);
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -427,7 +427,8 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
 
 
 CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
-  CSSOM_CSSStyleSheet *styleSheet, const char *cssText, int len)
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
+  const char *cssText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -444,7 +445,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
 
   cssRule = NULL;
   if (CSSOM_ParserStack_pushCSSRuleCatcher(stack,
-    styleSheet, &cssRule) == NULL)
+    parentRule, styleSheet, &cssRule) == NULL)
   {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);

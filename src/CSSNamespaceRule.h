@@ -12,7 +12,7 @@ extern "C" {
 
 
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_STRING prefix, const SAC_STRING uri);
 
 

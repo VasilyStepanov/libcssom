@@ -4,6 +4,7 @@
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
+#include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
 
@@ -112,6 +113,36 @@ void selectorText() {
 
 
 
+void parentRule() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+"}\n"
+"@media all {\n"
+" p {\n"
+"   color : green;\n"
+" }\n"
+"}\n"
+  );
+  assert(styleSheet.cssRules().size() == 2);
+
+  assert(styleSheet.cssRules()[0].parentRule().isNull() == true);
+  assert(styleSheet.cssRules()[1].parentRule().isNull() == true);
+
+
+
+  assert(styleSheet.cssRules()[1].type() == cssom::CSSRule::MEDIA_RULE);
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[1]);
+
+  assert(cssRule.cssRules().size() == 1);
+  assert(cssRule.cssRules()[0].parentRule().isNull() == false);
+  assert(cssRule.cssRules()[0].parentRule() == styleSheet.cssRules()[1]);
+}
+
+
+
 void parentStyleSheet() {
   cssom::CSSOM cssom;
   cssom::CSSRule cssRule;
@@ -157,6 +188,7 @@ void cssRule() {
   consts();
   type();
   cssText();
+  parentRule();
   parentStyleSheet();
 }
 

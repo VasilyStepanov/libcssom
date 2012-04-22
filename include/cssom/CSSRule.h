@@ -65,6 +65,10 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule * cssRule, const char * cssText);
 
 
 
+CSSOM_CSSRule* CSSOM_CSSRule_parentRule(const CSSOM_CSSRule * cssRule);
+
+
+
 CSSOM_CSSStyleSheet* CSSOM_CSSRule_parentStyleSheet(const CSSOM_CSSRule * cssRule);
 
 

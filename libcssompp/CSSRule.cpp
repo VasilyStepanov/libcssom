@@ -124,6 +124,12 @@ void CSSRule::setCSSText(const char * cssText) {
 
 
 
+cssom::CSSRule CSSRule::parentRule() const {
+  return cssom::CSSRule(CSSOM_CSSRule_parentRule(_impl));
+}
+
+
+
 cssom::CSSStyleSheet CSSRule::parentStyleSheet() const {
   return cssom::CSSStyleSheet(CSSOM_CSSRule_parentStyleSheet(_impl));
 }

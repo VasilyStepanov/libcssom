@@ -66,6 +66,7 @@ struct _CSSOM_CSSRule_vtable {
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
+  CSSOM_CSSRule *parentRule;
   CSSOM_CSSStyleSheet *parentStyleSheet;
   unsigned short type;
   char *cssText;
@@ -74,11 +75,12 @@ struct _CSSOM_CSSRule {
 
 
 static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
-  struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSStyleSheet *parentStyleSheet,
-  unsigned short type)
+  struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, unsigned short type)
 {
   cssRule->vtable = vtable;
   cssRule->handles = 1;
+  cssRule->parentRule = parentRule;
   cssRule->parentStyleSheet = parentStyleSheet;
   cssRule->type = type;
   cssRule->cssText = NULL;
@@ -90,6 +92,7 @@ void CSSOM_CSSRule_acquire(CSSOM_CSSRule *cssRule) {
   if (cssRule == NULL) return;
 
   ++cssRule->handles;
+  CSSOM_CSSRule_acquire(cssRule->parentRule);
   CSSOM_CSSStyleSheet_acquire(cssRule->parentStyleSheet);
 }
 
@@ -102,6 +105,7 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
   --cssRule->handles;
   if (cssRule->handles > 0) {
     CSSOM_CSSStyleSheet_release(cssRule->parentStyleSheet);
+    CSSOM_CSSRule_acquire(cssRule->parentRule);
     return;
   }
 
@@ -145,6 +149,12 @@ unsigned short CSSOM_CSSRule_type(const CSSOM_CSSRule *cssRule) {
 
 
 
+CSSOM_CSSRule* CSSOM_CSSRule_parentRule(const CSSOM_CSSRule *cssRule) {
+  return cssRule->parentRule;
+}
+
+
+
 CSSOM_CSSStyleSheet* CSSOM_CSSRule_parentStyleSheet(
   const CSSOM_CSSRule *cssRule)
 {
@@ -170,8 +180,8 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(cssRule->parentStyleSheet);
-  newCSSRule = CSSOM__parseCSSRule(cssom, cssRule->parentStyleSheet,
-    cssText, strlen(cssText));
+  newCSSRule = CSSOM__parseCSSRule(cssom, cssRule->parentRule,
+    cssRule->parentStyleSheet, cssText, strlen(cssText));
   if (newCSSRule == NULL) return;
 
   if (CSSOM_CSSRule_type(newCSSRule) != CSSOM_CSSRule_type(cssRule)) {
@@ -225,7 +235,7 @@ static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
 
 
 CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet)
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet)
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSFontFaceRule *cssRule;
@@ -240,8 +250,8 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
     return NULL;
   }
 
-  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
-    &CSSFontFaceRule_vtable, parentStyleSheet, CSSOM_CSSRule_FONT_FACE_RULE);
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSFontFaceRule_vtable,
+    parentRule, parentStyleSheet, CSSOM_CSSRule_FONT_FACE_RULE);
   cssRule->style = style;
 
   return cssRule;
@@ -295,7 +305,7 @@ static struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
 
 
 CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_STRING base CSSOM_UNUSED, const SAC_STRING uri,
   const SAC_MediaQuery *media[],
   const SAC_STRING defaultNamepaceURI CSSOM_UNUSED)
@@ -309,8 +319,8 @@ CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
   href = strdup(uri);
   if (href == NULL) return NULL;
 
-  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
-    &CSSImportRule_vtable, parentStyleSheet, CSSOM_CSSRule_IMPORT_RULE);
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSImportRule_vtable,
+    parentRule, parentStyleSheet, CSSOM_CSSRule_IMPORT_RULE);
 
   cssRule->href = href;
   cssRule->media = media;
@@ -367,7 +377,8 @@ static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
@@ -382,8 +393,8 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
     return NULL;
   }
 
-  CSSRule_ctor((CSSOM_CSSRule*)cssRule,
-    &CSSStyleRule_vtable, parentStyleSheet, CSSOM_CSSRule_STYLE_RULE);
+  CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable,
+    parentRule, parentStyleSheet, CSSOM_CSSRule_STYLE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
   cssRule->style = style;
@@ -476,7 +487,8 @@ static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
 
 
 CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_MediaQuery *media[])
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_MediaQuery *media[])
 {
   CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSMediaRule *cssRule;
@@ -491,7 +503,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   }
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
-    parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
+    parentRule, parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
   cssRule->media = media;
   cssRule->cssRules = cssRules;
@@ -524,7 +536,7 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
     return (unsigned long)-1;
   }
 
-  newCSSRule = CSSOM__parseCSSRule(cssom,
+  newCSSRule = CSSOM__parseCSSRule(cssom, ((CSSOM_CSSRule*)cssRule)->parentRule,
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet, rule, strlen(rule));
   if (newCSSRule == NULL) return (unsigned long)-1;
 
@@ -612,7 +624,7 @@ static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
 
 
 CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet,
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_STRING prefix, const SAC_STRING uri)
 {
   CSSOM_CSSNamespaceRule *cssRule;
@@ -622,7 +634,7 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSNamespaceRule__alloc(
   if (cssRule == NULL) return NULL;
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSNamespaceRule_vtable,
-    parentStyleSheet, CSSOM_CSSRule_NAMESPACE_RULE);
+    parentRule, parentStyleSheet, CSSOM_CSSRule_NAMESPACE_RULE);
 
   cssRule->prefix = prefix;
   cssRule->uri = uri;
@@ -689,7 +701,8 @@ static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
 
 
 CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSPageRule *cssRule;
@@ -706,7 +719,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   }
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSPageRule_vtable,
-    parentStyleSheet, CSSOM_CSSRule_PAGE_RULE);
+    parentRule, parentStyleSheet, CSSOM_CSSRule_PAGE_RULE);
   cssRule->selectorText = NULL;
   cssRule->selectors = selectors;
   cssRule->style = style;

@@ -147,7 +147,8 @@ static CSSOM_CSSFontFaceRule* ParserState_appendCSSFontFaceRule(
 
 struct _CSSOM_ParserCSSRuleCatcherState {
   struct _CSSOM_ParserState super;
-  CSSOM_CSSStyleSheet *styleSheet;
+  CSSOM_CSSRule *parentRule;
+  CSSOM_CSSStyleSheet *parentStyleSheet;
   CSSOM_CSSRule **cssRule;
 };
 
@@ -161,7 +162,8 @@ static CSSOM_CSSPageRule* ParserCSSRuleCatcherState_appendCSSPageRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSPageRule__alloc(state->styleSheet, selectors);
+  cssRule = CSSOM_CSSPageRule__alloc(state->parentRule,
+    state->parentStyleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -178,7 +180,8 @@ static CSSOM_CSSMediaRule* ParserCSSRuleCatcherState_appendCSSMediaRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSMediaRule__alloc(state->styleSheet, media);
+  cssRule = CSSOM_CSSMediaRule__alloc(state->parentRule,
+    state->parentStyleSheet, media);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -196,7 +199,8 @@ static CSSOM_CSSStyleRule* ParserCSSRuleCatcherState_appendCSSStyleRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSStyleRule__alloc(state->styleSheet, selectors);
+  cssRule = CSSOM_CSSStyleRule__alloc(state->parentRule,
+    state->parentStyleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -214,7 +218,8 @@ static CSSOM_CSSNamespaceRule* ParserCSSRuleCatcherState_appendCSSNamespaceRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSNamespaceRule__alloc(state->styleSheet, prefix, uri);
+  cssRule = CSSOM_CSSNamespaceRule__alloc(state->parentRule,
+    state->parentStyleSheet, prefix, uri);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -231,7 +236,8 @@ static CSSOM_CSSFontFaceRule* ParserCSSRuleCatcherState_appendCSSFontFaceRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSFontFaceRule__alloc(state->styleSheet);
+  cssRule = CSSOM_CSSFontFaceRule__alloc(state->parentRule,
+    state->parentStyleSheet);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -250,8 +256,8 @@ static CSSOM_CSSImportRule* ParserCSSRuleCatcherState_appendCSSImportRule(
 
   assert(*state->cssRule == NULL);
 
-  cssRule = CSSOM_CSSImportRule__alloc(state->styleSheet,
-    base, uri, media, defaultNamepaceURI);
+  cssRule = CSSOM_CSSImportRule__alloc(state->parentRule,
+    state->parentStyleSheet, base, uri, media, defaultNamepaceURI);
   if (cssRule == NULL) return NULL;
 
   *state->cssRule = (CSSOM_CSSRule*)cssRule;
@@ -286,7 +292,8 @@ static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
 
 
 static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule **cssRule)
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
+  CSSOM_CSSRule **cssRule)
 {
   struct _CSSOM_ParserCSSRuleCatcherState *state;
 
@@ -296,7 +303,8 @@ static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
 
   ParserState_ctor((struct _CSSOM_ParserState*)state,
     &ParserCSSRuleCatcherState_vtable);
-  state->styleSheet = styleSheet;
+  state->parentRule = parentRule;
+  state->parentStyleSheet = parentStyleSheet;
   state->cssRule = cssRule;
 
   return state;
@@ -310,6 +318,7 @@ static struct _CSSOM_ParserCSSRuleCatcherState* ParserCSSRuleCatcherState_alloc(
 
 struct _CSSOM_ParserCSSStyleSheetState {
   struct _CSSOM_ParserState super;
+  CSSOM_CSSRule *parentRule;
   CSSOM_CSSStyleSheet *styleSheet;
 };
 
@@ -319,7 +328,8 @@ static CSSOM_CSSFontFaceRule* ParserCSSStyleSheetState_appendCSSFontFaceRule(
   struct _CSSOM_ParserCSSStyleSheetState *state)
 {
   return CSSOM_CSSRuleList__appendCSSFontFaceRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet);
 }
 
 
@@ -330,8 +340,8 @@ static CSSOM_CSSImportRule* ParserCSSStyleSheetState_appendCSSImportRule(
   const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
 {
   return CSSOM_CSSRuleList__appendCSSImportRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet,
-    base, uri, media, defaultNamepaceURI);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet, base, uri, media, defaultNamepaceURI);
 }
 
 
@@ -341,8 +351,8 @@ static CSSOM_CSSPageRule* ParserCSSStyleSheetState_appendCSSPageRule(
   const SAC_Selector *selectors[])
 {
   return CSSOM_CSSRuleList__appendCSSPageRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet, 
-    selectors);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet, selectors);
 }
 
 
@@ -351,8 +361,8 @@ static CSSOM_CSSMediaRule* ParserCSSStyleSheetState_appendCSSMediaRule(
   struct _CSSOM_ParserCSSStyleSheetState *state, const SAC_MediaQuery *media[])
 {
   return CSSOM_CSSRuleList__appendCSSMediaRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet,
-    media);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet, media);
 }
 
 
@@ -362,8 +372,8 @@ static CSSOM_CSSNamespaceRule* ParserCSSStyleSheetState_appendCSSNamspaceRule(
   const SAC_STRING prefix, const SAC_STRING uri)
 {
   return CSSOM_CSSRuleList__appendCSSNamespaceRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet,
-    prefix, uri);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet, prefix, uri);
 }
 
 
@@ -373,8 +383,8 @@ static CSSOM_CSSStyleRule* ParserCSSStyleSheetState_appendCSSStyleRule(
   const SAC_Selector *selectors[])
 {
   return CSSOM_CSSRuleList__appendCSSStyleRule(
-    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->styleSheet,
-    selectors);
+    CSSOM_CSSStyleSheet_cssRules(state->styleSheet), state->parentRule,
+    state->styleSheet, selectors);
 }
 
 
@@ -405,7 +415,8 @@ ParserCSSStyleSheetState_vtable = {
 
 
 static struct _CSSOM_ParserCSSStyleSheetState*
-ParserCSSStyleSheetState_alloc(CSSOM_CSSStyleSheet *styleSheet)
+ParserCSSStyleSheetState_alloc(CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *styleSheet)
 {
   struct _CSSOM_ParserCSSStyleSheetState *state;
 
@@ -415,6 +426,7 @@ ParserCSSStyleSheetState_alloc(CSSOM_CSSStyleSheet *styleSheet)
 
   ParserState_ctor((struct _CSSOM_ParserState*)state,
     &ParserCSSStyleSheetState_vtable);
+  state->parentRule = parentRule;
   state->styleSheet = styleSheet;
 
   return state;
@@ -551,7 +563,7 @@ static CSSOM_CSSStyleRule* ParserCSSMediaRuleState_appendCSSStyleRule(
   const SAC_Selector *selectors[])
 {
   return CSSOM_CSSRuleList__appendCSSStyleRule(
-    CSSOM_CSSMediaRule_cssRules(state->cssRule),
+    CSSOM_CSSMediaRule_cssRules(state->cssRule), (CSSOM_CSSRule*)state->cssRule,
     CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)state->cssRule),
     selectors);
 }
@@ -747,11 +759,12 @@ CSSOM_CSSNamespaceRule* CSSOM_ParserStack_appendCSSNamespaceRule(
 
 
 CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule **cssRule)
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
+  CSSOM_CSSRule **cssRule)
 {
   struct _CSSOM_ParserCSSRuleCatcherState *state;
 
-  state = ParserCSSRuleCatcherState_alloc(styleSheet, cssRule);
+  state = ParserCSSRuleCatcherState_alloc(parentRule, styleSheet, cssRule);
   if (state == NULL) return NULL;
 
   if (CSSOM_Stack_ParserState_push(stack->state,
@@ -767,11 +780,12 @@ CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
 
 
 CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
-  CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet)
+  CSSOM_ParserStack *stack, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *styleSheet)
 {
   struct _CSSOM_ParserCSSStyleSheetState *state;
 
-  state = ParserCSSStyleSheetState_alloc(styleSheet);
+  state = ParserCSSStyleSheetState_alloc(parentRule, styleSheet);
   if (state == NULL) return NULL;
 
   if (CSSOM_Stack_ParserState_push(stack->state,

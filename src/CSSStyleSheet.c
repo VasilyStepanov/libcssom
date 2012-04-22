@@ -104,7 +104,7 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
     return (unsigned long)-1;
   }
 
-  newCSSRule = CSSOM__parseCSSRule(styleSheet->cssom,
+  newCSSRule = CSSOM__parseCSSRule(styleSheet->cssom, styleSheet->ownerRule,
     styleSheet, rule, strlen(rule));
   if (newCSSRule == NULL) return (unsigned long)-1;
 

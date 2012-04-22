@@ -36,10 +36,12 @@ CSSOM_CSSNamespaceRule* CSSOM_ParserStack_appendCSSNamespaceRule(
 void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack);
 
 CSSOM_CSSRule** CSSOM_ParserStack_pushCSSRuleCatcher(CSSOM_ParserStack *stack,
-  CSSOM_CSSStyleSheet *styleSheet, CSSOM_CSSRule **cssRule);
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
+  CSSOM_CSSRule **cssRule);
 
 CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
-  CSSOM_ParserStack *stack, CSSOM_CSSStyleSheet *styleSheet);
+  CSSOM_ParserStack *stack, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *styleSheet);
 
 CSSOM_CSSFontFaceRule* CSSOM_ParserStack_pushCSSFontFaceRule(
   CSSOM_ParserStack *stack);

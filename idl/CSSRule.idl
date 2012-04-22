@@ -12,6 +12,6 @@ interface CSSRule {
            attribute DOMString cssText;
 
   // Context
-  // readonly attribute CSSRule parentRule;
+  readonly attribute CSSRule parentRule;
   readonly attribute CSSStyleSheet parentStyleSheet;
 };

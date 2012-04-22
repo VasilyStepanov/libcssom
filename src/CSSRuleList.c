@@ -10,11 +10,12 @@
 
 
 CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet)
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet)
 {
   CSSOM_CSSFontFaceRule *cssRule;
 
-  cssRule = CSSOM_CSSFontFaceRule__alloc(styleSheet);
+  cssRule = CSSOM_CSSFontFaceRule__alloc(parentRule, parentStyleSheet);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,
@@ -30,13 +31,14 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSRuleList__appendCSSFontFaceRule(
 
 
 CSSOM_CSSImportRule* CSSOM_CSSRuleList__appendCSSImportRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
-  const SAC_STRING base, const SAC_STRING uri,
-  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI)
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_STRING base,
+  const SAC_STRING uri, const SAC_MediaQuery *media[],
+  const SAC_STRING defaultNamepaceURI)
 {
   CSSOM_CSSImportRule *cssRule;
 
-  cssRule = CSSOM_CSSImportRule__alloc(styleSheet,
+  cssRule = CSSOM_CSSImportRule__alloc(parentRule, parentStyleSheet,
     base, uri, media, defaultNamepaceURI);
   if (cssRule == NULL) return NULL;
 
@@ -53,12 +55,12 @@ CSSOM_CSSImportRule* CSSOM_CSSRuleList__appendCSSImportRule(
 
 
 CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
-  const SAC_MediaQuery *media[])
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_MediaQuery *media[])
 {
   CSSOM_CSSMediaRule *cssRule;
 
-  cssRule = CSSOM_CSSMediaRule__alloc(styleSheet, media);
+  cssRule = CSSOM_CSSMediaRule__alloc(parentRule, parentStyleSheet, media);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,
@@ -74,12 +76,14 @@ CSSOM_CSSMediaRule* CSSOM_CSSRuleList__appendCSSMediaRule(
 
 
 CSSOM_CSSNamespaceRule* CSSOM_CSSRuleList__appendCSSNamespaceRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
-  const SAC_STRING prefix, const SAC_STRING uri)
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_STRING prefix,
+  const SAC_STRING uri)
 {
   CSSOM_CSSNamespaceRule *cssRule;
 
-  cssRule = CSSOM_CSSNamespaceRule__alloc(styleSheet, prefix, uri);
+  cssRule = CSSOM_CSSNamespaceRule__alloc(parentRule, parentStyleSheet,
+    prefix, uri);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,
@@ -95,12 +99,12 @@ CSSOM_CSSNamespaceRule* CSSOM_CSSRuleList__appendCSSNamespaceRule(
 
 
 CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
-  const SAC_Selector *selectors[])
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
 {
   CSSOM_CSSPageRule *cssRule;
 
-  cssRule = CSSOM_CSSPageRule__alloc(styleSheet, selectors);
+  cssRule = CSSOM_CSSPageRule__alloc(parentRule, parentStyleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,
@@ -116,12 +120,12 @@ CSSOM_CSSPageRule* CSSOM_CSSRuleList__appendCSSPageRule(
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSRuleList__appendCSSStyleRule(
-  CSSOM_CSSRuleList *cssRules, CSSOM_CSSStyleSheet *styleSheet,
-  const SAC_Selector *selectors[])
+  CSSOM_CSSRuleList *cssRules, CSSOM_CSSRule *parentRule,
+  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[])
 {
   CSSOM_CSSStyleRule *cssRule;
 
-  cssRule = CSSOM_CSSStyleRule__alloc(styleSheet, selectors);
+  cssRule = CSSOM_CSSStyleRule__alloc(parentRule, parentStyleSheet, selectors);
   if (cssRule == NULL) return NULL;
 
   if (CSSOM_Sequence__append(cssRules,

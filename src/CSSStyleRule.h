@@ -12,7 +12,8 @@ extern "C" {
 
 
 CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
-  CSSOM_CSSStyleSheet *parentStyleSheet, const SAC_Selector *selectors[]);
+  CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
+  const SAC_Selector *selectors[]);
 
 
 

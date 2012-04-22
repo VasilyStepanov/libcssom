@@ -61,6 +61,8 @@ class CSSRule {
     const char * cssText() const;
     void setCSSText(const char * cssText);
 
+    cssom::CSSRule parentRule() const;
+
     cssom::CSSStyleSheet parentStyleSheet() const;
 
   protected:
