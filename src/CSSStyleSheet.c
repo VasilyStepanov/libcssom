@@ -55,6 +55,7 @@ void CSSOM_CSSStyleSheet_acquire(CSSOM_CSSStyleSheet *styleSheet) {
   if (styleSheet == NULL) return;
 
   ++styleSheet->handles;
+  CSSOM_CSSRule_acquire(styleSheet->ownerRule);
 }
 
 
@@ -64,7 +65,10 @@ void CSSOM_CSSStyleSheet_release(CSSOM_CSSStyleSheet *styleSheet) {
 
   assert(styleSheet->handles > 0);
   --styleSheet->handles;
-  if (styleSheet->handles > 0) return;
+  if (styleSheet->handles > 0) {
+    CSSOM_CSSRule_release(styleSheet->ownerRule);
+    return;
+  }
 
   CSSOM_Sequence_release(styleSheet->cssRules);
   SAC_DisposeParser(styleSheet->parser);
