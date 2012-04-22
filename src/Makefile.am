@@ -49,6 +49,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Deque_CSSRule.c \
                       Deque_void.c \
                       FSM_CSSProperty.c \
+                      Parser.c \
                       ParserStack.c \
                       Sequence.c \
                       memory.c
