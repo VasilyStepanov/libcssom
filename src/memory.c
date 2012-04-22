@@ -6,23 +6,23 @@
 #include <stdlib.h>
 
 
-static void dumpMalloc(const char * file, int line,
+static void dumpMalloc(const char * file, int line CSSOM_UNUSED,
   const char * function CSSOM_UNUSED, void * ptr)
 {
   FILE * f;
   f = fopen("malloc", "a");
-  fprintf(f, "%x %s:%d\n", (int)ptr, file, line);
+  fprintf(f, "%x %s\n", (int)ptr, file);
   fclose(f);
 }
 
 
 
-static void dumpFree(const char * file, int line,
+static void dumpFree(const char * file, int line CSSOM_UNUSED,
   const char * function CSSOM_UNUSED, void * ptr)
 {
   FILE * f;
   f = fopen("free", "a");
-  fprintf(f, "%x %s:%d\n", (int)ptr, file, line);
+  fprintf(f, "%x %s\n", (int)ptr, file);
   fclose(f);
 }
 
