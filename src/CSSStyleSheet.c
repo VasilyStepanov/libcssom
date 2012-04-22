@@ -134,11 +134,15 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
 void CSSOM_CSSStyleSheet_deleteRule(CSSOM_CSSStyleSheet *styleSheet,
   unsigned long index)
 {
+  CSSOM_CSSRule *at;
+
   if (index >= CSSOM_Sequence_size(styleSheet->cssRules)) {
     CSSOM__indexSizeErr(styleSheet->cssom);
     return;
   }
 
+  at = CSSOM_CSSRuleList_at(styleSheet->cssRules, index);
+  CSSOM_CSSRule_release(at);
   CSSOM_Sequence__remove(styleSheet->cssRules, index);
 }
 

@@ -554,6 +554,7 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
   unsigned long index)
 {
   const CSSOM *cssom;
+  CSSOM_CSSRule *at;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
@@ -564,6 +565,8 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
 
   CSSOM_native_free(((CSSOM_CSSRule*)cssRule)->cssText);
   ((CSSOM_CSSRule*)cssRule)->cssText = NULL;
+  at = CSSOM_CSSRuleList_at(cssRule->cssRules, index);
+  CSSOM_CSSRule_release(at);
   CSSOM_Sequence__remove(cssRule->cssRules, index);
 }
 
