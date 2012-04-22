@@ -172,6 +172,7 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   if (newCSSRule == NULL) return;
 
   if (CSSOM_CSSRule_type(newCSSRule) != CSSOM_CSSRule_type(cssRule)) {
+    CSSOM_CSSRule_release(newCSSRule);
     CSSOM__invalidModificationErr(cssom);
     return;
   }
@@ -513,7 +514,6 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
   size_t size;
 
   size = CSSOM_Sequence_size(cssRule->cssRules);
-
   cssom = CSSOM_CSSStyleSheet__cssom(
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
   if (index > size) {
@@ -526,6 +526,7 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
   if (newCSSRule == NULL) return (unsigned long)-1;
 
   if (!CSSOM_CSSRuleList__testHierarchy(cssRule->cssRules, index, newCSSRule)) {
+    CSSOM_CSSRule_release(newCSSRule);
     CSSOM__hierarchyRequestErr(cssom);
     return (unsigned long)-1;
   }

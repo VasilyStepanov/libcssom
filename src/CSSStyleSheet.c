@@ -107,6 +107,7 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
   if (!CSSOM_CSSRuleList__testHierarchy(styleSheet->cssRules,
     index, newCSSRule))
   {
+    CSSOM_CSSRule_release(newCSSRule);
     CSSOM__hierarchyRequestErr(styleSheet->cssom);
     return (unsigned long)-1;
   }
