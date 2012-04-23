@@ -3,9 +3,15 @@
 
 #include <cssom/CSSRule.h>
 
+#include <sacc.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+
+void CSSOM_CSSRule__keepParser(CSSOM_CSSRule *cssRule, SAC_Parser parser);
 
 
 

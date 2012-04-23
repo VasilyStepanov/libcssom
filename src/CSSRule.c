@@ -66,6 +66,7 @@ struct _CSSOM_CSSRule_vtable {
 struct _CSSOM_CSSRule {
   struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
+  SAC_Parser parser;
   CSSOM_CSSRule *parentRule;
   CSSOM_CSSStyleSheet *parentStyleSheet;
   unsigned short type;
@@ -80,6 +81,7 @@ static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
 {
   cssRule->vtable = vtable;
   cssRule->handles = 1;
+  cssRule->parser = NULL;
   cssRule->parentRule = parentRule;
   cssRule->parentStyleSheet = parentStyleSheet;
   cssRule->type = type;
@@ -109,8 +111,10 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
     return;
   }
 
-  CSSOM_native_free(cssRule->cssText);
   cssRule->vtable->free(cssRule);
+  CSSOM_native_free(cssRule->cssText);
+  SAC_DisposeParser(cssRule->parser);
+  CSSOM_free(cssRule);
 }
 
 
@@ -170,6 +174,7 @@ static void CSSRule_swap(CSSOM_CSSRule *lhs, CSSOM_CSSRule *rhs) {
 
 
 static void CSSRule_swap_impl(CSSOM_CSSRule *lhs, CSSOM_CSSRule *rhs) {
+  SWAP(lhs->parser, rhs->parser);
   SWAP(lhs->cssText, rhs->cssText);
 }
 
@@ -199,6 +204,13 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
 
 
 
+void CSSOM_CSSRule__keepParser(CSSOM_CSSRule *cssRule, SAC_Parser parser) {
+  assert(cssRule->parser == NULL);
+  cssRule->parser = parser;
+}
+
+
+
 /**
  * CSSFontFaceRule
  */
@@ -212,7 +224,6 @@ struct _CSSOM_CSSFontFaceRule {
 
 static void CSSFontFaceRule_free(CSSOM_CSSFontFaceRule *cssRule) {
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
-  CSSOM_free(cssRule);
 }
 
 
@@ -281,7 +292,6 @@ struct _CSSOM_CSSImportRule {
 
 static void CSSImportRule_free(CSSOM_CSSImportRule *cssRule) {
   CSSOM_native_free(cssRule->href);
-  CSSOM_free(cssRule);
 }
 
 
@@ -352,7 +362,6 @@ struct _CSSOM_CSSStyleRule {
 static void CSSStyleRule_free(CSSOM_CSSStyleRule *cssRule) {
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
-  CSSOM_free(cssRule);
 }
 
 
@@ -464,7 +473,6 @@ struct _CSSOM_CSSMediaRule {
 
 static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
   CSSOM_Sequence_release(cssRule->cssRules);
-  CSSOM_free(cssRule);
 }
 
 
@@ -599,9 +607,9 @@ struct _CSSOM_CSSNamespaceRule {
 
 
 
-static void CSSNamespaceRule_free(CSSOM_CSSNamespaceRule *cssRule) {
-  CSSOM_free(cssRule);
-}
+static void CSSNamespaceRule_free(
+  CSSOM_CSSNamespaceRule *cssRule CSSOM_UNUSED)
+{}
 
 
 
@@ -676,7 +684,6 @@ struct _CSSOM_CSSPageRule {
 static void CSSPageRule_free(CSSOM_CSSPageRule *cssRule) {
   CSSOM_CSSStyleDeclaration_release(cssRule->style);
   CSSOM_native_free(cssRule->selectorText);
-  CSSOM_free(cssRule);
 }
 
 

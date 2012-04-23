@@ -26,7 +26,7 @@ struct _CSSOM_CSSStyleSheet {
 
 
 CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
-  SAC_Parser parser, CSSOM_CSSRule *ownerRule)
+  CSSOM_CSSRule *ownerRule)
 {
   CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSStyleSheet *styleSheet;
@@ -42,7 +42,7 @@ CSSOM_CSSStyleSheet* CSSOM_CSSStyleSheet__alloc(const CSSOM *cssom,
 
   styleSheet->handles = 1;
   styleSheet->cssom = cssom;
-  styleSheet->parser = parser;
+  styleSheet->parser = NULL;
   styleSheet->ownerRule = ownerRule;
   styleSheet->cssRules = cssRules;
 
@@ -156,4 +156,13 @@ CSSOM_CSSRule* CSSOM_CSSStyleSheet_ownerRule(
   const CSSOM_CSSStyleSheet *styleSheet)
 {
   return styleSheet->ownerRule;
+}
+
+
+
+void CSSOM_CSSStyleSheet__keepParser(CSSOM_CSSStyleSheet *styleSheet,
+  SAC_Parser parser)
+{
+  assert(styleSheet->parser == NULL);
+  styleSheet->parser = parser;
 }

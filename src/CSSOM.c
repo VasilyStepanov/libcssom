@@ -203,7 +203,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
     return NULL;
   }
 
-  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, parser, NULL);
+  styleSheet = CSSOM_CSSStyleSheet__alloc(cssom, NULL);
   if (styleSheet == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -221,11 +221,9 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
 
   SAC_ParseStyleSheet(parser, cssText, len);
 
-  /**
-   * TODO: SAC_DisposeParser here
-   */
-
   CSSOM_ParserStack_free(stack);
+
+  CSSOM_CSSStyleSheet__keepParser(styleSheet, parser);
 
   return styleSheet;
 }
@@ -262,11 +260,9 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
 
   SAC_ParseRule(parser, cssText, len);
 
-  /**
-   * TODO: SAC_DisposeParser here
-   */
-
   CSSOM_ParserStack_free(stack);
+
+  if (cssRule != NULL) CSSOM_CSSRule__keepParser(cssRule, parser);
 
   return cssRule;
 }
