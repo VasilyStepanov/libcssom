@@ -15,7 +15,8 @@ BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.hpp \
                 $(top_idldir)/CSSRuleList.idl.hpp \
                 $(top_idldir)/CSSStyleDeclaration.idl.hpp \
                 $(top_idldir)/CSSStyleRule.idl.hpp \
-                $(top_idldir)/CSSStyleSheet.idl.hpp
+                $(top_idldir)/CSSStyleSheet.idl.hpp \
+                $(top_idldir)/MediaList.idl.hpp
 
 
 
@@ -36,7 +37,8 @@ libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp \
                         $(top_srcdir)/include/cssompp/CSSRuleList.hpp \
                         $(top_srcdir)/include/cssompp/CSSStyleDeclaration.hpp \
                         $(top_srcdir)/include/cssompp/CSSStyleRule.hpp \
-                        $(top_srcdir)/include/cssompp/CSSStyleSheet.hpp
+                        $(top_srcdir)/include/cssompp/CSSStyleSheet.hpp \
+                        $(top_srcdir)/include/cssompp/MediaList.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSProperty.cpp \
@@ -50,7 +52,8 @@ libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSRule.cpp \
                         CSSStyleDeclaration.cpp \
                         CSSStyleRule.cpp \
-                        CSSStyleSheet.cpp
+                        CSSStyleSheet.cpp \
+                        MediaList.cpp
 
 libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
 

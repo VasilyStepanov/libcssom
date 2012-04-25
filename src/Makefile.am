@@ -15,7 +15,8 @@ BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.h \
                 $(top_idldir)/CSSRuleList.idl.h \
                 $(top_idldir)/CSSStyleDeclaration.idl.h \
                 $(top_idldir)/CSSStyleRule.idl.h \
-                $(top_idldir)/CSSStyleSheet.idl.h
+                $(top_idldir)/CSSStyleSheet.idl.h \
+                $(top_idldir)/MediaList.idl.h
 
 
 
@@ -37,7 +38,8 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
                       $(top_srcdir)/include/cssom/CSSRuleList.h \
                       $(top_srcdir)/include/cssom/CSSStyleDeclaration.h \
                       $(top_srcdir)/include/cssom/CSSStyleRule.h \
-                      $(top_srcdir)/include/cssom/CSSStyleSheet.h
+                      $(top_srcdir)/include/cssom/CSSStyleSheet.h \
+                      $(top_srcdir)/include/cssom/MediaList.h
 
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
@@ -52,6 +54,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Parser.c \
                       ParserStack.c \
                       Sequence.c \
+                      MediaList.c \
                       memory.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)
