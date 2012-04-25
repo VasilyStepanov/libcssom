@@ -15,8 +15,7 @@ BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.h \
                 $(top_idldir)/CSSRuleList.idl.h \
                 $(top_idldir)/CSSStyleDeclaration.idl.h \
                 $(top_idldir)/CSSStyleRule.idl.h \
-                $(top_idldir)/CSSStyleSheet.idl.h \
-                $(top_idldir)/MediaList.idl.h
+                $(top_idldir)/CSSStyleSheet.idl.h
 
 
 

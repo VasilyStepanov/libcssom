@@ -16,6 +16,15 @@
 
 #include <cssom/typedefs.h>
 
+namespace cssom {
+
+
+
+class MediaList;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -30,6 +39,12 @@ class CSSMediaRule : public cssom::CSSRule {
 
     CSSMediaRule();
     explicit CSSMediaRule(CSSOM_CSSMediaRule * impl);
+
+    cssom::MediaList media() const;
+
+
+
+    void setMedia(const char * media);
 
     cssom::CSSRuleList cssRules() const;
 
