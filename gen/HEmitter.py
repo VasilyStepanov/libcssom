@@ -7,6 +7,7 @@ from Emitter import instanceName
 from Emitter import includes
 from Emitter import forwards
 from Emitter import renderWarning
+from Emitter import attributeExtendedAttributes
 
 import pywidl
 
@@ -101,21 +102,26 @@ def emitType(typedef):
 
 
 
-def renderAttribute(out, interface, attribute):
-  assert(not attribute.extended_attributes)
-  assert(not attribute.stringifier)
+def renderAttribute(out, interface, attribute, definitions):
   assert(not attribute.inherit)
 
   print >>out, "%s %s;" % ( \
     emitType(attribute.type),
     attributeGetterSignature(interface, attribute))
 
-  if attribute.readonly: return
+  if not attribute.readonly:
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "void %s;" % attributeSetterSignature(interface, attribute)
 
-  print >>out
-  print >>out
-  print >>out
-  print >>out, "void %s;" % attributeSetterSignature(interface, attribute)
+  forwarded_attribute = attributeExtendedAttributes(attribute, definitions)
+  if forwarded_attribute:
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "void %s;" % attributeSetterSignature(interface,
+      forwarded_attribute)
 
 
 
@@ -145,12 +151,12 @@ def renderConst(out, interface, const):
 
 
 
-def renderInterfaceMember(out, interface, member):
+def renderInterfaceMember(out, interface, member, definitions):
   print >>out
   print >>out
   print >>out
   if isinstance(member, pywidl.Attribute):
-    renderAttribute(out, interface, member)
+    renderAttribute(out, interface, member, definitions)
   elif isinstance(member, pywidl.Operation):
     renderOperation(out, interface, member)
   elif isinstance(member, pywidl.Const):
@@ -160,7 +166,7 @@ def renderInterfaceMember(out, interface, member):
 
 
 
-def renderInterface(out, interface):
+def renderInterface(out, interface, definitions):
   assert(not interface.extended_attributes)
   assert(not interface.callback)
 
@@ -192,7 +198,7 @@ def renderInterface(out, interface):
       template
 
   for member in interface.members:
-    renderInterfaceMember(out, interface, member)
+    renderInterfaceMember(out, interface, member, definitions)
 
 
 
@@ -248,12 +254,12 @@ def renderInclude(out, definition):
 
 
 
-def renderDefinition(out, definition):
+def renderDefinition(out, definition, definitions):
   print >>out
   print >>out
   print >>out
   if isinstance(definition, pywidl.Interface):
-    renderInterface(out, definition)
+    renderInterface(out, definition, definitions)
   elif isinstance(definition, pywidl.Typedef):
     renderTypedef(out, definition)
   else:
@@ -261,7 +267,7 @@ def renderDefinition(out, definition):
 
 
 
-def renderDefinitionFile(outputdir, source, definition):
+def renderDefinitionFile(outputdir, source, definition, definitions):
   with open(os.path.join(outputdir, "%s.h" % definition.name), 'w') as out:
     define = headerDefine("cssom", definition.name, "h")
     print >>out, "#ifndef %s" % define
@@ -276,7 +282,7 @@ def renderDefinitionFile(outputdir, source, definition):
     print >>out, "extern \"C\" {"
     print >>out, "#endif"
 
-    renderDefinition(out, definition)
+    renderDefinition(out, definition, definitions)
 
     print >>out
     print >>out
@@ -294,7 +300,7 @@ def render(definitions=[], source=None, output=None, template=None,
   assert(includedir)
 
   for definition in definitions:
-    renderDefinitionFile(includedir, source, definition)
+    renderDefinitionFile(includedir, source, definition, definitions)
 
   with open(output, 'w') as out:
     pass

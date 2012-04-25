@@ -6,6 +6,7 @@ from Emitter import includes
 from Emitter import emitSimpleType
 from Emitter import renderWarning
 from Emitter import instanceName
+from Emitter import attributeExtendedAttributes
 from CPPEmitter import emitArgument
 from CPPEmitter import emitType
 from CPPEmitter import attributeGetterSignature
@@ -36,16 +37,21 @@ def renderOperation(out, operation):
 
 
 
-def renderAttribute(out, attribute):
-  assert(not attribute.stringifier)
+def renderAttribute(out, interface, attribute, definitions):
   assert(not attribute.inherit)
-  assert(not attribute.extended_attributes)
 
   print >>out, "    %s %s;" % ( \
     emitType(attribute.type),
     attributeGetterSignature(attribute))
   if not attribute.readonly:
     print >>out, "    void %s;" % attributeSetterSignature(attribute)
+
+  forwarded_attribute = attributeExtendedAttributes(attribute, definitions)
+  if forwarded_attribute:
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "    void %s;" % attributeSetterSignature(forwarded_attribute)
 
 
 
@@ -58,13 +64,13 @@ def renderConst(out, const):
 
 
 
-def renderInterfaceMember(out, member):
+def renderInterfaceMember(out, interface, member, definitions):
   print >>out
 
   if isinstance(member, pywidl.Operation):
     renderOperation(out, member)
   elif isinstance(member, pywidl.Attribute):
-    renderAttribute(out, member)
+    renderAttribute(out, interface, member, definitions)
   elif isinstance(member, pywidl.Const):
     renderConst(out, member)
   else:
@@ -72,9 +78,15 @@ def renderInterfaceMember(out, member):
 
 
 
-def renderInterface(out, interface):
+def renderInterface(out, interface, definitions):
   assert(not interface.extended_attributes)
   assert(not interface.callback)
+
+  stringifier = False
+  for member in interface.members:
+    if isinstance(member, pywidl.Attribute) \
+    and member.stringifier:
+      stringifier = True
 
   classDef = interface.name
   if interface.parent: classDef = "%s : public cssom::%s" % ( \
@@ -112,8 +124,12 @@ def renderInterface(out, interface):
     print >>out
     print >>out, "    void swap(cssom::%(name)s &rhs);" % template
 
+  if stringifier:
+    print >>out
+    print >>out, "    operator const char *();"
+
   for member in interface.members:
-    renderInterfaceMember(out, member)
+    renderInterfaceMember(out, interface, member, definitions)
   
   if not interface.parent:
     print >>out
@@ -131,12 +147,12 @@ def renderTypedef(out, typedef):
 
 
 
-def renderDefinition(out, definition):
+def renderDefinition(out, definition, definitions):
   print >>out
   print >>out
   print >>out
   if isinstance(definition, pywidl.Interface):
-    renderInterface(out, definition)
+    renderInterface(out, definition, definitions)
   elif isinstance(definition, pywidl.Typedef):
     renderTypedef(out, definition)
   else:
@@ -175,7 +191,7 @@ def renderForwardDeclarations(out, declarations):
 
 
 
-def renderDefinitionHeaderFile(outputdir, source, definition):
+def renderDefinitionHeaderFile(outputdir, source, definition, definitions):
   with open(os.path.join(outputdir, "%s.hpp" % definition.name), 'w') as out:
     define = headerDefine("cssompp", definition.name, "hpp")
     print >>out, "#ifndef %s" % define
@@ -192,7 +208,7 @@ def renderDefinitionHeaderFile(outputdir, source, definition):
     print >>out
     print >>out, """namespace cssom {"""
 
-    renderDefinition(out, definition)
+    renderDefinition(out, definition, definitions)
 
     print >>out
     print >>out
@@ -210,10 +226,10 @@ def render(definitions=[], source=None, output=None, template=None,
   assert(includedir)
 
   for definition in definitions:
-    renderDefinitionHeaderFile(includedir, source, definition)
+    renderDefinitionHeaderFile(includedir, source, definition, definitions)
 
   for definition in definitions:
-    renderDefinitionSourceFile(srcdir, source, definition)
+    renderDefinitionSourceFile(srcdir, source, definition, definitions)
 
   with open(output, 'w') as out:
     pass

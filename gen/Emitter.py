@@ -8,6 +8,7 @@ import os.path
 
 forwards = { \
   'CSSFontFaceRule' : ('CSSStyleDeclaration', ),
+  'CSSMediaRule' : ('MediaList', ),
   'CSSRule' : ('CSSStyleSheet', ),
   'CSSPageRule' : ('CSSStyleDeclaration', ),
   'CSSRuleList' : ('CSSRule', ),
@@ -123,3 +124,48 @@ def renderWarning(out, source):
     print >>out, " */"
     print >>out
     print >>out
+
+
+
+def _findDefinition(definitions, name):
+  for definition in definitions:
+    if definition.name == name: return definition
+  return None
+
+
+
+def _findMember(interface, name):
+  for member in interface.members:
+    if member.name == name: return member
+  return None
+
+
+
+def _forwardedAttribute(name, type, putforwards, definitions):
+  assert not putforwards.arguments, "Unexpected PutForwards " \
+    "extended attribute declaration"
+  interface = _findDefinition(definitions, type.name)
+  assert not interface is None and isinstance(interface, pywidl.Interface), \
+    "Interface '%s' not found" % type.name
+  attribute = _findMember(interface, putforwards.name)
+  assert isinstance(attribute, pywidl.Attribute), \
+    "Attribute '%s' not found" % extended_attribute.value.name
+  return pywidl.Attribute(name=name, type=attribute.type)
+
+
+
+def attributeExtendedAttributes(attribute, definitions):
+  forwarded_attribute = None
+  for extended_attribute in attribute.extended_attributes:
+    if extended_attribute.name == "PutForwards":
+      assert isinstance(attribute.type, pywidl.InterfaceType)
+      assert forwarded_attribute is None, "Multiple PutForwards not allowed"
+      assert attribute.readonly, \
+        "PutForwards extended attribute not on readonly attribute"
+
+      forwarded_attribute = _forwardedAttribute(attribute.name, attribute.type,
+        extended_attribute.value, definitions)
+    else:
+      raise RuntimeError("Unknown extended attribute: %s" % \
+        extended_attribute.name)
+  return forwarded_attribute
