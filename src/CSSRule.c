@@ -10,6 +10,7 @@
 #include "CSSStyleSheet.h"
 #include "CSSEmitter.h"
 #include "CSSOM.h"
+#include "MediaList.h"
 #include "gcc.h"
 #include "memory.h"
 
@@ -465,13 +466,15 @@ const char* CSSOM_CSSStyleRule_selectorText(
 
 struct _CSSOM_CSSMediaRule {
   CSSOM_CSSRule super;
-  const SAC_MediaQuery **media;
+  const SAC_MediaQuery **mediaQuery;
+  CSSOM_MediaList *media;
   CSSOM_CSSRuleList *cssRules;
 };
 
 
 
 static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
+  CSSOM_MediaList_release(cssRule->media);
   CSSOM_Sequence_release(cssRule->cssRules);
 }
 
@@ -481,6 +484,8 @@ static void CSSMediaRule_swap(
   CSSOM_CSSMediaRule *lhs, CSSOM_CSSMediaRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->mediaQuery, rhs->mediaQuery);
+  SWAP(lhs->media, rhs->media);
   SWAP(lhs->cssRules, rhs->cssRules);
 }
 
@@ -513,7 +518,8 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
-  cssRule->media = media;
+  cssRule->mediaQuery = media;
+  cssRule->media = CSSOM_MediaList__alloc();
   cssRule->cssRules = cssRules;
 
   return cssRule;
@@ -591,6 +597,14 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
   at = CSSOM_CSSRuleList_at(cssRule->cssRules, index);
   CSSOM_CSSRule_release(at);
   CSSOM_Sequence__remove(cssRule->cssRules, index);
+}
+
+
+
+void CSSOM_CSSMediaRule_setMedia(CSSOM_CSSMediaRule *cssRule,
+  const char *media)
+{
+  CSSOM_MediaList_setMediaText(cssRule->media, media);
 }
 
 

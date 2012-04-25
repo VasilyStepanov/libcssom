@@ -9,7 +9,7 @@ extern "C" {
 
 
 
-void CSSOM_MediaList__alloc(void);
+CSSOM_MediaList* CSSOM_MediaList__alloc(void);
 
 
 
