@@ -3,13 +3,17 @@
 
 #include <cssom/MediaList.h>
 
+#include <sacc.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 
-CSSOM_MediaList* CSSOM_MediaList__alloc(void);
+CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query);
+
+const SAC_MediaQuery** CSSOM_MediaList__query(const CSSOM_MediaList *media);
 
 
 
