@@ -6,6 +6,7 @@
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
+#include <cssompp/MediaList.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -208,6 +209,28 @@ void deleteRule() {
 
 
 
+void media(void) {
+  test::Errors errors;
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(test::errorHandler);
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::MediaList media = cssRule.media();
+
+  assert(media.length() == 1);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -219,6 +242,7 @@ void cssMediaRule() {
   cssRules();
   insertRule();
   deleteRule();
+  media();
 }
 
 

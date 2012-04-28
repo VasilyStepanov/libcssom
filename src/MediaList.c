@@ -66,3 +66,11 @@ const char* CSSOM_MediaList_mediaText(
 {
   return "";
 }
+
+
+
+unsigned long CSSOM_MediaList_length(
+  const CSSOM_MediaList *media CSSOM_UNUSED)
+{
+  return 0;
+}

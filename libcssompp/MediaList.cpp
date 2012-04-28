@@ -98,4 +98,10 @@ void MediaList::setMediaText(const char * mediaText) {
 
 
 
+unsigned long MediaList::length() const {
+  return CSSOM_MediaList_length(_impl);
+}
+
+
+
 } // cssom

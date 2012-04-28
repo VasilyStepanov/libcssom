@@ -40,6 +40,8 @@ class MediaList {
     const char * mediaText() const;
     void setMediaText(const char * mediaText);
 
+    unsigned long length() const;
+
   protected:
     CSSOM_MediaList * _impl;
 };

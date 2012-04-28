@@ -37,6 +37,10 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList * MediaList, const char * medi
 
 
 
+unsigned long CSSOM_MediaList_length(const CSSOM_MediaList * MediaList);
+
+
+
 #ifdef __cplusplus
 }
 #endif
