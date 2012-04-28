@@ -210,11 +210,7 @@ void deleteRule() {
 
 
 void media(void) {
-  test::Errors errors;
-  std::string cssText;
   cssom::CSSOM cssom;
-  cssom.setUserData(&errors);
-  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "@media screen {\n"
 "  p {\n"

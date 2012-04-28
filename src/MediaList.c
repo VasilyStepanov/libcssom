@@ -10,18 +10,22 @@
 struct _CSSOM_MediaList {
   size_t handles;
   const SAC_MediaQuery **query;
+  size_t items;
 };
 
 
 
 CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
   CSSOM_MediaList *media;
+  const SAC_MediaQuery **it;
 
   media = (CSSOM_MediaList*)CSSOM_malloc(sizeof(CSSOM_MediaList));
   if (media == NULL) return NULL;
 
   media->handles = 1;
   media->query = query;
+  media->items = 0;
+  for (it = query; *it != NULL; ++it) ++media->items;
 
   return media;
 }
@@ -69,8 +73,7 @@ const char* CSSOM_MediaList_mediaText(
 
 
 
-unsigned long CSSOM_MediaList_length(
-  const CSSOM_MediaList *media CSSOM_UNUSED)
+unsigned long CSSOM_MediaList_length(const CSSOM_MediaList *media)
 {
-  return 0;
+  return media->items;
 }
