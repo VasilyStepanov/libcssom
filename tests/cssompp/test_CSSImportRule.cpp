@@ -24,7 +24,7 @@ void cssText() {
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "@import url(\"bluish.css\") projection, tv;"
   );
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assert(styleSheet.cssRules()[0].type() == cssom::CSSRule::IMPORT_RULE);
   cssom::CSSImportRule cssRule = cssom::CSSImportRule::cast(
     styleSheet.cssRules()[0]);

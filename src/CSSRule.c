@@ -536,7 +536,7 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
   const CSSOM *cssom;
   size_t size;
 
-  size = CSSOM_Sequence_size(cssRule->cssRules);
+  size = CSSOM_CSSRuleList_length(cssRule->cssRules);
   cssom = CSSOM_CSSStyleSheet__cssom(
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
   if (index > size) {
@@ -581,7 +581,7 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet);
-  if (index >= CSSOM_Sequence_size(cssRule->cssRules)) {
+  if (index >= CSSOM_CSSRuleList_length(cssRule->cssRules)) {
     CSSOM__indexSizeErr(cssom);
     return;
   }

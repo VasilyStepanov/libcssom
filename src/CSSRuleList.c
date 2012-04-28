@@ -216,7 +216,7 @@ int CSSOM_CSSRuleList__testHierarchy(const CSSOM_CSSRuleList *cssRules,
     1, 1, 1, 1, 1, 1
   };
 
-  size = CSSOM_CSSRuleList_size(cssRules);
+  size = CSSOM_CSSRuleList_length(cssRules);
   for (i = 0; i < size; ++i) {
     CSSOM_CSSRule *curCSSRule;
 

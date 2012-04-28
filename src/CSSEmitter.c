@@ -576,7 +576,7 @@ int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
   size_t size;
   size_t i;
 
-  size = CSSOM_CSSRuleList_size(cssRules);
+  size = CSSOM_CSSRuleList_length(cssRules);
   if (size != 0) {
     CSSOM_CSSRule *cssRule;
 

@@ -28,7 +28,7 @@ void cssText() {
 "}\n"
   );
 
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assert(styleSheet.cssRules()[0].type() == cssom::CSSRule::PAGE_RULE);
 
   cssom::CSSPageRule cssRule = cssom::CSSPageRule::cast(

@@ -97,7 +97,7 @@ unsigned long CSSOM_CSSStyleSheet_insertRule(CSSOM_CSSStyleSheet *styleSheet,
   CSSOM_CSSRule *newCSSRule;
   size_t size;
 
-  size = CSSOM_Sequence_size(styleSheet->cssRules);
+  size = CSSOM_CSSRuleList_length(styleSheet->cssRules);
 
   if (index > size) {
     CSSOM__indexSizeErr(styleSheet->cssom);
@@ -140,7 +140,7 @@ void CSSOM_CSSStyleSheet_deleteRule(CSSOM_CSSStyleSheet *styleSheet,
 {
   CSSOM_CSSRule *at;
 
-  if (index >= CSSOM_Sequence_size(styleSheet->cssRules)) {
+  if (index >= CSSOM_CSSRuleList_length(styleSheet->cssRules)) {
     CSSOM__indexSizeErr(styleSheet->cssom);
     return;
   }

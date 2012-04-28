@@ -78,7 +78,7 @@ void* CSSOM_Sequence__append(CSSOM_Sequence *sequence, void *ptr) {
 
 
 
-size_t CSSOM_Sequence_size(const CSSOM_Sequence *sequence) {
+size_t CSSOM_Sequence_length(const CSSOM_Sequence *sequence) {
   return CSSOM_Deque_void_size(sequence->data);
 }
 

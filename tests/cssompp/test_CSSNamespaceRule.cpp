@@ -24,7 +24,7 @@ void cssText() {
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "@namespace svg url('http://www.w3.org/2000/svg');"
   );
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assert(styleSheet.cssRules()[0].type() == cssom::CSSRule::NAMESPACE_RULE);
   cssom::CSSNamespaceRule cssRule = cssom::CSSNamespaceRule::cast(
     styleSheet.cssRules()[0]);

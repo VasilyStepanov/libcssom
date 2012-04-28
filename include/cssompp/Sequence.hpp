@@ -25,7 +25,7 @@ class Sequence {
 
     void swap(cssom::Sequence<T> &rhs);
 
-    size_t size() const;
+    size_t length() const;
     T operator[](size_t index) const;
 
   protected:
@@ -99,8 +99,8 @@ void Sequence<T>::swap(cssom::Sequence<T> &rhs) {
 
 
 template <typename T>
-size_t Sequence<T>::size() const {
-  return CSSOM_Sequence_size(_impl);
+size_t Sequence<T>::length() const {
+  return CSSOM_Sequence_length(_impl);
 }
 
 

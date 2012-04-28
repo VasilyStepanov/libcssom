@@ -39,11 +39,11 @@ void insertRule() {
 "}\n"
   );
 
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
 
   styleSheet.insertRule("span { color : green; }", 0);
 
-  assert(styleSheet.cssRules().size() == 2);
+  assert(styleSheet.cssRules().length() == 2);
   assertEquals(std::string("span"),
     cssom::CSSStyleRule::cast(styleSheet.cssRules()[0]).selectorText());
   assertEquals(std::string("p"),
@@ -53,7 +53,7 @@ void insertRule() {
 
   styleSheet.insertRule("div { color : green; }", 2);
 
-  assert(styleSheet.cssRules().size() == 3);
+  assert(styleSheet.cssRules().length() == 3);
   assertEquals(std::string("span"),
     cssom::CSSStyleRule::cast(styleSheet.cssRules()[0]).selectorText());
   assertEquals(std::string("p"),
@@ -65,10 +65,10 @@ void insertRule() {
 
   assert(errors.indexSizeErrors == 0);
   styleSheet.insertRule("p { color : red; }", 4);
-  assert(styleSheet.cssRules().size() == 3);
+  assert(styleSheet.cssRules().length() == 3);
   assert(errors.indexSizeErrors == 1);
   styleSheet.insertRule("p { color : red; }", -1);
-  assert(styleSheet.cssRules().size() == 3);
+  assert(styleSheet.cssRules().length() == 3);
   assert(errors.indexSizeErrors == 2);
 
 
@@ -76,7 +76,7 @@ void insertRule() {
   assert(errors.hierarchyRequestErrors == 0);
   styleSheet.insertRule("@import url('foo'); }", 1);
   assert(errors.hierarchyRequestErrors == 1);
-  assert(styleSheet.cssRules().size() == 3);
+  assert(styleSheet.cssRules().length() == 3);
 }
 
 
@@ -98,11 +98,11 @@ void deleteRule() {
 "}\n"
   );
 
-  assert(styleSheet.cssRules().size() == 3);
+  assert(styleSheet.cssRules().length() == 3);
 
   styleSheet.deleteRule(2);
 
-  assert(styleSheet.cssRules().size() == 2);
+  assert(styleSheet.cssRules().length() == 2);
   assertEquals(std::string("span"),
     cssom::CSSStyleRule::cast(styleSheet.cssRules()[0]).selectorText());
   assertEquals(std::string("p"),
@@ -112,7 +112,7 @@ void deleteRule() {
 
   styleSheet.deleteRule(0);
 
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assertEquals(std::string("p"),
     cssom::CSSStyleRule::cast(styleSheet.cssRules()[0]).selectorText());
 
@@ -121,18 +121,18 @@ void deleteRule() {
   assert(errors.indexSizeErrors == 0);
 
   styleSheet.deleteRule(1);
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assert(errors.indexSizeErrors == 1);
 
   styleSheet.deleteRule(-1);
-  assert(styleSheet.cssRules().size() == 1);
+  assert(styleSheet.cssRules().length() == 1);
   assert(errors.indexSizeErrors == 2);
 
 
 
   styleSheet.deleteRule(0);
 
-  assert(styleSheet.cssRules().size() == 0);
+  assert(styleSheet.cssRules().length() == 0);
 }
 
 

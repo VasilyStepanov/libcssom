@@ -31,8 +31,8 @@ extern "C" {
 
 
 
-#define CSSOM_CSSRuleList_size(cssRuleList) \
-  (CSSOM_Sequence_size((cssRuleList)))
+#define CSSOM_CSSRuleList_length(cssRuleList) \
+  (CSSOM_Sequence_length((cssRuleList)))
 
 
 

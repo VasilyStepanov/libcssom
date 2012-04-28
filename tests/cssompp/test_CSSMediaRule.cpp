@@ -82,7 +82,7 @@ void cssRules() {
   cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
     styleSheet.cssRules()[0]);
 
-  assert(cssRule.cssRules().size() == 1);
+  assert(cssRule.cssRules().length() == 1);
   assert(cssRule.cssRules()[0].type() == cssom::CSSRule::STYLE_RULE);
 }
 
@@ -140,7 +140,7 @@ void insertRule() {
   assert(errors.hierarchyRequestErrors == 0);
   styleSheet.insertRule("@import url('foo'); }", 1);
   assert(errors.hierarchyRequestErrors == 1);
-  assert(cssRule.cssRules().size() == 3);
+  assert(cssRule.cssRules().length() == 3);
 }
 
 

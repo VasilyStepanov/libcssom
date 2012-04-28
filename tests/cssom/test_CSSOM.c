@@ -28,7 +28,7 @@ static void test_CSSOM_basics(void) {
   styleSheet = CSSOM_parse(cssom, css, strlen(css));
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
-  assert(CSSOM_CSSRuleList_size(cssRules) == 1);
+  assert(CSSOM_CSSRuleList_length(cssRules) == 1);
 
   cssRule = CSSOM_CSSRuleList_at(cssRules, 0);
   assert(cssRule != NULL);
@@ -91,7 +91,7 @@ static void test_CSSOM_errors(void) {
   assert(errors == 6);
 
   cssRules = CSSOM_CSSStyleSheet_cssRules(styleSheet);
-  assert(CSSOM_CSSRuleList_size(cssRules) == 7);
+  assert(CSSOM_CSSRuleList_length(cssRules) == 7);
 
   cssRule = CSSOM_CSSRuleList_at(cssRules, 6);
   assert(cssRule != NULL);

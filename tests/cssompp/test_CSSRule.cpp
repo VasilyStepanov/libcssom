@@ -125,7 +125,7 @@ void parentRule() {
 " }\n"
 "}\n"
   );
-  assert(styleSheet.cssRules().size() == 2);
+  assert(styleSheet.cssRules().length() == 2);
 
   assert(styleSheet.cssRules()[0].parentRule().isNull() == true);
   assert(styleSheet.cssRules()[1].parentRule().isNull() == true);
@@ -136,7 +136,7 @@ void parentRule() {
   cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
     styleSheet.cssRules()[1]);
 
-  assert(cssRule.cssRules().size() == 1);
+  assert(cssRule.cssRules().length() == 1);
   assert(cssRule.cssRules()[0].parentRule().isNull() == false);
   assert(cssRule.cssRules()[0].parentRule() == styleSheet.cssRules()[1]);
 }

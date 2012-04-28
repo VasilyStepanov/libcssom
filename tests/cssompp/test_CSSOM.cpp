@@ -18,7 +18,7 @@ void basics() {
   );
 
   cssom::CSSRuleList cssRules = styleSheet.cssRules();
-  assert(cssRules.size() == 1);
+  assert(cssRules.length() == 1);
 
   cssom::CSSRule cssRule = cssRules[0];
   assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);

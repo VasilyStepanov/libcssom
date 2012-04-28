@@ -225,8 +225,8 @@ def renderTypedefSequence(out, typedef):
   print >>out
   print >>out
   print >>out
-  print >>out, "#define CSSOM_%(type)s_size(%(name)s) \\" % template
-  print >>out, "  (CSSOM_Sequence_size((%(name)s)))" % template
+  print >>out, "#define CSSOM_%(type)s_length(%(name)s) \\" % template
+  print >>out, "  (CSSOM_Sequence_length((%(name)s)))" % template
   print >>out
   print >>out
   print >>out
