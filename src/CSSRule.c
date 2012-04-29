@@ -10,11 +10,14 @@
 #include "CSSStyleSheet.h"
 #include "CSSEmitter.h"
 #include "CSSOM.h"
+#include "MediaList.h"
 #include "gcc.h"
 #include "memory.h"
+#include "utility.h"
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 
 
@@ -39,15 +42,6 @@ unsigned short CSSOM_CSSRule_PAGE_RULE = 6;
 
 
 unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
-
-
-
-#define SWAP(lhs, rhs) \
-  do { \
-    void *t = (void*)lhs; \
-    lhs = rhs; \
-    rhs = t; \
-  } while (0)
 
 
 
@@ -107,7 +101,7 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
   --cssRule->handles;
   if (cssRule->handles > 0) {
     CSSOM_CSSStyleSheet_release(cssRule->parentStyleSheet);
-    CSSOM_CSSRule_acquire(cssRule->parentRule);
+    CSSOM_CSSRule_release(cssRule->parentRule);
     return;
   }
 
@@ -465,13 +459,14 @@ const char* CSSOM_CSSStyleRule_selectorText(
 
 struct _CSSOM_CSSMediaRule {
   CSSOM_CSSRule super;
-  const SAC_MediaQuery **media;
+  CSSOM_MediaList *media;
   CSSOM_CSSRuleList *cssRules;
 };
 
 
 
 static void CSSMediaRule_free(CSSOM_CSSMediaRule *cssRule) {
+  CSSOM_MediaList_release(cssRule->media);
   CSSOM_Sequence_release(cssRule->cssRules);
 }
 
@@ -481,6 +476,7 @@ static void CSSMediaRule_swap(
   CSSOM_CSSMediaRule *lhs, CSSOM_CSSMediaRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
+  SWAP(lhs->media, rhs->media);
   SWAP(lhs->cssRules, rhs->cssRules);
 }
 
@@ -513,7 +509,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
-  cssRule->media = media;
+  cssRule->media = CSSOM_MediaList__alloc(cssRule, media);
   cssRule->cssRules = cssRules;
 
   return cssRule;
@@ -591,6 +587,20 @@ void CSSOM_CSSMediaRule_deleteRule(CSSOM_CSSMediaRule * cssRule,
   at = CSSOM_CSSRuleList_at(cssRule->cssRules, index);
   CSSOM_CSSRule_release(at);
   CSSOM_Sequence__remove(cssRule->cssRules, index);
+}
+
+
+
+void CSSOM_CSSMediaRule_setMedia(CSSOM_CSSMediaRule *cssRule,
+  const char *media)
+{
+  CSSOM_MediaList_setMediaText(cssRule->media, media);
+}
+
+
+
+CSSOM_MediaList* CSSOM_CSSMediaRule_media(const CSSOM_CSSMediaRule *cssRule) {
+  return cssRule->media;
 }
 
 

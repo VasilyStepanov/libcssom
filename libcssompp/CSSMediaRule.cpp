@@ -12,6 +12,8 @@
 
 #include <cssom/CSSMediaRule.h>
 
+#include <cssompp/MediaList.hpp>
+
 #include "checks.hpp"
 
 #include <utility>
@@ -51,6 +53,18 @@ CSSMediaRule::CSSMediaRule() :
 CSSMediaRule::CSSMediaRule(CSSOM_CSSMediaRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}
+
+
+
+cssom::MediaList CSSMediaRule::media() const {
+  return cssom::MediaList(CSSOM_CSSMediaRule_media(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl)));
+}
+
+
+
+void CSSMediaRule::setMedia(const char * media) {
+  CSSOM_CSSMediaRule_setMedia(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), media);
+}
 
 
 

@@ -3,6 +3,7 @@
 #include "CSSPageRule.h"
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleRule.h"
+#include "MediaList.h"
 #include "gcc.h"
 
 #include <cssom/CSSFontFaceRule.h>
@@ -232,126 +233,126 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
       if (fprintf(out, "%g", value->desc.real) < 0) return 1;
       break;
     case SAC_LENGTH_EM:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
           return 1;
       }
       break;
     case SAC_LENGTH_EX:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_PIXEL:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_INCH:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_CENTIMETER:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_MILLIMETER:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_POINT:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_LENGTH_PICA:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_PERCENTAGE:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_DEGREE:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_GRADIAN:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_RADIAN:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.sreal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_MILLISECOND:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_SECOND:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_HERTZ:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_KILOHERTZ:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_DOTS_PER_INCH:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
       }
       break;
     case SAC_DOTS_PER_CENTIMETER:
-      if (fprintf(out, "%g %s",
+      if (fprintf(out, "%g%s",
         value->desc.dimension.value.ureal, value->desc.dimension.unit) < 0)
       {
         return 1;
@@ -508,6 +509,77 @@ int CSSOM_CSSEmitter_pageSelectors(FILE *out, const SAC_Selector *selectors[]) {
 
 
 
+static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
+  switch (mediaQuery->mediaQueryType) {
+    case SAC_TYPE_MEDIA_QUERY:
+      if (fprintf(out, "%s", mediaQuery->desc.type) < 0) return 1;
+      break;
+    case SAC_FEATURE_MEDIA_QUERY:
+      if (fprintf(out, "(%s: ", mediaQuery->desc.feature.name) < 0) return 1;
+      if (CSSOM_CSSEmitter_lexicalUnit(out,
+        mediaQuery->desc.feature.value) != 0)
+      {
+        return 1;
+      }
+      if (fprintf(out, ")") < 0) return 1;
+      break;
+    case SAC_AND_MEDIA_QUERY:
+      if (emit_media_query(out, mediaQuery->desc.combinator.firstQuery) != 0)
+        return 1;
+      if (fprintf(out, " and ") < 0) return 1;
+      if (emit_media_query(out, mediaQuery->desc.combinator.secondQuery) != 0)
+        return 1;
+      break;
+    case SAC_ONLY_MEDIA_QUERY:
+      if (fprintf(out, "only ") < 0) return 1;
+      if (emit_media_query(out, mediaQuery->desc.subQuery) != 0) return 1;
+      break;
+    case SAC_NOT_MEDIA_QUERY:
+      if (fprintf(out, "not ") < 0) return 1;
+      if (emit_media_query(out, mediaQuery->desc.subQuery) != 0) return 1;
+      break;
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_query(FILE *out, const CSSOM_MediaQuery *query) {
+  const SAC_MediaQuery *mediaQuery;
+
+  mediaQuery = CSSOM_MediaQuery_query(query);
+
+  if (emit_media_query(out, mediaQuery) != 0) return 1;
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_media(FILE *out, const CSSOM_MediaList *media) {
+  unsigned long length;
+  unsigned long i;
+
+  length = CSSOM_MediaList_length(media);
+
+  if (length > 0) {
+    if (CSSOM_CSSEmitter_query(out, CSSOM_MediaList__at(media, 0)) != 0)
+      return 1;
+
+    for (i = 1; i < length; ++i) {
+      if (fprintf(out, ", ") < 0) return 1;
+
+      if (CSSOM_CSSEmitter_query(out, CSSOM_MediaList__at(media, i)) != 0)
+        return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
 int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style)
 {
@@ -627,7 +699,10 @@ int CSSOM_CSSEmitter_cssImportRule(FILE *out,
 int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
   const CSSOM_CSSMediaRule *cssRule)
 {
-  if (fprintf(out, "@media { ") < 0) return 1;
+  if (fprintf(out, "@media ") < 0) return 1;
+  if (CSSOM_CSSEmitter_media(out, CSSOM_CSSMediaRule_media(cssRule)) != 0)
+    return 1;
+  if (fprintf(out, " { ") < 0) return 1;
   if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
     return 1;
   if (fprintf(out, " }") < 0) return 1;

@@ -6,6 +6,7 @@
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSMediaRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
+#include <cssompp/MediaList.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -34,7 +35,7 @@ void cssText() {
    * cssText()
    */
 
-  cssText = "@media { p { color : green; } }";
+  cssText = "@media screen { p { color : green; } }";
   assertEquals(cssText, cssRule.cssText());
 
 
@@ -53,7 +54,7 @@ void cssText() {
 "  }\n"
 "}\n"
   );
-  cssText = "@media { p { color : green; } div { color : green; } }";
+  cssText = "@media all { p { color : green; } div { color : green; } }";
   assert(cssRule.type() == cssom::CSSRule::MEDIA_RULE);
   assertEquals(cssText, cssRule.cssText());
 
@@ -107,7 +108,7 @@ void insertRule() {
   cssRule.insertRule("span { color : green; }", 0);
 
   cssText =
-"@media { "
+"@media screen { "
   "span { color : green; } "
   "p { color : green; } "
 "}";
@@ -118,7 +119,7 @@ void insertRule() {
   cssRule.insertRule("div { color : green; }", 2);
 
   cssText =
-"@media { "
+"@media screen { "
   "span { color : green; } "
   "p { color : green; } "
   "div { color : green; } "
@@ -170,7 +171,7 @@ void deleteRule() {
   cssRule.deleteRule(2);
 
   cssText =
-"@media { "
+"@media screen { "
   "span { color : green; } "
   "p { color : green; } "
 "}";
@@ -181,7 +182,7 @@ void deleteRule() {
   cssRule.deleteRule(0);
 
   cssText =
-"@media { "
+"@media screen { "
   "p { color : green; } "
 "}";
   assertEquals(cssText, cssRule.cssText());
@@ -202,8 +203,29 @@ void deleteRule() {
 
   cssRule.deleteRule(0);
 
-  cssText = "@media {  }";
+  cssText = "@media screen {  }";
   assertEquals(cssText, cssRule.cssText());
+}
+
+
+
+void media(void) {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  assert(cssRule.media().length() == 1);
+
+
+
+  cssRule.setMedia("all, projection");
+  assert(cssRule.media().length() == 2);
 }
 
 
@@ -219,6 +241,7 @@ void cssMediaRule() {
   cssRules();
   insertRule();
   deleteRule();
+  media();
 }
 
 

@@ -7,6 +7,7 @@
 #include "test_CSSStyleRule.hpp"
 #include "test_CSSStyleSheet.hpp"
 #include "test_CSSOM.hpp"
+#include "test_MediaList.hpp"
 
 
 
@@ -16,6 +17,7 @@ int main() {
   test::cssStyleRule();
   test::cssPageRule();
   test::cssMediaRule();
+  test::mediaList();
   test::cssNamespaceRule();
   test::cssFontFaceRule();
   test::cssImportRule();

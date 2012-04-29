@@ -1,5 +1,6 @@
 #include "CSSOM.h"
 
+#include "MediaList.h"
 #include "CSSMediaRule.h"
 #include "CSSPageRule.h"
 #include "CSSProperty.h"
@@ -265,6 +266,90 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   if (cssRule != NULL) CSSOM_CSSRule__keepParser(cssRule, parser);
 
   return cssRule;
+}
+
+
+
+CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
+  CSSOM_CSSMediaRule *ownerRule, const char *mediaText, int len)
+{
+  SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  const SAC_MediaQuery **mediaQuery;
+  CSSOM_MediaList *media;
+
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
+
+  mediaQuery = SAC_ParseMediaQuery(parser, mediaText, len);
+  if (mediaQuery == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  media = CSSOM_MediaList__alloc(ownerRule, mediaQuery);
+  if (media == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_ParserStack_free(stack);
+
+  CSSOM_MediaList__keepParser(media, parser);
+
+  return media;
+}
+
+
+
+CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
+  CSSOM_MediaList *ownerMedia, const char *mediaText, int len)
+{
+  SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  const SAC_MediaQuery **mediaQuery;
+  CSSOM_MediaQuery *query;
+
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
+
+  mediaQuery = SAC_ParseMediaQuery(parser, mediaText, len);
+  if (mediaQuery == NULL || mediaQuery[1] != NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  query = CSSOM_MediaQuery__alloc(ownerMedia, *mediaQuery);
+  if (query == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_ParserStack_free(stack);
+
+  CSSOM_MediaQuery__keepParser(query, parser);
+
+  return query;
 }
 
 

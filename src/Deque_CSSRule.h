@@ -1,5 +1,5 @@
-#ifndef _CSSOM_LIST_CSSRULE_H
-#define _CSSOM_LIST_CSSRULE_H
+#ifndef _CSSOM_DEQUE_CSSRULE_H
+#define _CSSOM_DEQUE_CSSRULE_H
 
 #include "Deque.h"
 

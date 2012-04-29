@@ -37,7 +37,8 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
                       $(top_srcdir)/include/cssom/CSSRuleList.h \
                       $(top_srcdir)/include/cssom/CSSStyleDeclaration.h \
                       $(top_srcdir)/include/cssom/CSSStyleRule.h \
-                      $(top_srcdir)/include/cssom/CSSStyleSheet.h
+                      $(top_srcdir)/include/cssom/CSSStyleSheet.h \
+                      $(top_srcdir)/include/cssom/MediaList.h
 
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
@@ -47,11 +48,14 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       CSSStyleDeclaration.c \
                       CSSStyleSheet.c \
                       Deque_CSSRule.c \
+                      Deque_MediaQuery.c \
                       Deque_void.c \
                       FSM_CSSProperty.c \
                       Parser.c \
                       ParserStack.c \
                       Sequence.c \
+                      MediaList.c \
+                      MediaQuery.c \
                       memory.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)

@@ -32,6 +32,14 @@ extern "C" {
 
 
 
+CSSOM_MediaList* CSSOM_CSSMediaRule_media(const CSSOM_CSSMediaRule * cssMediaRule);
+
+
+
+void CSSOM_CSSMediaRule_setMedia(CSSOM_CSSMediaRule * cssMediaRule, const char * media);
+
+
+
 CSSOM_CSSRuleList* CSSOM_CSSMediaRule_cssRules(const CSSOM_CSSMediaRule * cssMediaRule);
 
 
