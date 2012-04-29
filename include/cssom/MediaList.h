@@ -41,6 +41,10 @@ unsigned long CSSOM_MediaList_length(const CSSOM_MediaList * MediaList);
 
 
 
+const char * CSSOM_MediaList_item(const CSSOM_MediaList * MediaList, unsigned long index);
+
+
+
 #ifdef __cplusplus
 }
 #endif

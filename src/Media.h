@@ -17,6 +17,8 @@ void CSSOM_Media_acquire(CSSOM_Media *media);
 
 void CSSOM_Media_release(CSSOM_Media *media);
 
+const char* CSSOM_Media_mediaText(const CSSOM_Media *media);
+
 
 
 #ifdef __cplusplus

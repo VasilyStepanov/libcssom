@@ -37,10 +37,14 @@ class MediaList {
 
     operator const char *();
 
+    const char * operator[](unsigned long index) const;
+
     const char * mediaText() const;
     void setMediaText(const char * mediaText);
 
     unsigned long length() const;
+
+    const char * item(unsigned long index) const;
 
   protected:
     CSSOM_MediaList * _impl;

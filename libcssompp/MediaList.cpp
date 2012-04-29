@@ -86,6 +86,12 @@ MediaList::operator const char *() {
 
 
 
+const char * MediaList::operator[](unsigned long index) const {
+  return CSSOM_MediaList_item(_impl, index);
+}
+
+
+
 const char * MediaList::mediaText() const {
   return CSSOM_MediaList_mediaText(_impl);
 }
@@ -100,6 +106,12 @@ void MediaList::setMediaText(const char * mediaText) {
 
 unsigned long MediaList::length() const {
   return CSSOM_MediaList_length(_impl);
+}
+
+
+
+const char * MediaList::item(unsigned long index) const {
+  return CSSOM_MediaList_item(_impl, index);
 }
 
 

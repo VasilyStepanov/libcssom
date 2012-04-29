@@ -122,3 +122,17 @@ const char* CSSOM_MediaList_mediaText(
 unsigned long CSSOM_MediaList_length(const CSSOM_MediaList *media) {
   return CSSOM_Deque_Media_size(media->data);
 }
+
+
+
+const char * CSSOM_MediaList_item(const CSSOM_MediaList *media,
+  unsigned long index)
+{
+  CSSOM_Media *query;
+
+  if (index >= CSSOM_Deque_Media_size(media->data)) return NULL;
+
+  query = *CSSOM_Deque_Media_at(media->data, index);
+
+  return CSSOM_Media_mediaText(query);
+}

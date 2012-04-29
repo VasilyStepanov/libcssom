@@ -1,6 +1,7 @@
 #include "Media.h"
 
 #include "memory.h"
+#include "gcc.h"
 
 #include <assert.h>
 
@@ -43,4 +44,10 @@ void CSSOM_Media_release(CSSOM_Media *media) {
   if (media->handles > 0) return;
 
   CSSOM_free(media);
+}
+
+
+
+const char* CSSOM_Media_mediaText(const CSSOM_Media *media CSSOM_UNUSED) {
+  return "";
 }
