@@ -46,6 +46,10 @@ class MediaList {
 
     const char * item(unsigned long index) const;
 
+    void appendMedium(const char * medium);
+
+    void deleteMedium(const char * medium);
+
   protected:
     CSSOM_MediaList * _impl;
 };

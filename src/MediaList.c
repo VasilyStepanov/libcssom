@@ -56,24 +56,24 @@ static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
 /**
  * TODO: Optimize me.
  */
-static int MediaDeque_exists(const CSSOM_Deque_MediaQuery *deque,
-  const CSSOM_MediaQuery *query)
+static CSSOM_DequeIter_MediaQuery MediaDeque_find(
+  CSSOM_Deque_MediaQuery *deque, const CSSOM_MediaQuery *query)
 {
   const char *match;
-  CSSOM_DequeConstIter_MediaQuery it;
+  CSSOM_DequeIter_MediaQuery it;
 
   match = CSSOM_MediaQuery_mediaText(query);
-  if (match == NULL) return -1;
+  if (match == NULL) return CSSOM_Deque_MediaQuery_end(deque);
 
   for (
-    it = CSSOM_Deque_MediaQuery_cbegin(deque);
-    it != CSSOM_Deque_MediaQuery_cend(deque);
-    it = CSSOM_DequeConstIter_MediaQuery_next(it))
+    it = CSSOM_Deque_MediaQuery_begin(deque);
+    it != CSSOM_Deque_MediaQuery_end(deque);
+    it = CSSOM_DequeIter_MediaQuery_next(it))
   {
-    if (strcmp(CSSOM_MediaQuery_mediaText(*it), match) == 0) return 1;
+    if (strcmp(CSSOM_MediaQuery_mediaText(*it), match) == 0) return it;
   }
 
-  return 0;
+  return CSSOM_Deque_MediaQuery_end(deque);
 }
 
 
@@ -107,7 +107,7 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
       return NULL;
     }
 
-    if (MediaDeque_exists(data, query) != 0) {
+    if (MediaDeque_find(data, query) != CSSOM_Deque_MediaQuery_end(data)) {
       CSSOM_MediaQuery_release(query);
       continue;
     }
@@ -176,7 +176,7 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media,
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
-  newMedia = CSSOM__parseMediaList(cssom, media->ownerRule,
+  newMedia = CSSOM__parseMedia(cssom, media->ownerRule,
     mediaText, strlen(mediaText));
   if (newMedia == NULL) return;
 
@@ -252,9 +252,50 @@ void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
 
 
 void CSSOM_MediaList_appendMedium(CSSOM_MediaList *media,
-  const char *medium);
+  const char *medium)
+{
+  CSSOM_MediaQuery *query;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+  query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
+  if (query == NULL) return;
+
+  if (MediaDeque_find(media->data, query) !=
+    CSSOM_Deque_MediaQuery_end(media->data))
+  {
+    CSSOM_MediaQuery_release(query);
+    return;
+  }
+
+  if (CSSOM_Deque_MediaQuery_append(media->data, query) ==
+    CSSOM_Deque_MediaQuery_end(media->data))
+  {
+    CSSOM_MediaQuery_release(query);
+    return;
+  }
+}
 
 
 
-void CSSOM_MediaList_deleteMedium(CSSOM_MediaList * MediaList CSSOM_UNUSED,
-  const char * medium CSSOM_UNUSED);
+void CSSOM_MediaList_deleteMedium(CSSOM_MediaList *media,
+  const char * medium)
+{
+  CSSOM_MediaQuery *query;
+  const CSSOM *cssom;
+  CSSOM_DequeIter_MediaQuery match;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+  query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
+  if (query == NULL) return;
+
+  match = MediaDeque_find(media->data, query);
+  if (match == CSSOM_Deque_MediaQuery_end(media->data)) {
+    CSSOM_MediaQuery_release(query);
+    return;
+  }
+
+  CSSOM_Deque_MediaQuery_erase(media->data, match);
+}

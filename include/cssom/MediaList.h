@@ -45,6 +45,14 @@ const char * CSSOM_MediaList_item(const CSSOM_MediaList * mediaList, unsigned lo
 
 
 
+void CSSOM_MediaList_appendMedium(CSSOM_MediaList * mediaList, const char * medium);
+
+
+
+void CSSOM_MediaList_deleteMedium(CSSOM_MediaList * mediaList, const char * medium);
+
+
+
 #ifdef __cplusplus
 }
 #endif

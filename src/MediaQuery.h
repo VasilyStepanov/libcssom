@@ -24,6 +24,9 @@ const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query);
 
 const SAC_MediaQuery* CSSOM_MediaQuery_query(const CSSOM_MediaQuery *query);
 
+void CSSOM_MediaQuery__keepParser(CSSOM_MediaQuery *query,
+  SAC_Parser parser);
+
 
 
 #ifdef __cplusplus

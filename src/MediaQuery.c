@@ -12,6 +12,7 @@
 
 struct _CSSOM_MediaQuery {
   size_t handles;
+  SAC_Parser parser;
   CSSOM_MediaList *ownerMedia;
   char *mediaText;
   const SAC_MediaQuery *query;
@@ -28,6 +29,7 @@ CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *ownerMedia,
   if (query == NULL) return NULL;
 
   query->handles = 1;
+  query->parser = NULL;
   query->ownerMedia = ownerMedia;
   query->mediaText = NULL;
   query->query = mediaQuery;
@@ -57,6 +59,7 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query) {
   }
 
   CSSOM_native_free(query->mediaText);
+  SAC_DisposeParser(query->parser);
   CSSOM_free(query);
 }
 
@@ -92,4 +95,12 @@ const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query) {
 
 const SAC_MediaQuery* CSSOM_MediaQuery_query(const CSSOM_MediaQuery *query) {
   return query->query;
+}
+
+
+
+void CSSOM_MediaQuery__keepParser(CSSOM_MediaQuery *query,
+  SAC_Parser parser)
+{
+  query->parser = parser;
 }

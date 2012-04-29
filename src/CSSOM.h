@@ -3,6 +3,7 @@
 
 #include <cssom/CSSOM.h>
 
+#include "MediaQuery.h"
 #include "FSM_CSSProperty.h"
 
 #ifdef __cplusplus
@@ -19,8 +20,11 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
   const char *cssText, int len);
 
-CSSOM_MediaList* CSSOM__parseMediaList(const CSSOM *cssom,
+CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
   CSSOM_CSSMediaRule *ownerRule, const char *mediaText, int len);
+
+CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
+  CSSOM_MediaList *ownerMedia, const char *mediaText, int len);
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 

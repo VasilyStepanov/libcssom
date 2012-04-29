@@ -153,7 +153,6 @@ void sacCare(void) {
 
 
 
-/*
 void appendMedium(void) {
   std::string cssText;
   cssom::CSSOM cssom;
@@ -171,7 +170,11 @@ void appendMedium(void) {
   assert(media.length() == 2);
 
   media.appendMedium("all");
-  assert(media.length() == 4);
+  assert(media.length() == 3);
+
+  media.appendMedium(
+    "projection and (min-width: 400px), projection and (max-width: 700px)");
+  assert(media.length() == 3);
 
   media.appendMedium("screen");
   assert(media.length() == 4);
@@ -210,7 +213,6 @@ void deleteMedium(void) {
   media.deleteMedium("screen and (min-width: 400px) and (max-width: 700px)");
   assert(media.length() == 0);
 }
-*/
 
 
 
@@ -226,10 +228,8 @@ void mediaList() {
   item();
   unique();
   sacCare();
-/*
   appendMedium();
   deleteMedium();
-*/
 }
 
 

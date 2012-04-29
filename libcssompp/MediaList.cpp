@@ -116,4 +116,16 @@ const char * MediaList::item(unsigned long index) const {
 
 
 
+void MediaList::appendMedium(const char * medium) {
+  return CSSOM_MediaList_appendMedium(_impl, medium);
+}
+
+
+
+void MediaList::deleteMedium(const char * medium) {
+  return CSSOM_MediaList_deleteMedium(_impl, medium);
+}
+
+
+
 } // cssom
