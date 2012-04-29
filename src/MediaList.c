@@ -1,7 +1,7 @@
 #include "MediaList.h"
 
-#include "Media.h"
-#include "Deque_Media.h"
+#include "MediaQuery.h"
+#include "Deque_MediaQuery.h"
 #include "memory.h"
 #include "gcc.h"
 
@@ -12,49 +12,49 @@
 struct _CSSOM_MediaList {
   size_t handles;
   const SAC_MediaQuery **query;
-  CSSOM_Deque_Media *data;
+  CSSOM_Deque_MediaQuery *data;
 };
 
 
 
-static void MediaDeque_free(CSSOM_Deque_Media *deque) {
-  CSSOM_DequeIter_Media it;
+static void MediaDeque_free(CSSOM_Deque_MediaQuery *deque) {
+  CSSOM_DequeIter_MediaQuery it;
 
   for (
-    it = CSSOM_Deque_Media_begin(deque);
-    it != CSSOM_Deque_Media_end(deque);
-    it = CSSOM_DequeIter_Media_next(it))
+    it = CSSOM_Deque_MediaQuery_begin(deque);
+    it != CSSOM_Deque_MediaQuery_end(deque);
+    it = CSSOM_DequeIter_MediaQuery_next(it))
   {
-    CSSOM_Media_release(*it);
+    CSSOM_MediaQuery_release(*it);
   }
 
-  CSSOM_Deque_Media_free(deque);
+  CSSOM_Deque_MediaQuery_free(deque);
 }
 
 
 
 CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
   CSSOM_MediaList *media;
-  CSSOM_Deque_Media *data;
+  CSSOM_Deque_MediaQuery *data;
   const SAC_MediaQuery **it;
   size_t size;
 
   for (it = query, size = 0; *it != NULL; ++it) ++size;
 
-  data = CSSOM_Deque_Media_alloc_ex(0, size);
+  data = CSSOM_Deque_MediaQuery_alloc_ex(0, size);
   if (data == NULL) return NULL;
 
   for (it = query; *it != NULL; ++it) {
-    CSSOM_Media *mediaItem;
+    CSSOM_MediaQuery *query;
 
-    mediaItem = CSSOM_Media__alloc(*it);
-    if (mediaItem == NULL) {
+    query = CSSOM_MediaQuery__alloc(*it);
+    if (query == NULL) {
       MediaDeque_free(data);
       return NULL;
     }
 
-    if (CSSOM_Deque_Media_append(data, mediaItem) ==
-      CSSOM_Deque_Media_end(data))
+    if (CSSOM_Deque_MediaQuery_append(data, query) ==
+      CSSOM_Deque_MediaQuery_end(data))
     {
       MediaDeque_free(data);
       return NULL;
@@ -64,7 +64,7 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
 
   media = (CSSOM_MediaList*)CSSOM_malloc(sizeof(CSSOM_MediaList));
   if (media == NULL) {
-    CSSOM_Deque_Media_free(data);
+    CSSOM_Deque_MediaQuery_free(data);
     return NULL;
   }
 
@@ -120,7 +120,7 @@ const char* CSSOM_MediaList_mediaText(
 
 
 unsigned long CSSOM_MediaList_length(const CSSOM_MediaList *media) {
-  return CSSOM_Deque_Media_size(media->data);
+  return CSSOM_Deque_MediaQuery_size(media->data);
 }
 
 
@@ -128,11 +128,11 @@ unsigned long CSSOM_MediaList_length(const CSSOM_MediaList *media) {
 const char * CSSOM_MediaList_item(const CSSOM_MediaList *media,
   unsigned long index)
 {
-  CSSOM_Media *query;
+  CSSOM_MediaQuery *query;
 
-  if (index >= CSSOM_Deque_Media_size(media->data)) return NULL;
+  if (index >= CSSOM_Deque_MediaQuery_size(media->data)) return NULL;
 
-  query = *CSSOM_Deque_Media_at(media->data, index);
+  query = *CSSOM_Deque_MediaQuery_at(media->data, index);
 
-  return CSSOM_Media_mediaText(query);
+  return CSSOM_MediaQuery_mediaText(query);
 }
