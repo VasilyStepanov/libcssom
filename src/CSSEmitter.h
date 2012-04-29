@@ -1,6 +1,7 @@
 #ifndef CSSOM_CSSEMITTER_H
 #define CSSOM_CSSEMITTER_H
 
+#include "MediaQuery.h"
 #include <cssom/typedefs.h>
 
 #include <sacc.h>
@@ -20,6 +21,10 @@ int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property);
 int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]);
 
 int CSSOM_CSSEmitter_pageSelectors(FILE *out, const SAC_Selector *selectors[]);
+
+int CSSOM_CSSEmitter_media(FILE *out, const CSSOM_MediaList *media);
+
+int CSSOM_CSSEmitter_query(FILE *out, const CSSOM_MediaQuery *query);
 
 int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style);

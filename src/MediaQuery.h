@@ -19,6 +19,8 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query);
 
 const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query);
 
+const SAC_MediaQuery* CSSOM_MediaQuery_query(const CSSOM_MediaQuery *query);
+
 
 
 #ifdef __cplusplus

@@ -14,14 +14,14 @@ struct _CSSOM_MediaQuery {
 
 
 
-CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(const SAC_MediaQuery *queryData) {
+CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(const SAC_MediaQuery *mediaQuery) {
   CSSOM_MediaQuery *query;
 
   query = (CSSOM_MediaQuery*)CSSOM_malloc(sizeof(CSSOM_MediaQuery));
   if (query == NULL) return NULL;
 
   query->handles = 1;
-  query->query = queryData;
+  query->query = mediaQuery;
 
   return query;
 }
@@ -52,4 +52,10 @@ const char* CSSOM_MediaQuery_mediaText(
   const CSSOM_MediaQuery *query CSSOM_UNUSED)
 {
   return "";
+}
+
+
+
+const SAC_MediaQuery* CSSOM_MediaQuery_query(const CSSOM_MediaQuery *query) {
+  return query->query;
 }

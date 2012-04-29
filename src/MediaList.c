@@ -1,16 +1,19 @@
 #include "MediaList.h"
 
 #include "MediaQuery.h"
+#include "CSSEmitter.h"
 #include "Deque_MediaQuery.h"
 #include "memory.h"
 #include "gcc.h"
 
 #include <assert.h>
+#include <stdio.h>
 
 
 
 struct _CSSOM_MediaList {
   size_t handles;
+  char *mediaText;
   const SAC_MediaQuery **query;
   CSSOM_Deque_MediaQuery *data;
 };
@@ -69,6 +72,7 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
   }
 
   media->handles = 1;
+  media->mediaText = NULL;
   media->query = query;
   media->data = data;
 
@@ -93,6 +97,7 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
   if (media->handles > 0) return;
 
   MediaDeque_free(media->data);
+  CSSOM_native_free(media->mediaText);
   CSSOM_free(media);
 }
 
@@ -111,10 +116,30 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media CSSOM_UNUSED,
 
 
 
-const char* CSSOM_MediaList_mediaText(
-  const CSSOM_MediaList *media CSSOM_UNUSED)
-{
-  return "";
+const char* CSSOM_MediaList_mediaText(const CSSOM_MediaList *media) {
+  if (media->mediaText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_media(out, media) != 0) {
+      fclose(out);
+      CSSOM_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_MediaList*)media)->mediaText = buf;
+  }
+  return media->mediaText;
 }
 
 
@@ -135,4 +160,12 @@ const char * CSSOM_MediaList_item(const CSSOM_MediaList *media,
   query = *CSSOM_Deque_MediaQuery_at(media->data, index);
 
   return CSSOM_MediaQuery_mediaText(query);
+}
+
+
+
+CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,
+  unsigned long index)
+{
+  return *CSSOM_Deque_MediaQuery_at(media->data, index);
 }
