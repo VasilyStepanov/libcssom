@@ -46,9 +46,19 @@ def attributeSetterSignature(attribute):
 
 
 def operationSignature(operation):
-  return "%s(%s)" % ( \
+  signature = "%s(%s)" % ( \
     operation.name,
     ", ".join([emitArgument(arg) for arg in operation.arguments]))
+
+  if operation.getter: signature = "%s const" % signature
+
+  return signature
+
+
+
+def getterOperationSignature(operation):
+  return "operator[](%s) const" % \
+    ", ".join([emitArgument(arg) for arg in operation.arguments])
 
 
 
@@ -92,7 +102,6 @@ def renderOperation(out, interface, operation):
   assert(not operation.extended_attributes)
   assert(not operation.stringifier)
   assert(not operation.static)
-  assert(not operation.getter)
   assert(not operation.setter)
   assert(not operation.creator)
   assert(not operation.deleter)
@@ -200,15 +209,58 @@ def renderInterfaceMember(out, interface, member, definitions):
 
 
 
+def renderSpecialOperations(out, interface):
+  stringifier = None
+  getter_operations = []
+
+  for member in interface.members:
+    if isinstance(member, pywidl.Attribute) and member.stringifier:
+      assert(stringifier is None, "Multiple stringifiers not allowed")
+      stringifier = member
+
+    if isinstance(member, pywidl.Operation):
+      assert(not member.setter)
+      assert(not member.creator)
+      assert(not member.deleter)
+      assert(not member.legacycaller)
+      assert(not member.stringifier)
+
+      if member.getter: getter_operations.append(member)
+
+  if stringifier:
+    impl = implArgument(interface)
+
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%s::operator const char *() {" % interface.name
+    print >>out, "  return CSSOM_%s_%s(%s);" % ( \
+      interface.name,
+      interfaceMemberName(interface, stringifier),
+      impl)
+    print >>out, "}"
+
+    for operation in getter_operations:
+      assert(len(operation.arguments) == 1)
+
+      print >>out
+      print >>out
+      print >>out
+      print >>out, "%s %s::%s {" % ( \
+        emitType(operation.return_type),
+        interface.name,
+        getterOperationSignature(operation))
+      print >>out, "  return CSSOM_%s_%s(%s%s);" % ( \
+        interface.name,
+        interfaceMemberName(interface, operation),
+        implArgument(interface),
+        "".join([", %s" % arg.name for arg in operation.arguments]))
+      print >>out, "}"
+
+
+
 def renderInterface(out, interface, definitions):
   template = { "name" : interface.name }
-
-  stringifier = None
-  for member in interface.members:
-    if isinstance(member, pywidl.Attribute):
-      if member.stringifier:
-        assert(stringifier == None, "Multiple stringifiers not allowed")
-        stringifier = member
 
   if not interface.parent:
     print >>out
@@ -326,18 +378,7 @@ def renderInterface(out, interface, definitions):
     print >>out, "  %(parent)s((CSSOM_%(parent)s *)impl)" % template
     print >>out, "{}"
 
-  if stringifier:
-    impl = implArgument(interface)
-
-    print >>out
-    print >>out
-    print >>out
-    print >>out, "%(name)s::operator const char *() {" % template
-    print >>out, "  return CSSOM_%s_%s(%s);" % ( \
-      interface.name,
-      interfaceMemberName(interface, stringifier),
-      impl)
-    print >>out, "}"
+  renderSpecialOperations(out, interface)
 
   for member in interface.members:
     renderInterfaceMember(out, interface, member, definitions)

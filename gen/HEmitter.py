@@ -58,7 +58,7 @@ def attributeSetterSignature(interface, attribute):
 
 
 def isGetterOperation(operation):
-  return splitCamelCase(operation.name)[0] == "get"
+  return splitCamelCase(operation.name)[0] == "get" or operation.getter
 
 
 
@@ -129,7 +129,6 @@ def renderOperation(out, interface, operation):
   assert(not operation.extended_attributes)
   assert(not operation.stringifier)
   assert(not operation.static)
-  assert(not operation.getter)
   assert(not operation.setter)
   assert(not operation.creator)
   assert(not operation.deleter)

@@ -12,6 +12,7 @@ from CPPEmitter import emitType
 from CPPEmitter import attributeGetterSignature
 from CPPEmitter import attributeSetterSignature
 from CPPEmitter import operationSignature
+from CPPEmitter import getterOperationSignature
 from CPPEmitter import attributeSetterName
 from CPPEmitter import renderDefinitionSourceFile
 
@@ -25,7 +26,6 @@ def renderOperation(out, operation):
   assert(not operation.extended_attributes)
   assert(not operation.stringifier)
   assert(not operation.static)
-  assert(not operation.getter)
   assert(not operation.setter)
   assert(not operation.creator)
   assert(not operation.deleter)
@@ -78,15 +78,43 @@ def renderInterfaceMember(out, interface, member, definitions):
 
 
 
+def renderSpecialOperations(out, members):
+  stringifier = None
+  getter_operations = []
+
+  for member in members:
+    if isinstance(member, pywidl.Attribute) and member.stringifier:
+      assert(not stringifier)
+      stringifier = member
+
+    if isinstance(member, pywidl.Operation):
+      assert(not member.setter)
+      assert(not member.creator)
+      assert(not member.deleter)
+      assert(not member.legacycaller)
+      assert(not member.stringifier)
+
+      if member.getter: getter_operations.append(member)
+
+  if stringifier:
+    print >>out
+    print >>out, "    operator const char *();"
+
+  if getter_operations:
+    print >>out
+    for operation in getter_operations:
+      assert(len(operation.arguments) == 1)
+      print >>out, "    %s %s;" % ( \
+        emitType(operation.return_type),
+        getterOperationSignature(operation))
+
+
+
+
+
 def renderInterface(out, interface, definitions):
   assert(not interface.extended_attributes)
   assert(not interface.callback)
-
-  stringifier = False
-  for member in interface.members:
-    if isinstance(member, pywidl.Attribute) \
-    and member.stringifier:
-      stringifier = True
 
   classDef = interface.name
   if interface.parent: classDef = "%s : public cssom::%s" % ( \
@@ -124,9 +152,7 @@ def renderInterface(out, interface, definitions):
     print >>out
     print >>out, "    void swap(cssom::%(name)s &rhs);" % template
 
-  if stringifier:
-    print >>out
-    print >>out, "    operator const char *();"
+  renderSpecialOperations(out, interface.members)
 
   for member in interface.members:
     renderInterfaceMember(out, interface, member, definitions)
