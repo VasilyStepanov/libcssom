@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 
 
@@ -100,7 +101,7 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
   --cssRule->handles;
   if (cssRule->handles > 0) {
     CSSOM_CSSStyleSheet_release(cssRule->parentStyleSheet);
-    CSSOM_CSSRule_acquire(cssRule->parentRule);
+    CSSOM_CSSRule_release(cssRule->parentRule);
     return;
   }
 
