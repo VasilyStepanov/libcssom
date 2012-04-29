@@ -49,8 +49,6 @@ def renderAttribute(out, interface, attribute, definitions):
   forwarded_attribute = attributeExtendedAttributes(attribute, definitions)
   if forwarded_attribute:
     print >>out
-    print >>out
-    print >>out
     print >>out, "    void %s;" % attributeSetterSignature(forwarded_attribute)
 
 

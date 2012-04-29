@@ -36,6 +36,8 @@ void mediaText(void) {
   assertEquals(cssText, media.mediaText());
   assertEquals(cssText, std::string(media));
 
+
+
   std::cout << "setMediaText test not implemented yet" << std::endl;
 }
 

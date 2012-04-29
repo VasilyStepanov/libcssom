@@ -223,6 +223,10 @@ void media(void) {
   cssom::MediaList media = cssRule.media();
 
   assert(media.length() == 1);
+
+
+
+  std::cout << "setMediaText test not implemented yet" << std::endl;
 }
 
 

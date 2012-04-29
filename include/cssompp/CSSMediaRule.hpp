@@ -42,8 +42,6 @@ class CSSMediaRule : public cssom::CSSRule {
 
     cssom::MediaList media() const;
 
-
-
     void setMedia(const char * media);
 
     cssom::CSSRuleList cssRules() const;
