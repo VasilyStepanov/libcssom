@@ -78,10 +78,10 @@ def splitCamelCase(ident):
   pch = ''
   for ch in ident:
     if pch.isupper() and ch.islower():
-      words.append(''.join(word))
+      if word: words.append(''.join(word))
       word = [pch]
     else:
-      word.append(pch)
+      if pch: word.append(pch)
 
     pch = ch
 

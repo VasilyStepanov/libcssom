@@ -1,5 +1,5 @@
-#ifndef CSSOM__MEDIA_LIST_H
-#define CSSOM__MEDIA_LIST_H
+#ifndef CSSOM_MEDIA_LIST_H
+#define CSSOM_MEDIA_LIST_H
 
 
 
@@ -20,28 +20,28 @@ extern "C" {
 
 
 void CSSOM_MediaList_acquire(
-  CSSOM_MediaList * MediaList);
+  CSSOM_MediaList * mediaList);
 
 
 
 void CSSOM_MediaList_release(
-  CSSOM_MediaList * MediaList);
+  CSSOM_MediaList * mediaList);
 
 
 
-const char * CSSOM_MediaList_mediaText(const CSSOM_MediaList * MediaList);
+const char * CSSOM_MediaList_mediaText(const CSSOM_MediaList * mediaList);
 
 
 
-void CSSOM_MediaList_setMediaText(CSSOM_MediaList * MediaList, const char * mediaText);
+void CSSOM_MediaList_setMediaText(CSSOM_MediaList * mediaList, const char * mediaText);
 
 
 
-unsigned long CSSOM_MediaList_length(const CSSOM_MediaList * MediaList);
+unsigned long CSSOM_MediaList_length(const CSSOM_MediaList * mediaList);
 
 
 
-const char * CSSOM_MediaList_item(const CSSOM_MediaList * MediaList, unsigned long index);
+const char * CSSOM_MediaList_item(const CSSOM_MediaList * mediaList, unsigned long index);
 
 
 

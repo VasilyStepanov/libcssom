@@ -1,5 +1,5 @@
-#ifndef CSSOMPP__MEDIA_LIST_HPP
-#define CSSOMPP__MEDIA_LIST_HPP
+#ifndef CSSOMPP_MEDIA_LIST_HPP
+#define CSSOMPP_MEDIA_LIST_HPP
 
 
 
@@ -54,4 +54,4 @@ class MediaList {
 
 } // cssom
 
-#endif // CSSOMPP__MEDIA_LIST_HPP
+#endif // CSSOMPP_MEDIA_LIST_HPP
