@@ -104,6 +104,32 @@ void item(void) {
 
 
 
+void unique(void) {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom.setErrorHandler(test::errorHandler);
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen, screen, screen, Screen {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::MediaList media = cssRule.media();
+
+  assert(media.length() == 2);
+
+  cssText = "screen";
+  assertEquals(cssText, media.item(0));
+
+  cssText = "Screen";
+  assertEquals(cssText, media.item(1));
+}
+
+
+
 void sacCare(void) {
   std::string cssText;
   cssom::CSSOM cssom;
@@ -127,6 +153,67 @@ void sacCare(void) {
 
 
 
+/*
+void appendMedium(void) {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen and (min-width: 400px) and (max-width: 700px), projection {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::MediaList media = cssRule.media();
+
+  assert(media.length() == 2);
+
+  media.appendMedium("all");
+  assert(media.length() == 4);
+
+  media.appendMedium("screen");
+  assert(media.length() == 4);
+
+  media.appendMedium("screen and (min-width: 400px) and (max-width: 700px)");
+  assert(media.length() == 4);
+
+  media.appendMedium("screen and (min-width: 400px) and (max-width: 701px)");
+  assert(media.length() == 5);
+}
+
+
+
+void deleteMedium(void) {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen and (min-width: 400px) and (max-width: 700px), projection {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::MediaList media = cssRule.media();
+
+  assert(media.length() == 2);
+
+  media.deleteMedium("projection");
+  assert(media.length() == 1);
+
+  media.deleteMedium("all &");
+  assert(media.length() == 1);
+
+  media.deleteMedium("screen and (min-width: 400px) and (max-width: 700px)");
+  assert(media.length() == 0);
+}
+*/
+
+
+
 } // unnamed
 
 namespace test {
@@ -137,7 +224,12 @@ void mediaList() {
   mediaText();
   length();
   item();
+  unique();
   sacCare();
+/*
+  appendMedium();
+  deleteMedium();
+*/
 }
 
 

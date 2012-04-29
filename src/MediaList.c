@@ -53,6 +53,28 @@ static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
 
 
 
+static int MediaDeque_exists(const CSSOM_Deque_MediaQuery *deque,
+  const CSSOM_MediaQuery *query)
+{
+  const char *match;
+  CSSOM_DequeConstIter_MediaQuery it;
+
+  match = CSSOM_MediaQuery_mediaText(query);
+  if (match == NULL) return -1;
+
+  for (
+    it = CSSOM_Deque_MediaQuery_cbegin(deque);
+    it != CSSOM_Deque_MediaQuery_cend(deque);
+    it = CSSOM_DequeConstIter_MediaQuery_next(it))
+  {
+    if (strcmp(CSSOM_MediaQuery_mediaText(*it), match) == 0) return 1;
+  }
+
+  return 0;
+}
+
+
+
 CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
   const SAC_MediaQuery **query)
 {
@@ -82,9 +104,15 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
       return NULL;
     }
 
+    if (MediaDeque_exists(data, query) != 0) {
+      CSSOM_MediaQuery_release(query);
+      continue;
+    }
+
     if (CSSOM_Deque_MediaQuery_append(data, query) ==
       CSSOM_Deque_MediaQuery_end(data))
     {
+      CSSOM_MediaQuery_release(query);
       CSSOM_MediaList_release(media);
       MediaDeque_free(data);
       return NULL;
@@ -217,3 +245,13 @@ void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
 {
   media->parser = parser;
 }
+
+
+
+void CSSOM_MediaList_appendMedium(CSSOM_MediaList *media,
+  const char *medium);
+
+
+
+void CSSOM_MediaList_deleteMedium(CSSOM_MediaList * MediaList CSSOM_UNUSED,
+  const char * medium CSSOM_UNUSED);
