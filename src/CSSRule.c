@@ -13,6 +13,7 @@
 #include "MediaList.h"
 #include "gcc.h"
 #include "memory.h"
+#include "utility.h"
 
 #include <string.h>
 #include <assert.h>
@@ -40,15 +41,6 @@ unsigned short CSSOM_CSSRule_PAGE_RULE = 6;
 
 
 unsigned short CSSOM_CSSRule_NAMESPACE_RULE = 10;
-
-
-
-#define SWAP(lhs, rhs) \
-  do { \
-    void *t = (void*)lhs; \
-    lhs = rhs; \
-    rhs = t; \
-  } while (0)
 
 
 

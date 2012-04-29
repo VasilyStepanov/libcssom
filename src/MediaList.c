@@ -2,18 +2,23 @@
 
 #include "MediaQuery.h"
 #include "CSSEmitter.h"
+#include "CSSOM.h"
 #include "CSSRule.h"
+#include "CSSStyleSheet.h"
 #include "Deque_MediaQuery.h"
 #include "memory.h"
 #include "gcc.h"
+#include "utility.h"
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
 struct _CSSOM_MediaList {
   size_t handles;
+  SAC_Parser parser;
   CSSOM_CSSMediaRule *ownerRule;
   char *mediaText;
   const SAC_MediaQuery **query;
@@ -34,6 +39,16 @@ static void MediaDeque_free(CSSOM_Deque_MediaQuery *deque) {
   }
 
   CSSOM_Deque_MediaQuery_free(deque);
+}
+
+
+
+static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
+  SWAP(lhs->parser, rhs->parser);
+  SWAP(lhs->ownerRule, rhs->ownerRule);
+  SWAP(lhs->mediaText, rhs->mediaText);
+  SWAP(lhs->query, rhs->query);
+  SWAP(lhs->data, rhs->data);
 }
 
 
@@ -78,6 +93,7 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
   }
 
   media->handles = 1;
+  media->parser = NULL;
   media->ownerRule = ownerRule;
   media->mediaText = NULL;
   media->query = query;
@@ -109,6 +125,7 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
 
   MediaDeque_free(media->data);
   CSSOM_native_free(media->mediaText);
+  SAC_DisposeParser(media->parser);
   CSSOM_free(media);
 }
 
@@ -120,9 +137,21 @@ const SAC_MediaQuery** CSSOM_MediaList__query(const CSSOM_MediaList *media) {
 
 
 
-void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media CSSOM_UNUSED,
-  const char *mediaText CSSOM_UNUSED)
+void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media,
+  const char *mediaText)
 {
+  CSSOM_MediaList *newMedia;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+  newMedia = CSSOM__parseMediaList(cssom, media->ownerRule,
+    mediaText, strlen(mediaText));
+  if (newMedia == NULL) return;
+
+  MediaList_swap(media, newMedia);
+
+  CSSOM_MediaList_release(newMedia);
 }
 
 
@@ -179,4 +208,12 @@ CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,
   unsigned long index)
 {
   return *CSSOM_Deque_MediaQuery_at(media->data, index);
+}
+
+
+
+void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
+  SAC_Parser parser)
+{
+  media->parser = parser;
 }

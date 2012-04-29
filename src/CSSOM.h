@@ -15,9 +15,12 @@ void CSSOM_acquire(CSSOM *cssom);
 
 void CSSOM_release(CSSOM *cssom);
 
-CSSOM_CSSRule * CSSOM__parseCSSRule(const CSSOM *cssom,
+CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
-  const char * cssText, int len);
+  const char *cssText, int len);
+
+CSSOM_MediaList* CSSOM__parseMediaList(const CSSOM *cssom,
+  CSSOM_CSSMediaRule *ownerRule, const char *mediaText, int len);
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 

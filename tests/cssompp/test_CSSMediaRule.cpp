@@ -220,13 +220,12 @@ void media(void) {
   );
   cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
     styleSheet.cssRules()[0]);
-  cssom::MediaList media = cssRule.media();
-
-  assert(media.length() == 1);
+  assert(cssRule.media().length() == 1);
 
 
 
-  std::cout << "setMediaText test not implemented yet" << std::endl;
+  cssRule.setMedia("all, projection");
+  assert(cssRule.media().length() == 2);
 }
 
 

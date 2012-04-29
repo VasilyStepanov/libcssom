@@ -38,7 +38,23 @@ void mediaText(void) {
 
 
 
-  std::cout << "setMediaText test not implemented yet" << std::endl;
+  media.setMediaText("all");
+  cssText = "all";
+  assertEquals(cssText, media.mediaText());
+
+
+
+  media.setMediaText("");
+  cssText = "";
+  assertEquals(cssText, media.mediaText());
+
+
+
+  assert(errors.syntaxErrors == 0);
+  media.setMediaText("screen, & projection");
+  cssText = "screen";
+  assertEquals(cssText, media.mediaText());
+  assert(errors.syntaxErrors == 1);
 }
 
 

@@ -11,6 +11,7 @@ int errorHandler(void *userData, const CSSOM_Error *error) {
     case CSSOM_ERROR_NOT_SUPPORTED:
       break;
     case CSSOM_ERROR_SYNTAX:
+      ++errors->syntaxErrors;
       break;
     case CSSOM_ERROR_INDEX_SIZE_ERR:
       ++errors->indexSizeErrors;

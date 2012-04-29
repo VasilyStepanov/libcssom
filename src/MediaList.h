@@ -19,6 +19,9 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
 CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,
   unsigned long index);
 
+void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
+  SAC_Parser parser);
+
 
 
 #ifdef __cplusplus
