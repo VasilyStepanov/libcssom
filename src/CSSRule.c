@@ -516,7 +516,7 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
-  cssRule->media = CSSOM_MediaList__alloc(media);
+  cssRule->media = CSSOM_MediaList__alloc(cssRule, media);
   cssRule->cssRules = cssRules;
 
   return cssRule;

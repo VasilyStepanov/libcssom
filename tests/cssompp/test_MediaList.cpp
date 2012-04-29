@@ -88,6 +88,29 @@ void item(void) {
 
 
 
+void sacCare(void) {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::MediaList media;
+  {
+    cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen and (min-width: 400px) and (max-width: 700px), projection {\n"
+"  p {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+    cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+      styleSheet.cssRules()[0]);
+    media = cssRule.media();
+  }
+
+  cssText = "screen and (min-width: 400px) and (max-width: 700px), projection";
+  assertEquals(cssText, std::string(media));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -98,6 +121,7 @@ void mediaList() {
   mediaText();
   length();
   item();
+  sacCare();
 }
 
 

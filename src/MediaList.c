@@ -2,6 +2,7 @@
 
 #include "MediaQuery.h"
 #include "CSSEmitter.h"
+#include "CSSRule.h"
 #include "Deque_MediaQuery.h"
 #include "memory.h"
 #include "gcc.h"
@@ -13,6 +14,7 @@
 
 struct _CSSOM_MediaList {
   size_t handles;
+  CSSOM_CSSMediaRule *ownerRule;
   char *mediaText;
   const SAC_MediaQuery **query;
   CSSOM_Deque_MediaQuery *data;
@@ -36,7 +38,9 @@ static void MediaDeque_free(CSSOM_Deque_MediaQuery *deque) {
 
 
 
-CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
+CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
+  const SAC_MediaQuery **query)
+{
   CSSOM_MediaList *media;
   CSSOM_Deque_MediaQuery *data;
   const SAC_MediaQuery **it;
@@ -47,11 +51,18 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
   data = CSSOM_Deque_MediaQuery_alloc_ex(0, size);
   if (data == NULL) return NULL;
 
+  media = (CSSOM_MediaList*)CSSOM_malloc(sizeof(CSSOM_MediaList));
+  if (media == NULL) {
+    CSSOM_Deque_MediaQuery_free(data);
+    return NULL;
+  }
+
   for (it = query; *it != NULL; ++it) {
     CSSOM_MediaQuery *query;
 
-    query = CSSOM_MediaQuery__alloc(*it);
+    query = CSSOM_MediaQuery__alloc(media, *it);
     if (query == NULL) {
+      CSSOM_MediaList_release(media);
       MediaDeque_free(data);
       return NULL;
     }
@@ -59,19 +70,15 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(const SAC_MediaQuery **query) {
     if (CSSOM_Deque_MediaQuery_append(data, query) ==
       CSSOM_Deque_MediaQuery_end(data))
     {
+      CSSOM_MediaList_release(media);
       MediaDeque_free(data);
       return NULL;
     }
 
   }
 
-  media = (CSSOM_MediaList*)CSSOM_malloc(sizeof(CSSOM_MediaList));
-  if (media == NULL) {
-    CSSOM_Deque_MediaQuery_free(data);
-    return NULL;
-  }
-
   media->handles = 1;
+  media->ownerRule = ownerRule;
   media->mediaText = NULL;
   media->query = query;
   media->data = data;
@@ -85,6 +92,7 @@ void CSSOM_MediaList_acquire(CSSOM_MediaList *media) {
   if (media == NULL) return;
 
   ++media->handles;
+  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)media->ownerRule);
 }
 
 
@@ -94,7 +102,10 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
 
   assert(media->handles > 0);
   --media->handles;
-  if (media->handles > 0) return;
+  if (media->handles > 0) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)media->ownerRule);
+    return;
+  }
 
   MediaDeque_free(media->data);
   CSSOM_native_free(media->mediaText);

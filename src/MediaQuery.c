@@ -1,5 +1,6 @@
 #include "MediaQuery.h"
 
+#include "MediaList.h"
 #include "CSSEmitter.h"
 #include "memory.h"
 #include "gcc.h"
@@ -11,19 +12,23 @@
 
 struct _CSSOM_MediaQuery {
   size_t handles;
+  CSSOM_MediaList *ownerMedia;
   char *mediaText;
   const SAC_MediaQuery *query;
 };
 
 
 
-CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(const SAC_MediaQuery *mediaQuery) {
+CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *ownerMedia,
+  const SAC_MediaQuery *mediaQuery)
+{
   CSSOM_MediaQuery *query;
 
   query = (CSSOM_MediaQuery*)CSSOM_malloc(sizeof(CSSOM_MediaQuery));
   if (query == NULL) return NULL;
 
   query->handles = 1;
+  query->ownerMedia = ownerMedia;
   query->mediaText = NULL;
   query->query = mediaQuery;
 
@@ -36,6 +41,7 @@ void CSSOM_MediaQuery_acquire(CSSOM_MediaQuery *query) {
   if (query == NULL) return;
 
   ++query->handles;
+  CSSOM_MediaList_acquire(query->ownerMedia);
 }
 
 
@@ -45,7 +51,10 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query) {
 
   assert(query->handles > 0);
   --query->handles;
-  if (query->handles > 0) return;
+  if (query->handles > 0) {
+    CSSOM_MediaList_release(query->ownerMedia);
+    return;
+  }
 
   CSSOM_native_free(query->mediaText);
   CSSOM_free(query);

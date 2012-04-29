@@ -1,6 +1,8 @@
 #ifndef _CSSOM_MEDIA_QUERY_H
 #define _CSSOM_MEDIA_QUERY_H
 
+#include <cssom/typedefs.h>
+
 #include <sacc.h>
 
 #ifdef __cplusplus
@@ -11,7 +13,8 @@ extern "C" {
 
 typedef struct _CSSOM_MediaQuery CSSOM_MediaQuery;
 
-CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(const SAC_MediaQuery *mediaQuery);
+CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *ownerMedia,
+  const SAC_MediaQuery *mediaQuery);
 
 void CSSOM_MediaQuery_acquire(CSSOM_MediaQuery *query);
 
