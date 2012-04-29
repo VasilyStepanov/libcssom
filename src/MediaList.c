@@ -53,6 +53,9 @@ static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
 
 
 
+/**
+ * TODO: Optimize me.
+ */
 static int MediaDeque_exists(const CSSOM_Deque_MediaQuery *deque,
   const CSSOM_MediaQuery *query)
 {
