@@ -19,7 +19,7 @@
 struct _CSSOM_MediaList {
   size_t handles;
   SAC_Parser parser;
-  CSSOM_CSSMediaRule *ownerRule;
+  CSSOM_CSSRule *ownerRule;
   char *mediaText;
   const SAC_MediaQuery **query;
   CSSOM_Deque_MediaQuery *data;
@@ -78,7 +78,7 @@ static CSSOM_DequeIter_MediaQuery MediaDeque_find(
 
 
 
-CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
+CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSRule *ownerRule,
   const SAC_MediaQuery **query)
 {
   CSSOM_MediaList *media;
@@ -139,7 +139,7 @@ void CSSOM_MediaList_acquire(CSSOM_MediaList *media) {
   if (media == NULL) return;
 
   ++media->handles;
-  CSSOM_CSSRule_acquire((CSSOM_CSSRule*)media->ownerRule);
+  CSSOM_CSSRule_acquire(media->ownerRule);
 }
 
 
@@ -150,7 +150,7 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
   assert(media->handles > 0);
   --media->handles;
   if (media->handles > 0) {
-    CSSOM_CSSRule_release((CSSOM_CSSRule*)media->ownerRule);
+    CSSOM_CSSRule_release(media->ownerRule);
     return;
   }
 
@@ -175,7 +175,7 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
   newMedia = CSSOM__parseMedia(cssom, media->ownerRule,
     mediaText, strlen(mediaText));
   if (newMedia == NULL) return;
@@ -258,7 +258,7 @@ void CSSOM_MediaList_appendMedium(CSSOM_MediaList *media,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
   query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
   if (query == NULL) return;
 
@@ -287,7 +287,7 @@ void CSSOM_MediaList_deleteMedium(CSSOM_MediaList *media,
   CSSOM_DequeIter_MediaQuery match;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet((CSSOM_CSSRule*)media->ownerRule));
+    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
   query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
   if (query == NULL) return;
 

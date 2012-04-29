@@ -13,7 +13,7 @@ extern "C" {
 
 CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
-  const SAC_MediaQuery *media[]);
+  const SAC_MediaQuery *mediaQuery[]);
 
 
 

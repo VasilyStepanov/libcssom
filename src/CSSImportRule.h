@@ -14,7 +14,7 @@ extern "C" {
 CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_STRING base, const SAC_STRING uri,
-  const SAC_MediaQuery *media[], const SAC_STRING defaultNamepaceURI);
+  const SAC_MediaQuery *mediaQuery[], const SAC_STRING defaultNamepaceURI);
 
 
 

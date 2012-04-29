@@ -9,8 +9,9 @@ import os.path
 forwards = { \
   'CSSFontFaceRule' : ('CSSStyleDeclaration', ),
   'CSSMediaRule' : ('MediaList', ),
-  'CSSRule' : ('CSSStyleSheet', ),
+  'CSSImportRule' : ('MediaList', ),
   'CSSPageRule' : ('CSSStyleDeclaration', ),
+  'CSSRule' : ('CSSStyleSheet', ),
   'CSSRuleList' : ('CSSRule', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
   'CSSStyleSheet' : ('CSSRule', ),

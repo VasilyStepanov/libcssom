@@ -6,15 +6,9 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic \
 
 AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
-BUILT_SOURCES = $(top_idldir)/CSSFontFaceRule.idl.hpp \
-                $(top_idldir)/CSSImportRule.idl.hpp \
-                $(top_idldir)/CSSMediaRule.idl.hpp \
-                $(top_idldir)/CSSNamespaceRule.idl.hpp \
-                $(top_idldir)/CSSPageRule.idl.hpp \
-                $(top_idldir)/CSSRule.idl.hpp \
+BUILT_SOURCES = $(top_idldir)/CSSRule.idl.hpp \
                 $(top_idldir)/CSSRuleList.idl.hpp \
                 $(top_idldir)/CSSStyleDeclaration.idl.hpp \
-                $(top_idldir)/CSSStyleRule.idl.hpp \
                 $(top_idldir)/CSSStyleSheet.idl.hpp
 
 

@@ -13,7 +13,7 @@ extern "C" {
 
 
 
-CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSMediaRule *ownerRule,
+CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSRule *ownerRule,
   const SAC_MediaQuery **query);
 
 CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,

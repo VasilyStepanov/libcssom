@@ -6,6 +6,7 @@
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSImportRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
+#include <cssompp/MediaList.hpp>
 
 #include <iostream>
 
@@ -33,7 +34,7 @@ void cssText() {
    * cssText()
    */
 
-  cssText = "@import url('bluish.css');";
+  cssText = "@import url('bluish.css') projection, tv;";
   assertEquals(cssText, cssRule.cssText());
 
 
@@ -45,7 +46,7 @@ void cssText() {
   cssRule.setCSSText(
 "@import url('foo') bar;"
   );
-  cssText = "@import url('foo');";
+  cssText = "@import url('foo') bar;";
   assert(cssRule.type() == cssom::CSSRule::IMPORT_RULE);
   assertEquals(cssText, cssRule.cssText());
 
@@ -79,6 +80,30 @@ void href() {
 
 
 
+void media() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@import url(\"bluish.css\") projection, tv;"
+  );
+  cssom::CSSImportRule cssRule = cssom::CSSImportRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::MediaList media = cssRule.media();
+
+  assert(media.length() == 2);
+  assertEquals(std::string("projection"), std::string(media.item(0)));
+  assertEquals(std::string("tv"), std::string(media.item(1)));
+
+  media.deleteMedium("projection");
+  media.deleteMedium("tv");
+  assert(media.length() == 0);
+
+  cssText = "@import url('bluish.css');";
+  assertEquals(cssText, cssRule.cssText());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -88,6 +113,7 @@ namespace test {
 void cssImportRule() {
   cssText();
   href();
+  media();
 }
 
 

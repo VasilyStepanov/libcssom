@@ -686,11 +686,18 @@ int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
 int CSSOM_CSSEmitter_cssImportRule(FILE *out,
   const CSSOM_CSSImportRule *cssRule)
 {
-  if (fprintf(out, "@import url('%s');",
+  if (fprintf(out, "@import url('%s')",
     CSSOM_CSSImportRule_href(cssRule)) < 0)
   {
     return 1;
   }
+  if (CSSOM_MediaList_length(CSSOM_CSSImportRule_media(cssRule)) > 0) {
+    if (fprintf(out, " ") < 0) return 1;
+    if (CSSOM_CSSEmitter_media(out, CSSOM_CSSImportRule_media(cssRule)) != 0)
+      return 1;
+  }
+  if (fprintf(out, ";") < 0)
+    return 1;
   return 0;
 }
 
@@ -699,9 +706,12 @@ int CSSOM_CSSEmitter_cssImportRule(FILE *out,
 int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
   const CSSOM_CSSMediaRule *cssRule)
 {
-  if (fprintf(out, "@media ") < 0) return 1;
-  if (CSSOM_CSSEmitter_media(out, CSSOM_CSSMediaRule_media(cssRule)) != 0)
-    return 1;
+  if (fprintf(out, "@media") < 0) return 1;
+  if (CSSOM_MediaList_length(CSSOM_CSSMediaRule_media(cssRule)) > 0) {
+    if (fprintf(out, " ") < 0) return 1;
+    if (CSSOM_CSSEmitter_media(out, CSSOM_CSSMediaRule_media(cssRule)) != 0)
+      return 1;
+  }
   if (fprintf(out, " { ") < 0) return 1;
   if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
     return 1;

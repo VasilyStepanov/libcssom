@@ -21,7 +21,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   const char *cssText, int len);
 
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
-  CSSOM_CSSMediaRule *ownerRule, const char *mediaText, int len);
+  CSSOM_CSSRule *ownerRule, const char *mediaText, int len);
 
 CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
   CSSOM_MediaList *ownerMedia, const char *mediaText, int len);

@@ -271,7 +271,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
 
 
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
-  CSSOM_CSSMediaRule *ownerRule, const char *mediaText, int len)
+  CSSOM_CSSRule *ownerRule, const char *mediaText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;

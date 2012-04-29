@@ -279,13 +279,14 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSFontFaceRule_style(
 struct _CSSOM_CSSImportRule {
   CSSOM_CSSRule super;
   char *href;
-  const SAC_MediaQuery **media;
+  CSSOM_MediaList *media;
 };
 
 
 
 static void CSSImportRule_free(CSSOM_CSSImportRule *cssRule) {
   CSSOM_native_free(cssRule->href);
+  CSSOM_MediaList_release(cssRule->media);
 }
 
 
@@ -311,11 +312,12 @@ static struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
 CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_STRING base CSSOM_UNUSED, const SAC_STRING uri,
-  const SAC_MediaQuery *media[],
+  const SAC_MediaQuery *mediaQuery[],
   const SAC_STRING defaultNamepaceURI CSSOM_UNUSED)
 {
   CSSOM_CSSImportRule *cssRule;
   char *href;
+  CSSOM_MediaList *media;
 
   cssRule = (CSSOM_CSSImportRule*)CSSOM_malloc(sizeof(CSSOM_CSSImportRule));
   if (cssRule == NULL) return NULL;
@@ -327,6 +329,16 @@ CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
     parentRule, parentStyleSheet, CSSOM_CSSRule_IMPORT_RULE);
 
   cssRule->href = href;
+  cssRule->media = NULL;
+
+
+
+  media = CSSOM_MediaList__alloc((CSSOM_CSSRule*)cssRule, mediaQuery);
+  if (media == NULL) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
   cssRule->media = media;
 
   return cssRule;
@@ -336,6 +348,20 @@ CSSOM_CSSImportRule* CSSOM_CSSImportRule__alloc(
 
 const char* CSSOM_CSSImportRule_href(const CSSOM_CSSImportRule *cssRule) {
   return cssRule->href;
+}
+
+
+
+void CSSOM_CSSImportRule_setMedia(CSSOM_CSSImportRule *cssRule,
+  const char *media)
+{
+  CSSOM_MediaList_setMediaText(cssRule->media, media);
+}
+
+
+
+CSSOM_MediaList* CSSOM_CSSImportRule_media(const CSSOM_CSSImportRule *cssRule) {
+  return cssRule->media;
 }
 
 
@@ -492,10 +518,11 @@ static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
 
 CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
-  const SAC_MediaQuery *media[])
+  const SAC_MediaQuery *mediaQuery[])
 {
   CSSOM_CSSRuleList *cssRules;
   CSSOM_CSSMediaRule *cssRule;
+  CSSOM_MediaList *media;
 
   cssRules = CSSOM_CSSRuleList__alloc();
   if (cssRules == NULL) return NULL;
@@ -509,8 +536,18 @@ CSSOM_CSSMediaRule* CSSOM_CSSMediaRule__alloc(
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSMediaRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_MEDIA_RULE);
 
-  cssRule->media = CSSOM_MediaList__alloc(cssRule, media);
   cssRule->cssRules = cssRules;
+  cssRule->media = NULL;
+
+
+
+  media = CSSOM_MediaList__alloc((CSSOM_CSSRule*)cssRule, mediaQuery);
+  if (media == NULL) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+
+  cssRule->media = media;
 
   return cssRule;
 }
