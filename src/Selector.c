@@ -72,7 +72,7 @@ static const char* Selector_selectorText(const CSSOM_Selector *selector) {
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
@@ -141,7 +141,7 @@ static const char* PageSelector_selectorText(const CSSOM_Selector *selector) {
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 

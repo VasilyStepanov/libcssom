@@ -198,12 +198,12 @@ const char* CSSOM_MediaList_mediaText(const CSSOM_MediaList *media) {
 
     if (CSSOM_CSSEmitter_media(out, media) != 0) {
       fclose(out);
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 

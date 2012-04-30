@@ -213,12 +213,12 @@ const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property) {
 
     if (CSSOM_CSSEmitter_lexicalUnit(out, property->value) != 0) {
       fclose(out);
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 

@@ -77,12 +77,12 @@ const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query) {
 
     if (CSSOM_CSSEmitter_query(out, query) != 0) {
       fclose(out);
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
     if (fclose(out) != 0) {
-      CSSOM_free(buf);
+      CSSOM_native_free(buf);
       return NULL;
     }
 
