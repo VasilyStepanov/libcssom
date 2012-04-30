@@ -91,8 +91,8 @@ void media() {
   cssom::MediaList media = cssRule.media();
 
   assert(media.length() == 2);
-  assertEquals(std::string("projection"), std::string(media.item(0)));
-  assertEquals(std::string("tv"), std::string(media.item(1)));
+  assertEquals(std::string("projection"), std::string(media[0]));
+  assertEquals(std::string("tv"), std::string(media[1]));
 
   media.deleteMedium("projection");
   media.deleteMedium("tv");

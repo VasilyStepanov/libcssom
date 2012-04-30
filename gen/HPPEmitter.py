@@ -14,6 +14,8 @@ from CPPEmitter import attributeSetterSignature
 from CPPEmitter import operationSignature
 from CPPEmitter import getterOperationSignature
 from CPPEmitter import attributeSetterName
+from CPPEmitter import isNumeralArgument
+from CPPEmitter import isStringType
 from CPPEmitter import renderDefinitionSourceFile
 
 import pywidl
@@ -105,6 +107,12 @@ def renderSpecialOperations(out, members):
       print >>out, "    %s %s;" % ( \
         emitType(operation.return_type),
         getterOperationSignature(operation))
+
+      if stringifier \
+      and isStringType(operation.return_type) \
+      and isNumeralArgument(operation.arguments[0]):
+        print >>out, "    const char * operator[](int %s) const;" % \
+          operation.arguments[0].name
 
 
 

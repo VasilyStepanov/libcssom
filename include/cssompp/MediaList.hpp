@@ -38,6 +38,7 @@ class MediaList {
     operator const char *();
 
     const char * operator[](unsigned long index) const;
+    const char * operator[](int index) const;
 
     const char * mediaText() const;
     void setMediaText(const char * mediaText);

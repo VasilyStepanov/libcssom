@@ -92,6 +92,12 @@ const char * MediaList::operator[](unsigned long index) const {
 
 
 
+const char * MediaList::operator[](int index) const {
+  return MediaList::operator[]((unsigned long)index);
+}
+
+
+
 const char * MediaList::mediaText() const {
   return CSSOM_MediaList_mediaText(_impl);
 }

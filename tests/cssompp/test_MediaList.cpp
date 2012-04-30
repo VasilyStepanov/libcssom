@@ -97,9 +97,11 @@ void item(void) {
 
   cssText = "screen and (min-width: 400px) and (max-width: 700px)";
   assertEquals(cssText, media.item(0));
+  assertEquals(cssText, media[0]);
 
   cssText = "projection";
   assertEquals(cssText, media.item(1));
+  assertEquals(cssText, media[1]);
 }
 
 

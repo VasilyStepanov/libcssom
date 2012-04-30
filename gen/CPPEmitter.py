@@ -98,6 +98,25 @@ def emitArgument(argument):
 
 
 
+def isNumeralArgument(argument):
+  if not isinstance(argument.type, pywidl.SimpleType): return False
+  return argument.type.type in ( \
+    argument.type.SHORT,
+    argument.type.UNSIGNED_SHORT,
+    argument.type.LONG,
+    argument.type.UNSIGNED_LONG,
+    argument.type.LONG_LONG,
+    argument.type.UNSIGNED_LONG_LONG,
+  )
+
+
+
+def isStringType(typedef):
+  if not isinstance(typedef, pywidl.SimpleType): return False
+  return typedef.type == typedef.DOMSTRING
+
+
+
 def renderOperation(out, interface, operation):
   assert(not operation.extended_attributes)
   assert(not operation.stringifier)
@@ -240,21 +259,38 @@ def renderSpecialOperations(out, interface):
       impl)
     print >>out, "}"
 
-    for operation in getter_operations:
-      assert(len(operation.arguments) == 1)
+  for operation in getter_operations:
+    assert(len(operation.arguments) == 1)
 
+    print >>out
+    print >>out
+    print >>out
+    print >>out, "%s %s::%s {" % ( \
+      emitType(operation.return_type),
+      interface.name,
+      getterOperationSignature(operation))
+    print >>out, "  return CSSOM_%s_%s(%s%s);" % ( \
+      interface.name,
+      interfaceMemberName(interface, operation),
+      implArgument(interface),
+      "".join([", %s" % arg.name for arg in operation.arguments]))
+    print >>out, "}"
+
+    if stringifier \
+    and isStringType(operation.return_type) \
+    and isNumeralArgument(operation.arguments[0]):
       print >>out
       print >>out
       print >>out
-      print >>out, "%s %s::%s {" % ( \
-        emitType(operation.return_type),
+      print >>out, "const char * %s::operator[](int %s) const {" % ( \
         interface.name,
-        getterOperationSignature(operation))
-      print >>out, "  return CSSOM_%s_%s(%s%s);" % ( \
+        operation.arguments[0].name
+      )
+      print >>out, "  return %s::operator[]((%s)%s);" % ( \
         interface.name,
-        interfaceMemberName(interface, operation),
-        implArgument(interface),
-        "".join([", %s" % arg.name for arg in operation.arguments]))
+        emitType(operation.arguments[0].type),
+        operation.arguments[0].name
+      )
       print >>out, "}"
 
 
