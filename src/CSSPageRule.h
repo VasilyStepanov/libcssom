@@ -3,6 +3,8 @@
 
 #include <cssom/CSSPageRule.h>
 
+#include "Selector.h"
+
 #include <sacc.h>
 
 #ifdef __cplusplus
@@ -15,8 +17,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_Selector *selectors[]);
 
-const SAC_Selector** CSSOM_CSSPageRule__selectors(
-  const CSSOM_CSSPageRule *cssRule);
+CSSOM_Selector* CSSOM_CSSPageRule__selector(const CSSOM_CSSPageRule *cssRule);
 
 
 

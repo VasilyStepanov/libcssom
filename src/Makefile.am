@@ -45,11 +45,12 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Deque_MediaQuery.c \
                       Deque_void.c \
                       FSM_CSSProperty.c \
+                      MediaList.c \
+                      MediaQuery.c \
                       Parser.c \
                       ParserStack.c \
                       Sequence.c \
-                      MediaList.c \
-                      MediaQuery.c \
+                      Selector.c \
                       memory.c
 
 libcssom_la_LIBADD = $(SACC_LIBS)

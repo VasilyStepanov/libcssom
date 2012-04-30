@@ -3,6 +3,8 @@
 
 #include <cssom/CSSStyleRule.h>
 
+#include "Selector.h"
+
 #include <sacc.h>
 
 #ifdef __cplusplus
@@ -17,7 +19,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
 
 
-const SAC_Selector** CSSOM_CSSStyleRule__selectors(
+CSSOM_Selector* CSSOM_CSSStyleRule__selector(
   const CSSOM_CSSStyleRule *cssRule);
 
 
