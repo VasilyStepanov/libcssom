@@ -35,6 +35,10 @@ const char * CSSOM_CSSStyleRule_selectorText(const CSSOM_CSSStyleRule * cssStyle
 
 
 
+void CSSOM_CSSStyleRule_setSelectorText(CSSOM_CSSStyleRule * cssStyleRule, const char * selectorText);
+
+
+
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleRule_style(const CSSOM_CSSStyleRule * cssStyleRule);
 
 

@@ -1,14 +1,16 @@
 #include "Selector.h"
 
-#include "MediaList.h"
 #include "CSSEmitter.h"
+#include "CSSStyleSheet.h"
+#include "CSSOM.h"
 #include "memory.h"
-#include "gcc.h"
+#include "utility.h"
 
 #include <cssom/CSSRule.h>
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
@@ -19,6 +21,15 @@ struct _CSSOM_Selector {
   char *selectorText;
   const SAC_Selector **selectors;
 };
+
+
+
+static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
+  SWAP(lhs->parser, rhs->parser);
+  SWAP(lhs->ownerRule, rhs->ownerRule);
+  SWAP(lhs->selectorText, rhs->selectorText);
+  SWAP(lhs->selectors, rhs->selectors);
+}
 
 
 
@@ -107,6 +118,25 @@ const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector) {
     ((CSSOM_Selector*)selector)->selectorText = buf;
   }
   return selector->selectorText;
+}
+
+
+
+void CSSOM_Selector_setSelectorText(CSSOM_Selector *selector,
+  const char *selectorText)
+{
+  CSSOM_Selector *newSelector;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
+  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
+    selectorText, strlen(selectorText));
+  if (newSelector == NULL) return;
+
+  Selector_swap(selector, newSelector);
+
+  CSSOM_Selector_release(newSelector);
 }
 
 

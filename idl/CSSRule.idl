@@ -59,13 +59,13 @@ interface CSSNamespaceRule : CSSRule {
 
 
 interface CSSPageRule : CSSRule {
-  readonly attribute DOMString selectorText;
+           attribute DOMString selectorText;
   readonly attribute CSSStyleDeclaration style;
 };
 
 
 
 interface CSSStyleRule : CSSRule {
-  readonly attribute DOMString selectorText;
+           attribute DOMString selectorText;
   readonly attribute CSSStyleDeclaration style;
 };

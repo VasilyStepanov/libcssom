@@ -40,6 +40,7 @@ class CSSPageRule : public cssom::CSSRule {
     explicit CSSPageRule(CSSOM_CSSPageRule * impl);
 
     const char * selectorText() const;
+    void setSelectorText(const char * selectorText);
 
     cssom::CSSStyleDeclaration style() const;
 };

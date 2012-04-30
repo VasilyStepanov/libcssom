@@ -62,6 +62,12 @@ const char * CSSPageRule::selectorText() const {
 
 
 
+void CSSPageRule::setSelectorText(const char * selectorText) {
+  CSSOM_CSSPageRule_setSelectorText(reinterpret_cast<CSSOM_CSSPageRule*>(_impl), selectorText);
+}
+
+
+
 cssom::CSSStyleDeclaration CSSPageRule::style() const {
   return cssom::CSSStyleDeclaration(CSSOM_CSSPageRule_style(reinterpret_cast<CSSOM_CSSPageRule*>(_impl)));
 }

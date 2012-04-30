@@ -5,6 +5,7 @@
 
 #include "MediaQuery.h"
 #include "FSM_CSSProperty.h"
+#include "Selector.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +26,9 @@ CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
 
 CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
   CSSOM_MediaList *ownerMedia, const char *mediaText, int len);
+
+CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
+  CSSOM_CSSRule *ownerRule, const char *selectorText, int len);
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 

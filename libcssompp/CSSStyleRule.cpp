@@ -62,6 +62,12 @@ const char * CSSStyleRule::selectorText() const {
 
 
 
+void CSSStyleRule::setSelectorText(const char * selectorText) {
+  CSSOM_CSSStyleRule_setSelectorText(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl), selectorText);
+}
+
+
+
 cssom::CSSStyleDeclaration CSSStyleRule::style() const {
   return cssom::CSSStyleDeclaration(CSSOM_CSSStyleRule_style(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl)));
 }

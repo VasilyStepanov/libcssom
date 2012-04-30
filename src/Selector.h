@@ -24,6 +24,9 @@ CSSOM_CSSRule* CSSOM_Selector__ownerRule(const CSSOM_Selector *selector);
 
 const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector);
 
+void CSSOM_Selector_setSelectorText(CSSOM_Selector *selector,
+  const char *selectorText);
+
 const SAC_Selector** CSSOM_Selector_selectors(const CSSOM_Selector *selector);
 
 void CSSOM_Selector__keepParser(CSSOM_Selector *selector,

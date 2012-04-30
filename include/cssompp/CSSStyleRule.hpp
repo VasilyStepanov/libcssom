@@ -40,6 +40,7 @@ class CSSStyleRule : public cssom::CSSRule {
     explicit CSSStyleRule(CSSOM_CSSStyleRule * impl);
 
     const char * selectorText() const;
+    void setSelectorText(const char * selectorText);
 
     cssom::CSSStyleDeclaration style() const;
 };

@@ -7,7 +7,6 @@
 #include "CSSStyleSheet.h"
 #include "Deque_MediaQuery.h"
 #include "memory.h"
-#include "gcc.h"
 #include "utility.h"
 
 #include <assert.h>

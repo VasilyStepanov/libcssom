@@ -462,6 +462,14 @@ const char* CSSOM_CSSStyleRule_selectorText(
 
 
 
+void CSSOM_CSSStyleRule_setSelectorText(CSSOM_CSSStyleRule *cssRule,
+  const char * selectorText)
+{
+  CSSOM_Selector_setSelectorText(cssRule->selector, selectorText);
+}
+
+
+
 /**
  * CSSMediaRule
  */
@@ -788,4 +796,12 @@ const char* CSSOM_CSSPageRule_selectorText(
   const CSSOM_CSSPageRule *cssRule)
 {
   return CSSOM_Selector_selectorText(cssRule->selector);
+}
+
+
+
+void CSSOM_CSSPageRule_setSelectorText(CSSOM_CSSPageRule *cssRule,
+  const char * selectorText)
+{
+  CSSOM_Selector_setSelectorText(cssRule->selector, selectorText);
 }

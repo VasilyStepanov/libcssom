@@ -35,6 +35,10 @@ const char * CSSOM_CSSPageRule_selectorText(const CSSOM_CSSPageRule * cssPageRul
 
 
 
+void CSSOM_CSSPageRule_setSelectorText(CSSOM_CSSPageRule * cssPageRule, const char * selectorText);
+
+
+
 CSSOM_CSSStyleDeclaration* CSSOM_CSSPageRule_style(const CSSOM_CSSPageRule * cssPageRule);
 
 
