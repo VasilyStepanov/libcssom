@@ -396,6 +396,48 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
 
 
 
+CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
+  CSSOM_CSSRule *ownerRule, const char *selectorText, int len)
+{
+  SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  const SAC_Selector **selectors;
+  CSSOM_Selector *selector;
+
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
+
+  selectors = SAC_ParsePageSelectors(parser, selectorText, len);
+  if (selectors == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  selector = CSSOM_Selector__alloc(ownerRule, selectors);
+  if (selector == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_ParserStack_free(stack);
+
+  CSSOM_Selector__keepParser(selector, parser);
+
+  return selector;
+}
+
+
+
 const CSSOM_FSMTable_CSSProperty* CSSOM__table(const CSSOM *cssom) {
   return cssom->table;
 }

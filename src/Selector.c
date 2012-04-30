@@ -160,7 +160,7 @@ static void PageSelector_setSelectorText(CSSOM_Selector *selector,
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
-  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
+  newSelector = CSSOM__parsePageSelector(cssom, selector->ownerRule,
     selectorText, strlen(selectorText));
   if (newSelector == NULL) return;
 

@@ -30,6 +30,9 @@ CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
 CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
   CSSOM_CSSRule *ownerRule, const char *selectorText, int len);
 
+CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
+  CSSOM_CSSRule *ownerRule, const char *selectorText, int len);
+
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 
 void CSSOM__hierarchyRequestErr(const CSSOM *cssom);
