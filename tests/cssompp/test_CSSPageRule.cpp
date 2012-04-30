@@ -74,7 +74,10 @@ void cssText() {
 
 
 void selectorText() {
+  test::Errors errors;
   cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet;
   cssom::CSSPageRule cssRule;
 
@@ -144,6 +147,66 @@ void selectorText() {
     styleSheet.cssRules()[0]);
 
   assertEquals(std::string("CompanyLetterHead:first"), cssRule.selectorText());
+
+
+
+  /**
+   * Set valid page selector text
+   */
+
+  styleSheet = cssom.parse(
+"@page CompanyLetterHead {\n"
+" color : green\n"
+"}\n"
+  );
+
+  cssRule = cssom::CSSPageRule::cast(
+    styleSheet.cssRules()[0]);
+
+  cssRule.setSelectorText(":first");
+  assertEquals(std::string(":first"), cssRule.selectorText());
+
+
+
+  /**
+   * Try to set invalid page selector text
+   */
+
+  styleSheet = cssom.parse(
+"@page CompanyLetterHead {\n"
+" color : green\n"
+"}\n"
+  );
+
+  cssRule = cssom::CSSPageRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assert(errors.syntaxErrors == 0);
+  cssRule.setSelectorText("&:first");
+  assertEquals(std::string("CompanyLetterHead"), cssRule.selectorText());
+  assert(errors.syntaxErrors == 1);
+
+
+  /**
+   * Try to set invalid page selector text, which is valid for generic
+   * selector.
+   */
+
+  styleSheet = cssom.parse(
+"@page CompanyLetterHead {\n"
+" color : green\n"
+"}\n"
+  );
+
+  cssRule = cssom::CSSPageRule::cast(
+    styleSheet.cssRules()[0]);
+
+  assert(errors.syntaxErrors == 1);
+  cssRule.setSelectorText("h1, h2, h3");
+  assertEquals(std::string("CompanyLetterHead"), cssRule.selectorText());
+  assert(errors.syntaxErrors == 2);
+
+
 }
 
 

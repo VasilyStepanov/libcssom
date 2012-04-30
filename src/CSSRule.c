@@ -766,7 +766,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   cssRule->selector = NULL;
   cssRule->style = style;
 
-  selector = CSSOM_Selector__alloc((CSSOM_CSSRule*)cssRule, selectors);
+  selector = CSSOM_PageSelector__alloc(cssRule, selectors);
   if (selector == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;

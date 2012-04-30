@@ -14,7 +14,15 @@
 
 
 
+struct _CSSOM_Selector_vtable {
+  const char* (*selectorText)(const CSSOM_Selector *selector);
+  void (*setSelectorText)(CSSOM_Selector *selector, const char *selectorText);
+};
+
+
+
 struct _CSSOM_Selector {
+  struct _CSSOM_Selector_vtable *vtable;
   size_t handles;
   SAC_Parser parser;
   CSSOM_CSSRule *ownerRule;
@@ -33,6 +41,74 @@ static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
 
 
 
+static void Selector_ctor(CSSOM_Selector *selector,
+  struct _CSSOM_Selector_vtable *vtable, CSSOM_CSSRule *ownerRule,
+  const SAC_Selector *selectors[])
+{
+  selector->vtable = vtable;
+  selector->handles = 1;
+  selector->parser = NULL;
+  selector->ownerRule = ownerRule;
+  selector->selectorText = NULL;
+  selector->selectors = selectors;
+}
+
+
+
+static const char* Selector_selectorText(const CSSOM_Selector *selector) {
+  if (selector->selectorText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_selectors(out, selector->selectors) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_Selector*)selector)->selectorText = buf;
+  }
+  return selector->selectorText;
+}
+
+
+
+static void Selector_setSelectorText(CSSOM_Selector *selector,
+  const char *selectorText)
+{
+  CSSOM_Selector *newSelector;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
+  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
+    selectorText, strlen(selectorText));
+  if (newSelector == NULL) return;
+
+  Selector_swap(selector, newSelector);
+
+  CSSOM_Selector_release(newSelector);
+}
+
+
+
+static struct _CSSOM_Selector_vtable Selector_vtable = {
+  Selector_selectorText,
+  Selector_setSelectorText
+};
+
+
+
 CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
   const SAC_Selector *selectors[])
 {
@@ -40,12 +116,78 @@ CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
 
   selector = (CSSOM_Selector*)CSSOM_malloc(sizeof(CSSOM_Selector));
   if (selector == NULL) return NULL;
+  
+  Selector_ctor(selector, &Selector_vtable, ownerRule, selectors);
 
-  selector->handles = 1;
-  selector->parser = NULL;
-  selector->ownerRule = ownerRule;
-  selector->selectorText = NULL;
-  selector->selectors = selectors;
+  return selector;
+}
+
+
+
+static const char* PageSelector_selectorText(const CSSOM_Selector *selector) {
+  if (selector->selectorText == NULL) {
+    FILE *out;
+    char *buf;
+    size_t bufsize;
+
+    buf = NULL;
+    out = open_memstream(&buf, &bufsize);
+    if (out == NULL) return NULL;
+
+    if (CSSOM_CSSEmitter_pageSelectors(out, selector->selectors) != 0) {
+      fclose(out);
+      CSSOM_native_free(buf);
+      return NULL;
+    }
+
+    if (fclose(out) != 0) {
+      CSSOM_free(buf);
+      return NULL;
+    }
+
+    ((CSSOM_Selector*)selector)->selectorText = buf;
+  }
+  return selector->selectorText;
+}
+
+
+
+static void PageSelector_setSelectorText(CSSOM_Selector *selector,
+  const char *selectorText)
+{
+  CSSOM_Selector *newSelector;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
+  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
+    selectorText, strlen(selectorText));
+  if (newSelector == NULL) return;
+
+  Selector_swap(selector, newSelector);
+
+  CSSOM_Selector_release(newSelector);
+}
+
+
+
+static struct _CSSOM_Selector_vtable PageSelector_vtable = {
+  PageSelector_selectorText,
+  PageSelector_setSelectorText
+};
+
+
+
+CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *ownerRule,
+  const SAC_Selector *selectors[])
+{
+  CSSOM_Selector *selector;
+
+  selector = (CSSOM_Selector*)CSSOM_malloc(sizeof(CSSOM_Selector));
+  if (selector == NULL) return NULL;
+  
+  Selector_ctor(selector, &PageSelector_vtable,
+    (CSSOM_CSSRule*)ownerRule, selectors);
 
   return selector;
 }
@@ -85,39 +227,7 @@ CSSOM_CSSRule* CSSOM_Selector__ownerRule(const CSSOM_Selector *selector) {
 
 
 const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector) {
-  if (selector->selectorText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
-
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
-
-    if (CSSOM_CSSRule_type(CSSOM_Selector__ownerRule(selector)) !=
-      CSSOM_CSSRule_PAGE_RULE)
-    {
-      if (CSSOM_CSSEmitter_selectors(out, selector->selectors) != 0) {
-        fclose(out);
-        CSSOM_native_free(buf);
-        return NULL;
-      }
-    } else {
-      if (CSSOM_CSSEmitter_pageSelectors(out, selector->selectors) != 0) {
-        fclose(out);
-        CSSOM_native_free(buf);
-        return NULL;
-      }
-    }
-
-    if (fclose(out) != 0) {
-      CSSOM_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_Selector*)selector)->selectorText = buf;
-  }
-  return selector->selectorText;
+  return selector->vtable->selectorText(selector);
 }
 
 
@@ -125,18 +235,7 @@ const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector) {
 void CSSOM_Selector_setSelectorText(CSSOM_Selector *selector,
   const char *selectorText)
 {
-  CSSOM_Selector *newSelector;
-  const CSSOM *cssom;
-
-  cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
-  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
-    selectorText, strlen(selectorText));
-  if (newSelector == NULL) return;
-
-  Selector_swap(selector, newSelector);
-
-  CSSOM_Selector_release(newSelector);
+  selector->vtable->setSelectorText(selector, selectorText);
 }
 
 

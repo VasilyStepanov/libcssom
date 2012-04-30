@@ -16,6 +16,9 @@ typedef struct _CSSOM_Selector CSSOM_Selector;
 CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
   const SAC_Selector *selectors[]);
 
+CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *ownerRule,
+  const SAC_Selector *selectors[]);
+
 void CSSOM_Selector_acquire(CSSOM_Selector *selector);
 
 void CSSOM_Selector_release(CSSOM_Selector *selector);
