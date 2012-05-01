@@ -21,6 +21,10 @@ class CSSRule;
 
 
 
+class CSSStyleDeclarationValue;
+
+
+
 } // cssom
 
 namespace cssom {
@@ -53,6 +57,8 @@ class CSSStyleDeclaration {
     const char * getPropertyValue(const char * property);
 
     const char * getPropertyPriority(const char * property);
+
+    cssom::CSSStyleDeclarationValue values() const;
 
     cssom::CSSRule parentRule() const;
 

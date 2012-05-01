@@ -1,13 +1,9 @@
-#ifndef _CSSOM_CSSSTYLEDECLARATION_H
-#define _CSSOM_CSSSTYLEDECLARATION_H
+#ifndef _CSSOM_CSS_STYLE_DECLARATION_H
+#define _CSSOM_CSS_STYLE_DECLARATION_H
 
 #include <cssom/CSSStyleDeclaration.h>
 
-#include "FSM_CSSProperty.h"
-
 #include <cssom/typedefs.h>
-
-#include <sacc.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,42 +11,8 @@ extern "C" {
 
 
 
-typedef CSSOM_FSMIter_CSSProperty CSSOM_CSSStyleDeclarationIter;
-
-typedef CSSOM_FSMConstIter_CSSProperty CSSOM_CSSStyleDeclarationConstIter;
-
-
-
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
-  CSSOM_CSSRule *parentRule, const CSSOM_FSMTable_CSSProperty *table);
-
-CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
-  CSSOM_CSSStyleDeclaration *style,
-  const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
-
-
-
-CSSOM_CSSStyleDeclarationIter CSSOM_CSSStyleDeclaration__begin(
-  CSSOM_CSSStyleDeclaration *style);
-
-CSSOM_CSSStyleDeclarationIter CSSOM_CSSStyleDeclaration__end(
-  CSSOM_CSSStyleDeclaration *style);
-
-CSSOM_CSSStyleDeclarationIter
-CSSOM_CSSStyleDeclarationIter_next(
-  CSSOM_CSSStyleDeclarationIter iter);
-
-
-
-CSSOM_CSSStyleDeclarationConstIter CSSOM_CSSStyleDeclaration__cbegin(
-  const CSSOM_CSSStyleDeclaration *style);
-
-CSSOM_CSSStyleDeclarationConstIter CSSOM_CSSStyleDeclaration__cend(
-  const CSSOM_CSSStyleDeclaration *style);
-
-CSSOM_CSSStyleDeclarationConstIter
-CSSOM_CSSStyleDeclarationConstIter_next(
-  CSSOM_CSSStyleDeclarationConstIter iter);
+  CSSOM_CSSRule *parentRule);
 
 
 

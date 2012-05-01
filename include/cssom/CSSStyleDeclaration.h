@@ -49,6 +49,10 @@ const char * CSSOM_CSSStyleDeclaration_getPropertyPriority(const CSSOM_CSSStyleD
 
 
 
+CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclaration_values(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
 CSSOM_CSSRule* CSSOM_CSSStyleDeclaration_parentRule(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

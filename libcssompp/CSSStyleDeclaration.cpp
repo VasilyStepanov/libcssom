@@ -13,6 +13,7 @@
 #include <cssom/CSSStyleDeclaration.h>
 
 #include <cssompp/CSSRule.hpp>
+#include <cssompp/CSSStyleDeclarationValue.hpp>
 
 #include "checks.hpp"
 
@@ -108,6 +109,12 @@ const char * CSSStyleDeclaration::getPropertyValue(const char * property) {
 
 const char * CSSStyleDeclaration::getPropertyPriority(const char * property) {
   return CSSOM_CSSStyleDeclaration_getPropertyPriority(_impl, property);
+}
+
+
+
+cssom::CSSStyleDeclarationValue CSSStyleDeclaration::values() const {
+  return cssom::CSSStyleDeclarationValue(CSSOM_CSSStyleDeclaration_values(_impl));
 }
 
 

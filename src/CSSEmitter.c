@@ -2,6 +2,7 @@
 
 #include "CSSPageRule.h"
 #include "CSSStyleDeclaration.h"
+#include "CSSStyleDeclarationValue.h"
 #include "CSSStyleRule.h"
 #include "MediaList.h"
 #include "gcc.h"
@@ -582,17 +583,20 @@ int CSSOM_CSSEmitter_media(FILE *out, const CSSOM_MediaList *media) {
 int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style)
 {
-  CSSOM_CSSStyleDeclarationConstIter it;
+  const CSSOM_CSSStyleDeclarationValue *values;
+  CSSOM_CSSStyleDeclarationValueConstIter it;
 
-  it = CSSOM_CSSStyleDeclaration__cbegin(style);
-  if (it == CSSOM_CSSStyleDeclaration__cend(style)) return 0;
+  values = CSSOM_CSSStyleDeclaration_values(style);
+
+  it = CSSOM_CSSStyleDeclarationValue__cbegin(values);
+  if (it == CSSOM_CSSStyleDeclarationValue__cend(values)) return 0;
 
   if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;
 
   for (
-    it = CSSOM_CSSStyleDeclarationConstIter_next(it);
-    it != CSSOM_CSSStyleDeclaration__cend(style);
-    it = CSSOM_CSSStyleDeclarationConstIter_next(it))
+    it = CSSOM_CSSStyleDeclarationValueConstIter_next(it);
+    it != CSSOM_CSSStyleDeclarationValue__cend(values);
+    it = CSSOM_CSSStyleDeclarationValueConstIter_next(it))
   {
     if (fprintf(out, " ") < 0) return 1;
     if (CSSOM_CSSEmitter_cssProperty(out, it->value) != 0) return 1;

@@ -253,8 +253,7 @@ CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
 
   cssRule->style = NULL;
 
-  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule, 
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule);
   if (style == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
@@ -428,8 +427,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   }
   cssRule->selector = selector;
 
-  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule,
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule);
   if (style == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
@@ -769,8 +767,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   }
   cssRule->selector = selector;
 
-  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule,
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule);
   if (style == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;

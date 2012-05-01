@@ -11,6 +11,7 @@
 #include "Stack.h"
 #include "Stack.c"
 #include "CSSStyleDeclaration.h"
+#include "CSSStyleDeclarationValue.h"
 #include "CSSStyleSheet.h"
 #include "memory.h"
 
@@ -454,8 +455,9 @@ static CSSOM_CSSProperty* ParserCSSFontFaceRuleState_setProperty(
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  return CSSOM_CSSStyleDeclaration__setProperty(
-    CSSOM_CSSFontFaceRule_style(state->cssRule),
+  return CSSOM_CSSStyleDeclarationValue__setProperty(
+    CSSOM_CSSStyleDeclaration_values(
+      CSSOM_CSSFontFaceRule_style(state->cssRule)),
     property, value, important);
 }
 
@@ -511,8 +513,8 @@ static CSSOM_CSSProperty* ParserCSSPageRuleState_setProperty(
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  return CSSOM_CSSStyleDeclaration__setProperty(
-    CSSOM_CSSPageRule_style(state->cssRule),
+  return CSSOM_CSSStyleDeclarationValue__setProperty(
+    CSSOM_CSSStyleDeclaration_values(CSSOM_CSSPageRule_style(state->cssRule)),
     property, value, important);
 }
 
@@ -622,8 +624,8 @@ static CSSOM_CSSProperty* ParserCSSStyleRuleState_setProperty(
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
-  return CSSOM_CSSStyleDeclaration__setProperty(
-    CSSOM_CSSStyleRule_style(state->cssRule),
+  return CSSOM_CSSStyleDeclarationValue__setProperty(
+    CSSOM_CSSStyleDeclaration_values(CSSOM_CSSStyleRule_style(state->cssRule)),
     property, value, important);
 }
 
