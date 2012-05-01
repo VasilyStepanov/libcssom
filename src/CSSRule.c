@@ -242,21 +242,23 @@ static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
 CSSOM_CSSFontFaceRule* CSSOM_CSSFontFaceRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet)
 {
-  CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSFontFaceRule *cssRule;
-
-  style = CSSOM_CSSStyleDeclaration__alloc(
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
-  if (style == NULL) return NULL;
+  CSSOM_CSSStyleDeclaration *style;
 
   cssRule = (CSSOM_CSSFontFaceRule*)CSSOM_malloc(sizeof(CSSOM_CSSFontFaceRule));
-  if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration_release(style);
-    return NULL;
-  }
+  if (cssRule == NULL) return NULL;
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSFontFaceRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_FONT_FACE_RULE);
+
+  cssRule->style = NULL;
+
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule, 
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  if (style == NULL) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
   cssRule->style = style;
 
   return cssRule;
@@ -407,24 +409,17 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_Selector *selectors[])
 {
-  CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSStyleRule *cssRule;
   CSSOM_Selector *selector;
-
-  style = CSSOM_CSSStyleDeclaration__alloc(
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
-  if (style == NULL) return NULL;
+  CSSOM_CSSStyleDeclaration *style;
 
   cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
-  if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration_release(style);
-    return NULL;
-  }
+  if (cssRule == NULL) return NULL;
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSStyleRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_STYLE_RULE);
   cssRule->selector = NULL;
-  cssRule->style = style;
+  cssRule->style = NULL;
 
   selector = CSSOM_Selector__alloc((CSSOM_CSSRule*)cssRule, selectors);
   if (selector == NULL) {
@@ -432,6 +427,14 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
     return NULL;
   }
   cssRule->selector = selector;
+
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule,
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  if (style == NULL) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+  cssRule->style = style;
 
   return cssRule;
 }
@@ -747,24 +750,17 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_Selector *selectors[])
 {
-  CSSOM_CSSStyleDeclaration *style;
   CSSOM_CSSPageRule *cssRule;
   CSSOM_Selector *selector;
-
-  style = CSSOM_CSSStyleDeclaration__alloc(
-    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
-  if (style == NULL) return NULL;
+  CSSOM_CSSStyleDeclaration *style;
 
   cssRule = (CSSOM_CSSPageRule*)CSSOM_malloc(sizeof(CSSOM_CSSPageRule));
-  if (cssRule == NULL) {
-    CSSOM_CSSStyleDeclaration_release(style);
-    return NULL;
-  }
+  if (cssRule == NULL) return NULL;
 
   CSSRule_ctor((CSSOM_CSSRule*)cssRule, &CSSPageRule_vtable,
     parentRule, parentStyleSheet, CSSOM_CSSRule_PAGE_RULE);
   cssRule->selector = NULL;
-  cssRule->style = style;
+  cssRule->style = NULL;
 
   selector = CSSOM_PageSelector__alloc(cssRule, selectors);
   if (selector == NULL) {
@@ -772,6 +768,14 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
     return NULL;
   }
   cssRule->selector = selector;
+
+  style = CSSOM_CSSStyleDeclaration__alloc((CSSOM_CSSRule*)cssRule,
+    CSSOM__table(CSSOM_CSSStyleSheet__cssom(parentStyleSheet)));
+  if (style == NULL) {
+    CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
+    return NULL;
+  }
+  cssRule->style = style;
 
   return cssRule;
 }

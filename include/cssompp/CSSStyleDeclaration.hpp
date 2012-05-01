@@ -13,6 +13,15 @@
 
 #include <cssom/typedefs.h>
 
+namespace cssom {
+
+
+
+class CSSRule;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -42,6 +51,8 @@ class CSSStyleDeclaration {
     const char * getPropertyValue(const char * property);
 
     const char * getPropertyPriority(const char * property);
+
+    cssom::CSSRule parentRule() const;
 
   protected:
     CSSOM_CSSStyleDeclaration * _impl;

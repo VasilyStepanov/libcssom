@@ -22,7 +22,7 @@ typedef CSSOM_FSMConstIter_CSSProperty CSSOM_CSSStyleDeclarationConstIter;
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
-  const CSSOM_FSMTable_CSSProperty *table);
+  CSSOM_CSSRule *parentRule, const CSSOM_FSMTable_CSSProperty *table);
 
 CSSOM_CSSProperty* CSSOM_CSSStyleDeclaration__setProperty(
   CSSOM_CSSStyleDeclaration *style,

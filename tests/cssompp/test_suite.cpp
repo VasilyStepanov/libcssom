@@ -4,6 +4,7 @@
 #include "test_CSSNamespaceRule.hpp"
 #include "test_CSSPageRule.hpp"
 #include "test_CSSRule.hpp"
+#include "test_CSSStyleDeclaration.hpp"
 #include "test_CSSStyleRule.hpp"
 #include "test_CSSStyleSheet.hpp"
 #include "test_CSSOM.hpp"
@@ -22,5 +23,6 @@ int main() {
   test::cssFontFaceRule();
   test::cssImportRule();
   test::cssStyleSheet();
+  test::cssStyleDeclaration();
   return 0;
 }

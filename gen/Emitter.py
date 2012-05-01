@@ -13,6 +13,7 @@ forwards = { \
   'CSSPageRule' : ('CSSStyleDeclaration', ),
   'CSSRule' : ('CSSStyleSheet', ),
   'CSSRuleList' : ('CSSRule', ),
+  'CSSStyleDeclaration' : ('CSSRule', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
   'CSSStyleSheet' : ('CSSRule', ),
 }

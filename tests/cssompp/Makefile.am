@@ -12,6 +12,7 @@ test_suite_SOURCES = Errors.cpp \
                      test_CSSOM.cpp \
                      test_CSSPageRule.cpp \
                      test_CSSRule.cpp \
+                     test_CSSStyleDeclaration.cpp \
                      test_CSSStyleRule.cpp \
                      test_CSSStyleSheet.cpp \
                      test_MediaList.cpp \

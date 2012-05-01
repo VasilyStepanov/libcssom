@@ -5,6 +5,8 @@
 #include "FSM_CSSProperty.h"
 #include "memory.h"
 
+#include <cssom/CSSRule.h>
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -12,6 +14,7 @@
 
 struct _CSSOM_CSSStyleDeclaration {
   size_t handles;
+  CSSOM_CSSRule *parentRule;
   CSSOM_FSM_CSSProperty *fsm;
   char *cssText;
 };
@@ -19,7 +22,7 @@ struct _CSSOM_CSSStyleDeclaration {
 
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
-  const CSSOM_FSMTable_CSSProperty *table)
+  CSSOM_CSSRule *parentRule, const CSSOM_FSMTable_CSSProperty *table)
 {
   CSSOM_CSSStyleDeclaration *style;
   CSSOM_FSM_CSSProperty *fsm;
@@ -35,6 +38,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   }
 
   style->handles = 1;
+  style->parentRule = parentRule;
   style->fsm = fsm;
   style->cssText = NULL;
 
@@ -47,6 +51,7 @@ void CSSOM_CSSStyleDeclaration_acquire(CSSOM_CSSStyleDeclaration *style) {
   if (style == NULL) return;
 
   ++style->handles;
+  CSSOM_CSSRule_acquire(style->parentRule);
 }
 
 
@@ -56,7 +61,10 @@ void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
 
   assert(style->handles > 0);
   --style->handles;
-  if (style->handles > 0) return;
+  if (style->handles > 0) {
+    CSSOM_CSSRule_release(style->parentRule);
+    return;
+  }
 
   CSSOM_native_free(style->cssText);
   CSSOM_FSM_CSSProperty_free(style->fsm);
@@ -203,4 +211,12 @@ CSSOM_CSSStyleDeclarationConstIter_next(
   CSSOM_CSSStyleDeclarationConstIter iter)
 {
   return CSSOM_FSMConstIter_CSSProperty_next(iter);
+}
+
+
+
+CSSOM_CSSRule* CSSOM_CSSStyleDeclaration_parentRule(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return style->parentRule;
 }
