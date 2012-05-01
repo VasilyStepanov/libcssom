@@ -38,6 +38,32 @@ void parentRule() {
 
 
 
+void item() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+" background-color : maroon;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+
+
+  cssText = "color";
+  assertEquals(cssText, style.item(0));
+
+  cssText = "background-color";
+  assertEquals(cssText, style.item(1));
+
+  assert(style.item(2) == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -46,6 +72,7 @@ namespace test {
 
 void cssStyleDeclaration() {
   parentRule();
+  item();
 }
 
 

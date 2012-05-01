@@ -262,15 +262,19 @@ static void test_FSM_order(void) {
 
   it = CSSOM_FSM_Int_begin(fsm);
   assert(it != CSSOM_FSM_Int_end(fsm));
+  assert(it == CSSOM_FSM_Int_at(fsm, 0));
   assert(it->value == 4);
   it = CSSOM_FSMIter_Int_next(it);
   assert(it != CSSOM_FSM_Int_end(fsm));
+  assert(it == CSSOM_FSM_Int_at(fsm, 1));
   assert(it->value == 3);
   it = CSSOM_FSMIter_Int_next(it);
   assert(it != CSSOM_FSM_Int_end(fsm));
+  assert(it == CSSOM_FSM_Int_at(fsm, 2));
   assert(it->value == 2);
   it = CSSOM_FSMIter_Int_next(it);
   assert(it != CSSOM_FSM_Int_end(fsm));
+  assert(it == CSSOM_FSM_Int_at(fsm, 3));
   assert(it->value == 1);
   it = CSSOM_FSMIter_Int_next(it);
   assert(it == CSSOM_FSM_Int_end(fsm));

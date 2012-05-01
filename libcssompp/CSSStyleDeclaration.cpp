@@ -94,6 +94,12 @@ unsigned long CSSStyleDeclaration::length() const {
 
 
 
+const char * CSSStyleDeclaration::item(unsigned long index) {
+  return CSSOM_CSSStyleDeclaration_item(_impl, index);
+}
+
+
+
 const char * CSSStyleDeclaration::getPropertyValue(const char * property) {
   return CSSOM_CSSStyleDeclaration_getPropertyValue(_impl, property);
 }

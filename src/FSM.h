@@ -40,6 +40,8 @@ extern "C" {
     CSSOM_FSM_##suffix *fsm, int hash); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_find( \
     CSSOM_FSM_##suffix *fsm, const char *key); \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_at( \
+    CSSOM_FSM_##suffix *fsm, size_t index); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_begin(CSSOM_FSM_##suffix *fsm); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_end(CSSOM_FSM_##suffix *fsm); \
   CSSOM_FSMConstIter_##suffix CSSOM_FSM_##suffix##_cbegin( \

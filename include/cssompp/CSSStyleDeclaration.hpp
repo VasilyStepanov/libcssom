@@ -48,6 +48,8 @@ class CSSStyleDeclaration {
 
     unsigned long length() const;
 
+    const char * item(unsigned long index);
+
     const char * getPropertyValue(const char * property);
 
     const char * getPropertyPriority(const char * property);

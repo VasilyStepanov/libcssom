@@ -424,6 +424,14 @@
   \
   \
   \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_at(CSSOM_FSM_##suffix *fsm, \
+    size_t index) \
+  { \
+    return CSSOM_Deque_FSMItem_##suffix##_at(fsm->data, index); \
+  } \
+  \
+  \
+  \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_add(CSSOM_FSM_##suffix *fsm, \
     const char *key, T value) \
   { \

@@ -220,3 +220,17 @@ CSSOM_CSSRule* CSSOM_CSSStyleDeclaration_parentRule(
 {
   return style->parentRule;
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_item(CSSOM_CSSStyleDeclaration *style,
+  unsigned long index)
+{
+  CSSOM_FSMConstIter_CSSProperty match;
+
+  if (index >= CSSOM_FSM_CSSProperty_size(style->fsm)) return NULL;
+
+  match = CSSOM_FSM_CSSProperty_at(style->fsm, index);
+
+  return CSSOM_CSSProperty_name(match->value);
+}

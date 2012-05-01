@@ -37,6 +37,10 @@ unsigned long CSSOM_CSSStyleDeclaration_length(const CSSOM_CSSStyleDeclaration *
 
 
 
+const char * CSSOM_CSSStyleDeclaration_item(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, unsigned long index);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_getPropertyValue(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * property);
 
 

@@ -2,7 +2,7 @@ interface CSSStyleDeclaration {
   readonly attribute DOMString cssText;
 
   readonly attribute unsigned long length;
-  // DOMString item(unsigned long index);
+  DOMString item(unsigned long index);
 
   DOMString getPropertyValue(DOMString property);
   DOMString getPropertyPriority(DOMString property);
