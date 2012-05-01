@@ -11,9 +11,9 @@ if ENABLE_PYWIDL
 
 .idl.idl.hpp:
 	@$(RM) $@
-	$(RUN_PYWIDL) -t gen.HPPEmitter -o $@ $< -- --srcdir=$(top_srcdir)/libcssompp --includedir=$(top_srcdir)/include/cssompp
+	$(RUN_PYWIDL) -t cg.HPPEmitter -o $@ $< -- --srcdir=$(top_srcdir)/libcssompp --includedir=$(top_srcdir)/include/cssompp
 
-$(top_idldir)/*.idl.hpp: $(top_srcdir)/gen/*.py $(PYWIDL)
+$(top_idldir)/*.idl.hpp: $(top_srcdir)/cg/*.py $(PYWIDL)
 
 else
 

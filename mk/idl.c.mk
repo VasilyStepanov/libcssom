@@ -14,9 +14,9 @@ if ENABLE_PYWIDL
 
 .idl.idl.h:
 	@$(RM) $@
-	$(RUN_PYWIDL) -t gen.HEmitter -o $@ $< -- --includedir=$(top_srcdir)/include/cssom
+	$(RUN_PYWIDL) -t cg.HEmitter -o $@ $< -- --includedir=$(top_srcdir)/include/cssom
 
-$(top_idldir)/*.idl.h: $(top_srcdir)/gen/*.py $(PYWIDL)
+$(top_idldir)/*.idl.h: $(top_srcdir)/cg/*.py $(PYWIDL)
 
 else
 
