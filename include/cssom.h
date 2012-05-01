@@ -5,7 +5,7 @@
 #include <cssom/CSSNamespaceRule.h>
 #include <cssom/CSSOM.h>
 #include <cssom/CSSPageRule.h>
-#include <cssom/CSSProperty.h>
+#include <cssom/CSSProperties.h>
 #include <cssom/CSSRule.h>
 #include <cssom/CSSRuleList.h>
 #include <cssom/CSSStyleDeclaration.h>

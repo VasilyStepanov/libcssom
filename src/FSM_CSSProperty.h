@@ -1,9 +1,8 @@
 #ifndef CSSOM_FSM_CSSPROPERTY_H
 #define CSSOM_FSM_CSSPROPERTY_H
 
+#include "CSSProperty.h"
 #include "FSM.h"
-
-#include <cssom/typedefs.h>
 
 #ifdef __cplusplus
 extern "C" {

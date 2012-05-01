@@ -1,7 +1,5 @@
-#ifndef CSSOM_CSSPROPERTY_H
-#define CSSOM_CSSPROPERTY_H
-
-#include <cssom/typedefs.h>
+#ifndef CSSOM_CSS_PROPERTIES_H
+#define CSSOM_CSS_PROPERTIES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -137,18 +135,6 @@ typedef enum _CSSOM_CSSPropertyType {
 
 
 extern const char *CSSOM_CSSProperties[];
-
-
-
-void CSSOM_CSSProperty_acquire(CSSOM_CSSProperty *property);
-
-void CSSOM_CSSProperty_release(CSSOM_CSSProperty *property);
-
-const char* CSSOM_CSSProperty_cssText(const CSSOM_CSSProperty *property);
-
-const char* CSSOM_CSSProperty_name(const CSSOM_CSSProperty *property);
-
-int CSSOM_CSSProperty_important(const CSSOM_CSSProperty *property);
 
 
 

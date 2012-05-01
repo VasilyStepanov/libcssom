@@ -34,7 +34,6 @@ libcssompp_la_HEADERS = $(top_srcdir)/include/cssompp/CSSOM.hpp \
                         $(top_srcdir)/include/cssompp/MediaList.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
-                        CSSProperty.cpp \
                         checks.cpp \
                         \
                         CSSFontFaceRule.cpp \

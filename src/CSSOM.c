@@ -12,6 +12,8 @@
 #include "ParserStack.h"
 #include "memory.h"
 
+#include <cssom/CSSProperties.h>
+
 #include <sacc.h>
 
 #include <string.h>

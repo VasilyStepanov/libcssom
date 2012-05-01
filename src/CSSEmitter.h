@@ -1,7 +1,9 @@
 #ifndef CSSOM_CSSEMITTER_H
 #define CSSOM_CSSEMITTER_H
 
+#include "CSSProperty.h"
 #include "MediaQuery.h"
+
 #include <cssom/typedefs.h>
 
 #include <sacc.h>

@@ -2,7 +2,7 @@
 #define CSSOMPP_CSSOM_HPP
 
 #include <cssom/CSSOM.h>
-#include <cssom/CSSProperty.h>
+#include <cssom/CSSProperties.h>
 
 #include <string>
 

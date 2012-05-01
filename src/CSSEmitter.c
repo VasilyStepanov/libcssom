@@ -10,7 +10,6 @@
 #include <cssom/CSSImportRule.h>
 #include <cssom/CSSMediaRule.h>
 #include <cssom/CSSNamespaceRule.h>
-#include <cssom/CSSProperty.h>
 #include <cssom/CSSRuleList.h>
 
 #include <stdio.h>

@@ -20,7 +20,7 @@ libcssom_base_la_HEADERS = $(top_srcdir)/include/cssom.h
 libcssom_ladir = $(includedir)/cssom
 
 libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
-                      $(top_srcdir)/include/cssom/CSSProperty.h \
+                      $(top_srcdir)/include/cssom/CSSProperties.h \
                       \
                       $(top_srcdir)/include/cssom/CSSFontFaceRule.h \
                       $(top_srcdir)/include/cssom/CSSImportRule.h \

@@ -1,6 +1,7 @@
 #ifndef _CSSOM_PARSER_STACK_H
 #define _CSSOM_PARSER_STACK_H
 
+#include "CSSProperty.h"
 #include <cssom/typedefs.h>
 
 #include <sacc.h>
