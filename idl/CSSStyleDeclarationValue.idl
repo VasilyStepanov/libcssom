@@ -1,3 +1,7 @@
 interface CSSStyleDeclarationValue {
+  readonly attribute unsigned long length;
+  DOMString item(unsigned long index);
+
   CSSPropertyValue? getProperty(DOMString property);
+  // void setProperty(DOMString? property, DOMString? value);
 };

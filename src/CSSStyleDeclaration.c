@@ -76,7 +76,7 @@ void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
 unsigned long CSSOM_CSSStyleDeclaration_length(
   const CSSOM_CSSStyleDeclaration *style)
 {
-  return CSSOM_CSSStyleDeclarationValue__length(style->values);
+  return CSSOM_CSSStyleDeclarationValue_length(style->values);
 }
 
 
@@ -84,7 +84,7 @@ unsigned long CSSOM_CSSStyleDeclaration_length(
 const char* CSSOM_CSSStyleDeclaration_item(CSSOM_CSSStyleDeclaration *style,
   unsigned long index)
 {
-  return CSSOM_CSSStyleDeclarationValue__item(style->values, index);
+  return CSSOM_CSSStyleDeclarationValue_item(style->values, index);
 }
 
 
@@ -105,6 +105,16 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
   return CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
     style->values, property);
 }
+
+
+
+/*
+void CSSOM_CSSStyleDeclaration_setProperty(CSSOM_CSSStyleDeclaration *style,
+  const char *property, const char *value)
+{
+  CSSOM_CSSStyleDeclarationValue_setProperty(style->values, property, value);
+}
+*/
 
 
 

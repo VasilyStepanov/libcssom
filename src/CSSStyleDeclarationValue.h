@@ -25,15 +25,9 @@ typedef CSSOM_FSMConstIter_CSSPropertyValue
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   CSSOM_CSSStyleDeclaration *ownerStyle);
 
-unsigned long CSSOM_CSSStyleDeclarationValue__length(
-  const CSSOM_CSSStyleDeclarationValue *values);
-
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
-
-const char* CSSOM_CSSStyleDeclarationValue__item(
-  CSSOM_CSSStyleDeclarationValue *values, unsigned long index);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property);

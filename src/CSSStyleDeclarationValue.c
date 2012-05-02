@@ -80,7 +80,7 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
-unsigned long CSSOM_CSSStyleDeclarationValue__length(
+unsigned long CSSOM_CSSStyleDeclarationValue_length(
   const CSSOM_CSSStyleDeclarationValue *values)
 {
   return CSSOM_FSM_CSSPropertyValue_size(values->fsm);
@@ -88,7 +88,7 @@ unsigned long CSSOM_CSSStyleDeclarationValue__length(
 
 
 
-const char* CSSOM_CSSStyleDeclarationValue__item(
+const char* CSSOM_CSSStyleDeclarationValue_item(
   CSSOM_CSSStyleDeclarationValue *values, unsigned long index)
 {
   CSSOM_FSMConstIter_CSSPropertyValue match;
@@ -167,7 +167,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
 
 
 
-CSSOM_CSSStyleDeclarationValueIter CSSOM_CSSStyleDeclarationValueValue__begin(
+CSSOM_CSSStyleDeclarationValueIter CSSOM_CSSStyleDeclarationValue__begin(
   CSSOM_CSSStyleDeclarationValue *values)
 {
   return CSSOM_FSM_CSSPropertyValue_begin(values->fsm);

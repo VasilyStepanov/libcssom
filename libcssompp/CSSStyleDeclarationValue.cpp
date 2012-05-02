@@ -82,6 +82,18 @@ void CSSStyleDeclarationValue::swap(cssom::CSSStyleDeclarationValue &rhs) {
 
 
 
+unsigned long CSSStyleDeclarationValue::length() const {
+  return CSSOM_CSSStyleDeclarationValue_length(_impl);
+}
+
+
+
+const char * CSSStyleDeclarationValue::item(unsigned long index) {
+  return CSSOM_CSSStyleDeclarationValue_item(_impl, index);
+}
+
+
+
 cssom::CSSPropertyValue CSSStyleDeclarationValue::getProperty(const char * property) {
   return cssom::CSSPropertyValue(CSSOM_CSSStyleDeclarationValue_getProperty(_impl, property));
 }

@@ -29,6 +29,14 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
+unsigned long CSSOM_CSSStyleDeclarationValue_length(const CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue);
+
+
+
+const char * CSSOM_CSSStyleDeclarationValue_item(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, unsigned long index);
+
+
+
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(const CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property);
 
 

@@ -44,6 +44,10 @@ class CSSStyleDeclarationValue {
 
     void swap(cssom::CSSStyleDeclarationValue &rhs);
 
+    unsigned long length() const;
+
+    const char * item(unsigned long index);
+
     cssom::CSSPropertyValue getProperty(const char * property);
 
   protected:
