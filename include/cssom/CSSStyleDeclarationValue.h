@@ -29,6 +29,10 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
+CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(const CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property);
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -13,6 +13,15 @@
 
 #include <cssom/typedefs.h>
 
+namespace cssom {
+
+
+
+class CSSPropertyValue;
+
+
+
+} // cssom
 
 namespace cssom {
 
@@ -34,6 +43,8 @@ class CSSStyleDeclarationValue {
     bool isNull() const;
 
     void swap(cssom::CSSStyleDeclarationValue &rhs);
+
+    cssom::CSSPropertyValue getProperty(const char * property);
 
   protected:
     CSSOM_CSSStyleDeclarationValue * _impl;

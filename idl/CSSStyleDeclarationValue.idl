@@ -1,6 +1,3 @@
 interface CSSStyleDeclarationValue {
-  // ...
-
-  // CSS Properties
-
+  CSSPropertyValue? getProperty(DOMString property);
 };

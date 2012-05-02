@@ -102,7 +102,7 @@ const char* CSSOM_CSSStyleDeclarationValue__item(
 
 
 
-const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
+CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property)
 {
   CSSOM_FSMIter_CSSPropertyValue it;
@@ -110,7 +110,21 @@ const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   it = CSSOM_FSM_CSSPropertyValue_find(values->fsm, property);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return NULL;
 
-  return CSSOM_CSSPropertyValue_cssText(it->value);
+  return it->value;
+}
+
+
+
+const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
+  const CSSOM_CSSStyleDeclarationValue *values, const char *property)
+{
+  CSSOM_CSSPropertyValue *value;
+
+  value = CSSOM_CSSStyleDeclarationValue_getProperty(values, property);
+
+  if (value == NULL) return NULL;
+
+  return CSSOM_CSSPropertyValue_cssText(value);
 }
 
 
@@ -118,12 +132,12 @@ const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
   const CSSOM_CSSStyleDeclarationValue *values, const char * property)
 {
-  CSSOM_FSMIter_CSSPropertyValue it;
+  CSSOM_CSSPropertyValue *value;
 
-  it = CSSOM_FSM_CSSPropertyValue_find(values->fsm, property);
-  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return "";
+  value = CSSOM_CSSStyleDeclarationValue_getProperty(values, property);
 
-  if (CSSOM_CSSPropertyValue__important(it->value) == 0) return "";
+  if (value == NULL) return "";
+  if (CSSOM_CSSPropertyValue__important(value) == 0) return "";
 
   return "important";
 }

@@ -75,7 +75,8 @@ def emitType(typedef):
 
 
 def emitInterfaceType(interface):
-  assert(not interface.nullable)
+  if not isinstance(interface, pywidl.InterfaceType):
+    assert(not interface.nullable)
 
   return "cssom::%s" % interface.name
 
@@ -133,11 +134,19 @@ def renderOperation(out, interface, operation):
     interface.name,
     operationSignature(operation))
 
-  print >>out, "  return CSSOM_%s_%s(%s%s);" % (
-    interface.name,
-    interfaceMemberName(interface, operation),
-    impl,
-    "".join([", %s" % arg.name for arg in operation.arguments]))
+  if not isinstance(operation.return_type, pywidl.InterfaceType):
+    print >>out, "  return CSSOM_%s_%s(%s%s);" % (
+      interface.name,
+      interfaceMemberName(interface, operation),
+      impl,
+      "".join([", %s" % arg.name for arg in operation.arguments]))
+  else:
+    print >>out, "  return %s(CSSOM_%s_%s(%s%s));" % (
+      emitType(operation.return_type),
+      interface.name,
+      interfaceMemberName(interface, operation),
+      impl,
+      "".join([", %s" % arg.name for arg in operation.arguments]))
 
   print >>out, "}"
 

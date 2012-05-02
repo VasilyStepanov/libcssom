@@ -12,6 +12,8 @@
 
 #include <cssom/CSSStyleDeclarationValue.h>
 
+#include <cssompp/CSSPropertyValue.hpp>
+
 #include "checks.hpp"
 
 #include <utility>
@@ -76,6 +78,12 @@ bool CSSStyleDeclarationValue::isNull() const {
 
 void CSSStyleDeclarationValue::swap(cssom::CSSStyleDeclarationValue &rhs) {
   std::swap(_impl, rhs._impl);
+}
+
+
+
+cssom::CSSPropertyValue CSSStyleDeclarationValue::getProperty(const char * property) {
+  return cssom::CSSPropertyValue(CSSOM_CSSStyleDeclarationValue_getProperty(_impl, property));
 }
 
 

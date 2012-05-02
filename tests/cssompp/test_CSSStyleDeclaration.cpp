@@ -5,6 +5,7 @@
 
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSStyleDeclaration.hpp>
+#include <cssompp/CSSStyleDeclarationValue.hpp>
 #include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
 
@@ -142,7 +143,6 @@ void getPropertyPriority() {
 
 
 void parentRule() {
-  std::string cssText;
   cssom::CSSOM cssom;
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
@@ -160,6 +160,25 @@ void parentRule() {
 
 
 
+void values() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+" background-color : maroon;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+  cssom::CSSStyleDeclarationValue values = style.values();
+
+  assert(style.values().isNull() == false);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -172,6 +191,7 @@ void cssStyleDeclaration() {
   item();
   getPropertyValue();
   getPropertyPriority();
+  values();
   parentRule();
 }
 

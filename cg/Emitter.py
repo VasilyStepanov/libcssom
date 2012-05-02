@@ -14,6 +14,7 @@ forwards = { \
   'CSSRule' : ('CSSStyleSheet', ),
   'CSSRuleList' : ('CSSRule', ),
   'CSSStyleDeclaration' : ('CSSRule', 'CSSStyleDeclarationValue', ),
+  'CSSStyleDeclarationValue' : ('CSSPropertyValue', ),
   'CSSStyleRule' : ('CSSStyleDeclaration', ),
   'CSSStyleSheet' : ('CSSRule', ),
 }
