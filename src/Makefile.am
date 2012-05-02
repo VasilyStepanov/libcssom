@@ -6,7 +6,8 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic -D_XOPEN_SOURCE=700 \
 
 AM_CFLAGS = $(GENERIC_CFLAGS) -Werror
 
-BUILT_SOURCES = $(top_idldir)/CSSRule.idl.h \
+BUILT_SOURCES = $(top_idldir)/CSSPropertyValue.idl.h \
+                $(top_idldir)/CSSRule.idl.h \
                 $(top_idldir)/CSSRuleList.idl.h \
                 $(top_idldir)/CSSStyleDeclaration.idl.h \
                 $(top_idldir)/CSSStyleDeclarationValue.idl.h \
@@ -28,6 +29,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
                       $(top_srcdir)/include/cssom/CSSMediaRule.h \
                       $(top_srcdir)/include/cssom/CSSNamespaceRule.h \
                       $(top_srcdir)/include/cssom/CSSPageRule.h \
+                      $(top_srcdir)/include/cssom/CSSPropertyValue.h \
                       $(top_srcdir)/include/cssom/CSSRule.h \
                       $(top_srcdir)/include/cssom/CSSRuleList.h \
                       $(top_srcdir)/include/cssom/CSSStyleDeclaration.h \
@@ -39,6 +41,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
                       CSSProperty.c \
+                      CSSPropertyValue.c \
                       CSSRule.c \
                       CSSRuleList.c \
                       CSSStyleDeclaration.c \

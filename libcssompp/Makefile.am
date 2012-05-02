@@ -6,7 +6,8 @@ GENERIC_CFLAGS = -Wall -Wextra -ansi -pedantic \
 
 AM_CPPFLAGS = $(GENERIC_CFLAGS) -Werror
 
-BUILT_SOURCES = $(top_idldir)/CSSRule.idl.hpp \
+BUILT_SOURCES = $(top_idldir)/CSSPropertyValue.idl.hpp \
+                $(top_idldir)/CSSRule.idl.hpp \
                 $(top_idldir)/CSSRuleList.idl.hpp \
                 $(top_idldir)/CSSStyleDeclaration.idl.hpp \
                 $(top_idldir)/CSSStyleDeclarationValue.idl.hpp \
@@ -28,6 +29,7 @@ libcssompp_la_HEADERS = \
 	$(top_srcdir)/include/cssompp/CSSMediaRule.hpp \
 	$(top_srcdir)/include/cssompp/CSSNamespaceRule.hpp \
 	$(top_srcdir)/include/cssompp/CSSPageRule.hpp \
+	$(top_srcdir)/include/cssompp/CSSPropertyValue.hpp \
 	$(top_srcdir)/include/cssompp/CSSRule.hpp \
 	$(top_srcdir)/include/cssompp/CSSRuleList.hpp \
 	$(top_srcdir)/include/cssompp/CSSStyleDeclaration.hpp \
@@ -44,6 +46,7 @@ libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSMediaRule.cpp \
                         CSSNamespaceRule.cpp \
                         CSSPageRule.cpp \
+                        CSSPropertyValue.cpp \
                         CSSRule.cpp \
                         CSSStyleDeclaration.cpp \
                         CSSStyleDeclarationValue.cpp \

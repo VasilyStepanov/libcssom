@@ -13,6 +13,7 @@ typedef struct _CSSOM_CSSImportRule CSSOM_CSSImportRule;
 typedef struct _CSSOM_CSSMediaRule CSSOM_CSSMediaRule;
 typedef struct _CSSOM_CSSNamespaceRule CSSOM_CSSNamespaceRule;
 typedef struct _CSSOM_CSSPageRule CSSOM_CSSPageRule;
+typedef struct _CSSOM_CSSPropertyValue CSSOM_CSSPropertyValue;
 typedef struct _CSSOM_CSSRule CSSOM_CSSRule;
 typedef struct _CSSOM_CSSStyleDeclaration CSSOM_CSSStyleDeclaration;
 typedef struct _CSSOM_CSSStyleDeclarationValue CSSOM_CSSStyleDeclarationValue;
