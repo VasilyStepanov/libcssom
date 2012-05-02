@@ -25,7 +25,7 @@ struct _CSSOM_Selector {
   struct _CSSOM_Selector_vtable *vtable;
   size_t handles;
   SAC_Parser parser;
-  CSSOM_CSSRule *ownerRule;
+  CSSOM_CSSRule *parentRule;
   char *selectorText;
   const SAC_Selector **selectors;
 };
@@ -34,7 +34,7 @@ struct _CSSOM_Selector {
 
 static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
   SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->ownerRule, rhs->ownerRule);
+  SWAP(lhs->parentRule, rhs->parentRule);
   SWAP(lhs->selectorText, rhs->selectorText);
   SWAP(lhs->selectors, rhs->selectors);
 }
@@ -42,13 +42,13 @@ static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
 
 
 static void Selector_ctor(CSSOM_Selector *selector,
-  struct _CSSOM_Selector_vtable *vtable, CSSOM_CSSRule *ownerRule,
+  struct _CSSOM_Selector_vtable *vtable, CSSOM_CSSRule *parentRule,
   const SAC_Selector *selectors[])
 {
   selector->vtable = vtable;
   selector->handles = 1;
   selector->parser = NULL;
-  selector->ownerRule = ownerRule;
+  selector->parentRule = parentRule;
   selector->selectorText = NULL;
   selector->selectors = selectors;
 }
@@ -90,8 +90,8 @@ static void Selector_setSelectorText(CSSOM_Selector *selector,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
-  newSelector = CSSOM__parseSelector(cssom, selector->ownerRule,
+    CSSOM_CSSRule_parentStyleSheet(selector->parentRule));
+  newSelector = CSSOM__parseSelector(cssom, selector->parentRule,
     selectorText, strlen(selectorText));
   if (newSelector == NULL) return;
 
@@ -109,7 +109,7 @@ static struct _CSSOM_Selector_vtable Selector_vtable = {
 
 
 
-CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
+CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
   const SAC_Selector *selectors[])
 {
   CSSOM_Selector *selector;
@@ -117,7 +117,7 @@ CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
   selector = (CSSOM_Selector*)CSSOM_malloc(sizeof(CSSOM_Selector));
   if (selector == NULL) return NULL;
   
-  Selector_ctor(selector, &Selector_vtable, ownerRule, selectors);
+  Selector_ctor(selector, &Selector_vtable, parentRule, selectors);
 
   return selector;
 }
@@ -159,8 +159,8 @@ static void PageSelector_setSelectorText(CSSOM_Selector *selector,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(selector->ownerRule));
-  newSelector = CSSOM__parsePageSelector(cssom, selector->ownerRule,
+    CSSOM_CSSRule_parentStyleSheet(selector->parentRule));
+  newSelector = CSSOM__parsePageSelector(cssom, selector->parentRule,
     selectorText, strlen(selectorText));
   if (newSelector == NULL) return;
 
@@ -178,7 +178,7 @@ static struct _CSSOM_Selector_vtable PageSelector_vtable = {
 
 
 
-CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *ownerRule,
+CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
   const SAC_Selector *selectors[])
 {
   CSSOM_Selector *selector;
@@ -187,7 +187,7 @@ CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *ownerRule,
   if (selector == NULL) return NULL;
   
   Selector_ctor(selector, &PageSelector_vtable,
-    (CSSOM_CSSRule*)ownerRule, selectors);
+    (CSSOM_CSSRule*)parentRule, selectors);
 
   return selector;
 }
@@ -198,7 +198,7 @@ void CSSOM_Selector_acquire(CSSOM_Selector *selector) {
   if (selector == NULL) return;
 
   ++selector->handles;
-  CSSOM_CSSRule_acquire(selector->ownerRule);
+  CSSOM_CSSRule_acquire(selector->parentRule);
 }
 
 
@@ -209,7 +209,7 @@ void CSSOM_Selector_release(CSSOM_Selector *selector) {
   assert(selector->handles > 0);
   --selector->handles;
   if (selector->handles > 0) {
-    CSSOM_CSSRule_release(selector->ownerRule);
+    CSSOM_CSSRule_release(selector->parentRule);
     return;
   }
 
@@ -220,8 +220,8 @@ void CSSOM_Selector_release(CSSOM_Selector *selector) {
 
 
 
-CSSOM_CSSRule* CSSOM_Selector__ownerRule(const CSSOM_Selector *selector) {
-  return selector->ownerRule;
+CSSOM_CSSRule* CSSOM_Selector__parentRule(const CSSOM_Selector *selector) {
+  return selector->parentRule;
 }
 
 
@@ -249,5 +249,6 @@ const SAC_Selector** CSSOM_Selector_selectors(const CSSOM_Selector *selector) {
 void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
   SAC_Parser parser)
 {
+  assert(selector->parser == NULL);
   selector->parser = parser;
 }

@@ -3,6 +3,8 @@
 #include "CSSEmitter.h"
 #include "memory.h"
 
+#include <cssom/CSSStyleDeclarationValue.h>
+
 #include <assert.h>
 #include <stdio.h>
 
@@ -10,15 +12,18 @@
 
 struct _CSSOM_CSSPropertyValue {
   size_t handles;
-  char *cssText;
+  CSSOM_CSSStyleDeclarationValue *parentValues;
+  SAC_Parser parser;
   const char *name;
   const SAC_LexicalUnit *value;
   SAC_Boolean important;
+  char *cssText;
 };
 
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
+  CSSOM_CSSStyleDeclarationValue *parentValues,
   const SAC_LexicalUnit *value, SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
@@ -28,10 +33,12 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   if (property == NULL) return NULL;
 
   property->handles = 1;
-  property->cssText = NULL;
+  property->parentValues = parentValues;
+  property->parser = NULL;
   property->name = NULL;
   property->value = value;
   property->important = important;
+  property->cssText = NULL;
 
   return property;
 }
@@ -42,6 +49,7 @@ void CSSOM_CSSPropertyValue_acquire(CSSOM_CSSPropertyValue *property) {
   if (property == NULL) return;
 
   ++property->handles;
+  CSSOM_CSSStyleDeclarationValue_acquire(property->parentValues);
 }
 
 
@@ -51,8 +59,13 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
 
   assert(property->handles > 0);
   --property->handles;
-  if (property->handles > 0) return;
+  if (property->handles > 0) {
+    CSSOM_CSSStyleDeclarationValue_release(property->parentValues);
+    return;
+  }
 
+  CSSOM_native_free(property->cssText);
+  SAC_DisposeParser(property->parser);
   CSSOM_free(property);
 }
 
@@ -108,4 +121,14 @@ const char* CSSOM_CSSPropertyValue_cssText(
 
 int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property) {
   return property->important == SAC_TRUE ? 1 : 0;
+}
+
+
+
+
+void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
+  SAC_Parser parser)
+{
+  assert(property->parser == NULL);
+  property->parser = parser;
 }

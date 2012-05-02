@@ -13,17 +13,17 @@ extern "C" {
 
 typedef struct _CSSOM_Selector CSSOM_Selector;
 
-CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *ownerRule,
+CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
   const SAC_Selector *selectors[]);
 
-CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *ownerRule,
+CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
   const SAC_Selector *selectors[]);
 
 void CSSOM_Selector_acquire(CSSOM_Selector *selector);
 
 void CSSOM_Selector_release(CSSOM_Selector *selector);
 
-CSSOM_CSSRule* CSSOM_Selector__ownerRule(const CSSOM_Selector *selector);
+CSSOM_CSSRule* CSSOM_Selector__parentRule(const CSSOM_Selector *selector);
 
 const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector);
 

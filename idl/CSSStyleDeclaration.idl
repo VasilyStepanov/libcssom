@@ -6,8 +6,8 @@ interface CSSStyleDeclaration {
 
   DOMString getPropertyValue(DOMString property);
   DOMString getPropertyPriority(DOMString property);
-  // void setProperty(DOMString? property, DOMString? value);
-  // void setProperty(DOMString? property, DOMString? value, DOMString? priority);
+  void setProperty(DOMString? property, DOMString? value);
+  void setProperty(DOMString? property, DOMString? value, DOMString? priority);
   // DOMString removeProperty(DOMString property);
 
   readonly attribute CSSStyleDeclarationValue values;

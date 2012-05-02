@@ -113,6 +113,18 @@ const char * CSSStyleDeclaration::getPropertyPriority(const char * property) {
 
 
 
+void CSSStyleDeclaration::setProperty(const char * property, const char * value) {
+  return CSSOM_CSSStyleDeclaration_setProperty(_impl, property, value);
+}
+
+
+
+void CSSStyleDeclaration::setProperty(const char * property, const char * value, const char * priority) {
+  return CSSOM_CSSStyleDeclaration_setPropertyEx(_impl, property, value, priority);
+}
+
+
+
 cssom::CSSStyleDeclarationValue CSSStyleDeclaration::values() const {
   return cssom::CSSStyleDeclarationValue(CSSOM_CSSStyleDeclaration_values(_impl));
 }

@@ -23,17 +23,25 @@ typedef CSSOM_FSMConstIter_CSSPropertyValue
 
 
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
-  CSSOM_CSSStyleDeclaration *ownerStyle);
+  CSSOM_CSSStyleDeclaration *parentStyle);
 
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
+  const char *property, const SAC_LexicalUnit *value, SAC_Boolean priority);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
   const CSSOM_CSSStyleDeclarationValue *values, const char * property);
+
+void CSSOM_CSSStyleDeclarationValue_setProperty(
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *property, const char *value);
+
+void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *property, const char *value, const char *priority);
 
 
 

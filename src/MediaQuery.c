@@ -13,14 +13,14 @@
 struct _CSSOM_MediaQuery {
   size_t handles;
   SAC_Parser parser;
-  CSSOM_MediaList *ownerMedia;
+  CSSOM_MediaList *parentMedia;
   char *mediaText;
   const SAC_MediaQuery *query;
 };
 
 
 
-CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *ownerMedia,
+CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *parentMedia,
   const SAC_MediaQuery *mediaQuery)
 {
   CSSOM_MediaQuery *query;
@@ -30,7 +30,7 @@ CSSOM_MediaQuery* CSSOM_MediaQuery__alloc(CSSOM_MediaList *ownerMedia,
 
   query->handles = 1;
   query->parser = NULL;
-  query->ownerMedia = ownerMedia;
+  query->parentMedia = parentMedia;
   query->mediaText = NULL;
   query->query = mediaQuery;
 
@@ -43,7 +43,7 @@ void CSSOM_MediaQuery_acquire(CSSOM_MediaQuery *query) {
   if (query == NULL) return;
 
   ++query->handles;
-  CSSOM_MediaList_acquire(query->ownerMedia);
+  CSSOM_MediaList_acquire(query->parentMedia);
 }
 
 
@@ -54,7 +54,7 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query) {
   assert(query->handles > 0);
   --query->handles;
   if (query->handles > 0) {
-    CSSOM_MediaList_release(query->ownerMedia);
+    CSSOM_MediaList_release(query->parentMedia);
     return;
   }
 
@@ -102,5 +102,6 @@ const SAC_MediaQuery* CSSOM_MediaQuery_query(const CSSOM_MediaQuery *query) {
 void CSSOM_MediaQuery__keepParser(CSSOM_MediaQuery *query,
   SAC_Parser parser)
 {
+  assert(query->parser == NULL);
   query->parser = parser;
 }

@@ -9,19 +9,20 @@
 #include <cssom/CSSStyleRule.h>
 
 #include <assert.h>
+#include <string.h>
 
 
 
 struct _CSSOM_CSSStyleDeclarationValue {
   size_t handles;
-  CSSOM_CSSStyleDeclaration *ownerStyle;
+  CSSOM_CSSStyleDeclaration *parentStyle;
   CSSOM_FSM_CSSPropertyValue *fsm;
 };
 
 
 
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
-  CSSOM_CSSStyleDeclaration *ownerStyle)
+  CSSOM_CSSStyleDeclaration *parentStyle)
 {
   const CSSOM_FSMTable_CSSPropertyValue *table;
   CSSOM_CSSStyleDeclarationValue *values;
@@ -30,7 +31,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   table = CSSOM__table(
     CSSOM_CSSStyleSheet__cssom(
       CSSOM_CSSRule_parentStyleSheet(
-        CSSOM_CSSStyleDeclaration_parentRule(ownerStyle))));
+        CSSOM_CSSStyleDeclaration_parentRule(parentStyle))));
 
   fsm = CSSOM_FSM_CSSPropertyValue_alloc(table);
   if (fsm == NULL) return NULL;
@@ -43,7 +44,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   }
 
   values->handles = 1;
-  values->ownerStyle = ownerStyle;
+  values->parentStyle = parentStyle;
   values->fsm = fsm;
 
   return values;
@@ -57,7 +58,7 @@ void CSSOM_CSSStyleDeclarationValue_acquire(
   if (values == NULL) return;
 
   ++values->handles;
-  CSSOM_CSSStyleDeclaration_acquire(values->ownerStyle);
+  CSSOM_CSSStyleDeclaration_acquire(values->parentStyle);
 }
 
 
@@ -70,7 +71,7 @@ void CSSOM_CSSStyleDeclarationValue_release(
   assert(values->handles > 0);
   --values->handles;
   if (values->handles > 0) {
-    CSSOM_CSSStyleDeclaration_release(values->ownerStyle);
+    CSSOM_CSSStyleDeclaration_release(values->parentStyle);
     return;
   }
 
@@ -146,23 +147,61 @@ const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
 
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const SAC_LexicalUnit *value, SAC_Boolean important)
+  const char *property, const SAC_LexicalUnit *value, SAC_Boolean priority)
 {
-  CSSOM_CSSPropertyValue *prop;
+  CSSOM_CSSPropertyValue *propertyValue;
   CSSOM_FSMIter_CSSPropertyValue it;
 
-  prop = CSSOM_CSSPropertyValue__alloc(value, important);
-  if (prop == NULL) return NULL;
+  propertyValue = CSSOM_CSSPropertyValue__alloc(values, value, priority);
+  if (propertyValue == NULL) return NULL;
 
-  it = CSSOM_FSM_CSSPropertyValue_add(values->fsm, property, prop);
+  it = CSSOM_FSM_CSSPropertyValue_add(values->fsm, property, propertyValue);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
-    CSSOM_CSSPropertyValue_release(prop);
+    CSSOM_CSSPropertyValue_release(propertyValue);
     return NULL;
   }
 
-  CSSOM_CSSPropertyValue__setName(prop, it->key);
+  CSSOM_CSSPropertyValue__setName(propertyValue, it->key);
 
-  return prop;
+  return propertyValue;
+}
+
+
+
+void CSSOM_CSSStyleDeclarationValue_setProperty(
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *property, const char *value)
+{
+  CSSOM_CSSStyleDeclarationValue_setPropertyEx(values, property, value, NULL);
+}
+
+
+
+void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *property, const char *value, const char *priority)
+{
+  const CSSOM *cssom;
+  CSSOM_CSSPropertyValue *propertyValue;
+  CSSOM_FSMIter_CSSPropertyValue it;
+
+  if (property == NULL) return;
+  if (value == NULL) return;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+  propertyValue = CSSOM__parsePropertyValue(cssom, values,
+    value, strlen(value), priority, strlen(priority));
+  if (propertyValue == NULL) return;
+
+  it = CSSOM_FSM_CSSPropertyValue_add(values->fsm, property, propertyValue);
+  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+    CSSOM_CSSPropertyValue_release(propertyValue);
+    return;
+  }
+
+  CSSOM_CSSPropertyValue__setName(propertyValue, it->key);
 }
 
 

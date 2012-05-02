@@ -273,7 +273,7 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
 
 
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *mediaText, int len)
+  CSSOM_CSSRule *parentRule, const char *mediaText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -298,7 +298,7 @@ CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
     return NULL;
   }
 
-  media = CSSOM_MediaList__alloc(ownerRule, mediaQuery);
+  media = CSSOM_MediaList__alloc(parentRule, mediaQuery);
   if (media == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -315,7 +315,7 @@ CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
 
 
 CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
-  CSSOM_MediaList *ownerMedia, const char *mediaText, int len)
+  CSSOM_MediaList *parentMedia, const char *mediaText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -340,7 +340,7 @@ CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
     return NULL;
   }
 
-  query = CSSOM_MediaQuery__alloc(ownerMedia, *mediaQuery);
+  query = CSSOM_MediaQuery__alloc(parentMedia, *mediaQuery);
   if (query == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -357,7 +357,7 @@ CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
 
 
 CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *selectorText, int len)
+  CSSOM_CSSRule *parentRule, const char *selectorText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -382,7 +382,7 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
     return NULL;
   }
 
-  selector = CSSOM_Selector__alloc(ownerRule, selectors);
+  selector = CSSOM_Selector__alloc(parentRule, selectors);
   if (selector == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -399,7 +399,7 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
 
 
 CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *selectorText, int len)
+  CSSOM_CSSRule *parentRule, const char *selectorText, int len)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -424,7 +424,7 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
     return NULL;
   }
 
-  selector = CSSOM_Selector__alloc(ownerRule, selectors);
+  selector = CSSOM_Selector__alloc(parentRule, selectors);
   if (selector == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -436,6 +436,55 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
   CSSOM_Selector__keepParser(selector, parser);
 
   return selector;
+}
+
+
+
+CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *value, int valueLen, const char *priority, int priorityLen)
+{
+  SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  const SAC_LexicalUnit *lu;
+  SAC_Boolean important;
+  CSSOM_CSSPropertyValue *propertyValue;
+
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
+
+  lu = SAC_ParsePropertyValue(parser, value, valueLen);
+  if (lu == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  important = SAC_FALSE;
+  if (priority != NULL && priorityLen != 0) {
+    important = SAC_ParsePriority(parser, priority, priorityLen);
+  }
+
+  propertyValue = CSSOM_CSSPropertyValue__alloc(values, lu, important);
+  if (propertyValue == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_ParserStack_free(stack);
+
+  CSSOM_CSSPropertyValue__keepParser(propertyValue, parser);
+
+  return propertyValue;
 }
 
 

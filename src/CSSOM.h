@@ -22,16 +22,20 @@ CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
   const char *cssText, int len);
 
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *mediaText, int len);
+  CSSOM_CSSRule *parentRule, const char *mediaText, int len);
 
 CSSOM_MediaQuery* CSSOM__parseMediaQuery(const CSSOM *cssom,
-  CSSOM_MediaList *ownerMedia, const char *mediaText, int len);
+  CSSOM_MediaList *parentMedia, const char *mediaText, int len);
 
 CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *selectorText, int len);
+  CSSOM_CSSRule *parentRule, const char *selectorText, int len);
 
 CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
-  CSSOM_CSSRule *ownerRule, const char *selectorText, int len);
+  CSSOM_CSSRule *parentRule, const char *selectorText, int len);
+
+CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *values,
+  const char *value, int valueLen, const char *important, int importantLen);
 
 void CSSOM__invalidModificationErr(const CSSOM *cssom);
 

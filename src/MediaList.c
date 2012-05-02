@@ -18,7 +18,7 @@
 struct _CSSOM_MediaList {
   size_t handles;
   SAC_Parser parser;
-  CSSOM_CSSRule *ownerRule;
+  CSSOM_CSSRule *parentRule;
   char *mediaText;
   const SAC_MediaQuery **query;
   CSSOM_Deque_MediaQuery *data;
@@ -44,7 +44,7 @@ static void MediaDeque_free(CSSOM_Deque_MediaQuery *deque) {
 
 static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
   SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->ownerRule, rhs->ownerRule);
+  SWAP(lhs->parentRule, rhs->parentRule);
   SWAP(lhs->mediaText, rhs->mediaText);
   SWAP(lhs->query, rhs->query);
   SWAP(lhs->data, rhs->data);
@@ -77,7 +77,7 @@ static CSSOM_DequeIter_MediaQuery MediaDeque_find(
 
 
 
-CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSRule *ownerRule,
+CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSRule *parentRule,
   const SAC_MediaQuery **query)
 {
   CSSOM_MediaList *media;
@@ -124,7 +124,7 @@ CSSOM_MediaList* CSSOM_MediaList__alloc(CSSOM_CSSRule *ownerRule,
 
   media->handles = 1;
   media->parser = NULL;
-  media->ownerRule = ownerRule;
+  media->parentRule = parentRule;
   media->mediaText = NULL;
   media->query = query;
   media->data = data;
@@ -138,7 +138,7 @@ void CSSOM_MediaList_acquire(CSSOM_MediaList *media) {
   if (media == NULL) return;
 
   ++media->handles;
-  CSSOM_CSSRule_acquire(media->ownerRule);
+  CSSOM_CSSRule_acquire(media->parentRule);
 }
 
 
@@ -149,7 +149,7 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
   assert(media->handles > 0);
   --media->handles;
   if (media->handles > 0) {
-    CSSOM_CSSRule_release(media->ownerRule);
+    CSSOM_CSSRule_release(media->parentRule);
     return;
   }
 
@@ -174,8 +174,8 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
-  newMedia = CSSOM__parseMedia(cssom, media->ownerRule,
+    CSSOM_CSSRule_parentStyleSheet(media->parentRule));
+  newMedia = CSSOM__parseMedia(cssom, media->parentRule,
     mediaText, strlen(mediaText));
   if (newMedia == NULL) return;
 
@@ -245,6 +245,7 @@ CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,
 void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
   SAC_Parser parser)
 {
+  assert(media->parser == NULL);
   media->parser = parser;
 }
 
@@ -257,7 +258,7 @@ void CSSOM_MediaList_appendMedium(CSSOM_MediaList *media,
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
+    CSSOM_CSSRule_parentStyleSheet(media->parentRule));
   query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
   if (query == NULL) return;
 
@@ -286,7 +287,7 @@ void CSSOM_MediaList_deleteMedium(CSSOM_MediaList *media,
   CSSOM_DequeIter_MediaQuery match;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(media->ownerRule));
+    CSSOM_CSSRule_parentStyleSheet(media->parentRule));
   query = CSSOM__parseMediaQuery(cssom, media, medium, strlen(medium));
   if (query == NULL) return;
 

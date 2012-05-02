@@ -58,6 +58,10 @@ class CSSStyleDeclaration {
 
     const char * getPropertyPriority(const char * property);
 
+    void setProperty(const char * property, const char * value);
+
+    void setProperty(const char * property, const char * value, const char * priority);
+
     cssom::CSSStyleDeclarationValue values() const;
 
     cssom::CSSRule parentRule() const;
