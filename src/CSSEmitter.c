@@ -11,6 +11,7 @@
 #include <cssom/CSSImportRule.h>
 #include <cssom/CSSMediaRule.h>
 #include <cssom/CSSNamespaceRule.h>
+#include <cssom/CSSPropertyValue.h>
 #include <cssom/CSSRuleList.h>
 
 #include <stdio.h>
@@ -446,18 +447,20 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
 
 
-int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property) {
-  if (!CSSOM_CSSProperty_important(property)) {
+int CSSOM_CSSEmitter_cssProperty(FILE *out,
+  const CSSOM_CSSPropertyValue *property)
+{
+  if (!CSSOM_CSSPropertyValue__important(property)) {
     if (fprintf(out, "%s : %s;",
-      CSSOM_CSSProperty_name(property),
-      CSSOM_CSSProperty_cssText(property)) < 0)
+      CSSOM_CSSPropertyValue__name(property),
+      CSSOM_CSSPropertyValue_cssText(property)) < 0)
     {
         return 1;
     }
   } else {
     if (fprintf(out, "%s : %s !important;",
-      CSSOM_CSSProperty_name(property),
-      CSSOM_CSSProperty_cssText(property)) < 0)
+      CSSOM_CSSPropertyValue__name(property),
+      CSSOM_CSSPropertyValue_cssText(property)) < 0)
     {
         return 1;
     }

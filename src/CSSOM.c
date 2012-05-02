@@ -3,7 +3,7 @@
 #include "MediaList.h"
 #include "CSSMediaRule.h"
 #include "CSSPageRule.h"
-#include "CSSProperty.h"
+#include "CSSPropertyValue.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -24,7 +24,7 @@
 struct _CSSOM {
   size_t handles;
   char * * properties;
-  CSSOM_FSMTable_CSSProperty * table;
+  CSSOM_FSMTable_CSSPropertyValue * table;
   CSSOM_ErrorHandler errorHandler;
   void * userData;
 };
@@ -46,7 +46,7 @@ static void freeProperties(char **properties) {
 
 CSSOM* CSSOM_create(const char * * properties) {
   char **propertiesCopy;
-  CSSOM_FSMTable_CSSProperty *table;
+  CSSOM_FSMTable_CSSPropertyValue *table;
   CSSOM *cssom;
 
   if (properties != CSSOM_CSSProperties) {
@@ -74,8 +74,8 @@ CSSOM* CSSOM_create(const char * * properties) {
     propertiesCopy = (char**)properties;
   }
 
-  table = CSSOM_FSMTable_CSSProperty_alloc(properties, 
-    CSSOM_CSSProperty_release);
+  table = CSSOM_FSMTable_CSSPropertyValue_alloc(properties, 
+    CSSOM_CSSPropertyValue_release);
   if (table == NULL) {
     freeProperties(propertiesCopy);
     return NULL;
@@ -84,7 +84,7 @@ CSSOM* CSSOM_create(const char * * properties) {
   cssom = (CSSOM*)CSSOM_malloc(sizeof(CSSOM));
   if (cssom == NULL) {
     freeProperties(propertiesCopy);
-    CSSOM_FSMTable_CSSProperty_free(table);
+    CSSOM_FSMTable_CSSPropertyValue_free(table);
     return NULL;
   }
 
@@ -112,7 +112,7 @@ void CSSOM_release(CSSOM *cssom) {
   --cssom->handles;
   if (cssom->handles > 0) return;
 
-  CSSOM_FSMTable_CSSProperty_free(cssom->table);
+  CSSOM_FSMTable_CSSPropertyValue_free(cssom->table);
   freeProperties(cssom->properties);
   CSSOM_free(cssom);
 }
@@ -440,6 +440,6 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
 
 
 
-const CSSOM_FSMTable_CSSProperty* CSSOM__table(const CSSOM *cssom) {
+const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom) {
   return cssom->table;
 }

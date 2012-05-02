@@ -1,7 +1,7 @@
 #ifndef _CSSOM_PARSER_STACK_H
 #define _CSSOM_PARSER_STACK_H
 
-#include "CSSProperty.h"
+#include "CSSPropertyValue.h"
 #include <cssom/typedefs.h>
 
 #include <sacc.h>
@@ -20,7 +20,7 @@ CSSOM_ParserStack* CSSOM_ParserStack_alloc(const CSSOM *cssom);
 
 void CSSOM_ParserStack_free(CSSOM_ParserStack *stack);
 
-CSSOM_CSSProperty* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
+CSSOM_CSSPropertyValue* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);

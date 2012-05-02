@@ -40,7 +40,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
 
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
-                      CSSProperty.c \
+                      CSSProperties.c \
                       CSSPropertyValue.c \
                       CSSRule.c \
                       CSSRuleList.c \
@@ -50,7 +50,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Deque_CSSRule.c \
                       Deque_MediaQuery.c \
                       Deque_void.c \
-                      FSM_CSSProperty.c \
+                      FSM_CSSPropertyValue.c \
                       MediaList.c \
                       MediaQuery.c \
                       Parser.c \

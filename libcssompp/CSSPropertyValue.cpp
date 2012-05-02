@@ -80,4 +80,10 @@ void CSSPropertyValue::swap(cssom::CSSPropertyValue &rhs) {
 
 
 
+const char * CSSPropertyValue::cssText() const {
+  return CSSOM_CSSPropertyValue_cssText(_impl);
+}
+
+
+
 } // cssom

@@ -1,9 +1,7 @@
 #include "CSSStyleDeclaration.h"
 
 #include "CSSEmitter.h"
-#include "CSSProperty.h"
 #include "CSSStyleDeclarationValue.h"
-#include "FSM_CSSProperty.h"
 #include "memory.h"
 
 #include <cssom/CSSRule.h>

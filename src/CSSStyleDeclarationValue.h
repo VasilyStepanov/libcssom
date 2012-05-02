@@ -3,7 +3,7 @@
 
 #include <cssom/CSSStyleDeclarationValue.h>
 
-#include "FSM_CSSProperty.h"
+#include "FSM_CSSPropertyValue.h"
 
 #include <cssom/typedefs.h>
 
@@ -15,9 +15,10 @@ extern "C" {
 
 
 
-typedef CSSOM_FSMIter_CSSProperty CSSOM_CSSStyleDeclarationValueIter;
+typedef CSSOM_FSMIter_CSSPropertyValue CSSOM_CSSStyleDeclarationValueIter;
 
-typedef CSSOM_FSMConstIter_CSSProperty CSSOM_CSSStyleDeclarationValueConstIter;
+typedef CSSOM_FSMConstIter_CSSPropertyValue
+  CSSOM_CSSStyleDeclarationValueConstIter;
 
 
 
@@ -27,7 +28,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
 unsigned long CSSOM_CSSStyleDeclarationValue__length(
   const CSSOM_CSSStyleDeclarationValue *values);
 
-CSSOM_CSSProperty* CSSOM_CSSStyleDeclarationValue__setProperty(
+CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean important);
 

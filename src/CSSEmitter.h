@@ -1,7 +1,6 @@
 #ifndef CSSOM_CSSEMITTER_H
 #define CSSOM_CSSEMITTER_H
 
-#include "CSSProperty.h"
 #include "MediaQuery.h"
 
 #include <cssom/typedefs.h>
@@ -18,7 +17,8 @@ extern "C" {
 
 int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value);
 
-int CSSOM_CSSEmitter_cssProperty(FILE *out, const CSSOM_CSSProperty *property);
+int CSSOM_CSSEmitter_property(FILE *out,
+  const CSSOM_CSSPropertyValue *property);
 
 int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]);
 

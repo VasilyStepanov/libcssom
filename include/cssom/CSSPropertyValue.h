@@ -29,6 +29,10 @@ void CSSOM_CSSPropertyValue_release(
 
 
 
+const char * CSSOM_CSSPropertyValue_cssText(const CSSOM_CSSPropertyValue * cssPropertyValue);
+
+
+
 #ifdef __cplusplus
 }
 #endif

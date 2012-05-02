@@ -4,7 +4,7 @@
 #include <cssom/CSSOM.h>
 
 #include "MediaQuery.h"
-#include "FSM_CSSProperty.h"
+#include "FSM_CSSPropertyValue.h"
 #include "Selector.h"
 
 #ifdef __cplusplus
@@ -41,7 +41,7 @@ void CSSOM__indexSizeErr(const CSSOM *cssom);
 
 int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);
 
-const CSSOM_FSMTable_CSSProperty* CSSOM__table(const CSSOM *cssom);
+const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom);
 
 
 
