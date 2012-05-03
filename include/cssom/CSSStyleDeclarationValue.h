@@ -41,6 +41,18 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(const CSSOM_C
 
 
 
+void CSSOM_CSSStyleDeclarationValue_setProperty(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property, const char * value);
+
+
+
+void CSSOM_CSSStyleDeclarationValue_setPropertyEx(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property, const char * value, const char * priority);
+
+
+
+void CSSOM_CSSStyleDeclarationValue_removeProperty(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property);
+
+
+
 #ifdef __cplusplus
 }
 #endif

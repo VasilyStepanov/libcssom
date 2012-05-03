@@ -3,5 +3,7 @@ interface CSSStyleDeclarationValue {
   DOMString item(unsigned long index);
 
   CSSPropertyValue? getProperty(DOMString property);
-  // void setProperty(DOMString? property, DOMString? value);
+  void setProperty(DOMString? property, DOMString? value);
+  void setProperty(DOMString? property, DOMString? value, DOMString? priority);
+  void removeProperty(DOMString property);
 };

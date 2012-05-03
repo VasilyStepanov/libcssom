@@ -100,4 +100,22 @@ cssom::CSSPropertyValue CSSStyleDeclarationValue::getProperty(const char * prope
 
 
 
+void CSSStyleDeclarationValue::setProperty(const char * property, const char * value) {
+  return CSSOM_CSSStyleDeclarationValue_setProperty(_impl, property, value);
+}
+
+
+
+void CSSStyleDeclarationValue::setProperty(const char * property, const char * value, const char * priority) {
+  return CSSOM_CSSStyleDeclarationValue_setPropertyEx(_impl, property, value, priority);
+}
+
+
+
+void CSSStyleDeclarationValue::removeProperty(const char * property) {
+  return CSSOM_CSSStyleDeclarationValue_removeProperty(_impl, property);
+}
+
+
+
 } // cssom

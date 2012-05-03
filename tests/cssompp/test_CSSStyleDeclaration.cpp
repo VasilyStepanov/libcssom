@@ -166,10 +166,14 @@ void setProperty() {
   cssText = "color : green;";
   style.setProperty(NULL, NULL);
   assertEquals(cssText, style.cssText());
+
   style.setProperty("invalid", NULL);
   assertEquals(cssText, style.cssText());
+
   style.setProperty("background-color", NULL);
   assertEquals(cssText, style.cssText());
+
+  cssText = "";
   style.setProperty("color", NULL);
   assertEquals(cssText, style.cssText());
 
@@ -227,6 +231,42 @@ void setProperty() {
 
 
 
+void removeProperty() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" background-color : green;\n"
+" color : green;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+
+
+  cssText = "color : green;";
+  style.removeProperty("background-color");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "color : green;";
+  style.removeProperty("foo");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "color : green;";
+  style.removeProperty("font-face");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "";
+  style.removeProperty("color");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "";
+  style.removeProperty("color");
+  assertEquals(cssText, style.cssText());
+}
+
 
 
 void values() {
@@ -279,6 +319,7 @@ void cssStyleDeclaration() {
   getPropertyValue();
   getPropertyPriority();
   setProperty();
+  removeProperty();
   values();
   parentRule();
 }

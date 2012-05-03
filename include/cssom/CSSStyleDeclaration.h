@@ -57,6 +57,10 @@ void CSSOM_CSSStyleDeclaration_setPropertyEx(CSSOM_CSSStyleDeclaration * cssStyl
 
 
 
+void CSSOM_CSSStyleDeclaration_removeProperty(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * property);
+
+
+
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclaration_values(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

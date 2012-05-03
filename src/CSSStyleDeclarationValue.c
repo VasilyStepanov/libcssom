@@ -187,7 +187,10 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   int priorityLen;
 
   if (property == NULL) return;
-  if (value == NULL) return;
+  if (value == NULL) {
+    CSSOM_CSSStyleDeclarationValue_removeProperty(values, property);
+    return;
+  }
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     CSSOM_CSSRule_parentStyleSheet(
@@ -208,6 +211,19 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   }
 
   CSSOM_CSSPropertyValue__setName(propertyValue, it->key);
+}
+
+
+
+void CSSOM_CSSStyleDeclarationValue_removeProperty(
+  CSSOM_CSSStyleDeclarationValue *values, const char *property)
+{
+  CSSOM_FSMIter_CSSPropertyValue match;
+  
+  match = CSSOM_FSM_CSSPropertyValue_find(values->fsm, property);
+  if (match == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;
+
+  CSSOM_FSM_CSSPropertyValue_erase(values->fsm, match);
 }
 
 

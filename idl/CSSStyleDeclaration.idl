@@ -8,7 +8,7 @@ interface CSSStyleDeclaration {
   DOMString getPropertyPriority(DOMString property);
   void setProperty(DOMString? property, DOMString? value);
   void setProperty(DOMString? property, DOMString? value, DOMString? priority);
-  // DOMString removeProperty(DOMString property);
+  void removeProperty(DOMString property);
 
   readonly attribute CSSStyleDeclarationValue values;
 
