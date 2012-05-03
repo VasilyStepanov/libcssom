@@ -184,6 +184,7 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   const CSSOM *cssom;
   CSSOM_CSSPropertyValue *propertyValue;
   CSSOM_FSMIter_CSSPropertyValue it;
+  int priorityLen;
 
   if (property == NULL) return;
   if (value == NULL) return;
@@ -191,8 +192,13 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   cssom = CSSOM_CSSStyleSheet__cssom(
     CSSOM_CSSRule_parentStyleSheet(
       CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+  if (priority == NULL) {
+    priorityLen = 0;
+  } else {
+    priorityLen = strlen(priority);
+  }
   propertyValue = CSSOM__parsePropertyValue(cssom, values,
-    value, strlen(value), priority, strlen(priority));
+    value, strlen(value), priority, priorityLen);
   if (propertyValue == NULL) return;
 
   it = CSSOM_FSM_CSSPropertyValue_add(values->fsm, property, propertyValue);

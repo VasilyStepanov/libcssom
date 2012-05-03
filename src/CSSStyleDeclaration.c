@@ -111,6 +111,8 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
 void CSSOM_CSSStyleDeclaration_setProperty(CSSOM_CSSStyleDeclaration *style,
   const char *property, const char *value)
 {
+  CSSOM_native_free(style->cssText);
+  style->cssText = NULL;
   CSSOM_CSSStyleDeclarationValue_setProperty(style->values, property, value);
 }
 
@@ -119,6 +121,8 @@ void CSSOM_CSSStyleDeclaration_setProperty(CSSOM_CSSStyleDeclaration *style,
 void CSSOM_CSSStyleDeclaration_setPropertyEx(CSSOM_CSSStyleDeclaration *style,
   const char *property, const char *value, const char *priority)
 {
+  CSSOM_native_free(style->cssText);
+  style->cssText = NULL;
   CSSOM_CSSStyleDeclarationValue_setPropertyEx(style->values,
     property, value, priority);
 }

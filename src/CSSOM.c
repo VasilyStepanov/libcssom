@@ -11,6 +11,7 @@
 #include "Parser.h"
 #include "ParserStack.h"
 #include "memory.h"
+#include "gcc.h"
 
 #include <cssom/CSSProperties.h>
 
@@ -18,6 +19,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 
 
@@ -440,6 +442,40 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
 
 
 
+static int priorityErrorHandler(void *userData,
+  const SAC_Error *error CSSOM_UNUSED)
+{
+  int *errors = (int*)userData;
+  ++(*errors);
+  return 1;
+}
+
+
+
+int CSSOM__parsePriority(const CSSOM *cssom CSSOM_UNUSED,
+  const char *priority, int len)
+{
+  int errors;
+  SAC_Parser parser;
+  SAC_Boolean important;
+
+  errors = 0;
+  parser = SAC_CreateParser();
+  if (parser == NULL) return -1;
+  SAC_SetUserData(parser, &errors);
+  SAC_SetErrorHandler(parser, priorityErrorHandler);
+
+  important = SAC_ParsePriority(parser, priority, len);
+
+  SAC_DisposeParser(parser);
+
+  if (errors != 0) return -1;
+
+  return important == SAC_TRUE ? 1 : 0;
+}
+
+
+
 CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *values,
   const char *value, int valueLen, const char *priority, int priorityLen)
@@ -470,7 +506,11 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
 
   important = SAC_FALSE;
   if (priority != NULL && priorityLen != 0) {
-    important = SAC_ParsePriority(parser, priority, priorityLen);
+    int rval;
+
+    rval = CSSOM__parsePriority(parser, priority, priorityLen);
+    if (rval == -1) return NULL;
+    important = rval == 1 ? SAC_TRUE : SAC_FALSE;
   }
 
   propertyValue = CSSOM_CSSPropertyValue__alloc(values, lu, important);

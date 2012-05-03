@@ -142,12 +142,15 @@ void getPropertyPriority() {
 
 
 
-void parentRule() {
+void setProperty() {
+  std::string cssText;
+  test::Errors errors;
   cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
 " color : green;\n"
-" background-color : maroon;\n"
 "}\n"
   );
   cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
@@ -155,8 +158,74 @@ void parentRule() {
   cssom::CSSStyleDeclaration style = cssRule.style();
 
 
-  assert(style.parentRule() == cssRule);
+
+  /**
+   * Test NULLs.
+   */
+
+  cssText = "color : green;";
+  style.setProperty(NULL, NULL);
+  assertEquals(cssText, style.cssText());
+  style.setProperty("invalid", NULL);
+  assertEquals(cssText, style.cssText());
+  style.setProperty("background-color", NULL);
+  assertEquals(cssText, style.cssText());
+  style.setProperty("color", NULL);
+  assertEquals(cssText, style.cssText());
+
+
+
+  cssText = "color : red;";
+  style.setProperty("color", "red");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "color : red;";
+  assert(errors.syntaxErrors == 0);
+  style.setProperty("color", "& invalid");
+  assertEquals(cssText, style.cssText());
+  assert(errors.syntaxErrors == 1);
+
+  cssText = "color : green;";
+  style.setProperty("color", "green");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "color : green; background-color : maroon;";
+  style.setProperty("background-color", "maroon");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "background-color : maroon; color : green;";
+  style.setProperty("color", "green");
+  assertEquals(cssText, style.cssText());
+
+
+
+  /**
+   * Test priority.
+   */
+
+  cssText = "background-color : maroon; color : red;";
+  style.setProperty("color", "red", NULL);
+  assertEquals(cssText, style.cssText());
+
+  cssText = "background-color : maroon; color : maroon;";
+  style.setProperty("color", "maroon", "");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "background-color : maroon; color : green !important;";
+  style.setProperty("color", "green", "!important");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "background-color : maroon; color : green !important;";
+  style.setProperty("color", "red", "invalid");
+  assertEquals(cssText, style.cssText());
+
+  cssText = "background-color : maroon; color : green;";
+  style.setProperty("color", "green", "");
+  assertEquals(cssText, style.cssText());
 }
+
+
+
 
 
 
@@ -179,6 +248,24 @@ void values() {
 
 
 
+void parentRule() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+" background-color : maroon;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+
+  assert(style.parentRule() == cssRule);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -191,6 +278,7 @@ void cssStyleDeclaration() {
   item();
   getPropertyValue();
   getPropertyPriority();
+  setProperty();
   values();
   parentRule();
 }

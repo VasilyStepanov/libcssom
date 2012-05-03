@@ -33,6 +33,8 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
 CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, const char *selectorText, int len);
 
+int CSSOM__parsePriority(const CSSOM *cssom, const char *priority, int len);
+
 CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *values,
   const char *value, int valueLen, const char *important, int importantLen);
