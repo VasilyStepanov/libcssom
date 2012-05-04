@@ -55,6 +55,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       MediaQuery.c \
                       Parser.c \
                       ParserStack.c \
+                      ParserStats.c \
                       Sequence.c \
                       Selector.c \
                       memory.c

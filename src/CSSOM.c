@@ -442,32 +442,29 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
 
 
 
-static int priorityErrorHandler(void *userData,
-  const SAC_Error *error CSSOM_UNUSED)
-{
-  int *errors = (int*)userData;
-  ++(*errors);
-  return 1;
-}
-
-
-
-int CSSOM__parsePriority(const CSSOM *cssom CSSOM_UNUSED,
-  const char *priority, int len)
-{
-  int errors;
+int CSSOM__parsePriority(const CSSOM *cssom, const char *priority, int len) {
   SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  size_t errors;
   SAC_Boolean important;
 
-  errors = 0;
   parser = SAC_CreateParser();
   if (parser == NULL) return -1;
-  SAC_SetUserData(parser, &errors);
-  SAC_SetErrorHandler(parser, priorityErrorHandler);
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return -1;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
 
   important = SAC_ParsePriority(parser, priority, len);
+  errors = CSSOM_ParserStats_syntaxErrors(CSSOM_ParserStack_stats(stack));
 
   SAC_DisposeParser(parser);
+
+  CSSOM_ParserStack_free(stack);
 
   if (errors != 0) return -1;
 
@@ -508,7 +505,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   if (priority != NULL && priorityLen != 0) {
     int rval;
 
-    rval = CSSOM__parsePriority(parser, priority, priorityLen);
+    rval = CSSOM__parsePriority(cssom, priority, priorityLen);
     if (rval == -1) return NULL;
     important = rval == 1 ? SAC_TRUE : SAC_FALSE;
   }

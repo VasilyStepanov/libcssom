@@ -220,8 +220,10 @@ void setProperty() {
   assertEquals(cssText, style.cssText());
 
   cssText = "background-color : maroon; color : green !important;";
+  assert(errors.syntaxErrors == 1);
   style.setProperty("color", "red", "invalid");
   assertEquals(cssText, style.cssText());
+  assert(errors.syntaxErrors == 2);
 
   cssText = "background-color : maroon; color : green;";
   style.setProperty("color", "green", "");

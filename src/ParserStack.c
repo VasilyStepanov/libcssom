@@ -13,6 +13,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleDeclarationValue.h"
 #include "CSSStyleSheet.h"
+#include "ParserStats.h"
 #include "memory.h"
 
 #include <cssom/CSSStyleRule.h>
@@ -671,25 +672,35 @@ CSSOM_STACK_DEFINE(struct _CSSOM_ParserState *, ParserState)
 
 struct _CSSOM_ParserStack {
   const CSSOM *cssom;
+  CSSOM_ParserStats *stats;
   CSSOM_Stack_ParserState *state;
 };
 
 
 
 CSSOM_ParserStack* CSSOM_ParserStack_alloc(const CSSOM *cssom) {
+  CSSOM_ParserStats *stats;
   CSSOM_Stack_ParserState *state;
   CSSOM_ParserStack *stack;
 
+  stats = CSSOM_ParserStats_alloc();
+  if (stats == NULL) return NULL;
+
   state = CSSOM_Stack_ParserState_alloc();
-  if (state == NULL) return NULL;
+  if (state == NULL) {
+    CSSOM_ParserStats_free(stats);
+    return NULL;
+  }
 
   stack = (CSSOM_ParserStack*)CSSOM_malloc(sizeof(CSSOM_ParserStack));
   if (stack == NULL) {
     CSSOM_Stack_ParserState_free(state);
+    CSSOM_ParserStats_free(stats);
     return NULL;
   }
 
   stack->cssom = cssom;
+  stack->stats = stats;
   stack->state = state;
 
   return stack;
@@ -710,7 +721,16 @@ void CSSOM_ParserStack_free(CSSOM_ParserStack *stack) {
   }
 
   CSSOM_Stack_ParserState_free(stack->state);
+  CSSOM_ParserStats_free(stack->stats);
   CSSOM_free(stack);
+}
+
+
+
+const CSSOM_ParserStats* CSSOM_ParserStack_stats(
+  const CSSOM_ParserStack *stack)
+{
+  return stack->stats;
 }
 
 
@@ -725,6 +745,7 @@ void CSSOM_ParserStack_pop(CSSOM_ParserStack *stack) {
 int CSSOM_ParserStack_error(const CSSOM_ParserStack *stack,
   const SAC_Error *error)
 {
+  CSSOM_ParserStats_errorHandler(stack->stats, error);
   return CSSOM__error(stack->cssom, error);
 }
 
