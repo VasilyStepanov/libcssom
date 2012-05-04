@@ -462,9 +462,9 @@ int CSSOM__parsePriority(const CSSOM *cssom, const char *priority, int len) {
   important = SAC_ParsePriority(parser, priority, len);
   errors = CSSOM_ParserStats_syntaxErrors(CSSOM_ParserStack_stats(stack));
 
-  SAC_DisposeParser(parser);
-
   CSSOM_ParserStack_free(stack);
+
+  SAC_DisposeParser(parser);
 
   if (errors != 0) return -1;
 
@@ -506,7 +506,11 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     int rval;
 
     rval = CSSOM__parsePriority(cssom, priority, priorityLen);
-    if (rval == -1) return NULL;
+    if (rval == -1) {
+      CSSOM_ParserStack_free(stack);
+      SAC_DisposeParser(parser);
+      return NULL;
+    }
     important = rval == 1 ? SAC_TRUE : SAC_FALSE;
   }
 

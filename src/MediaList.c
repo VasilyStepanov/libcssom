@@ -297,5 +297,7 @@ void CSSOM_MediaList_deleteMedium(CSSOM_MediaList *media,
     return;
   }
 
+  CSSOM_MediaQuery_release(query);
+  CSSOM_MediaQuery_release(*match);
   CSSOM_Deque_MediaQuery_erase(media->data, match);
 }
