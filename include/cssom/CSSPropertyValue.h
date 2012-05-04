@@ -33,6 +33,10 @@ const char * CSSOM_CSSPropertyValue_cssText(const CSSOM_CSSPropertyValue * cssPr
 
 
 
+void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue * cssPropertyValue, const char * cssText);
+
+
+
 #ifdef __cplusplus
 }
 #endif

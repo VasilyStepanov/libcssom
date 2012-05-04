@@ -1,12 +1,19 @@
 #include "CSSPropertyValue.h"
 
 #include "CSSEmitter.h"
+#include "CSSOM.h"
+#include "CSSRule.h"
+#include "CSSStyleDeclaration.h"
+#include "CSSStyleDeclarationValue.h"
+#include "CSSStyleSheet.h"
 #include "memory.h"
+#include "utility.h"
 
 #include <cssom/CSSStyleDeclarationValue.h>
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
@@ -115,6 +122,40 @@ const char* CSSOM_CSSPropertyValue_cssText(
     ((CSSOM_CSSPropertyValue*)property)->cssText = buf;
   }
   return property->cssText;
+}
+
+
+
+static void CSSPropertyValue_swap(
+  CSSOM_CSSPropertyValue *lhs, CSSOM_CSSPropertyValue *rhs)
+{
+  SWAP(lhs->parentValues, rhs->parentValues);
+  SWAP(lhs->parser, rhs->parser);
+  SWAP(lhs->name, rhs->name);
+  SWAP(lhs->value, rhs->value);
+  SWAPS(lhs->important, rhs->important);
+  SWAP(lhs->cssText, rhs->cssText);
+}
+
+
+
+void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
+  const char * cssText)
+{
+  const CSSOM *cssom;
+  CSSOM_CSSPropertyValue *newProperty;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(
+        CSSOM_CSSStyleDeclarationValue_parentStyle(property->parentValues))));
+  newProperty = CSSOM__parsePropertyValue(cssom, property->parentValues,
+    cssText, strlen(cssText), NULL, 0);
+  if (newProperty == NULL) return;
+
+  CSSPropertyValue_swap(property, newProperty);
+
+  CSSOM_CSSPropertyValue_release(newProperty);
 }
 
 

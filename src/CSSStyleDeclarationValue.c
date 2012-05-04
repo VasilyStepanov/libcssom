@@ -84,6 +84,14 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue_parentStyle(
+  const CSSOM_CSSStyleDeclarationValue *values)
+{
+  return values->parentStyle;
+}
+
+
+
 unsigned long CSSOM_CSSStyleDeclarationValue_length(
   const CSSOM_CSSStyleDeclarationValue *values)
 {

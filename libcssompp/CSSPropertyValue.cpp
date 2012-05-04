@@ -86,4 +86,10 @@ const char * CSSPropertyValue::cssText() const {
 
 
 
+void CSSPropertyValue::setCSSText(const char * cssText) {
+  CSSOM_CSSPropertyValue_setCSSText(_impl, cssText);
+}
+
+
+
 } // cssom

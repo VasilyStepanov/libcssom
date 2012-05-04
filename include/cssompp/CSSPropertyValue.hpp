@@ -36,6 +36,7 @@ class CSSPropertyValue {
     void swap(cssom::CSSPropertyValue &rhs);
 
     const char * cssText() const;
+    void setCSSText(const char * cssText);
 
   protected:
     CSSOM_CSSPropertyValue * _impl;
