@@ -17,6 +17,7 @@ struct _CSSOM_CSSStyleDeclarationValue {
   size_t handles;
   CSSOM_CSSStyleDeclaration *parentStyle;
   CSSOM_FSM_CSSPropertyValue *fsm;
+  char *removedPropertyHolder;
 };
 
 
@@ -46,6 +47,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   values->handles = 1;
   values->parentStyle = parentStyle;
   values->fsm = fsm;
+  values->removedPropertyHolder = NULL;
 
   return values;
 }
@@ -75,6 +77,7 @@ void CSSOM_CSSStyleDeclarationValue_release(
     return;
   }
 
+  CSSOM_native_free(values->removedPropertyHolder);
   CSSOM_FSM_CSSPropertyValue_free(values->fsm);
   CSSOM_free(values);
 }
@@ -215,15 +218,21 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
 
 
 
-void CSSOM_CSSStyleDeclarationValue_removeProperty(
+const char* CSSOM_CSSStyleDeclarationValue_removeProperty(
   CSSOM_CSSStyleDeclarationValue *values, const char *property)
 {
   CSSOM_FSMIter_CSSPropertyValue match;
   
   match = CSSOM_FSM_CSSPropertyValue_find(values->fsm, property);
-  if (match == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;
+  if (match == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return NULL;
+
+  CSSOM_native_free(values->removedPropertyHolder);
+  values->removedPropertyHolder = strdup(CSSOM_CSSPropertyValue_cssText(
+    match->value));
 
   CSSOM_FSM_CSSPropertyValue_erase(values->fsm, match);
+
+  return values->removedPropertyHolder;
 }
 
 

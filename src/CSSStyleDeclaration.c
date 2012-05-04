@@ -129,12 +129,12 @@ void CSSOM_CSSStyleDeclaration_setPropertyEx(CSSOM_CSSStyleDeclaration *style,
 
 
 
-void CSSOM_CSSStyleDeclaration_removeProperty(CSSOM_CSSStyleDeclaration *style,
-  const char *property)
+const char* CSSOM_CSSStyleDeclaration_removeProperty(
+  CSSOM_CSSStyleDeclaration *style, const char *property)
 {
   CSSOM_native_free(style->cssText);
   style->cssText = NULL;
-  CSSOM_CSSStyleDeclarationValue_removeProperty(style->values, property);
+  return CSSOM_CSSStyleDeclarationValue_removeProperty(style->values, property);
 }
 
 

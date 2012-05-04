@@ -125,7 +125,7 @@ void CSSStyleDeclaration::setProperty(const char * property, const char * value,
 
 
 
-void CSSStyleDeclaration::removeProperty(const char * property) {
+const char * CSSStyleDeclaration::removeProperty(const char * property) {
   return CSSOM_CSSStyleDeclaration_removeProperty(_impl, property);
 }
 

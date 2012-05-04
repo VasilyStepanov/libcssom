@@ -2,13 +2,13 @@ interface CSSStyleDeclaration {
   readonly attribute DOMString cssText;
 
   readonly attribute unsigned long length;
-  DOMString item(unsigned long index);
+  DOMString? item(unsigned long index);
 
-  DOMString getPropertyValue(DOMString property);
-  DOMString getPropertyPriority(DOMString property);
+  DOMString? getPropertyValue(DOMString property);
+  DOMString? getPropertyPriority(DOMString property);
   void setProperty(DOMString? property, DOMString? value);
   void setProperty(DOMString? property, DOMString? value, DOMString? priority);
-  void removeProperty(DOMString property);
+  DOMString? removeProperty(DOMString property);
 
   readonly attribute CSSStyleDeclarationValue values;
 

@@ -49,7 +49,7 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(CSSOM_CSSStyleDeclarationValue
 
 
 
-void CSSOM_CSSStyleDeclarationValue_removeProperty(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property);
+const char * CSSOM_CSSStyleDeclarationValue_removeProperty(CSSOM_CSSStyleDeclarationValue * cssStyleDeclarationValue, const char * property);
 
 
 

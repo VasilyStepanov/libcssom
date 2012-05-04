@@ -54,7 +54,7 @@ class CSSStyleDeclarationValue {
 
     void setProperty(const char * property, const char * value, const char * priority);
 
-    void removeProperty(const char * property);
+    const char * removeProperty(const char * property);
 
   protected:
     CSSOM_CSSStyleDeclarationValue * _impl;

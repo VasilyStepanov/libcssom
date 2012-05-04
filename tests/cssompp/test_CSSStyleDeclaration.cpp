@@ -249,23 +249,25 @@ void removeProperty() {
 
 
   cssText = "color : green;";
-  style.removeProperty("background-color");
+  assertEquals(std::string("green"),
+    std::string(style.removeProperty("background-color")));
   assertEquals(cssText, style.cssText());
 
   cssText = "color : green;";
-  style.removeProperty("foo");
+  assert(style.removeProperty("foo") == NULL);
   assertEquals(cssText, style.cssText());
 
   cssText = "color : green;";
-  style.removeProperty("font-face");
+  assert(style.removeProperty("font-face") == NULL);
   assertEquals(cssText, style.cssText());
 
   cssText = "";
-  style.removeProperty("color");
+  assertEquals(std::string("green"),
+    std::string(style.removeProperty("color")));
   assertEquals(cssText, style.cssText());
 
   cssText = "";
-  style.removeProperty("color");
+  assert(style.removeProperty("color") == NULL);
   assertEquals(cssText, style.cssText());
 }
 
