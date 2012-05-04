@@ -83,4 +83,4 @@ endif
 
 
 
-include $(top_srcdir)/mk/idl.c.mk
+include $(top_srcdir)/mk/idl.h.mk

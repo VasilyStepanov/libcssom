@@ -77,4 +77,4 @@ endif
 
 
 
-include $(top_srcdir)/mk/idl.cpp.mk
+include $(top_srcdir)/mk/idl.hpp.mk
