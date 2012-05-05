@@ -114,28 +114,29 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
 
 
 const char* CSSOM_CSSRule_cssText(const CSSOM_CSSRule *cssRule) {
-  if (cssRule->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(cssRule->cssText);
 
-    if (cssRule->vtable->emit(out, cssRule) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+  if (cssRule->vtable->emit(out, cssRule) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_CSSRule*)cssRule)->cssText = buf;
+
   return cssRule->cssText;
 }
 
