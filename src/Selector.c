@@ -65,7 +65,7 @@ static const char* Selector_selectorText(const CSSOM_Selector *selector) {
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (CSSOM_CSSEmitter_selectors(out, selector->selectors) != 0) {
+    if (CSSOM_CSSEmitter_selector(out, selector) != 0) {
       fclose(out);
       CSSOM_native_free(buf);
       return NULL;
@@ -134,7 +134,7 @@ static const char* PageSelector_selectorText(const CSSOM_Selector *selector) {
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (CSSOM_CSSEmitter_pageSelectors(out, selector->selectors) != 0) {
+    if (CSSOM_CSSEmitter_pageSelector(out, selector) != 0) {
       fclose(out);
       CSSOM_native_free(buf);
       return NULL;

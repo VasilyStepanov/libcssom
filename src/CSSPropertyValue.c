@@ -108,7 +108,7 @@ const char* CSSOM_CSSPropertyValue_cssText(
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (CSSOM_CSSEmitter_lexicalUnit(out, property->value) != 0) {
+    if (CSSOM_CSSEmitter_property(out, property) != 0) {
       fclose(out);
       CSSOM_native_free(buf);
       return NULL;
@@ -172,4 +172,12 @@ void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
 {
   assert(property->parser == NULL);
   property->parser = parser;
+}
+
+
+
+const SAC_LexicalUnit* CSSOM_CSSPropertyValue__value(
+  const CSSOM_CSSPropertyValue *property)
+{
+  return property->value;
 }

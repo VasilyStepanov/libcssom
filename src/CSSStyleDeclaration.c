@@ -151,7 +151,7 @@ const char* CSSOM_CSSStyleDeclaration_cssText(
     out = open_memstream(&buf, &bufsize);
     if (out == NULL) return NULL;
 
-    if (CSSOM_CSSEmitter_cssStyleDeclaration(out, style) != 0) {
+    if (CSSOM_CSSEmitter_styleDeclaration(out, style) != 0) {
       fclose(out);
       CSSOM_native_free(buf);
       return NULL;

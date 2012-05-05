@@ -179,7 +179,7 @@ void CSSOM_CSSRule_setCSSText(CSSOM_CSSRule *cssRule, const char *cssText) {
   const CSSOM *cssom;
 
   cssom = CSSOM_CSSStyleSheet__cssom(cssRule->parentStyleSheet);
-  newCSSRule = CSSOM__parseCSSRule(cssom, cssRule->parentRule,
+  newCSSRule = CSSOM__parseRule(cssom, cssRule->parentRule,
     cssRule->parentStyleSheet, cssText, strlen(cssText));
   if (newCSSRule == NULL) return;
 
@@ -234,7 +234,7 @@ static void CSSFontFaceRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSFontFaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSFontFaceRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssFontFaceRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_fontFaceRule
 };
 
 
@@ -305,7 +305,7 @@ static void CSSImportRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSImportRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSImportRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssImportRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_importRule
 };
 
 
@@ -399,7 +399,7 @@ static void CSSStyleRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSStyleRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSStyleRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssStyleRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_styleRule
 };
 
 
@@ -503,7 +503,7 @@ static void CSSMediaRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSMediaRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSMediaRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssMediaRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_mediaRule
 };
 
 
@@ -569,7 +569,7 @@ unsigned long CSSOM_CSSMediaRule_insertRule(CSSOM_CSSMediaRule * cssRule,
     return (unsigned long)-1;
   }
 
-  newCSSRule = CSSOM__parseCSSRule(cssom, ((CSSOM_CSSRule*)cssRule)->parentRule,
+  newCSSRule = CSSOM__parseRule(cssom, ((CSSOM_CSSRule*)cssRule)->parentRule,
     ((CSSOM_CSSRule*)cssRule)->parentStyleSheet, rule, strlen(rule));
   if (newCSSRule == NULL) return (unsigned long)-1;
 
@@ -665,7 +665,7 @@ static void CSSNamespaceRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSNamespaceRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssNamespaceRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_namespaceRule
 };
 
 
@@ -739,7 +739,7 @@ static void CSSPageRule_swap(
 static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSPageRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSPageRule_swap,
-  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_cssPageRule
+  (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_pageRule
 };
 
 
