@@ -11,7 +11,8 @@ BUILT_SOURCES = $(top_idldir)/CSSPropertyValue.idl.hpp \
                 $(top_idldir)/CSSRuleList.idl.hpp \
                 $(top_idldir)/CSSStyleDeclaration.idl.hpp \
                 $(top_idldir)/CSSStyleDeclarationValue.idl.hpp \
-                $(top_idldir)/CSSStyleSheet.idl.hpp
+                $(top_idldir)/CSSStyleSheet.idl.hpp \
+                $(top_idldir)/Selector.idl.hpp
 
 
 
@@ -36,7 +37,8 @@ libcssompp_la_HEADERS = \
 	$(top_srcdir)/include/cssompp/CSSStyleDeclarationValue.hpp \
 	$(top_srcdir)/include/cssompp/CSSStyleRule.hpp \
 	$(top_srcdir)/include/cssompp/CSSStyleSheet.hpp \
-	$(top_srcdir)/include/cssompp/MediaList.hpp
+	$(top_srcdir)/include/cssompp/MediaList.hpp \
+	$(top_srcdir)/include/cssompp/Selector.hpp
 
 libcssompp_la_SOURCES = CSSOM.cpp \
                         checks.cpp \
@@ -52,7 +54,8 @@ libcssompp_la_SOURCES = CSSOM.cpp \
                         CSSStyleDeclarationValue.cpp \
                         CSSStyleRule.cpp \
                         CSSStyleSheet.cpp \
-                        MediaList.cpp
+                        MediaList.cpp \
+                        Selector.cpp
 
 libcssompp_la_LIBADD = $(top_srcdir)/src/libcssom.la
 

@@ -1,0 +1,4 @@
+interface Selector {
+           attribute DOMString selectorText;
+  readonly attribute CSSRule parentRule;
+};

@@ -3,8 +3,6 @@
 
 #include <cssom/CSSStyleRule.h>
 
-#include "Selector.h"
-
 #include <sacc.h>
 
 #ifdef __cplusplus

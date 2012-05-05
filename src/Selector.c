@@ -222,7 +222,7 @@ void CSSOM_Selector_release(CSSOM_Selector *selector) {
 
 
 
-CSSOM_CSSRule* CSSOM_Selector__parentRule(const CSSOM_Selector *selector) {
+CSSOM_CSSRule* CSSOM_Selector_parentRule(const CSSOM_Selector *selector) {
   return selector->parentRule;
 }
 
@@ -242,7 +242,7 @@ void CSSOM_Selector_setSelectorText(CSSOM_Selector *selector,
 
 
 
-const SAC_Selector** CSSOM_Selector_selectors(const CSSOM_Selector *selector) {
+const SAC_Selector** CSSOM_Selector__selectors(const CSSOM_Selector *selector) {
   return selector->selectors;
 }
 

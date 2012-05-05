@@ -1,5 +1,5 @@
-#ifndef CSSOMPP_SEQUENCE_H
-#define CSSOMPP_SEQUENCE_H
+#ifndef CSSOMPP_SEQUENCE_HPP
+#define CSSOMPP_SEQUENCE_HPP
 
 #include <cssom/Sequence.h>
 
@@ -114,4 +114,4 @@ T Sequence<T>::operator[](size_t index) const {
 
 } // cssom
 
-#endif // CSSOMPP_SEQUENCE_H
+#endif // CSSOMPP_SEQUENCE_HPP

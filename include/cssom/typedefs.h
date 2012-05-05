@@ -20,6 +20,7 @@ typedef struct _CSSOM_CSSStyleDeclarationValue CSSOM_CSSStyleDeclarationValue;
 typedef struct _CSSOM_CSSStyleRule CSSOM_CSSStyleRule;
 typedef struct _CSSOM_CSSStyleSheet CSSOM_CSSStyleSheet;
 typedef struct _CSSOM_MediaList CSSOM_MediaList;
+typedef struct _CSSOM_Selector CSSOM_Selector;
 typedef struct _CSSOM_Sequence CSSOM_Sequence;
 
 typedef CSSOM_Sequence CSSOM_CSSRuleList;

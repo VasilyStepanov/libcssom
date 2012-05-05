@@ -10,6 +10,7 @@
 #include "CSSStyleSheet.h"
 #include "Parser.h"
 #include "ParserStack.h"
+#include "Selector.h"
 #include "memory.h"
 #include "gcc.h"
 

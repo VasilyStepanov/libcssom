@@ -5,7 +5,6 @@
 
 #include "MediaQuery.h"
 #include "FSM_CSSPropertyValue.h"
-#include "Selector.h"
 
 #ifdef __cplusplus
 extern "C" {

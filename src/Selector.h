@@ -1,7 +1,7 @@
 #ifndef _CSSOM_SELECTOR_H
 #define _CSSOM_SELECTOR_H
 
-#include <cssom/typedefs.h>
+#include <cssom/Selector.h>
 
 #include <sacc.h>
 
@@ -11,26 +11,13 @@ extern "C" {
 
 
 
-typedef struct _CSSOM_Selector CSSOM_Selector;
-
 CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
   const SAC_Selector *selectors[]);
 
 CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
   const SAC_Selector *selectors[]);
 
-void CSSOM_Selector_acquire(CSSOM_Selector *selector);
-
-void CSSOM_Selector_release(CSSOM_Selector *selector);
-
-CSSOM_CSSRule* CSSOM_Selector__parentRule(const CSSOM_Selector *selector);
-
-const char* CSSOM_Selector_selectorText(const CSSOM_Selector *selector);
-
-void CSSOM_Selector_setSelectorText(CSSOM_Selector *selector,
-  const char *selectorText);
-
-const SAC_Selector** CSSOM_Selector_selectors(const CSSOM_Selector *selector);
+const SAC_Selector** CSSOM_Selector__selectors(const CSSOM_Selector *selector);
 
 void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
   SAC_Parser parser);

@@ -5,6 +5,7 @@
 #include "CSSStyleDeclarationValue.h"
 #include "CSSStyleRule.h"
 #include "MediaList.h"
+#include "Selector.h"
 #include "gcc.h"
 
 #include <cssom/CSSFontFaceRule.h>
@@ -473,7 +474,7 @@ int CSSOM_CSSEmitter_cssProperty(FILE *out,
 int CSSOM_CSSEmitter_selector(FILE *out, const CSSOM_Selector *selector) {
   const SAC_Selector **it;
 
-  it = CSSOM_Selector_selectors(selector);
+  it = CSSOM_Selector__selectors(selector);
   if (*it != NULL) {
     if (emit_selector(out, *it) != 0) return 1;
     while (*(++it) != NULL) {
@@ -489,7 +490,7 @@ int CSSOM_CSSEmitter_selector(FILE *out, const CSSOM_Selector *selector) {
 static int anyNodeSelector(const CSSOM_Selector *selector) {
   const SAC_Selector **selectors;
 
-  selectors = CSSOM_Selector_selectors(selector);
+  selectors = CSSOM_Selector__selectors(selector);
 
   return selectors[0] != NULL
     && selectors[1] == NULL
@@ -503,7 +504,7 @@ int CSSOM_CSSEmitter_pageSelector(FILE *out, const CSSOM_Selector *selector) {
 
   if (anyNodeSelector(selector)) return 0;
 
-  it = CSSOM_Selector_selectors(selector);
+  it = CSSOM_Selector__selectors(selector);
   if (*it != NULL) {
     if (emit_selector(out, *it) != 0) return 1;
     while (*(++it) != NULL) {

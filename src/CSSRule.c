@@ -11,6 +11,7 @@
 #include "CSSEmitter.h"
 #include "CSSOM.h"
 #include "MediaList.h"
+#include "Selector.h"
 #include "gcc.h"
 #include "memory.h"
 #include "utility.h"

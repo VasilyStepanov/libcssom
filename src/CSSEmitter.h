@@ -2,7 +2,6 @@
 #define CSSOM_CSSEMITTER_H
 
 #include "MediaQuery.h"
-#include "Selector.h"
 
 #include <cssom/typedefs.h>
 
