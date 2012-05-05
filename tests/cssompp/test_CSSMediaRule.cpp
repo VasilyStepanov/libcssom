@@ -5,6 +5,7 @@
 
 #include <cssompp/CSSOM.hpp>
 #include <cssompp/CSSMediaRule.hpp>
+#include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
 #include <cssompp/MediaList.hpp>
 
@@ -230,6 +231,35 @@ void media(void) {
 
 
 
+void cache(void) {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"@media screen {\n"
+"  h1 {\n"
+"    color : green;\n"
+"  }\n"
+"}\n"
+  );
+  cssom::CSSMediaRule cssRule = cssom::CSSMediaRule::cast(
+    styleSheet.cssRules()[0]);
+  assert(cssRule.media().length() == 1);
+  cssRule.cssText();
+
+
+
+  cssText = 
+"@media screen { "
+  "h2 { "
+    "color : green; "
+  "} "
+"}";
+  cssom::CSSStyleRule::cast(cssRule.cssRules()[0]).setSelectorText("h2");
+  assertEquals(cssText, cssRule.cssText());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -242,6 +272,7 @@ void cssMediaRule() {
   insertRule();
   deleteRule();
   media();
+  cache();
 }
 
 

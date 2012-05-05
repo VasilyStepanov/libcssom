@@ -142,28 +142,29 @@ const char* CSSOM_CSSStyleDeclaration_removeProperty(
 const char* CSSOM_CSSStyleDeclaration_cssText(
   const CSSOM_CSSStyleDeclaration *style)
 {
-  if (style->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(style->cssText);
 
-    if (CSSOM_CSSEmitter_cssStyleDeclaration(out, style) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSStyleDeclaration*)style)->cssText = buf;
+  if (CSSOM_CSSEmitter_styleDeclaration(out, style) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_CSSStyleDeclaration*)style)->cssText = buf;
+
   return style->cssText;
 }
 

@@ -56,28 +56,29 @@ static void Selector_ctor(CSSOM_Selector *selector,
 
 
 static const char* Selector_selectorText(const CSSOM_Selector *selector) {
-  if (selector->selectorText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(selector->selectorText);
 
-    if (CSSOM_CSSEmitter_selectors(out, selector->selectors) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_Selector*)selector)->selectorText = buf;
+  if (CSSOM_CSSEmitter_selector(out, selector) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_Selector*)selector)->selectorText = buf;
+
   return selector->selectorText;
 }
 
@@ -125,28 +126,29 @@ CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
 
 
 static const char* PageSelector_selectorText(const CSSOM_Selector *selector) {
-  if (selector->selectorText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(selector->selectorText);
 
-    if (CSSOM_CSSEmitter_pageSelectors(out, selector->selectors) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_Selector*)selector)->selectorText = buf;
+  if (CSSOM_CSSEmitter_pageSelector(out, selector) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_Selector*)selector)->selectorText = buf;
+
   return selector->selectorText;
 }
 

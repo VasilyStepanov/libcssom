@@ -66,28 +66,29 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query) {
 
 
 const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query) {
-  if (query->mediaText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(query->mediaText);
 
-    if (CSSOM_CSSEmitter_query(out, query) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_MediaQuery*)query)->mediaText = buf;
+  if (CSSOM_CSSEmitter_query(out, query) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_MediaQuery*)query)->mediaText = buf;
+
   return query->mediaText;
 }
 

@@ -187,28 +187,29 @@ void CSSOM_MediaList_setMediaText(CSSOM_MediaList *media,
 
 
 const char* CSSOM_MediaList_mediaText(const CSSOM_MediaList *media) {
-  if (media->mediaText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(media->mediaText);
 
-    if (CSSOM_CSSEmitter_media(out, media) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_MediaList*)media)->mediaText = buf;
+  if (CSSOM_CSSEmitter_media(out, media) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_MediaList*)media)->mediaText = buf;
+
   return media->mediaText;
 }
 

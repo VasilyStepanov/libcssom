@@ -39,178 +39,7 @@ static int emit_name(FILE *out,
 
 
 
-static int emit_condition(FILE *out, const SAC_Condition *condition) {
-  switch (condition->conditionType) {
-    case SAC_ONE_OF_ATTRIBUTE_CONDITION:
-    case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-    case SAC_PREFIX_ATTRIBUTE_CONDITION:
-    case SAC_SUFFIX_ATTRIBUTE_CONDITION:
-    case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
-    case SAC_ATTRIBUTE_CONDITION:
-    case SAC_CLASS_CONDITION:
-    case SAC_ID_CONDITION:
-      if (fprintf(out, "[") < 0) return 1;
-      if (emit_name(out,
-        condition->desc.attribute.namespaceURI,
-        condition->desc.attribute.localName) != 0)
-      {
-        return 1;
-      }
-
-      switch (condition->conditionType) {
-        case SAC_ID_CONDITION:
-          if (fprintf(out, "\"id\"") < 0) return 1;
-          break;
-        case SAC_CLASS_CONDITION:
-          if (fprintf(out, "\"class\"") < 0) return 1;
-          break;
-        case SAC_PREFIX_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"prefix\"") < 0) return 1;
-          break;
-        case SAC_SUFFIX_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"suffix\"") < 0) return 1;
-          break;
-        case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"substr\"") < 0) return 1;
-          break;
-        case SAC_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"attr\"") < 0) return 1;
-          break;
-        case SAC_ONE_OF_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"one_of\"") < 0) return 1;
-          break;
-        case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
-          if (fprintf(out, "\"begin_hypen\"") < 0) return 1;
-          break;
-        default:
-          if (fprintf(out, "\"unknown_%d\"", condition->conditionType) < 0)
-            return 1;
-          break;
-      }
-
-      if (condition->desc.attribute.value != NULL) {
-        if (fprintf(out, "=\"%s\"", condition->desc.attribute.value) < 0) {
-          return 1;
-        }
-      }
-
-      if (fprintf(out, "]") < 0) return 1;
-
-      break;
-    case SAC_PSEUDO_CLASS_CONDITION:
-    case SAC_PSEUDO_ELEMENT_CONDITION:
-      {
-        switch (condition->conditionType) {
-          case SAC_PSEUDO_CLASS_CONDITION:
-            if (fprintf(out, ":") < 0) return 1;
-            break;
-          case SAC_PSEUDO_ELEMENT_CONDITION:
-            if (fprintf(out, "::") < 0) return 1;
-            break;
-          default:
-            if (fprintf(out, "?") < 0) return 1;
-            break;
-        }
-        if (CSSOM_CSSEmitter_lexicalUnit(out, condition->desc.pseudo) != 0)
-          return 1;
-      }
-      break;
-    case SAC_AND_CONDITION:
-      if (emit_condition(out, condition->desc.combinator.firstCondition) != 0)
-        return 1;
-      if (emit_condition(out, condition->desc.combinator.secondCondition) != 0)
-        return 1;
-      break;
-    case SAC_NEGATIVE_CONDITION:
-      if (fprintf(out, "not(") < 0) return 1;
-      if (emit_selector(out, condition->desc.selector) != 0) return 1;
-      if (fprintf(out, ")") < 0) return 1;
-      break;
-    case SAC_OR_CONDITION:
-    case SAC_POSITIONAL_CONDITION:
-    case SAC_LANG_CONDITION:
-    case SAC_ONLY_CHILD_CONDITION:
-    case SAC_ONLY_TYPE_CONDITION:
-    case SAC_CONTENT_CONDITION:
-      if (fprintf(out, "?") < 0) return 1;
-      break;
-  }
-  return 0;
-}
-
-
-
-static int emit_selector(FILE *out, const SAC_Selector *selector) {
-  switch (selector->selectorType) {
-    case SAC_CONDITIONAL_SELECTOR:
-      if (selector->desc.conditional.simpleSelector->selectorType !=
-        SAC_ANY_NODE_SELECTOR)
-      {
-        if (emit_selector(out,
-          selector->desc.conditional.simpleSelector) != 0)
-        {
-          return 1;
-        }
-      }
-      if (emit_condition(out, selector->desc.conditional.condition) != 0)
-        return 1;
-      break;
-    case SAC_ANY_NODE_SELECTOR:
-      if (fprintf(out, "*") < 0) return 1;
-      break;
-    case SAC_ELEMENT_NODE_SELECTOR:
-      if (emit_name(out,
-        selector->desc.element.namespaceURI,
-        selector->desc.element.localName) != 0)
-      {
-        return 1;
-      }
-      break;
-    case SAC_DESCENDANT_SELECTOR:
-    case SAC_CHILD_SELECTOR:
-      if (emit_selector(out, selector->desc.descendant.descendantSelector) != 0)
-        return 1;
-      switch (selector->selectorType) {
-        case SAC_DESCENDANT_SELECTOR:
-          if (fprintf(out, " ") < 0) return 1;
-          break;
-        case SAC_CHILD_SELECTOR:
-          if (fprintf(out, " + ") < 0) return 1;
-          break;
-        default:
-          if (fprintf(out, " ? ") < 0) return 1;
-          break;
-      }
-      if (emit_selector(out, selector->desc.descendant.simpleSelector) != 0)
-        return 1;
-      break;
-    case SAC_DIRECT_ADJACENT_SELECTOR:
-      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
-        return 1;
-      if (fprintf(out, " > ") < 0) return 1;
-      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
-        return 1;
-      break;
-    case SAC_GENERAL_ADJACENT_SELECTOR:
-      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
-        return 1;
-      if (fprintf(out, " ~ ") < 0) return 1;
-      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
-        return 1;
-      break;
-    case SAC_TEXT_NODE_SELECTOR:
-    case SAC_CDATA_SECTION_NODE_SELECTOR:
-    case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
-    case SAC_COMMENT_NODE_SELECTOR:
-      if (fprintf(out, "?") < 0) return 1;
-      break;
-  }
-  return 0;
-}
-
-
-
-int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
+static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
   switch (value->lexicalUnitType) {
     case SAC_OPERATOR_PLUS:
       if (fprintf(out, "+") < 0) return 1;
@@ -379,10 +208,10 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
         arg = value->desc.function.parameters;
         if (*arg != NULL) {
-          if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
+          if (emit_lexicalUnit(out, *arg) != 0) return 1;
           while (*(++arg) != NULL) {
             if (fprintf(out, " ") < 0) return 1;
-            if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
+            if (emit_lexicalUnit(out, *arg) != 0) return 1;
           }
         }
       }
@@ -402,10 +231,10 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
         sub = value->desc.function.parameters;
         if (*sub != NULL) {
-          if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
+          if (emit_lexicalUnit(out, *sub) != 0) return 1;
           while (*(++sub) != NULL) {
             if (fprintf(out, " ") < 0) return 1;
-            if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
+            if (emit_lexicalUnit(out, *sub) != 0) return 1;
           }
         }
       }
@@ -447,6 +276,177 @@ int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
 
 
+static int emit_condition(FILE *out, const SAC_Condition *condition) {
+  switch (condition->conditionType) {
+    case SAC_ONE_OF_ATTRIBUTE_CONDITION:
+    case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+    case SAC_PREFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
+    case SAC_ATTRIBUTE_CONDITION:
+    case SAC_CLASS_CONDITION:
+    case SAC_ID_CONDITION:
+      if (fprintf(out, "[") < 0) return 1;
+      if (emit_name(out,
+        condition->desc.attribute.namespaceURI,
+        condition->desc.attribute.localName) != 0)
+      {
+        return 1;
+      }
+
+      switch (condition->conditionType) {
+        case SAC_ID_CONDITION:
+          if (fprintf(out, "\"id\"") < 0) return 1;
+          break;
+        case SAC_CLASS_CONDITION:
+          if (fprintf(out, "\"class\"") < 0) return 1;
+          break;
+        case SAC_PREFIX_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"prefix\"") < 0) return 1;
+          break;
+        case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"suffix\"") < 0) return 1;
+          break;
+        case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"substr\"") < 0) return 1;
+          break;
+        case SAC_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"attr\"") < 0) return 1;
+          break;
+        case SAC_ONE_OF_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"one_of\"") < 0) return 1;
+          break;
+        case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+          if (fprintf(out, "\"begin_hypen\"") < 0) return 1;
+          break;
+        default:
+          if (fprintf(out, "\"unknown_%d\"", condition->conditionType) < 0)
+            return 1;
+          break;
+      }
+
+      if (condition->desc.attribute.value != NULL) {
+        if (fprintf(out, "=\"%s\"", condition->desc.attribute.value) < 0) {
+          return 1;
+        }
+      }
+
+      if (fprintf(out, "]") < 0) return 1;
+
+      break;
+    case SAC_PSEUDO_CLASS_CONDITION:
+    case SAC_PSEUDO_ELEMENT_CONDITION:
+      {
+        switch (condition->conditionType) {
+          case SAC_PSEUDO_CLASS_CONDITION:
+            if (fprintf(out, ":") < 0) return 1;
+            break;
+          case SAC_PSEUDO_ELEMENT_CONDITION:
+            if (fprintf(out, "::") < 0) return 1;
+            break;
+          default:
+            if (fprintf(out, "?") < 0) return 1;
+            break;
+        }
+        if (emit_lexicalUnit(out, condition->desc.pseudo) != 0)
+          return 1;
+      }
+      break;
+    case SAC_AND_CONDITION:
+      if (emit_condition(out, condition->desc.combinator.firstCondition) != 0)
+        return 1;
+      if (emit_condition(out, condition->desc.combinator.secondCondition) != 0)
+        return 1;
+      break;
+    case SAC_NEGATIVE_CONDITION:
+      if (fprintf(out, "not(") < 0) return 1;
+      if (emit_selector(out, condition->desc.selector) != 0) return 1;
+      if (fprintf(out, ")") < 0) return 1;
+      break;
+    case SAC_OR_CONDITION:
+    case SAC_POSITIONAL_CONDITION:
+    case SAC_LANG_CONDITION:
+    case SAC_ONLY_CHILD_CONDITION:
+    case SAC_ONLY_TYPE_CONDITION:
+    case SAC_CONTENT_CONDITION:
+      if (fprintf(out, "?") < 0) return 1;
+      break;
+  }
+  return 0;
+}
+
+
+
+static int emit_selector(FILE *out, const SAC_Selector *selector) {
+  switch (selector->selectorType) {
+    case SAC_CONDITIONAL_SELECTOR:
+      if (selector->desc.conditional.simpleSelector->selectorType !=
+        SAC_ANY_NODE_SELECTOR)
+      {
+        if (emit_selector(out,
+          selector->desc.conditional.simpleSelector) != 0)
+        {
+          return 1;
+        }
+      }
+      if (emit_condition(out, selector->desc.conditional.condition) != 0)
+        return 1;
+      break;
+    case SAC_ANY_NODE_SELECTOR:
+      if (fprintf(out, "*") < 0) return 1;
+      break;
+    case SAC_ELEMENT_NODE_SELECTOR:
+      if (emit_name(out,
+        selector->desc.element.namespaceURI,
+        selector->desc.element.localName) != 0)
+      {
+        return 1;
+      }
+      break;
+    case SAC_DESCENDANT_SELECTOR:
+    case SAC_CHILD_SELECTOR:
+      if (emit_selector(out, selector->desc.descendant.descendantSelector) != 0)
+        return 1;
+      switch (selector->selectorType) {
+        case SAC_DESCENDANT_SELECTOR:
+          if (fprintf(out, " ") < 0) return 1;
+          break;
+        case SAC_CHILD_SELECTOR:
+          if (fprintf(out, " + ") < 0) return 1;
+          break;
+        default:
+          if (fprintf(out, " ? ") < 0) return 1;
+          break;
+      }
+      if (emit_selector(out, selector->desc.descendant.simpleSelector) != 0)
+        return 1;
+      break;
+    case SAC_DIRECT_ADJACENT_SELECTOR:
+      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
+        return 1;
+      if (fprintf(out, " > ") < 0) return 1;
+      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
+        return 1;
+      break;
+    case SAC_GENERAL_ADJACENT_SELECTOR:
+      if (emit_selector(out, selector->desc.sibling.firstSelector) != 0)
+        return 1;
+      if (fprintf(out, " ~ ") < 0) return 1;
+      if (emit_selector(out, selector->desc.sibling.secondSelector) != 0)
+        return 1;
+      break;
+    case SAC_TEXT_NODE_SELECTOR:
+    case SAC_CDATA_SECTION_NODE_SELECTOR:
+    case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
+    case SAC_COMMENT_NODE_SELECTOR:
+      if (fprintf(out, "?") < 0) return 1;
+      break;
+  }
+  return 0;
+}
+
+
+
 int CSSOM_CSSEmitter_cssProperty(FILE *out,
   const CSSOM_CSSPropertyValue *property)
 {
@@ -470,10 +470,10 @@ int CSSOM_CSSEmitter_cssProperty(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
+int CSSOM_CSSEmitter_selector(FILE *out, const CSSOM_Selector *selector) {
   const SAC_Selector **it;
 
-  it = selectors;
+  it = CSSOM_Selector_selectors(selector);
   if (*it != NULL) {
     if (emit_selector(out, *it) != 0) return 1;
     while (*(++it) != NULL) {
@@ -486,7 +486,11 @@ int CSSOM_CSSEmitter_selectors(FILE *out, const SAC_Selector *selectors[]) {
 
 
 
-static int anyNodeSelector(const SAC_Selector *selectors[]) {
+static int anyNodeSelector(const CSSOM_Selector *selector) {
+  const SAC_Selector **selectors;
+
+  selectors = CSSOM_Selector_selectors(selector);
+
   return selectors[0] != NULL
     && selectors[1] == NULL
     && selectors[0]->selectorType == SAC_ANY_NODE_SELECTOR;
@@ -494,12 +498,12 @@ static int anyNodeSelector(const SAC_Selector *selectors[]) {
 
 
 
-int CSSOM_CSSEmitter_pageSelectors(FILE *out, const SAC_Selector *selectors[]) {
+int CSSOM_CSSEmitter_pageSelector(FILE *out, const CSSOM_Selector *selector) {
   const SAC_Selector **it;
 
-  if (anyNodeSelector(selectors)) return 0;
+  if (anyNodeSelector(selector)) return 0;
 
-  it = selectors;
+  it = CSSOM_Selector_selectors(selector);
   if (*it != NULL) {
     if (emit_selector(out, *it) != 0) return 1;
     while (*(++it) != NULL) {
@@ -519,7 +523,7 @@ static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
       break;
     case SAC_FEATURE_MEDIA_QUERY:
       if (fprintf(out, "(%s: ", mediaQuery->desc.feature.name) < 0) return 1;
-      if (CSSOM_CSSEmitter_lexicalUnit(out,
+      if (emit_lexicalUnit(out,
         mediaQuery->desc.feature.value) != 0)
       {
         return 1;
@@ -541,6 +545,20 @@ static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
       if (fprintf(out, "not ") < 0) return 1;
       if (emit_media_query(out, mediaQuery->desc.subQuery) != 0) return 1;
       break;
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSEmitter_property(FILE *out,
+  const CSSOM_CSSPropertyValue *property)
+{
+  if (emit_lexicalUnit(out, CSSOM_CSSPropertyValue__value(
+    property)) != 0)
+  {
+    return 1;
   }
 
   return 0;
@@ -583,7 +601,7 @@ int CSSOM_CSSEmitter_media(FILE *out, const CSSOM_MediaList *media) {
 
 
 
-int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
+int CSSOM_CSSEmitter_styleDeclaration(FILE *out,
   const CSSOM_CSSStyleDeclaration *style)
 {
   const CSSOM_CSSStyleDeclarationValue *values;
@@ -610,37 +628,37 @@ int CSSOM_CSSEmitter_cssStyleDeclaration(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
+static int emit_rule(FILE *out, const CSSOM_CSSRule *cssRule) {
   unsigned short type = CSSOM_CSSRule_type(cssRule);
 
   if (type == CSSOM_CSSRule_STYLE_RULE) {
-    if (CSSOM_CSSEmitter_cssStyleRule(out, (CSSOM_CSSStyleRule*)cssRule) != 0) {
+    if (CSSOM_CSSEmitter_styleRule(out, (CSSOM_CSSStyleRule*)cssRule) != 0) {
       return 1;
     }
   } else if (type == CSSOM_CSSRule_FONT_FACE_RULE) {
-    if (CSSOM_CSSEmitter_cssFontFaceRule(out,
+    if (CSSOM_CSSEmitter_fontFaceRule(out,
       (CSSOM_CSSFontFaceRule*)cssRule) != 0)
     {
       return 1;
     }
   } else if (type == CSSOM_CSSRule_IMPORT_RULE) {
-    if (CSSOM_CSSEmitter_cssImportRule(out,
+    if (CSSOM_CSSEmitter_importRule(out,
       (CSSOM_CSSImportRule*)cssRule) != 0)
     {
       return 1;
     }
   } else if (type == CSSOM_CSSRule_MEDIA_RULE) {
-    if (CSSOM_CSSEmitter_cssMediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
+    if (CSSOM_CSSEmitter_mediaRule(out, (CSSOM_CSSMediaRule*)cssRule) != 0) {
       return 1;
     }
   } else if (type == CSSOM_CSSRule_NAMESPACE_RULE) {
-    if (CSSOM_CSSEmitter_cssNamespaceRule(out,
+    if (CSSOM_CSSEmitter_namespaceRule(out,
       (CSSOM_CSSNamespaceRule*)cssRule) != 0)
     {
       return 1;
     }
   } else if (type == CSSOM_CSSRule_PAGE_RULE) {
-    if (CSSOM_CSSEmitter_cssPageRule(out, (CSSOM_CSSPageRule*)cssRule) != 0) {
+    if (CSSOM_CSSEmitter_pageRule(out, (CSSOM_CSSPageRule*)cssRule) != 0) {
       return 1;
     }
   }
@@ -650,7 +668,7 @@ int CSSOM_CSSEmitter_cssRule(FILE *out, const CSSOM_CSSRule *cssRule) {
 
 
 
-int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
+static int emit_rules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
   size_t size;
   size_t i;
 
@@ -659,13 +677,13 @@ int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
     CSSOM_CSSRule *cssRule;
 
     cssRule = CSSOM_CSSRuleList_at(cssRules, 0);
-    CSSOM_CSSEmitter_cssRule(out, cssRule);
+    emit_rule(out, cssRule);
 
     for (i = 1; i < size; ++i) {
       if (fprintf(out, " ") < 0) return 1;
 
       cssRule = CSSOM_CSSRuleList_at(cssRules, i);
-      CSSOM_CSSEmitter_cssRule(out, cssRule);
+      emit_rule(out, cssRule);
     }
   }
 
@@ -674,11 +692,11 @@ int CSSOM_CSSEmitter_cssRules(FILE *out, const CSSOM_CSSRuleList *cssRules) {
 
 
 
-int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
+int CSSOM_CSSEmitter_fontFaceRule(FILE *out,
   const CSSOM_CSSFontFaceRule *cssRule)
 {
   if (fprintf(out, "@font-face { ") < 0) return 1;
-  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+  if (CSSOM_CSSEmitter_styleDeclaration(out,
     CSSOM_CSSFontFaceRule_style(cssRule)) != 0)
   {
     return 1;
@@ -689,7 +707,7 @@ int CSSOM_CSSEmitter_cssFontFaceRule(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_cssImportRule(FILE *out,
+int CSSOM_CSSEmitter_importRule(FILE *out,
   const CSSOM_CSSImportRule *cssRule)
 {
   if (fprintf(out, "@import url('%s')",
@@ -709,7 +727,7 @@ int CSSOM_CSSEmitter_cssImportRule(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
+int CSSOM_CSSEmitter_mediaRule(FILE *out,
   const CSSOM_CSSMediaRule *cssRule)
 {
   if (fprintf(out, "@media") < 0) return 1;
@@ -719,7 +737,7 @@ int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
       return 1;
   }
   if (fprintf(out, " { ") < 0) return 1;
-  if (CSSOM_CSSEmitter_cssRules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
+  if (emit_rules(out, CSSOM_CSSMediaRule_cssRules(cssRule)) != 0)
     return 1;
   if (fprintf(out, " }") < 0) return 1;
   return 0;
@@ -727,7 +745,7 @@ int CSSOM_CSSEmitter_cssMediaRule(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
+int CSSOM_CSSEmitter_namespaceRule(FILE *out,
   const CSSOM_CSSNamespaceRule *cssRule)
 {
   const char *prefix;
@@ -746,19 +764,19 @@ int CSSOM_CSSEmitter_cssNamespaceRule(FILE *out,
 
 
 
-int CSSOM_CSSEmitter_cssPageRule(FILE *out, const CSSOM_CSSPageRule *cssRule) {
-  const SAC_Selector **selectors;
+int CSSOM_CSSEmitter_pageRule(FILE *out, const CSSOM_CSSPageRule *cssRule) {
+  const CSSOM_Selector *selector;
 
-  selectors = CSSOM_Selector_selectors(CSSOM_CSSPageRule__selector(cssRule));
+  selector = CSSOM_CSSPageRule__selector(cssRule);
 
-  if (anyNodeSelector(selectors)) {
+  if (anyNodeSelector(selector)) {
     if (fprintf(out, "@page") < 0) return 1;
   } else {
     if (fprintf(out, "@page ") < 0) return 1;
   }
-  if (CSSOM_CSSEmitter_pageSelectors(out, selectors) != 0) return 1;
+  if (CSSOM_CSSEmitter_pageSelector(out, selector) != 0) return 1;
   if (fprintf(out, " { ") < 0) return 1;
-  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+  if (CSSOM_CSSEmitter_styleDeclaration(out,
     CSSOM_CSSPageRule_style(cssRule)) != 0)
   {
     return 1;
@@ -769,16 +787,16 @@ int CSSOM_CSSEmitter_cssPageRule(FILE *out, const CSSOM_CSSPageRule *cssRule) {
 
 
 
-int CSSOM_CSSEmitter_cssStyleRule(FILE *out,
+int CSSOM_CSSEmitter_styleRule(FILE *out,
   const CSSOM_CSSStyleRule *cssRule)
 {
-  if (CSSOM_CSSEmitter_selectors(out, CSSOM_Selector_selectors(
-    CSSOM_CSSStyleRule__selector(cssRule))) != 0)
+  if (CSSOM_CSSEmitter_selector(out,
+    CSSOM_CSSStyleRule__selector(cssRule)) != 0)
   {
     return 1;
   }
   if (fprintf(out, " { ") < 0) return 1;
-  if (CSSOM_CSSEmitter_cssStyleDeclaration(out,
+  if (CSSOM_CSSEmitter_styleDeclaration(out,
     CSSOM_CSSStyleRule_style(cssRule)) != 0)
   {
     return 1;

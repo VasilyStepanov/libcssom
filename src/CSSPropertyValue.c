@@ -99,28 +99,29 @@ const char* CSSOM_CSSPropertyValue__name(
 const char* CSSOM_CSSPropertyValue_cssText(
   const CSSOM_CSSPropertyValue *property)
 {
-  if (property->cssText == NULL) {
-    FILE *out;
-    char *buf;
-    size_t bufsize;
+  FILE *out;
+  char *buf;
+  size_t bufsize;
 
-    buf = NULL;
-    out = open_memstream(&buf, &bufsize);
-    if (out == NULL) return NULL;
+  CSSOM_native_free(property->cssText);
 
-    if (CSSOM_CSSEmitter_lexicalUnit(out, property->value) != 0) {
-      fclose(out);
-      CSSOM_native_free(buf);
-      return NULL;
-    }
+  buf = NULL;
+  out = open_memstream(&buf, &bufsize);
+  if (out == NULL) return NULL;
 
-    if (fclose(out) != 0) {
-      CSSOM_native_free(buf);
-      return NULL;
-    }
-
-    ((CSSOM_CSSPropertyValue*)property)->cssText = buf;
+  if (CSSOM_CSSEmitter_property(out, property) != 0) {
+    fclose(out);
+    CSSOM_native_free(buf);
+    return NULL;
   }
+
+  if (fclose(out) != 0) {
+    CSSOM_native_free(buf);
+    return NULL;
+  }
+
+  ((CSSOM_CSSPropertyValue*)property)->cssText = buf;
+
   return property->cssText;
 }
 
@@ -172,4 +173,12 @@ void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
 {
   assert(property->parser == NULL);
   property->parser = parser;
+}
+
+
+
+const SAC_LexicalUnit* CSSOM_CSSPropertyValue__value(
+  const CSSOM_CSSPropertyValue *property)
+{
+  return property->value;
 }

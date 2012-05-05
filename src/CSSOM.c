@@ -235,7 +235,7 @@ CSSOM_CSSStyleSheet* CSSOM_parse(const CSSOM *cssom,
 
 
 
-CSSOM_CSSRule* CSSOM__parseCSSRule(const CSSOM *cssom,
+CSSOM_CSSRule* CSSOM__parseRule(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
   const char *cssText, int len)
 {
