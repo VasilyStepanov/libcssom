@@ -1,3 +1,20 @@
+interface Selector {
+           attribute DOMString selectorText;
+  readonly attribute CSSRule parentRule;
+};
+
+
+
+interface MediaList {
+  stringifier attribute DOMString mediaText;
+  readonly attribute unsigned long length;
+  getter DOMString item(unsigned long index);
+  void appendMedium(DOMString medium);
+  void deleteMedium(DOMString medium);
+};
+
+
+
 interface CSSRule {
   // Types
   const unsigned short STYLE_RULE = 1;
@@ -20,16 +37,6 @@ interface CSSRule {
 
 interface CSSFontFaceRule : CSSRule {
   readonly attribute CSSStyleDeclaration style;
-};
-
-
-
-interface MediaList {
-  stringifier attribute DOMString mediaText;
-  readonly attribute unsigned long length;
-  getter DOMString item(unsigned long index);
-  void appendMedium(DOMString medium);
-  void deleteMedium(DOMString medium);
 };
 
 
@@ -59,6 +66,7 @@ interface CSSNamespaceRule : CSSRule {
 
 
 interface CSSPageRule : CSSRule {
+  readonly attribute Selector selector;
            attribute DOMString selectorText;
   readonly attribute CSSStyleDeclaration style;
 };
@@ -66,6 +74,7 @@ interface CSSPageRule : CSSRule {
 
 
 interface CSSStyleRule : CSSRule {
+  readonly attribute Selector selector;
            attribute DOMString selectorText;
   readonly attribute CSSStyleDeclaration style;
 };

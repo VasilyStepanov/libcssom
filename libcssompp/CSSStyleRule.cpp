@@ -13,6 +13,7 @@
 #include <cssom/CSSStyleRule.h>
 
 #include <cssompp/CSSStyleDeclaration.hpp>
+#include <cssompp/Selector.hpp>
 
 #include "checks.hpp"
 
@@ -53,6 +54,12 @@ CSSStyleRule::CSSStyleRule() :
 CSSStyleRule::CSSStyleRule(CSSOM_CSSStyleRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}
+
+
+
+cssom::Selector CSSStyleRule::selector() const {
+  return cssom::Selector(CSSOM_CSSStyleRule_selector(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl)));
+}
 
 
 

@@ -768,7 +768,7 @@ int CSSOM_CSSEmitter_namespaceRule(FILE *out,
 int CSSOM_CSSEmitter_pageRule(FILE *out, const CSSOM_CSSPageRule *cssRule) {
   const CSSOM_Selector *selector;
 
-  selector = CSSOM_CSSPageRule__selector(cssRule);
+  selector = CSSOM_CSSPageRule_selector(cssRule);
 
   if (anyNodeSelector(selector)) {
     if (fprintf(out, "@page") < 0) return 1;
@@ -792,7 +792,7 @@ int CSSOM_CSSEmitter_styleRule(FILE *out,
   const CSSOM_CSSStyleRule *cssRule)
 {
   if (CSSOM_CSSEmitter_selector(out,
-    CSSOM_CSSStyleRule__selector(cssRule)) != 0)
+    CSSOM_CSSStyleRule_selector(cssRule)) != 0)
   {
     return 1;
   }

@@ -15,8 +15,6 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *parentStyleSheet,
   const SAC_Selector *selectors[]);
 
-CSSOM_Selector* CSSOM_CSSPageRule__selector(const CSSOM_CSSPageRule *cssRule);
-
 
 
 #ifdef __cplusplus

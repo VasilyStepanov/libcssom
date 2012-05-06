@@ -31,6 +31,10 @@ extern "C" {
 
 
 
+CSSOM_Selector* CSSOM_CSSPageRule_selector(const CSSOM_CSSPageRule * cssPageRule);
+
+
+
 const char * CSSOM_CSSPageRule_selectorText(const CSSOM_CSSPageRule * cssPageRule);
 
 

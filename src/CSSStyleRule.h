@@ -17,11 +17,6 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
 
 
-CSSOM_Selector* CSSOM_CSSStyleRule__selector(
-  const CSSOM_CSSStyleRule *cssRule);
-
-
-
 #ifdef __cplusplus
 }
 #endif

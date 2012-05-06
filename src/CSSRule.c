@@ -441,9 +441,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
 
 
 
-CSSOM_Selector* CSSOM_CSSStyleRule__selector(
-  const CSSOM_CSSStyleRule *cssRule)
-{
+CSSOM_Selector* CSSOM_CSSStyleRule_selector(const CSSOM_CSSStyleRule *cssRule) {
   return cssRule->selector;
 }
 
@@ -789,7 +787,7 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSPageRule_style(
 
 
 
-CSSOM_Selector* CSSOM_CSSPageRule__selector(const CSSOM_CSSPageRule *cssRule) {
+CSSOM_Selector* CSSOM_CSSPageRule_selector(const CSSOM_CSSPageRule *cssRule) {
   return cssRule->selector;
 }
 

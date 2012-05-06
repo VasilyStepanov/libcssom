@@ -13,6 +13,7 @@
 #include <cssom/CSSPageRule.h>
 
 #include <cssompp/CSSStyleDeclaration.hpp>
+#include <cssompp/Selector.hpp>
 
 #include "checks.hpp"
 
@@ -53,6 +54,12 @@ CSSPageRule::CSSPageRule() :
 CSSPageRule::CSSPageRule(CSSOM_CSSPageRule * impl) :
   CSSRule((CSSOM_CSSRule *)impl)
 {}
+
+
+
+cssom::Selector CSSPageRule::selector() const {
+  return cssom::Selector(CSSOM_CSSPageRule_selector(reinterpret_cast<CSSOM_CSSPageRule*>(_impl)));
+}
 
 
 

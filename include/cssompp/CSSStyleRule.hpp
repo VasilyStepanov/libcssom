@@ -23,6 +23,10 @@ class CSSStyleDeclaration;
 
 
 
+class Selector;
+
+
+
 } // cssom
 
 namespace cssom {
@@ -38,6 +42,8 @@ class CSSStyleRule : public cssom::CSSRule {
 
     CSSStyleRule();
     explicit CSSStyleRule(CSSOM_CSSStyleRule * impl);
+
+    cssom::Selector selector() const;
 
     const char * selectorText() const;
     void setSelectorText(const char * selectorText);

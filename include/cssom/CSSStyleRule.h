@@ -31,6 +31,10 @@ extern "C" {
 
 
 
+CSSOM_Selector* CSSOM_CSSStyleRule_selector(const CSSOM_CSSStyleRule * cssStyleRule);
+
+
+
 const char * CSSOM_CSSStyleRule_selectorText(const CSSOM_CSSStyleRule * cssStyleRule);
 
 

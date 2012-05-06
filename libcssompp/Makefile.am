@@ -11,8 +11,7 @@ BUILT_SOURCES = $(top_idldir)/CSSPropertyValue.idl.hpp \
                 $(top_idldir)/CSSRuleList.idl.hpp \
                 $(top_idldir)/CSSStyleDeclaration.idl.hpp \
                 $(top_idldir)/CSSStyleDeclarationValue.idl.hpp \
-                $(top_idldir)/CSSStyleSheet.idl.hpp \
-                $(top_idldir)/Selector.idl.hpp
+                $(top_idldir)/CSSStyleSheet.idl.hpp
 
 
 
