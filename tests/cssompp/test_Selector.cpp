@@ -20,14 +20,7 @@ namespace {
 void selectorText() {
   std::string selectorText;
   cssom::CSSOM cssom;
-  cssom::CSSStyleSheet styleSheet = cssom.parse(
-"p {\n"
-" color : green;\n"
-"}\n"
-  );
-  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
-    styleSheet.cssRules()[0]);
-  cssom::Selector selector = cssRule.selector();
+  cssom::Selector selector = cssom.parseSelector("p");
 
 
 

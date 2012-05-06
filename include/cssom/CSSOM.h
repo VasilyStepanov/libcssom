@@ -65,6 +65,9 @@ void CSSOM_setFatalErrorHandler(CSSOM * cssom, CSSOM_FatalErrorHandler handler);
 CSSOM_CSSStyleSheet * CSSOM_parse(const CSSOM *cssom,
   const char * cssText, int len);
 
+CSSOM_Selector * CSSOM_parseSelector(const CSSOM *cssom,
+  const char * selectorText, int len);
+
 
 
 #ifdef __cplusplus

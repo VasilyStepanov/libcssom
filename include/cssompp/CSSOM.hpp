@@ -14,6 +14,8 @@ class CSSRule;
 
 class CSSStyleSheet;
 
+class Selector;
+
 
 
 }
@@ -40,6 +42,9 @@ class CSSOM {
 
     cssom::CSSStyleSheet parse(const char *cssText, int len) const;
     cssom::CSSStyleSheet parse(const std::string &cssText) const;
+
+    cssom::Selector parseSelector(const char *selectorText, int len) const;
+    cssom::Selector parseSelector(const std::string &selectorText) const;
 
   private:
     ::CSSOM *_impl;

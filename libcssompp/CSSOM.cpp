@@ -2,9 +2,10 @@
 
 #include "src/CSSOM.h"
 
-#include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
+#include <cssompp/Selector.hpp>
 #include <cssom/CSSStyleSheet.h>
+#include <cssom/Selector.h>
 
 #include <new>
 #include <utility>
@@ -91,6 +92,26 @@ cssom::CSSStyleSheet CSSOM::parse(const char *cssText, int len) const {
 
 cssom::CSSStyleSheet CSSOM::parse(const std::string &cssText) const {
   return parse(cssText.data(), cssText.length());
+}
+
+
+
+cssom::Selector CSSOM::parseSelector(const char *selectorText, int len) const {
+  CSSOM_Selector *selector;
+  
+  selector = CSSOM_parseSelector(_impl, selectorText, len);
+
+  cssom::Selector wrap(selector);
+
+  CSSOM_Selector_release(selector);
+
+  return wrap;
+}
+
+
+
+cssom::Selector CSSOM::parseSelector(const std::string &selectorText) const {
+  return parseSelector(selectorText.data(), selectorText.length());
 }
 
 

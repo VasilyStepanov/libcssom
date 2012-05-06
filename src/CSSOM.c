@@ -401,6 +401,14 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
 
 
 
+CSSOM_Selector* CSSOM_parseSelector(const CSSOM *cssom,
+  const char *selectorText, int len)
+{
+  return CSSOM__parseSelector(cssom, NULL, selectorText, len);
+}
+
+
+
 CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, const char *selectorText, int len)
 {

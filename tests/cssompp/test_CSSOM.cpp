@@ -1,5 +1,8 @@
 #include "test_CSSOM.hpp"
 
+#include "Errors.hpp"
+#include "utility.hpp"
+
 #include <cssompp.hpp>
 
 #include <assert.h>
@@ -8,7 +11,7 @@ namespace {
 
 
 
-void basics() {
+void parse() {
   cssom::CSSOM cssom;
 
   cssom::CSSStyleSheet styleSheet = cssom.parse(
@@ -35,6 +38,27 @@ void basics() {
 
 
 
+void parseSelector() {
+  test::Errors errors;
+  std::string selectorText;
+  cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(test::errorHandler);
+  cssom::Selector selector = cssom.parseSelector("p");
+
+  selectorText = "p";
+  assertEquals(selectorText, selector.selectorText());
+
+
+
+  assert(errors.syntaxErrors == 0);
+  selector = cssom.parseSelector("& invalid");
+  assert(selector.isNull() == true);
+  assert(errors.syntaxErrors == 1);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -42,7 +66,8 @@ namespace test {
 
 
 void cssom() {
-  basics();
+  parse();
+  parseSelector();
 }
 
 
