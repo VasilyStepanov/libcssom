@@ -18,6 +18,7 @@ test_suite_SOURCES = Errors.cpp \
                      test_CSSStyleRule.cpp \
                      test_CSSStyleSheet.cpp \
                      test_MediaList.cpp \
+                     test_Selector.cpp \
                      test_suite.cpp
 
 test_suite_LDADD = $(top_srcdir)/libcssompp/libcssompp.la

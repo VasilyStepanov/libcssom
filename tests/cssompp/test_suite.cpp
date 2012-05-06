@@ -11,6 +11,7 @@
 #include "test_CSSStyleSheet.hpp"
 #include "test_CSSOM.hpp"
 #include "test_MediaList.hpp"
+#include "test_Selector.hpp"
 
 
 
@@ -28,5 +29,6 @@ int main() {
   test::cssStyleDeclaration();
   test::cssStyleDeclarationValue();
   test::cssPropertyValue();
+  test::selector();
   return 0;
 }
