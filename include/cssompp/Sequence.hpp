@@ -107,7 +107,7 @@ size_t Sequence<T>::length() const {
 
 template <typename T>
 T Sequence<T>::operator[](size_t index) const {
-   return T((typename T::C)CSSOM_Sequence_at(_impl, index));
+   return T((typename T::Impl)CSSOM_Sequence_at(_impl, index));
 }
 
 

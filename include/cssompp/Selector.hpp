@@ -29,10 +29,10 @@ namespace cssom {
 
 class Selector {
   public:
-    typedef CSSOM_Selector * C;
+    typedef CSSOM_Selector * Impl;
 
     Selector();
-    explicit Selector(CSSOM_Selector * impl);
+    explicit Selector(cssom::Selector::Impl impl);
     Selector(const cssom::Selector &copy);
     ~Selector();
 
@@ -50,7 +50,7 @@ class Selector {
     cssom::CSSRule parentRule() const;
 
   protected:
-    CSSOM_Selector * _impl;
+    cssom::Selector::Impl _impl;
 };
 
 

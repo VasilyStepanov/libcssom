@@ -35,13 +35,13 @@ namespace cssom {
 
 class CSSPageRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSPageRule * C;
+    typedef CSSOM_CSSPageRule * Impl;
 
     static cssom::CSSPageRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSPageRule & cast(cssom::CSSRule & cssRule);
 
     CSSPageRule();
-    explicit CSSPageRule(CSSOM_CSSPageRule * impl);
+    explicit CSSPageRule(cssom::CSSPageRule::Impl impl);
 
     cssom::Selector selector() const;
 

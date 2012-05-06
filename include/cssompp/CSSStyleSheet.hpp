@@ -31,10 +31,10 @@ namespace cssom {
 
 class CSSStyleSheet {
   public:
-    typedef CSSOM_CSSStyleSheet * C;
+    typedef CSSOM_CSSStyleSheet * Impl;
 
     CSSStyleSheet();
-    explicit CSSStyleSheet(CSSOM_CSSStyleSheet * impl);
+    explicit CSSStyleSheet(cssom::CSSStyleSheet::Impl impl);
     CSSStyleSheet(const cssom::CSSStyleSheet &copy);
     ~CSSStyleSheet();
 
@@ -55,7 +55,7 @@ class CSSStyleSheet {
     void deleteRule(unsigned long index);
 
   protected:
-    CSSOM_CSSStyleSheet * _impl;
+    cssom::CSSStyleSheet::Impl _impl;
 };
 
 

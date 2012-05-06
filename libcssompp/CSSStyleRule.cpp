@@ -51,32 +51,32 @@ CSSStyleRule::CSSStyleRule() :
 
 
 
-CSSStyleRule::CSSStyleRule(CSSOM_CSSStyleRule * impl) :
-  CSSRule((CSSOM_CSSRule *)impl)
+CSSStyleRule::CSSStyleRule(cssom::CSSStyleRule::Impl impl) :
+  CSSRule((cssom::CSSRule::Impl)impl)
 {}
 
 
 
 cssom::Selector CSSStyleRule::selector() const {
-  return cssom::Selector(CSSOM_CSSStyleRule_selector(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl)));
+  return cssom::Selector(CSSOM_CSSStyleRule_selector(reinterpret_cast<cssom::CSSStyleRule::Impl>(_impl)));
 }
 
 
 
 const char * CSSStyleRule::selectorText() const {
-  return CSSOM_CSSStyleRule_selectorText(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl));
+  return CSSOM_CSSStyleRule_selectorText(reinterpret_cast<cssom::CSSStyleRule::Impl>(_impl));
 }
 
 
 
 void CSSStyleRule::setSelectorText(const char * selectorText) {
-  CSSOM_CSSStyleRule_setSelectorText(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl), selectorText);
+  CSSOM_CSSStyleRule_setSelectorText(reinterpret_cast<cssom::CSSStyleRule::Impl>(_impl), selectorText);
 }
 
 
 
 cssom::CSSStyleDeclaration CSSStyleRule::style() const {
-  return cssom::CSSStyleDeclaration(CSSOM_CSSStyleRule_style(reinterpret_cast<CSSOM_CSSStyleRule*>(_impl)));
+  return cssom::CSSStyleDeclaration(CSSOM_CSSStyleRule_style(reinterpret_cast<cssom::CSSStyleRule::Impl>(_impl)));
 }
 
 

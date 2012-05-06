@@ -28,7 +28,7 @@ CSSStyleSheet::CSSStyleSheet() :
 
 
 
-CSSStyleSheet::CSSStyleSheet(CSSOM_CSSStyleSheet * impl) :
+CSSStyleSheet::CSSStyleSheet(cssom::CSSStyleSheet::Impl impl) :
   _impl(impl)
 {
   CSSOM_CSSStyleSheet_acquire(_impl);

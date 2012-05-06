@@ -50,26 +50,26 @@ CSSImportRule::CSSImportRule() :
 
 
 
-CSSImportRule::CSSImportRule(CSSOM_CSSImportRule * impl) :
-  CSSRule((CSSOM_CSSRule *)impl)
+CSSImportRule::CSSImportRule(cssom::CSSImportRule::Impl impl) :
+  CSSRule((cssom::CSSRule::Impl)impl)
 {}
 
 
 
 const char * CSSImportRule::href() const {
-  return CSSOM_CSSImportRule_href(reinterpret_cast<CSSOM_CSSImportRule*>(_impl));
+  return CSSOM_CSSImportRule_href(reinterpret_cast<cssom::CSSImportRule::Impl>(_impl));
 }
 
 
 
 cssom::MediaList CSSImportRule::media() const {
-  return cssom::MediaList(CSSOM_CSSImportRule_media(reinterpret_cast<CSSOM_CSSImportRule*>(_impl)));
+  return cssom::MediaList(CSSOM_CSSImportRule_media(reinterpret_cast<cssom::CSSImportRule::Impl>(_impl)));
 }
 
 
 
 void CSSImportRule::setMedia(const char * media) {
-  CSSOM_CSSImportRule_setMedia(reinterpret_cast<CSSOM_CSSImportRule*>(_impl), media);
+  CSSOM_CSSImportRule_setMedia(reinterpret_cast<cssom::CSSImportRule::Impl>(_impl), media);
 }
 
 

@@ -29,10 +29,10 @@ namespace cssom {
 
 class CSSStyleDeclarationValue {
   public:
-    typedef CSSOM_CSSStyleDeclarationValue * C;
+    typedef CSSOM_CSSStyleDeclarationValue * Impl;
 
     CSSStyleDeclarationValue();
-    explicit CSSStyleDeclarationValue(CSSOM_CSSStyleDeclarationValue * impl);
+    explicit CSSStyleDeclarationValue(cssom::CSSStyleDeclarationValue::Impl impl);
     CSSStyleDeclarationValue(const cssom::CSSStyleDeclarationValue &copy);
     ~CSSStyleDeclarationValue();
 
@@ -57,7 +57,7 @@ class CSSStyleDeclarationValue {
     const char * removeProperty(const char * property);
 
   protected:
-    CSSOM_CSSStyleDeclarationValue * _impl;
+    cssom::CSSStyleDeclarationValue::Impl _impl;
 };
 
 

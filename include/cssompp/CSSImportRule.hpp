@@ -31,13 +31,13 @@ namespace cssom {
 
 class CSSImportRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSImportRule * C;
+    typedef CSSOM_CSSImportRule * Impl;
 
     static cssom::CSSImportRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSImportRule & cast(cssom::CSSRule & cssRule);
 
     CSSImportRule();
-    explicit CSSImportRule(CSSOM_CSSImportRule * impl);
+    explicit CSSImportRule(cssom::CSSImportRule::Impl impl);
 
     const char * href() const;
 

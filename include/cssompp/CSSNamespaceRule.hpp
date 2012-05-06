@@ -22,13 +22,13 @@ namespace cssom {
 
 class CSSNamespaceRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSNamespaceRule * C;
+    typedef CSSOM_CSSNamespaceRule * Impl;
 
     static cssom::CSSNamespaceRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSNamespaceRule & cast(cssom::CSSRule & cssRule);
 
     CSSNamespaceRule();
-    explicit CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl);
+    explicit CSSNamespaceRule(cssom::CSSNamespaceRule::Impl impl);
 
     const char * namespaceURI() const;
 

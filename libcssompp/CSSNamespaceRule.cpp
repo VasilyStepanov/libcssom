@@ -48,20 +48,20 @@ CSSNamespaceRule::CSSNamespaceRule() :
 
 
 
-CSSNamespaceRule::CSSNamespaceRule(CSSOM_CSSNamespaceRule * impl) :
-  CSSRule((CSSOM_CSSRule *)impl)
+CSSNamespaceRule::CSSNamespaceRule(cssom::CSSNamespaceRule::Impl impl) :
+  CSSRule((cssom::CSSRule::Impl)impl)
 {}
 
 
 
 const char * CSSNamespaceRule::namespaceURI() const {
-  return CSSOM_CSSNamespaceRule_namespaceURI(reinterpret_cast<CSSOM_CSSNamespaceRule*>(_impl));
+  return CSSOM_CSSNamespaceRule_namespaceURI(reinterpret_cast<cssom::CSSNamespaceRule::Impl>(_impl));
 }
 
 
 
 const char * CSSNamespaceRule::prefix() const {
-  return CSSOM_CSSNamespaceRule_prefix(reinterpret_cast<CSSOM_CSSNamespaceRule*>(_impl));
+  return CSSOM_CSSNamespaceRule_prefix(reinterpret_cast<cssom::CSSNamespaceRule::Impl>(_impl));
 }
 
 

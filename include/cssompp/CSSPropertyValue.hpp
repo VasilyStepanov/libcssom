@@ -20,10 +20,10 @@ namespace cssom {
 
 class CSSPropertyValue {
   public:
-    typedef CSSOM_CSSPropertyValue * C;
+    typedef CSSOM_CSSPropertyValue * Impl;
 
     CSSPropertyValue();
-    explicit CSSPropertyValue(CSSOM_CSSPropertyValue * impl);
+    explicit CSSPropertyValue(cssom::CSSPropertyValue::Impl impl);
     CSSPropertyValue(const cssom::CSSPropertyValue &copy);
     ~CSSPropertyValue();
 
@@ -39,7 +39,7 @@ class CSSPropertyValue {
     void setCSSText(const char * cssText);
 
   protected:
-    CSSOM_CSSPropertyValue * _impl;
+    cssom::CSSPropertyValue::Impl _impl;
 };
 
 

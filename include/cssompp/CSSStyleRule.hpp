@@ -35,13 +35,13 @@ namespace cssom {
 
 class CSSStyleRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSStyleRule * C;
+    typedef CSSOM_CSSStyleRule * Impl;
 
     static cssom::CSSStyleRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSStyleRule & cast(cssom::CSSRule & cssRule);
 
     CSSStyleRule();
-    explicit CSSStyleRule(CSSOM_CSSStyleRule * impl);
+    explicit CSSStyleRule(cssom::CSSStyleRule::Impl impl);
 
     cssom::Selector selector() const;
 

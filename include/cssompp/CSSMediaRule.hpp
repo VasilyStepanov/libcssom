@@ -32,13 +32,13 @@ namespace cssom {
 
 class CSSMediaRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSMediaRule * C;
+    typedef CSSOM_CSSMediaRule * Impl;
 
     static cssom::CSSMediaRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSMediaRule & cast(cssom::CSSRule & cssRule);
 
     CSSMediaRule();
-    explicit CSSMediaRule(CSSOM_CSSMediaRule * impl);
+    explicit CSSMediaRule(cssom::CSSMediaRule::Impl impl);
 
     cssom::MediaList media() const;
 

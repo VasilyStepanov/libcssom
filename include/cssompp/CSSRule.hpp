@@ -29,10 +29,10 @@ namespace cssom {
 
 class CSSRule {
   public:
-    typedef CSSOM_CSSRule * C;
+    typedef CSSOM_CSSRule * Impl;
 
     CSSRule();
-    explicit CSSRule(CSSOM_CSSRule * impl);
+    explicit CSSRule(cssom::CSSRule::Impl impl);
     CSSRule(const cssom::CSSRule &copy);
     ~CSSRule();
 
@@ -66,7 +66,7 @@ class CSSRule {
     cssom::CSSStyleSheet parentStyleSheet() const;
 
   protected:
-    CSSOM_CSSRule * _impl;
+    cssom::CSSRule::Impl _impl;
 };
 
 

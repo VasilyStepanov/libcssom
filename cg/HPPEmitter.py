@@ -129,7 +129,7 @@ def renderInterface(out, interface, definitions):
   template = { 'name' : interface.name }
   print >>out, "class %s {" % classDef
   print >>out, "  public:"
-  print >>out, "    typedef CSSOM_%(name)s * C;" % template;
+  print >>out, "    typedef CSSOM_%(name)s * Impl;" % template;
   print >>out
 
   if interface.parent:
@@ -143,7 +143,7 @@ def renderInterface(out, interface, definitions):
     print >>out
 
   print >>out, "    %(name)s();" % template
-  print >>out, "    explicit %(name)s(CSSOM_%(name)s * impl);" % template
+  print >>out, "    explicit %(name)s(cssom::%(name)s::Impl impl);" % template
   if not interface.parent:
     print >>out, "    %(name)s(const cssom::%(name)s &copy);" % template
     print >>out, "    ~%(name)s();" % template
@@ -166,7 +166,7 @@ def renderInterface(out, interface, definitions):
   if not interface.parent:
     print >>out
     print >>out, "  protected:"
-    print >>out, "    CSSOM_%(name)s * _impl;" % template
+    print >>out, "    cssom::%(name)s::Impl _impl;" % template
   print >>out, "};"
 
 

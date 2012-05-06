@@ -26,7 +26,7 @@ CSSPropertyValue::CSSPropertyValue() :
 
 
 
-CSSPropertyValue::CSSPropertyValue(CSSOM_CSSPropertyValue * impl) :
+CSSPropertyValue::CSSPropertyValue(cssom::CSSPropertyValue::Impl impl) :
   _impl(impl)
 {
   CSSOM_CSSPropertyValue_acquire(_impl);

@@ -26,7 +26,7 @@ MediaList::MediaList() :
 
 
 
-MediaList::MediaList(CSSOM_MediaList * impl) :
+MediaList::MediaList(cssom::MediaList::Impl impl) :
   _impl(impl)
 {
   CSSOM_MediaList_acquire(_impl);

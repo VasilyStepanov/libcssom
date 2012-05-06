@@ -28,7 +28,7 @@ Selector::Selector() :
 
 
 
-Selector::Selector(CSSOM_Selector * impl) :
+Selector::Selector(cssom::Selector::Impl impl) :
   _impl(impl)
 {
   CSSOM_Selector_acquire(_impl);

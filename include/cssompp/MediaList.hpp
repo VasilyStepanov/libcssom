@@ -20,10 +20,10 @@ namespace cssom {
 
 class MediaList {
   public:
-    typedef CSSOM_MediaList * C;
+    typedef CSSOM_MediaList * Impl;
 
     MediaList();
-    explicit MediaList(CSSOM_MediaList * impl);
+    explicit MediaList(cssom::MediaList::Impl impl);
     MediaList(const cssom::MediaList &copy);
     ~MediaList();
 
@@ -52,7 +52,7 @@ class MediaList {
     void deleteMedium(const char * medium);
 
   protected:
-    CSSOM_MediaList * _impl;
+    cssom::MediaList::Impl _impl;
 };
 
 

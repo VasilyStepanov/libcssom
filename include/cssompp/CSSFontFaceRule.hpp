@@ -31,13 +31,13 @@ namespace cssom {
 
 class CSSFontFaceRule : public cssom::CSSRule {
   public:
-    typedef CSSOM_CSSFontFaceRule * C;
+    typedef CSSOM_CSSFontFaceRule * Impl;
 
     static cssom::CSSFontFaceRule cast(const cssom::CSSRule & cssRule);
     static cssom::CSSFontFaceRule & cast(cssom::CSSRule & cssRule);
 
     CSSFontFaceRule();
-    explicit CSSFontFaceRule(CSSOM_CSSFontFaceRule * impl);
+    explicit CSSFontFaceRule(cssom::CSSFontFaceRule::Impl impl);
 
     cssom::CSSStyleDeclaration style() const;
 };

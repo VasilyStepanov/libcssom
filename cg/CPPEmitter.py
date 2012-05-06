@@ -17,7 +17,7 @@ import os.path
 def implArgument(interface):
   if not interface.parent: return "_impl"
 
-  return "reinterpret_cast<CSSOM_%s*>(_impl)" % interface.name
+  return "reinterpret_cast<cssom::%s::Impl>(_impl)" % interface.name
 
 
 
@@ -318,7 +318,7 @@ def renderInterface(out, interface, definitions):
     print >>out
     print >>out
     print >>out
-    print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
+    print >>out, "%(name)s::%(name)s(cssom::%(name)s::Impl impl) :" % template
     print >>out, "  _impl(impl)"
     print >>out, "{"
     print >>out, "  CSSOM_%(name)s_acquire(_impl);" % template
@@ -419,8 +419,8 @@ def renderInterface(out, interface, definitions):
     print >>out
     print >>out
     print >>out
-    print >>out, "%(name)s::%(name)s(CSSOM_%(name)s * impl) :" % template
-    print >>out, "  %(parent)s((CSSOM_%(parent)s *)impl)" % template
+    print >>out, "%(name)s::%(name)s(cssom::%(name)s::Impl impl) :" % template
+    print >>out, "  %(parent)s((cssom::%(parent)s::Impl)impl)" % template
     print >>out, "{}"
 
   renderSpecialOperations(out, interface)

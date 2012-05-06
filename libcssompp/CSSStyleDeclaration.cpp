@@ -29,7 +29,7 @@ CSSStyleDeclaration::CSSStyleDeclaration() :
 
 
 
-CSSStyleDeclaration::CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl) :
+CSSStyleDeclaration::CSSStyleDeclaration(cssom::CSSStyleDeclaration::Impl impl) :
   _impl(impl)
 {
   CSSOM_CSSStyleDeclaration_acquire(_impl);

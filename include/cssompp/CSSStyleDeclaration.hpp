@@ -33,10 +33,10 @@ namespace cssom {
 
 class CSSStyleDeclaration {
   public:
-    typedef CSSOM_CSSStyleDeclaration * C;
+    typedef CSSOM_CSSStyleDeclaration * Impl;
 
     CSSStyleDeclaration();
-    explicit CSSStyleDeclaration(CSSOM_CSSStyleDeclaration * impl);
+    explicit CSSStyleDeclaration(cssom::CSSStyleDeclaration::Impl impl);
     CSSStyleDeclaration(const cssom::CSSStyleDeclaration &copy);
     ~CSSStyleDeclaration();
 
@@ -69,7 +69,7 @@ class CSSStyleDeclaration {
     cssom::CSSRule parentRule() const;
 
   protected:
-    CSSOM_CSSStyleDeclaration * _impl;
+    cssom::CSSStyleDeclaration::Impl _impl;
 };
 
 

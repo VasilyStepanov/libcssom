@@ -28,7 +28,7 @@ CSSRule::CSSRule() :
 
 
 
-CSSRule::CSSRule(CSSOM_CSSRule * impl) :
+CSSRule::CSSRule(cssom::CSSRule::Impl impl) :
   _impl(impl)
 {
   CSSOM_CSSRule_acquire(_impl);

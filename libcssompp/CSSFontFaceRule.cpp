@@ -50,14 +50,14 @@ CSSFontFaceRule::CSSFontFaceRule() :
 
 
 
-CSSFontFaceRule::CSSFontFaceRule(CSSOM_CSSFontFaceRule * impl) :
-  CSSRule((CSSOM_CSSRule *)impl)
+CSSFontFaceRule::CSSFontFaceRule(cssom::CSSFontFaceRule::Impl impl) :
+  CSSRule((cssom::CSSRule::Impl)impl)
 {}
 
 
 
 cssom::CSSStyleDeclaration CSSFontFaceRule::style() const {
-  return cssom::CSSStyleDeclaration(CSSOM_CSSFontFaceRule_style(reinterpret_cast<CSSOM_CSSFontFaceRule*>(_impl)));
+  return cssom::CSSStyleDeclaration(CSSOM_CSSFontFaceRule_style(reinterpret_cast<cssom::CSSFontFaceRule::Impl>(_impl)));
 }
 
 

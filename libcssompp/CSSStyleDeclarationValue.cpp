@@ -28,7 +28,7 @@ CSSStyleDeclarationValue::CSSStyleDeclarationValue() :
 
 
 
-CSSStyleDeclarationValue::CSSStyleDeclarationValue(CSSOM_CSSStyleDeclarationValue * impl) :
+CSSStyleDeclarationValue::CSSStyleDeclarationValue(cssom::CSSStyleDeclarationValue::Impl impl) :
   _impl(impl)
 {
   CSSOM_CSSStyleDeclarationValue_acquire(_impl);

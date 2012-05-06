@@ -50,38 +50,38 @@ CSSMediaRule::CSSMediaRule() :
 
 
 
-CSSMediaRule::CSSMediaRule(CSSOM_CSSMediaRule * impl) :
-  CSSRule((CSSOM_CSSRule *)impl)
+CSSMediaRule::CSSMediaRule(cssom::CSSMediaRule::Impl impl) :
+  CSSRule((cssom::CSSRule::Impl)impl)
 {}
 
 
 
 cssom::MediaList CSSMediaRule::media() const {
-  return cssom::MediaList(CSSOM_CSSMediaRule_media(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl)));
+  return cssom::MediaList(CSSOM_CSSMediaRule_media(reinterpret_cast<cssom::CSSMediaRule::Impl>(_impl)));
 }
 
 
 
 void CSSMediaRule::setMedia(const char * media) {
-  CSSOM_CSSMediaRule_setMedia(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), media);
+  CSSOM_CSSMediaRule_setMedia(reinterpret_cast<cssom::CSSMediaRule::Impl>(_impl), media);
 }
 
 
 
 cssom::CSSRuleList CSSMediaRule::cssRules() const {
-  return cssom::CSSRuleList(CSSOM_CSSMediaRule_cssRules(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl)));
+  return cssom::CSSRuleList(CSSOM_CSSMediaRule_cssRules(reinterpret_cast<cssom::CSSMediaRule::Impl>(_impl)));
 }
 
 
 
 unsigned long CSSMediaRule::insertRule(const char * rule, unsigned long index) {
-  return CSSOM_CSSMediaRule_insertRule(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), rule, index);
+  return CSSOM_CSSMediaRule_insertRule(reinterpret_cast<cssom::CSSMediaRule::Impl>(_impl), rule, index);
 }
 
 
 
 void CSSMediaRule::deleteRule(unsigned long index) {
-  return CSSOM_CSSMediaRule_deleteRule(reinterpret_cast<CSSOM_CSSMediaRule*>(_impl), index);
+  return CSSOM_CSSMediaRule_deleteRule(reinterpret_cast<cssom::CSSMediaRule::Impl>(_impl), index);
 }
 
 
