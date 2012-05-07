@@ -3,6 +3,7 @@
 #include "CSSEmitter.h"
 #include "CSSStyleSheet.h"
 #include "CSSOM.h"
+#include "gcc.h"
 #include "memory.h"
 #include "utility.h"
 
@@ -253,4 +254,11 @@ void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
 {
   assert(selector->parser == NULL);
   selector->parser = parser;
+}
+
+
+
+void CSSOM_Selector_select(CSSOM_Selector * selector CSSOM_UNUSED,
+  void * userData CSSOM_UNUSED)
+{
 }

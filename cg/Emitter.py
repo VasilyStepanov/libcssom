@@ -65,6 +65,8 @@ def emitSimpleType(typedef):
   elif typedef.type == typedef.UNSIGNED_LONG_LONG:
     assert(not typedef.nullable)
     return "unsigned long long"
+  elif typedef.type == typedef.ANY:
+    return "void *"
   else:
     raise RuntimeError("Unknown simple type: %s" % typedef.type)
 
