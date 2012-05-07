@@ -1,6 +1,7 @@
 #include "test_Selector.hpp"
 
 #include "Errors.hpp"
+#include "Node.hpp"
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
@@ -30,6 +31,11 @@ void selectorText() {
 
 
 
+void selectElements() {
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -38,6 +44,7 @@ namespace test {
 
 void selector() {
   selectorText();
+  selectElements();
 }
 
 

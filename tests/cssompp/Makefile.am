@@ -2,9 +2,14 @@ noinst_PROGRAMS = test_suite
 
 AM_CPPFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
               -I$(top_srcdir)/include \
+              $(LIBXML2_CFLAGS) \
               $(SACC_CFLAGS)
 
 test_suite_SOURCES = Errors.cpp \
+                     Node.cpp \
+                     NodeData.cpp \
+                     NodeList.cpp \
+                     NodeListData.cpp \
                      test_CSSFontFaceRule.cpp \
                      test_CSSImportRule.cpp \
                      test_CSSMediaRule.cpp \
@@ -21,8 +26,8 @@ test_suite_SOURCES = Errors.cpp \
                      test_Selector.cpp \
                      test_suite.cpp
 
-test_suite_LDADD = $(top_srcdir)/libcssompp/libcssompp.la
-
+test_suite_LDADD = $(top_srcdir)/libcssompp/libcssompp.la \
+                   $(LIBXML2_LIBS)
 
 
 if ENABLE_MEMORY_TRACE
