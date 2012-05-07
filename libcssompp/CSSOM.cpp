@@ -69,6 +69,18 @@ void CSSOM::setUserData(void * userData) {
 
 
 
+const CSSOM_DOMAPI* CSSOM::getDOMAPI() const {
+  return CSSOM_getDOMAPI(_impl);
+}
+
+
+
+void CSSOM::setDOMAPI(const CSSOM_DOMAPI *domapi) {
+  CSSOM_setDOMAPI(_impl, domapi);
+}
+
+
+
 void CSSOM::setErrorHandler(CSSOM_ErrorHandler handler) {
   CSSOM_setErrorHandler(_impl, handler);
 }

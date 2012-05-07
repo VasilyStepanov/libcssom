@@ -2,7 +2,7 @@ interface Selector {
            attribute DOMString selectorText;
   readonly attribute CSSRule parentRule;
 
-  void select(any userData);
+  void select(any root, any selection);
 };
 
 

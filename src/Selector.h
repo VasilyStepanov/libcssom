@@ -11,11 +11,11 @@ extern "C" {
 
 
 
-CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
-  const SAC_Selector *selectors[]);
+CSSOM_Selector* CSSOM_Selector__alloc(const CSSOM *cssom,
+  CSSOM_CSSRule *parentRule, const SAC_Selector *selectors[]);
 
-CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
-  const SAC_Selector *selectors[]);
+CSSOM_Selector* CSSOM_PageSelector__alloc(const CSSOM *cssom,
+  CSSOM_CSSPageRule *parentRule, const SAC_Selector *selectors[]);
 
 const SAC_Selector** CSSOM_Selector__selectors(const CSSOM_Selector *selector);
 

@@ -38,6 +38,8 @@ class CSSOM {
 
     void * getUserData() const;
     void setUserData(void * userData);
+    const CSSOM_DOMAPI* getDOMAPI() const;
+    void setDOMAPI(const CSSOM_DOMAPI *domapi);
     void setErrorHandler(CSSOM_ErrorHandler handler);
 
     cssom::CSSStyleSheet parse(const char *cssText, int len) const;

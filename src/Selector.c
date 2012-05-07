@@ -25,6 +25,7 @@ struct _CSSOM_Selector_vtable {
 struct _CSSOM_Selector {
   struct _CSSOM_Selector_vtable *vtable;
   size_t handles;
+  const CSSOM *cssom;
   SAC_Parser parser;
   CSSOM_CSSRule *parentRule;
   char *selectorText;
@@ -43,11 +44,12 @@ static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
 
 
 static void Selector_ctor(CSSOM_Selector *selector,
-  struct _CSSOM_Selector_vtable *vtable, CSSOM_CSSRule *parentRule,
-  const SAC_Selector *selectors[])
+  struct _CSSOM_Selector_vtable *vtable, const CSSOM *cssom,
+  CSSOM_CSSRule *parentRule, const SAC_Selector *selectors[])
 {
   selector->vtable = vtable;
   selector->handles = 1;
+  selector->cssom = cssom;
   selector->parser = NULL;
   selector->parentRule = parentRule;
   selector->selectorText = NULL;
@@ -111,15 +113,15 @@ static struct _CSSOM_Selector_vtable Selector_vtable = {
 
 
 
-CSSOM_Selector* CSSOM_Selector__alloc(CSSOM_CSSRule *parentRule,
-  const SAC_Selector *selectors[])
+CSSOM_Selector* CSSOM_Selector__alloc(const CSSOM *cssom,
+  CSSOM_CSSRule *parentRule, const SAC_Selector *selectors[])
 {
   CSSOM_Selector *selector;
 
   selector = (CSSOM_Selector*)CSSOM_malloc(sizeof(CSSOM_Selector));
   if (selector == NULL) return NULL;
   
-  Selector_ctor(selector, &Selector_vtable, parentRule, selectors);
+  Selector_ctor(selector, &Selector_vtable, cssom, parentRule, selectors);
 
   return selector;
 }
@@ -181,8 +183,8 @@ static struct _CSSOM_Selector_vtable PageSelector_vtable = {
 
 
 
-CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
-  const SAC_Selector *selectors[])
+CSSOM_Selector* CSSOM_PageSelector__alloc(const CSSOM *cssom,
+  CSSOM_CSSPageRule *parentRule, const SAC_Selector *selectors[])
 {
   CSSOM_Selector *selector;
 
@@ -190,7 +192,7 @@ CSSOM_Selector* CSSOM_PageSelector__alloc(CSSOM_CSSPageRule *parentRule,
   if (selector == NULL) return NULL;
   
   Selector_ctor(selector, &PageSelector_vtable,
-    (CSSOM_CSSRule*)parentRule, selectors);
+    cssom, (CSSOM_CSSRule*)parentRule, selectors);
 
   return selector;
 }
@@ -258,7 +260,12 @@ void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
 
 
 
-void CSSOM_Selector_select(CSSOM_Selector * selector CSSOM_UNUSED,
-  void * userData CSSOM_UNUSED)
+void CSSOM_Selector_select(CSSOM_Selector *selector, void *root,
+  void *selection)
 {
+  const CSSOM_DOMAPI *domapi;
+
+  domapi = CSSOM_getDOMAPI(selector->cssom);
+  
+  domapi->Selection_appendNode(selection, root);
 }

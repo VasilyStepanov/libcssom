@@ -413,6 +413,9 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   CSSOM_CSSStyleRule *cssRule;
   CSSOM_Selector *selector;
   CSSOM_CSSStyleDeclaration *style;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(parentStyleSheet);
 
   cssRule = (CSSOM_CSSStyleRule*)CSSOM_malloc(sizeof(CSSOM_CSSStyleRule));
   if (cssRule == NULL) return NULL;
@@ -422,7 +425,7 @@ CSSOM_CSSStyleRule* CSSOM_CSSStyleRule__alloc(
   cssRule->selector = NULL;
   cssRule->style = NULL;
 
-  selector = CSSOM_Selector__alloc((CSSOM_CSSRule*)cssRule, selectors);
+  selector = CSSOM_Selector__alloc(cssom, (CSSOM_CSSRule*)cssRule, selectors);
   if (selector == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;
@@ -751,6 +754,9 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   CSSOM_CSSPageRule *cssRule;
   CSSOM_Selector *selector;
   CSSOM_CSSStyleDeclaration *style;
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(parentStyleSheet);
 
   cssRule = (CSSOM_CSSPageRule*)CSSOM_malloc(sizeof(CSSOM_CSSPageRule));
   if (cssRule == NULL) return NULL;
@@ -760,7 +766,7 @@ CSSOM_CSSPageRule* CSSOM_CSSPageRule__alloc(
   cssRule->selector = NULL;
   cssRule->style = NULL;
 
-  selector = CSSOM_PageSelector__alloc(cssRule, selectors);
+  selector = CSSOM_PageSelector__alloc(cssom, cssRule, selectors);
   if (selector == NULL) {
     CSSOM_CSSRule_release((CSSOM_CSSRule*)cssRule);
     return NULL;

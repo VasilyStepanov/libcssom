@@ -49,7 +49,7 @@ class Selector {
 
     cssom::CSSRule parentRule() const;
 
-    void select(void * userData);
+    void select(void * root, void * selection);
 
   protected:
     cssom::Selector::Impl _impl;

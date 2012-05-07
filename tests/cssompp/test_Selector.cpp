@@ -14,8 +14,38 @@
 #include <stdexcept>
 
 #include <assert.h>
+#include <stdio.h>
 
 namespace {
+
+
+
+template <typename T>
+void* wrap(const T &t) {
+  return *(void**)&t;
+}
+
+
+
+template <typename T>
+T* unwrap(void *p) {
+  T *t = (T*)&p;
+  return t;
+}
+
+
+
+static const char* Node_name(void *node) {
+  return unwrap<test::Node>(node)->name().c_str();
+}
+
+
+
+static void Selection_appendNode(std::deque<test::Node> *selection,
+  void *node)
+{
+  selection->push_back(*unwrap<test::Node>(node));
+}
 
 
 
@@ -35,12 +65,12 @@ std::string html(const std::deque<test::Node> &nodes) {
 
 
 
-void select(test::Node, cssom::Selector &selector,
+void select(const test::Node &root, cssom::Selector &selector,
   std::deque<test::Node> &selection)
 {
   std::deque<test::Node> ret;
 
-  selector.select((void*)&ret);
+  selector.select(wrap(root), (void*)&ret);
 
   selection.swap(ret);
 }
@@ -61,10 +91,16 @@ void selectorText() {
 
 
 void selectElements() {
+  CSSOM_DOMAPI domapi = {
+    Node_name,
+    (void(*)(void*, void*))Selection_appendNode,
+  };
+
   cssom::CSSOM cssom;
+  cssom.setDOMAPI(&domapi);
   cssom::Selector selector = cssom.parseSelector("span");
 
-  test::Node dom = test::Node::parse(
+  test::Node root = test::Node::parse(
 "<div>\n"
   "<p>Skip.</p>\n"
   "<span>Paragraph <span>with</span> spans.</span>\n"
@@ -73,7 +109,7 @@ void selectElements() {
   );
 
   std::deque<test::Node> selection;
-  select(dom, selector, selection);
+  select(root, selector, selection);
 
   assertEquals(std::string(
 "<span>Paragraph <span>with</span> spans.</span>"

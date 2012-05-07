@@ -30,6 +30,7 @@ struct _CSSOM {
   CSSOM_FSMTable_CSSPropertyValue * table;
   CSSOM_ErrorHandler errorHandler;
   void * userData;
+  CSSOM_DOMAPI domapi;
 };
 
 
@@ -130,6 +131,18 @@ void * CSSOM_getUserData(const CSSOM * cssom) {
 
 void CSSOM_setUserData(CSSOM * cssom, void * userData) {
   cssom->userData = userData;
+}
+
+
+
+const CSSOM_DOMAPI* CSSOM_getDOMAPI(const CSSOM * cssom) {
+  return &cssom->domapi;
+}
+
+
+
+void CSSOM_setDOMAPI(CSSOM *cssom, const CSSOM_DOMAPI *domapi) {
+  cssom->domapi = *domapi;
 }
 
 
@@ -385,7 +398,7 @@ CSSOM_Selector* CSSOM__parseSelector(const CSSOM *cssom,
     return NULL;
   }
 
-  selector = CSSOM_Selector__alloc(parentRule, selectors);
+  selector = CSSOM_Selector__alloc(cssom, parentRule, selectors);
   if (selector == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
@@ -435,7 +448,7 @@ CSSOM_Selector* CSSOM__parsePageSelector(const CSSOM *cssom,
     return NULL;
   }
 
-  selector = CSSOM_Selector__alloc(parentRule, selectors);
+  selector = CSSOM_Selector__alloc(cssom, parentRule, selectors);
   if (selector == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);

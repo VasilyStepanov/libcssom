@@ -100,8 +100,8 @@ cssom::CSSRule Selector::parentRule() const {
 
 
 
-void Selector::select(void * userData) {
-  return CSSOM_Selector_select(_impl, userData);
+void Selector::select(void * root, void * selection) {
+  return CSSOM_Selector_select(_impl, root, selection);
 }
 
 

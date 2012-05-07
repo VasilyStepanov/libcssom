@@ -48,6 +48,13 @@ typedef int (*CSSOM_ErrorHandler)(void *userData,
 
 
 
+typedef struct {
+  const char * (*Node_name)(void *node);
+  void (*Selection_appendNode)(void *selection, void *node);
+} CSSOM_DOMAPI;
+
+
+
 CSSOM * CSSOM_create(const char * * properties);
 
 void CSSOM_acquire(CSSOM * cssom);
@@ -57,6 +64,10 @@ void CSSOM_release(CSSOM * cssom);
 void * CSSOM_getUserData(const CSSOM * cssom);
 
 void CSSOM_setUserData(CSSOM * cssom, void * userData);
+
+const CSSOM_DOMAPI* CSSOM_getDOMAPI(const CSSOM * cssom);
+
+void CSSOM_setDOMAPI(CSSOM * cssom, const CSSOM_DOMAPI *domapi);
 
 void CSSOM_setErrorHandler(CSSOM * cssom, CSSOM_ErrorHandler handler);
 
