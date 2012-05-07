@@ -18,6 +18,10 @@ AC_ARG_ENABLE([tests], [AS_HELP_STRING([--enable-tests],
   [tests_enabled='no'])
 AM_CONDITIONAL([ENABLE_TESTS], [test "x$tests_enabled" != "xno"])
 
+if test "x$tests_enabled" != "xno"; then
+  PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
+fi
+
 
 
 AC_ARG_ENABLE([memory-trace], [AS_HELP_STRING([--enable-memory-trace],
