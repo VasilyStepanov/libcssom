@@ -32,6 +32,7 @@ class NodeListData {
     void acquire();
     void release();
 
+    bool empty() const;
     size_t size() const;
     test::NodeData* operator[](size_t index) const;
 

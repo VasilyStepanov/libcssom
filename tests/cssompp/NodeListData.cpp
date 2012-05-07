@@ -1,5 +1,7 @@
 #include "NodeListData.hpp"
 
+#include "NodeData.hpp"
+
 #include <assert.h>
 
 namespace test {
@@ -9,7 +11,19 @@ namespace test {
 NodeListData::NodeListData(std::deque<test::NodeData*> *nodes) :
   _handles(1),
   _nodes(nodes)
-{}
+{
+  if (_nodes->size() > 1) {
+    for (
+      std::deque<test::NodeData*>::iterator lhs = _nodes->begin(),
+        rhs = _nodes->begin() + 1;
+      rhs != _nodes->end();
+      ++lhs, ++rhs)
+    {
+      (**lhs).setNextSibling(*rhs);
+      (**rhs).setPreviousSibling(*lhs);
+    }
+  }
+}
 
 
 
@@ -29,6 +43,12 @@ void NodeListData::release() {
   if (_handles > 0) return;
 
   delete _nodes;
+}
+
+
+
+bool NodeListData::empty() const {
+  return _nodes->empty();
 }
 
 

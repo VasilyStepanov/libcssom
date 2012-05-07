@@ -2,6 +2,7 @@
 
 #include "Errors.hpp"
 #include "Node.hpp"
+#include "NodeList.hpp"
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
@@ -37,6 +38,20 @@ T* unwrap(void *p) {
 
 static const char* Node_name(void *node) {
   return unwrap<test::Node>(node)->name().c_str();
+}
+
+
+
+static void* Node_children(void *node) {
+  if (unwrap<test::Node>(node)->children().empty()) return NULL;
+  return wrap(unwrap<test::Node>(node)->children()[0]);
+}
+
+
+
+static void* Node_next(void *node) {
+  if (unwrap<test::Node>(node)->nextSibling().isNull()) return NULL;
+  return wrap(unwrap<test::Node>(node)->nextSibling());
 }
 
 
@@ -93,6 +108,8 @@ void selectorText() {
 void selectElements() {
   CSSOM_DOMAPI domapi = {
     Node_name,
+    Node_children,
+    Node_next,
     (void(*)(void*, void*))Selection_appendNode,
   };
 

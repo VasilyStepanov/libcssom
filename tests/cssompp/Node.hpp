@@ -35,10 +35,13 @@ class Node {
     bool operator==(const test::Node &rhs) const;
     std::string str() const;
     void swap(test::Node &rhs);
+    bool isNull() const;
 
     const std::string& name() const;
     const std::string& getAttribute(const std::string &name) const;
     test::NodeList children() const;
+    test::Node previousSibling() const;
+    test::Node nextSibling() const;
 
 };
 

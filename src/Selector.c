@@ -3,6 +3,7 @@
 #include "CSSEmitter.h"
 #include "CSSStyleSheet.h"
 #include "CSSOM.h"
+#include "Deque_void.h"
 #include "gcc.h"
 #include "memory.h"
 #include "utility.h"
@@ -264,8 +265,27 @@ void CSSOM_Selector_select(CSSOM_Selector *selector, void *root,
   void *selection)
 {
   const CSSOM_DOMAPI *domapi;
+  CSSOM_Deque_void *deque;
+
+  deque = CSSOM_Deque_void_alloc(0);
 
   domapi = CSSOM_getDOMAPI(selector->cssom);
-  
-  domapi->Selection_appendNode(selection, root);
+
+  CSSOM_Deque_void_append(deque, root);
+  while (CSSOM_Deque_void_size(deque) != 0) {
+    void *child;
+    void *top = *CSSOM_Deque_void_at(deque, CSSOM_Deque_void_size(deque) - 1);
+    CSSOM_Deque_void_erase(deque,
+      CSSOM_Deque_void_at(deque, CSSOM_Deque_void_size(deque) - 1));
+
+    domapi->Selection_appendNode(selection, top);
+
+    for (
+      child = domapi->Node_children(top);
+      child != NULL;
+      child = domapi->Node_next(child))
+    {
+      CSSOM_Deque_void_append(deque, child);
+    }
+  }
 }

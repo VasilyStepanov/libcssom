@@ -175,6 +175,12 @@ void Node::swap(test::Node &rhs) {
 
 
 
+bool Node::isNull() const {
+  return _data == NULL;
+}
+
+
+
 const std::string& Node::name() const {
   return _data->name();
 }
@@ -189,6 +195,18 @@ const std::string& Node::getAttribute(const std::string &name) const {
 
 test::NodeList Node::children() const {
   return test::NodeList(_data->children());
+}
+
+
+
+test::Node Node::previousSibling() const {
+  return test::Node(_data->previousSibling());
+}
+
+
+
+test::Node Node::nextSibling() const {
+  return test::Node(_data->nextSibling());
 }
 
 

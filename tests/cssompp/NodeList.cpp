@@ -19,7 +19,9 @@ NodeList::NodeList() :
 
 NodeList::NodeList(test::NodeListData *data) :
   _data(data)
-{}
+{
+  _data->acquire();
+}
 
 
 
@@ -52,6 +54,12 @@ bool NodeList::operator==(const test::NodeList &rhs) const {
 
 void NodeList::swap(test::NodeList &rhs) {
   std::swap(_data, rhs._data);
+}
+
+
+
+bool NodeList::empty() const {
+  return _data->empty();
 }
 
 

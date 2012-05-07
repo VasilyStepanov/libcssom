@@ -25,6 +25,8 @@ class NodeData {
     std::string _content;
     std::map<std::string, std::string> _attributes;
     test::NodeListData *_children;
+    test::NodeData *_previousSibling;
+    test::NodeData *_nextSibling;
 
     // no copy
     NodeData(const test::NodeData &copy);
@@ -44,6 +46,10 @@ class NodeData {
     const std::string& content() const;
     const std::string& getAttribute(const std::string &name) const;
     test::NodeListData* children() const;
+    void setPreviousSibling(test::NodeData *sibling);
+    test::NodeData* previousSibling() const;
+    void setNextSibling(test::NodeData *sibling);
+    test::NodeData* nextSibling() const;
 };
 
 

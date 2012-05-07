@@ -27,7 +27,9 @@ NodeData::NodeData(const std::string &name, const std::string &content,
   _name(name),
   _content(content),
   _attributes(attributes),
-  _children(children)
+  _children(children),
+  _previousSibling(NULL),
+  _nextSibling(NULL)
 {}
 
 
@@ -105,6 +107,30 @@ const std::string& NodeData::getAttribute(const std::string &name) const {
 
 test::NodeListData* NodeData::children() const {
   return _children;
+}
+
+
+
+void NodeData::setPreviousSibling(test::NodeData *sibling) {
+  _previousSibling = sibling;
+}
+
+
+
+test::NodeData* NodeData::previousSibling() const {
+  return _previousSibling;
+}
+
+
+
+void NodeData::setNextSibling(test::NodeData *sibling) {
+  _nextSibling = sibling;
+}
+
+
+
+test::NodeData* NodeData::nextSibling() const {
+  return _nextSibling;
 }
 
 

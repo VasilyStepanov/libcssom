@@ -32,6 +32,7 @@ class NodeList {
     bool operator==(const test::NodeList &rhs) const;
     void swap(test::NodeList &rhs);
 
+    bool empty() const;
     size_t size() const;
     test::Node operator[](size_t index) const;
 };
