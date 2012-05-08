@@ -35,6 +35,12 @@ extern "C" {
     const CSSOM_Deque_##suffix *deque); \
   CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_at( \
     CSSOM_Deque_##suffix *deque, size_t index); \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_front( \
+    CSSOM_Deque_##suffix *deque);\
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_back( \
+    CSSOM_Deque_##suffix *deque);\
+  void CSSOM_Deque_##suffix##_pop_front(CSSOM_Deque_##suffix *deque);\
+  void CSSOM_Deque_##suffix##_pop_back(CSSOM_Deque_##suffix *deque);\
   \
   CSSOM_DequeIter_##suffix CSSOM_DequeIter_##suffix##_next( \
     CSSOM_DequeIter_##suffix iter); \

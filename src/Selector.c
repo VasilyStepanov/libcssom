@@ -274,11 +274,10 @@ void CSSOM_Selector_select(CSSOM_Selector *selector, void *root,
   CSSOM_Deque_void_append(deque, root);
   while (CSSOM_Deque_void_size(deque) != 0) {
     void *child;
-    void *top = *CSSOM_Deque_void_at(deque, CSSOM_Deque_void_size(deque) - 1);
-    CSSOM_Deque_void_erase(deque,
-      CSSOM_Deque_void_at(deque, CSSOM_Deque_void_size(deque) - 1));
+    void *top = *CSSOM_Deque_void_back(deque);
+    CSSOM_Deque_void_pop_back(deque);
 
-    domapi->Selection_appendNode(selection, top);
+    domapi->Selection_append(selection, top);
 
     for (
       child = domapi->Node_children(top);

@@ -56,7 +56,7 @@ static void* Node_next(void *node) {
 
 
 
-static void Selection_appendNode(std::deque<test::Node> *selection,
+static void Selection_append(std::deque<test::Node> *selection,
   void *node)
 {
   selection->push_back(*unwrap<test::Node>(node));
@@ -110,7 +110,7 @@ void selectElements() {
     Node_name,
     Node_children,
     Node_next,
-    (void(*)(void*, void*))Selection_appendNode,
+    (void(*)(void*, void*))Selection_append,
   };
 
   cssom::CSSOM cssom;

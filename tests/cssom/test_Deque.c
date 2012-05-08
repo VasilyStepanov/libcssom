@@ -326,6 +326,45 @@ static void test_Deque_erase_2(void) {
 
 
 
+static void test_Deque_front_back(void) {
+  CSSOM_Deque_Int *d;
+
+  d = CSSOM_Deque_Int_alloc(5);
+
+  *CSSOM_Deque_Int_at(d, 0) = 1;
+  *CSSOM_Deque_Int_at(d, 1) = 2;
+  *CSSOM_Deque_Int_at(d, 2) = 3;
+  *CSSOM_Deque_Int_at(d, 3) = 4;
+  *CSSOM_Deque_Int_at(d, 4) = 5;
+
+
+
+  assert(*CSSOM_Deque_Int_front(d) == 1);
+  assert(*CSSOM_Deque_Int_back(d) == 5);
+
+
+
+  CSSOM_Deque_Int_pop_front(d);
+  CSSOM_Deque_Int_pop_back(d);
+
+  assert(*CSSOM_Deque_Int_front(d) == 2);
+  assert(*CSSOM_Deque_Int_back(d) == 4);
+
+
+
+  CSSOM_Deque_Int_pop_front(d);
+  CSSOM_Deque_Int_pop_back(d);
+
+  assert(*CSSOM_Deque_Int_front(d) == 3);
+  assert(*CSSOM_Deque_Int_back(d) == 3);
+
+
+
+  CSSOM_Deque_Int_free(d);
+}
+
+
+
 void test_Deque(void) {
   test_Deque_basics();
   test_Deque_append();
@@ -333,4 +372,5 @@ void test_Deque(void) {
   test_Deque_insert_2();
   test_Deque_erase();
   test_Deque_erase_2();
+  test_Deque_front_back();
 }

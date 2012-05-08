@@ -280,6 +280,40 @@
   \
   \
   \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_front( \
+    CSSOM_Deque_##suffix *deque) \
+  { \
+    return (CSSOM_DequeIter_##suffix)deque->head->next; \
+  } \
+  \
+  \
+  \
+  CSSOM_DequeIter_##suffix CSSOM_Deque_##suffix##_back( \
+    CSSOM_Deque_##suffix *deque) \
+  { \
+    return (CSSOM_DequeIter_##suffix)deque->tail; \
+  } \
+  \
+  \
+  \
+  void CSSOM_Deque_##suffix##_pop_front( \
+    CSSOM_Deque_##suffix *deque) \
+  { \
+    CSSOM_Deque_##suffix##_erase(deque, \
+      (CSSOM_DequeIter_##suffix)deque->head->next); \
+  } \
+  \
+  \
+  \
+  void CSSOM_Deque_##suffix##_pop_back( \
+    CSSOM_Deque_##suffix *deque) \
+  { \
+    CSSOM_Deque_##suffix##_erase(deque, \
+      (CSSOM_DequeIter_##suffix)deque->tail); \
+  } \
+  \
+  \
+  \
   CSSOM_DequeIter_##suffix CSSOM_DequeIter_##suffix##_next( \
     CSSOM_DequeIter_##suffix iter) \
   { \
