@@ -9,7 +9,7 @@ namespace test {
 
 class Node;
 
-class NodeListData;
+class NodeListImpl;
 
 
 
@@ -21,11 +21,11 @@ namespace test {
 
 class NodeList {
   private:
-    test::NodeListData *_data;
+    test::NodeListImpl *_impl;
 
   public:
     NodeList();
-    explicit NodeList(test::NodeListData *data);
+    explicit NodeList(test::NodeListImpl *impl);
     NodeList(const test::NodeList &copy);
     ~NodeList();
     test::NodeList& operator=(const test::NodeList &rhs);

@@ -7,9 +7,9 @@ AM_CPPFLAGS = -Wall -Wextra -Werror -ansi -pedantic -D_XOPEN_SOURCE=700 \
 
 test_suite_SOURCES = Errors.cpp \
                      Node.cpp \
-                     NodeData.cpp \
+                     NodeImpl.cpp \
                      NodeList.cpp \
-                     NodeListData.cpp \
+                     NodeListImpl.cpp \
                      test_CSSFontFaceRule.cpp \
                      test_CSSImportRule.cpp \
                      test_CSSMediaRule.cpp \

@@ -1,8 +1,8 @@
 #include "Node.hpp"
 
-#include "NodeData.hpp"
+#include "NodeImpl.hpp"
 #include "NodeList.hpp"
-#include "NodeListData.hpp"
+#include "NodeListImpl.hpp"
 
 #include <utility>
 #include <sstream>
@@ -16,7 +16,7 @@ namespace {
 
 
 std::string nodeName(xmlNode *node) {
-  if (node->type == XML_CDATA_SECTION_NODE) return "#cdata-section";
+  if (node->type == XML_CDATA_SECTION_NODE) return "#cimpl-section";
   if (node->type == XML_ELEMENT_NODE) return (const char*)node->name;
   if (node->type == XML_TEXT_NODE) return "#text";
   if (node->name == NULL) {
@@ -29,7 +29,7 @@ std::string nodeName(xmlNode *node) {
 
 
 
-test::NodeData* create(xmlNode *node, std::deque<test::NodeData*> *children) {
+test::NodeImpl* create(xmlNode *node, std::deque<test::NodeImpl*> *children) {
   std::string name = nodeName(node);
   std::string content;
   if (node->content != NULL) content = (const char*)node->content;
@@ -81,14 +81,14 @@ test::NodeData* create(xmlNode *node, std::deque<test::NodeData*> *children) {
       break;
   }
 
-  return new test::NodeData(name, content, attributes,
-    new test::NodeListData(children));
+  return new test::NodeImpl(name, content, attributes,
+    new test::NodeListImpl(children));
 }
 
 
 
-test::NodeData* walk(xmlNode *node) {
-  std::deque<test::NodeData*> *children = new std::deque<test::NodeData*>();
+test::NodeImpl* walk(xmlNode *node) {
+  std::deque<test::NodeImpl*> *children = new std::deque<test::NodeImpl*>();
 
   for (xmlNode *it = node->children; it != NULL; it = it->next)
     children->push_back(walk(it));
@@ -112,7 +112,7 @@ test::Node Node::parse(const std::string &html) {
     HTML_PARSE_NOIMPLIED);
   htmlParseChunk(parser, html.c_str(), html.length(), 0);
 
-  test::NodeData *nodeData = walk(xmlDocGetRootElement(parser->myDoc));
+  test::NodeImpl *nodeData = walk(xmlDocGetRootElement(parser->myDoc));
   test::Node wrap(nodeData);
   nodeData->release();
 
@@ -124,29 +124,29 @@ test::Node Node::parse(const std::string &html) {
 
 
 Node::Node() :
-  _data(NULL)
+  _impl(NULL)
 {}
 
 
 
-Node::Node(test::NodeData *data) :
-  _data(data)
+Node::Node(test::NodeImpl *impl) :
+  _impl(impl)
 {
-  _data->acquire();
+  _impl->acquire();
 }
 
 
 
 Node::Node(const test::Node &copy) :
-  _data(copy._data)
+  _impl(copy._impl)
 {
-  _data->acquire();
+  _impl->acquire();
 }
 
 
 
 Node::~Node() {
-  _data->release();
+  _impl->release();
 }
 
 
@@ -159,54 +159,54 @@ test::Node& Node::operator=(const test::Node &rhs) {
 
 
 bool Node::operator==(const test::Node &rhs) const {
-  return _data == rhs._data;
+  return _impl == rhs._impl;
 }
 
 
 std::string Node::str() const {
-  return _data->str();
+  return _impl->str();
 }
 
 
 
 void Node::swap(test::Node &rhs) {
-  std::swap(_data, rhs._data);
+  std::swap(_impl, rhs._impl);
 }
 
 
 
 bool Node::isNull() const {
-  return _data == NULL;
+  return _impl == NULL;
 }
 
 
 
 const std::string& Node::name() const {
-  return _data->name();
+  return _impl->name();
 }
 
 
 
 const std::string& Node::getAttribute(const std::string &name) const {
-  return _data->getAttribute(name);
+  return _impl->getAttribute(name);
 }
 
 
 
 test::NodeList Node::children() const {
-  return test::NodeList(_data->children());
+  return test::NodeList(_impl->children());
 }
 
 
 
 test::Node Node::previousSibling() const {
-  return test::Node(_data->previousSibling());
+  return test::Node(_impl->previousSibling());
 }
 
 
 
 test::Node Node::nextSibling() const {
-  return test::Node(_data->nextSibling());
+  return test::Node(_impl->nextSibling());
 }
 
 

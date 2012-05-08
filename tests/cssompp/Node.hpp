@@ -8,7 +8,7 @@ namespace test {
 
 
 
-class NodeData;
+class NodeImpl;
 
 class NodeList;
 
@@ -22,13 +22,13 @@ namespace test {
 
 class Node {
   private:
-    test::NodeData *_data;
+    test::NodeImpl *_impl;
 
   public:
     static test::Node parse(const std::string &html);
 
     Node();
-    explicit Node(test::NodeData *data);
+    explicit Node(test::NodeImpl *impl);
     Node(const test::Node &copy);
     ~Node();
     test::Node& operator=(const test::Node &rhs);

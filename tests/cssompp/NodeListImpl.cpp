@@ -1,6 +1,6 @@
-#include "NodeListData.hpp"
+#include "NodeListImpl.hpp"
 
-#include "NodeData.hpp"
+#include "NodeImpl.hpp"
 
 #include <assert.h>
 
@@ -8,13 +8,13 @@ namespace test {
 
 
 
-NodeListData::NodeListData(std::deque<test::NodeData*> *nodes) :
+NodeListImpl::NodeListImpl(std::deque<test::NodeImpl*> *nodes) :
   _handles(1),
   _nodes(nodes)
 {
   if (_nodes->size() > 1) {
     for (
-      std::deque<test::NodeData*>::iterator lhs = _nodes->begin(),
+      std::deque<test::NodeImpl*>::iterator lhs = _nodes->begin(),
         rhs = _nodes->begin() + 1;
       rhs != _nodes->end();
       ++lhs, ++rhs)
@@ -27,7 +27,7 @@ NodeListData::NodeListData(std::deque<test::NodeData*> *nodes) :
 
 
 
-void NodeListData::acquire() {
+void NodeListImpl::acquire() {
   if (this == NULL) return;
 
   ++_handles;
@@ -35,7 +35,7 @@ void NodeListData::acquire() {
 
 
 
-void NodeListData::release() {
+void NodeListImpl::release() {
   if (this == NULL) return;
 
   assert(_handles > 0);
@@ -47,19 +47,19 @@ void NodeListData::release() {
 
 
 
-bool NodeListData::empty() const {
+bool NodeListImpl::empty() const {
   return _nodes->empty();
 }
 
 
 
-size_t NodeListData::size() const {
+size_t NodeListImpl::size() const {
   return _nodes->size();
 }
 
 
 
-test::NodeData* NodeListData::operator[](size_t index) const {
+test::NodeImpl* NodeListImpl::operator[](size_t index) const {
   return (*_nodes)[index];
 }
 

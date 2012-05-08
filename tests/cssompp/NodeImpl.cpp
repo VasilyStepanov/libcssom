@@ -1,6 +1,6 @@
-#include "NodeData.hpp"
+#include "NodeImpl.hpp"
 
-#include "NodeListData.hpp"
+#include "NodeListImpl.hpp"
 
 #include <sstream>
 
@@ -20,9 +20,9 @@ namespace test {
 
 
 
-NodeData::NodeData(const std::string &name, const std::string &content,
+NodeImpl::NodeImpl(const std::string &name, const std::string &content,
   const std::map<std::string, std::string> &attributes,
-  test::NodeListData *children) :
+  test::NodeListImpl *children) :
   _handles(1),
   _name(name),
   _content(content),
@@ -34,7 +34,7 @@ NodeData::NodeData(const std::string &name, const std::string &content,
 
 
 
-void NodeData::acquire() {
+void NodeImpl::acquire() {
   if (this == NULL) return;
 
   ++_handles;
@@ -42,7 +42,7 @@ void NodeData::acquire() {
 
 
 
-void NodeData::release() {
+void NodeImpl::release() {
   if (this == NULL) return;
 
   assert(_handles > 0);
@@ -54,7 +54,7 @@ void NodeData::release() {
 
 
 
-std::string NodeData::str() const {
+std::string NodeImpl::str() const {
   std::ostringstream oss;
 
   if (_name == "#text") {
@@ -82,19 +82,19 @@ std::string NodeData::str() const {
 
 
 
-const std::string& NodeData::name() const {
+const std::string& NodeImpl::name() const {
   return _name;
 }
 
 
 
-const std::string& NodeData::content() const {
+const std::string& NodeImpl::content() const {
   return _content;
 }
 
 
 
-const std::string& NodeData::getAttribute(const std::string &name) const {
+const std::string& NodeImpl::getAttribute(const std::string &name) const {
   std::map<std::string, std::string>::const_iterator match =
     _attributes.find(name);
 
@@ -105,31 +105,31 @@ const std::string& NodeData::getAttribute(const std::string &name) const {
 
 
 
-test::NodeListData* NodeData::children() const {
+test::NodeListImpl* NodeImpl::children() const {
   return _children;
 }
 
 
 
-void NodeData::setPreviousSibling(test::NodeData *sibling) {
+void NodeImpl::setPreviousSibling(test::NodeImpl *sibling) {
   _previousSibling = sibling;
 }
 
 
 
-test::NodeData* NodeData::previousSibling() const {
+test::NodeImpl* NodeImpl::previousSibling() const {
   return _previousSibling;
 }
 
 
 
-void NodeData::setNextSibling(test::NodeData *sibling) {
+void NodeImpl::setNextSibling(test::NodeImpl *sibling) {
   _nextSibling = sibling;
 }
 
 
 
-test::NodeData* NodeData::nextSibling() const {
+test::NodeImpl* NodeImpl::nextSibling() const {
   return _nextSibling;
 }
 
