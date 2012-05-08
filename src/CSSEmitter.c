@@ -289,8 +289,8 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
     case SAC_ID_CONDITION:
       if (fprintf(out, "[") < 0) return 1;
       if (emit_name(out,
-        condition->desc.attribute.namespaceURI,
-        condition->desc.attribute.localName) != 0)
+        condition->desc.attribute.prefix,
+        condition->desc.attribute.name) != 0)
       {
         return 1;
       }
@@ -398,8 +398,8 @@ static int emit_selector(FILE *out, const SAC_Selector *selector) {
       break;
     case SAC_ELEMENT_NODE_SELECTOR:
       if (emit_name(out,
-        selector->desc.element.namespaceURI,
-        selector->desc.element.localName) != 0)
+        selector->desc.element.prefix,
+        selector->desc.element.name) != 0)
       {
         return 1;
       }

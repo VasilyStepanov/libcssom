@@ -274,7 +274,7 @@ static int selected(const CSSOM_DOMAPI *domapi,
     case SAC_ELEMENT_NODE_SELECTOR:
       if (domapi->Node_type(node) != CSSOM_ELEMENT_NODE) return 0;
       if (strcasecmp(domapi->Node_name(node),
-        selector->desc.element.localName) != 0) return 0;
+        selector->desc.element.name) != 0) return 0;
       return 1;
     case SAC_TEXT_NODE_SELECTOR:
       fprintf(stderr, "Text node selector not implemented.\n");
