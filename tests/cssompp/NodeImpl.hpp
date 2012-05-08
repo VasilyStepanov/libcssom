@@ -47,6 +47,7 @@ class NodeImpl {
     const std::string& ns() const;
     const std::string& name() const;
     const std::string& content() const;
+    bool hasAttribute(const std::string &name) const;
     const std::string& getAttribute(const std::string &name) const;
     test::NodeListImpl* children() const;
     void setPreviousSibling(test::NodeImpl *sibling);

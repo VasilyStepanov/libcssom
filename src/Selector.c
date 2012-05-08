@@ -13,7 +13,6 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 
 
 
@@ -262,18 +261,254 @@ void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
 
 
 
-static int selected(const CSSOM_DOMAPI *domapi,
-  const SAC_Selector *selector, void *node CSSOM_UNUSED)
+static int oneof(const char *attribute, const char *value) {
+  const char *lhs;
+  const char *rhs;
+
+  for (lhs = attribute; *lhs == ' '; ++lhs);
+  while (*lhs != '\0') {
+    for (rhs = lhs + 1; *rhs != ' ' && *rhs != '\0'; ++rhs);
+
+    if (strncmp(lhs, value, rhs - lhs) == 0) return 1;
+
+    for (lhs = rhs; *lhs == ' '; ++lhs);
+  }
+
+  return 0;
+}
+
+
+
+static int empty(const char *string) {
+  const char *ch;
+
+  for (ch = string; *ch == ' '; ++ch);
+
+  return *ch == '\0';
+}
+
+
+
+static int beginhypen(const char *attribute, const char *value) {
+  const char *lhs;
+  const char *rhs;
+
+  for (
+    lhs = attribute, rhs = value;
+    *lhs != '\0' && *rhs != '\0';
+    ++lhs, ++rhs)
+  {
+    if (*lhs != *rhs) return 0;
+  }
+
+  return (*lhs == '\0' || *lhs == '-') && *rhs == '\0';
+}
+
+
+
+static int prefix(const char *attribute, const char *value) {
+  const char *lhs;
+  const char *rhs;
+
+  lhs = attribute;
+  rhs = value;
+  while (1) {
+    if (*rhs == '\0') return 1;
+    if (*lhs == '\0') return 0;
+
+    if (*lhs != *rhs) return 0;
+
+    ++lhs;
+    ++rhs;
+  }
+
+  return 0;
+}
+
+
+
+static int suffix(const char *attribute, const char *value) {
+  const char *lhs;
+  const char *rhs;
+
+  for (lhs = attribute; *lhs != '\0'; ++lhs);
+  for (rhs = value; *rhs != '\0'; ++rhs);
+
+  while (1) {
+    if (strncmp(lhs, rhs, 1) != 0) return 0;
+
+    if (rhs == value) return 1;
+    if (lhs == attribute) return 0;
+
+    --lhs;
+    --rhs;
+  }
+
+  return 0;
+}
+
+
+
+static int performed(const CSSOM_DOMAPI *domapi, const SAC_Condition *condition,
+  void *node)
+{
+  switch (condition->conditionType) {
+    case SAC_AND_CONDITION:
+      if (performed(domapi,
+        condition->desc.combinator.firstCondition, node) == 0)
+      {
+        return 0;
+      }
+      if (performed(domapi,
+        condition->desc.combinator.secondCondition, node) == 0)
+      {
+        return 0;
+      }
+      return 1;
+    case SAC_OR_CONDITION:
+      fprintf(stderr, "Condition OR not implemented.\n");
+      return 0;
+    case SAC_NEGATIVE_CONDITION:
+      fprintf(stderr, "Negative condition not implemented.\n");
+      return 0;
+    case SAC_POSITIONAL_CONDITION:
+      fprintf(stderr, "Positional condition not implemented.\n");
+      return 0;
+    case SAC_PREFIX_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (empty(condition->desc.attribute.value)) return 0;
+        if (attribute == NULL) return 0;
+
+        if (condition->desc.attribute.value == NULL) return 1;
+        if (prefix(attribute, condition->desc.attribute.value) != 0)
+          return 1;
+
+        return 0;
+      }
+    case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (empty(condition->desc.attribute.value)) return 0;
+        if (attribute == NULL) return 0;
+
+        if (condition->desc.attribute.value == NULL) return 1;
+        if (suffix(attribute, condition->desc.attribute.value) != 0)
+          return 1;
+
+        return 0;
+      }
+    case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (empty(condition->desc.attribute.value)) return 0;
+        if (attribute == NULL) return 0;
+
+        if (condition->desc.attribute.value == NULL) return 1;
+        if (strstr(attribute, condition->desc.attribute.value) != NULL)
+          return 1;
+
+        return 0;
+      }
+      return 0;
+    case SAC_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (attribute == NULL) return 0;
+
+        if (condition->desc.attribute.value == NULL) return 1;
+        if (strcmp(attribute, condition->desc.attribute.value) == 0)
+          return 1;
+
+        return 0;
+      }
+    case SAC_ID_CONDITION:
+      fprintf(stderr, "Id condition not implemented.\n");
+      return 0;
+    case SAC_LANG_CONDITION:
+      fprintf(stderr, "Lang condition not implemented.\n");
+      return 0;
+    case SAC_ONE_OF_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (empty(condition->desc.attribute.value)) return 0;
+        if (attribute == NULL) return 0;
+
+        if (oneof(attribute, condition->desc.attribute.value) != 0)
+          return 1;
+
+        return 0;
+      }
+      return 0;
+    case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+      {
+        const char *attribute = domapi->Node_attribute(node,
+          condition->desc.attribute.name);
+
+        if (empty(condition->desc.attribute.value)) return 0;
+        if (attribute == NULL) return 0;
+
+        if (beginhypen(attribute, condition->desc.attribute.value) != 0)
+          return 1;
+
+        return 0;
+      }
+      return 0;
+    case SAC_CLASS_CONDITION:
+      fprintf(stderr, "Class condition not implemented.\n");
+      return 0;
+    case SAC_PSEUDO_CLASS_CONDITION:
+      fprintf(stderr, "Pseudo class condition not implemented.\n");
+      return 0;
+    case SAC_PSEUDO_ELEMENT_CONDITION:
+      fprintf(stderr, "Pseudo element condition not implemented.\n");
+      return 0;
+    case SAC_ONLY_CHILD_CONDITION:
+      fprintf(stderr, "Only child condition not implemented.\n");
+      return 0;
+    case SAC_ONLY_TYPE_CONDITION:
+      fprintf(stderr, "Only type condition not implemented.\n");
+      return 0;
+    case SAC_CONTENT_CONDITION:
+      fprintf(stderr, "Content condition not implemented.\n");
+      return 0;
+  }
+  return 0;
+}
+
+
+
+static int selected(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
+  void *node)
 {
   switch (selector->selectorType) {
     case SAC_CONDITIONAL_SELECTOR:
-      fprintf(stderr, "Conditional selector not implemented.\n");
-      return 0;
+      if (selected(domapi,
+        selector->desc.conditional.simpleSelector, node) == 0)
+      {
+        return 0;
+      }
+      if (performed(domapi,
+        selector->desc.conditional.condition, node) == 0)
+      {
+        return 0;
+      }
+      return 1;
     case SAC_ANY_NODE_SELECTOR:
       return 1;
     case SAC_ELEMENT_NODE_SELECTOR:
       if (domapi->Node_type(node) != CSSOM_ELEMENT_NODE) return 0;
-      if (strcasecmp(domapi->Node_name(node),
+      if (strcmp(domapi->Node_name(node),
         selector->desc.element.name) != 0) return 0;
       return 1;
     case SAC_TEXT_NODE_SELECTOR:

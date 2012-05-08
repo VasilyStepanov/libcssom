@@ -36,6 +36,13 @@ const char* Node_name(test::Node::Impl *node) {
 
 
 
+const char* Node_attribute(test::Node::Impl *node, const char *name) {
+  if (!node->hasAttribute(name)) return NULL;
+  return node->getAttribute(name).c_str();
+}
+
+
+
 test::Node::Impl* Node_children(test::Node::Impl *node) {
   if (node->children()->empty()) return NULL;
   return (*node->children())[0];
@@ -103,6 +110,7 @@ cssom::CSSOM setup() {
   CSSOM_DOMAPI domapi = {
     (CSSOM_NodeType(*)(void*))Node_type,
     (const char*(*)(void*))Node_name,
+    (const char*(*)(void*, const char*))Node_attribute,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
@@ -116,9 +124,41 @@ cssom::CSSOM setup() {
 
 
 
+void typeSelector() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 6.1. Type selector
+   */
+
+  test::Node root = test::Node::parse(
+"<div>"
+  "<h1>Title</h1>"
+  "<p>Paragraph.</p>"
+"</div>"
+  );
+
+
+
+  selector = cssom.parseSelector("h1");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1>Title</h1>"
+  ), html(selection));
+}
+
+
+
 void universalSelector() {
   cssom::CSSOM cssom = setup();
-  cssom::Selector selector = cssom.parseSelector("*");
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 6.2. Universal selector
+   */
 
   test::Node root = test::Node::parse(
 "<div>"
@@ -126,9 +166,10 @@ void universalSelector() {
 "</div>"
   );
 
-  std::deque<test::Node> selection;
-  select(root, selector, selection);
 
+
+  selector = cssom.parseSelector("*");
+  select(root, selector, selection);
   assertEquals(std::string(
 
 "<div>"
@@ -144,22 +185,123 @@ void universalSelector() {
 
 
 
-void typeSelector() {
+void attributeSelector() {
   cssom::CSSOM cssom = setup();
-  cssom::Selector selector = cssom.parseSelector("h1");
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 6.3.1. Attribute presence and value selectors
+   */
 
   test::Node root = test::Node::parse(
-"<div>\n"
-  "<h1>Title</h1>\n"
-  "<p>Paragraph.</p>\n"
-"</div>\n"
+"<div>"
+
+  "<h1 title=\"chapter1\">Chapter 1</h1>"
+  "<h1>Chapter 2</h1>"
+
+  "<span>span</span>"
+  "<span class=\"generic\">generic span</span>"
+  "<span class=\"example\">example span</span>"
+
+  "<span hello=\"Cleveland\">Hello Cleveland</span>"
+  "<span goodbye=\"Columbus\">Goodbye Columbus</span>"
+  "<span goodbye=\"Columbus\" hello=\"Cleveland\">"
+    "Hello Cleveland, goodbye Columbus</span>"
+
+  "<a rel=\"copyright copyleft copyeditor\">copying</a>"
+
+  "<a hreflang=\"fr\">french</a>"
+
+  "<a hreflang=\"en\">english</a>"
+  "<a hreflang=\"en-US\">us english</a>"
+  "<a hreflang=\"en-scouse\">scouse english</a>"
+  "<a hreflang=\"envalid\">invalid</a>"
+
+  "<object type=\"image/gif\"></object>"
+
+  "<a href=\"http://example.com/foo.html\">foo</a>"
+
+  "<p title=\"sayhelloworld\">Hello world</p>"
+
+"</div>"
   );
 
-  std::deque<test::Node> selection;
-  select(root, selector, selection);
 
+
+  selector = cssom.parseSelector("h1[title]");
+  select(root, selector, selection);
   assertEquals(std::string(
-"<h1>Title</h1>"
+"<h1 title=\"chapter1\">Chapter 1</h1>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("span[class=\"example\"]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<span class=\"example\">example span</span>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector(
+"span[hello=\"Cleveland\"][goodbye=\"Columbus\"]"
+  );
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<span goodbye=\"Columbus\" hello=\"Cleveland\">"
+  "Hello Cleveland, goodbye Columbus</span>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("a[rel~=\"copyright\"]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<a rel=\"copyright copyleft copyeditor\">copying</a>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("a[hreflang=fr]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<a hreflang=\"fr\">french</a>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("a[hreflang|=en]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<a hreflang=\"en\">english</a>"
+"<a hreflang=\"en-US\">us english</a>"
+"<a hreflang=\"en-scouse\">scouse english</a>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("object[type^=\"image/\"]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<object type=\"image/gif\"></object>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("a[href$=\".html\"]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<a href=\"http://example.com/foo.html\">foo</a>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("p[title*=\"hello\"]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p title=\"sayhelloworld\">Hello world</p>"
   ), html(selection));
 }
 
@@ -173,8 +315,10 @@ namespace test {
 
 void selector() {
   selectorText();
-  universalSelector();
+
   typeSelector();
+  universalSelector();
+  attributeSelector();
 }
 
 

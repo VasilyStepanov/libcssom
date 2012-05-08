@@ -41,6 +41,7 @@ class Node {
     test::Node::Impl* impl() const;
 
     const std::string& name() const;
+    bool hasAttribute(const std::string &name) const;
     const std::string& getAttribute(const std::string &name) const;
     test::NodeList children() const;
     test::Node previousSibling() const;

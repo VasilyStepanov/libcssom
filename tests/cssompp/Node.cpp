@@ -193,6 +193,12 @@ const std::string& Node::name() const {
 
 
 
+bool Node::hasAttribute(const std::string &name) const {
+  return _impl->hasAttribute(name);
+}
+
+
+
 const std::string& Node::getAttribute(const std::string &name) const {
   return _impl->getAttribute(name);
 }

@@ -107,6 +107,12 @@ const std::string& NodeImpl::content() const {
 
 
 
+bool NodeImpl::hasAttribute(const std::string &name) const {
+  return _attributes.find(name) != _attributes.end();
+}
+
+
+
 const std::string& NodeImpl::getAttribute(const std::string &name) const {
   std::map<std::string, std::string>::const_iterator match =
     _attributes.find(name);
