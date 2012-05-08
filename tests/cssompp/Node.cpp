@@ -33,22 +33,29 @@ test::NodeImpl* create(xmlNode *node, std::deque<test::NodeImpl*> *children) {
   std::string name = nodeName(node);
   std::string content;
   if (node->content != NULL) content = (const char*)node->content;
+  std::string ns;
+  if (node->ns != NULL && node->ns->prefix != NULL)
+    ns = (const char*)node->ns->prefix;
 
   std::map<std::string, std::string> attributes;
 
   switch (node->type) {
     case XML_ELEMENT_NODE:
       {
-        for (xmlAttr *curAttr = node->properties; curAttr; curAttr = curAttr->next) {
-          if (curAttr->name == NULL)
-            throw std::runtime_error("create(): Attr name is null.");
+        for (
+          xmlAttr *attr = node->properties;
+          attr != NULL;
+          attr = attr->next)
+        {
+          if (attr->name == NULL)
+            throw std::runtime_error("create(): Attr name is NULL.");
 
           std::string content;
-          if (curAttr->children != NULL && curAttr->children->content != NULL)
-            content = (const char*)curAttr->children->content;
+          if (attr->children != NULL && attr->children->content != NULL)
+            content = (const char*)attr->children->content;
 
           attributes.insert(std::map<std::string, std::string>::value_type(
-            (const char*)curAttr->name, content));
+            (const char*)attr->name, content));
         }
       }
       break;
@@ -81,7 +88,7 @@ test::NodeImpl* create(xmlNode *node, std::deque<test::NodeImpl*> *children) {
       break;
   }
 
-  return new test::NodeImpl(name, content, attributes,
+  return new test::NodeImpl(ns, name, content, attributes,
     new test::NodeListImpl(children));
 }
 
@@ -105,12 +112,11 @@ namespace test {
 
 
 test::Node Node::parse(const std::string &html) {
-  htmlParserCtxtPtr parser = htmlCreatePushParserCtxt(
-    NULL, NULL, NULL, 0, NULL, XML_CHAR_ENCODING_UTF8);
-  htmlCtxtUseOptions(parser, HTML_PARSE_RECOVER | HTML_PARSE_NOBLANKS |
-    HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING | HTML_PARSE_NONET |
-    HTML_PARSE_NOIMPLIED);
-  htmlParseChunk(parser, html.c_str(), html.length(), 0);
+  xmlParserCtxtPtr parser = xmlCreatePushParserCtxt(
+    NULL, NULL, NULL, 0, NULL);
+  xmlCtxtUseOptions(parser, XML_PARSE_RECOVER | XML_PARSE_NOERROR |
+    XML_PARSE_NOBLANKS | XML_PARSE_NOWARNING | XML_PARSE_NONET);
+  xmlParseChunk(parser, html.c_str(), html.length(), 1);
 
   test::NodeImpl *nodeData = walk(xmlDocGetRootElement(parser->myDoc));
   test::Node wrap(nodeData);

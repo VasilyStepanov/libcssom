@@ -121,26 +121,24 @@ void universalSelector() {
   cssom::Selector selector = cssom.parseSelector("*");
 
   test::Node root = test::Node::parse(
-"<div>\n"
-  "<p>Paragraph.</p>\n"
-"</div>\n"
+"<div>"
+  "<p>Paragraph.</p>"
+"</div>"
   );
 
   std::deque<test::Node> selection;
   select(root, selector, selection);
 
   assertEquals(std::string(
-"<html><body><div>\n"
-"<p>Paragraph.</p>\n"
-"</div></body></html>"
-"<body><div>\n"
-"<p>Paragraph.</p>\n"
-"</div></body>"
-"<div>\n"
-"<p>Paragraph.</p>\n"
-"</div>\n"
+
+"<div>"
 "<p>Paragraph.</p>"
-"Paragraph.\n"
+"</div>"
+
+"<p>Paragraph.</p>"
+
+"Paragraph."
+
   ), html(selection));
 }
 

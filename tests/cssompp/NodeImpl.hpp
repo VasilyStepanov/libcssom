@@ -21,6 +21,7 @@ namespace test {
 class NodeImpl {
   private:
     size_t _handles;
+    std::string _ns;
     std::string _name;
     std::string _content;
     std::map<std::string, std::string> _attributes;
@@ -33,7 +34,8 @@ class NodeImpl {
     test::NodeImpl& operator=(const test::NodeImpl &rhs);
 
   public:
-    NodeImpl(const std::string &name, const std::string &content,
+    NodeImpl(const std::string &ns, const std::string &name,
+      const std::string &content,
       const std::map<std::string, std::string> &attributes,
       test::NodeListImpl *children);
 
@@ -42,6 +44,7 @@ class NodeImpl {
     void acquire();
     void release();
 
+    const std::string& ns() const;
     const std::string& name() const;
     const std::string& content() const;
     const std::string& getAttribute(const std::string &name) const;

@@ -20,10 +20,12 @@ namespace test {
 
 
 
-NodeImpl::NodeImpl(const std::string &name, const std::string &content,
+NodeImpl::NodeImpl(const std::string &ns, const std::string &name,
+  const std::string &content,
   const std::map<std::string, std::string> &attributes,
   test::NodeListImpl *children) :
   _handles(1),
+  _ns(ns),
   _name(name),
   _content(content),
   _attributes(attributes),
@@ -60,7 +62,9 @@ std::string NodeImpl::str() const {
   if (_name == "#text") {
     oss << _content;    
   } else {
-    oss << "<" << _name;
+    oss << '<';
+    if (!_ns.empty()) oss << _ns << ':';
+    oss << _name;
     for (
       std::map<std::string, std::string>::const_iterator it =
         _attributes.begin();
@@ -69,15 +73,24 @@ std::string NodeImpl::str() const {
     {
       oss << " " << it->first << "=\"" << it->second << "\"";
     }
-    oss << ">";
+    oss << '>';
 
     for (size_t i = 0; i < _children->size(); ++i)
       oss << (*_children)[i]->str();
 
-    oss << "</" << _name << ">";
+    oss << "</";
+    if (!_ns.empty()) oss << _ns << ':';
+    oss << _name;
+    oss << '>';
   }
 
   return oss.str();
+}
+
+
+
+const std::string& NodeImpl::ns() const {
+  return _ns;
 }
 
 
