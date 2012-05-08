@@ -181,6 +181,12 @@ bool Node::isNull() const {
 
 
 
+test::NodeImpl* Node::impl() const {
+  return _impl;
+}
+
+
+
 const std::string& Node::name() const {
   return _impl->name();
 }

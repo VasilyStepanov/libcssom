@@ -20,17 +20,20 @@ namespace test {
 
 
 class NodeList {
+  public:
+    typedef test::NodeListImpl Impl;
   private:
-    test::NodeListImpl *_impl;
+    test::NodeList::Impl *_impl;
 
   public:
     NodeList();
-    explicit NodeList(test::NodeListImpl *impl);
+    explicit NodeList(test::NodeList::Impl *impl);
     NodeList(const test::NodeList &copy);
     ~NodeList();
     test::NodeList& operator=(const test::NodeList &rhs);
     bool operator==(const test::NodeList &rhs) const;
     void swap(test::NodeList &rhs);
+    test::NodeList::Impl* impl() const;
 
     bool empty() const;
     size_t size() const;

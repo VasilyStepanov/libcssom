@@ -2,7 +2,9 @@
 
 #include "Errors.hpp"
 #include "Node.hpp"
+#include "NodeImpl.hpp"
 #include "NodeList.hpp"
+#include "NodeListImpl.hpp"
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
@@ -21,45 +23,42 @@ namespace {
 
 
 
-template <typename T>
-void* wrap(const T &t) {
-  return *(void**)&t;
+inline void* wrap(test::Node::Impl *impl) {
+  return reinterpret_cast<void*>(impl);
 }
 
 
 
-template <typename T>
-T* unwrap(void *p) {
-  T *t = (T*)&p;
-  return t;
+inline test::Node::Impl* unwrap(void *p) {
+  return reinterpret_cast<test::Node::Impl*>(p);
 }
 
 
 
-static const char* Node_name(void *node) {
-  return unwrap<test::Node>(node)->name().c_str();
+const char* Node_name(void *node) {
+  return unwrap(node)->name().c_str();
 }
 
 
 
-static void* Node_children(void *node) {
-  if (unwrap<test::Node>(node)->children().empty()) return NULL;
-  return wrap(unwrap<test::Node>(node)->children()[0]);
+void* Node_children(void *node) {
+  if (unwrap(node)->children()->empty()) return NULL;
+  return wrap((*unwrap(node)->children())[0]);
 }
 
 
 
-static void* Node_next(void *node) {
-  if (unwrap<test::Node>(node)->nextSibling().isNull()) return NULL;
-  return wrap(unwrap<test::Node>(node)->nextSibling());
+void* Node_next(void *node) {
+  if (unwrap(node)->nextSibling() == NULL) return NULL;
+  return wrap(unwrap(node)->nextSibling());
 }
 
 
 
-static void Selection_append(std::deque<test::Node> *selection,
+void Selection_append(std::deque<test::Node> *selection,
   void *node)
 {
-  selection->push_back(*unwrap<test::Node>(node));
+  selection->push_back(test::Node(unwrap(node)));
 }
 
 
@@ -85,7 +84,7 @@ void select(const test::Node &root, cssom::Selector &selector,
 {
   std::deque<test::Node> ret;
 
-  selector.select(wrap(root), (void*)&ret);
+  selector.select(wrap(root.impl()), (void*)&ret);
 
   selection.swap(ret);
 }

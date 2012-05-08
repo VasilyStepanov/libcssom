@@ -58,6 +58,12 @@ void NodeList::swap(test::NodeList &rhs) {
 
 
 
+test::NodeListImpl* NodeList::impl() const {
+  return _impl;
+}
+
+
+
 bool NodeList::empty() const {
   return _impl->empty();
 }
