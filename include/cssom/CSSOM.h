@@ -48,7 +48,16 @@ typedef int (*CSSOM_ErrorHandler)(void *userData,
 
 
 
+typedef enum {
+  CSSOM_TEXT_NODE,
+  CSSOM_ELEMENT_NODE
+} CSSOM_NodeType;
+
+
+
+
 typedef struct {
+  CSSOM_NodeType (*Node_type)(void *node);
   const char * (*Node_name)(void *node);
   void* (*Node_children)(void *node);
   void* (*Node_next)(void *node);

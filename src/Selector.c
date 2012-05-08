@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 
 
@@ -261,30 +262,77 @@ void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
 
 
 
+static int selected(const CSSOM_DOMAPI *domapi,
+  const SAC_Selector *selector, void *node CSSOM_UNUSED)
+{
+  switch (selector->selectorType) {
+    case SAC_CONDITIONAL_SELECTOR:
+      fprintf(stderr, "Conditional selector not implemented.\n");
+      return 0;
+    case SAC_ANY_NODE_SELECTOR:
+      return 1;
+    case SAC_ELEMENT_NODE_SELECTOR:
+      if (domapi->Node_type(node) != CSSOM_ELEMENT_NODE) return 0;
+      if (strcasecmp(domapi->Node_name(node),
+        selector->desc.element.localName) != 0) return 0;
+      return 1;
+    case SAC_TEXT_NODE_SELECTOR:
+      fprintf(stderr, "Text node selector not implemented.\n");
+      return 0;
+    case SAC_CDATA_SECTION_NODE_SELECTOR:
+      fprintf(stderr, "CDATA section node selector not implemented.\n");
+      return 0;
+    case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
+      fprintf(stderr, "Processing instruction node selector "
+        "not implemented.\n");
+      return 0;
+    case SAC_COMMENT_NODE_SELECTOR:
+      fprintf(stderr, "Comment node selector not implemented.\n");
+      return 0;
+    case SAC_DESCENDANT_SELECTOR:
+      fprintf(stderr, "Descendant selector not implemented.\n");
+      return 0;
+    case SAC_CHILD_SELECTOR:
+      fprintf(stderr, "Child selector not implemented.\n");
+      return 0;
+    case SAC_DIRECT_ADJACENT_SELECTOR:
+      printf("Direct adjacent selector not implemented.\n");
+      return 0;
+    case SAC_GENERAL_ADJACENT_SELECTOR:
+      printf("General adjacent selector not implemented.\n");
+      return 0;
+  }
+  return 0;
+}
+
+
+
+static void Selector_walk(const CSSOM_Selector *selector,
+  const CSSOM_DOMAPI *domapi, void *node, void *selection)
+{
+  const SAC_Selector **it;
+  void *child;
+
+  for (it = selector->selectors; *it != NULL; ++it) {
+    if (selected(domapi, *it, node) != 0) {
+      domapi->Selection_append(selection, node);
+      break;
+    }
+  }
+
+  for (
+    child = domapi->Node_children(node);
+    child != NULL;
+    child = domapi->Node_next(child))
+  {
+    Selector_walk(selector, domapi, child, selection);
+  }
+}
+
+
+
 void CSSOM_Selector_select(CSSOM_Selector *selector, void *root,
   void *selection)
 {
-  const CSSOM_DOMAPI *domapi;
-  CSSOM_Deque_void *deque;
-
-  deque = CSSOM_Deque_void_alloc(0);
-
-  domapi = CSSOM_getDOMAPI(selector->cssom);
-
-  CSSOM_Deque_void_append(deque, root);
-  while (CSSOM_Deque_void_size(deque) != 0) {
-    void *child;
-    void *top = *CSSOM_Deque_void_back(deque);
-    CSSOM_Deque_void_pop_back(deque);
-
-    domapi->Selection_append(selection, top);
-
-    for (
-      child = domapi->Node_children(top);
-      child != NULL;
-      child = domapi->Node_next(child))
-    {
-      CSSOM_Deque_void_append(deque, child);
-    }
-  }
+  Selector_walk(selector, CSSOM_getDOMAPI(selector->cssom), root, selection);
 }

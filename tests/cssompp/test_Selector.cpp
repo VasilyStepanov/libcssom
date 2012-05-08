@@ -23,6 +23,13 @@ namespace {
 
 
 
+CSSOM_NodeType Node_type(test::Node::Impl *node) {
+  if (node->name() == "#text") return CSSOM_TEXT_NODE;
+  return CSSOM_ELEMENT_NODE;
+}
+
+
+
 const char* Node_name(test::Node::Impl *node) {
   return node->name().c_str();
 }
@@ -92,8 +99,9 @@ void selectorText() {
 
 
 
-void universalSelector() {
+cssom::CSSOM setup() {
   CSSOM_DOMAPI domapi = {
+    (CSSOM_NodeType(*)(void*))Node_type,
     (const char*(*)(void*))Node_name,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_next,
@@ -102,6 +110,14 @@ void universalSelector() {
 
   cssom::CSSOM cssom;
   cssom.setDOMAPI(&domapi);
+
+  return cssom;
+}
+
+
+
+void universalSelector() {
+  cssom::CSSOM cssom = setup();
   cssom::Selector selector = cssom.parseSelector("*");
 
   test::Node root = test::Node::parse(
@@ -130,6 +146,27 @@ void universalSelector() {
 
 
 
+void typeSelector() {
+  cssom::CSSOM cssom = setup();
+  cssom::Selector selector = cssom.parseSelector("h1");
+
+  test::Node root = test::Node::parse(
+"<div>\n"
+  "<h1>Title</h1>\n"
+  "<p>Paragraph.</p>\n"
+"</div>\n"
+  );
+
+  std::deque<test::Node> selection;
+  select(root, selector, selection);
+
+  assertEquals(std::string(
+"<h1>Title</h1>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -139,6 +176,7 @@ namespace test {
 void selector() {
   selectorText();
   universalSelector();
+  typeSelector();
 }
 
 
