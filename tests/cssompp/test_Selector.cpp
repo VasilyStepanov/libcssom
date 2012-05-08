@@ -105,7 +105,7 @@ void selectorText() {
 
 
 
-void selectElements() {
+void universalSelector() {
   CSSOM_DOMAPI domapi = {
     Node_name,
     Node_children,
@@ -119,9 +119,7 @@ void selectElements() {
 
   test::Node root = test::Node::parse(
 "<div>\n"
-  "<p>Skip.</p>\n"
-  "<span>Paragraph <span>with</span> spans.</span>\n"
-  "<p>Skip.</p>\n"
+  "<p>Paragraph.</p>\n"
 "</div>\n"
   );
 
@@ -129,8 +127,17 @@ void selectElements() {
   select(root, selector, selection);
 
   assertEquals(std::string(
-"<span>Paragraph <span>with</span> spans.</span>"
-"<span>with</span>"
+"<html><body><div>\n"
+"<p>Paragraph.</p>\n"
+"</div></body></html>"
+"<body><div>\n"
+"<p>Paragraph.</p>\n"
+"</div></body>"
+"<div>\n"
+"<p>Paragraph.</p>\n"
+"</div>\n"
+"<p>Paragraph.</p>"
+"Paragraph.\n"
   ), html(selection));
 }
 
@@ -144,7 +151,7 @@ namespace test {
 
 void selector() {
   selectorText();
-  selectElements();
+  universalSelector();
 }
 
 
