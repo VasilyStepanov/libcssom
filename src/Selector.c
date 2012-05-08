@@ -465,7 +465,16 @@ static int performed(const CSSOM_DOMAPI *domapi, const SAC_Condition *condition,
       }
       return 0;
     case SAC_CLASS_CONDITION:
-      fprintf(stderr, "Class condition not implemented.\n");
+      {
+        const char *attribute = domapi->Node_class(node);
+
+        if (attribute == NULL) return 0;
+
+        if (oneof(attribute, condition->desc.attribute.value) != 0)
+          return 1;
+
+        return 0;
+      }
       return 0;
     case SAC_PSEUDO_CLASS_CONDITION:
       fprintf(stderr, "Pseudo class condition not implemented.\n");

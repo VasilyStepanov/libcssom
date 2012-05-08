@@ -43,6 +43,13 @@ const char* Node_attribute(test::Node::Impl *node, const char *name) {
 
 
 
+const char* Node_class(test::Node::Impl *node) {
+  if (!node->hasAttribute("class")) return NULL;
+  return node->getAttribute("class").c_str();
+}
+
+
+
 test::Node::Impl* Node_children(test::Node::Impl *node) {
   if (node->children()->empty()) return NULL;
   return (*node->children())[0];
@@ -111,6 +118,7 @@ cssom::CSSOM setup() {
     (CSSOM_NodeType(*)(void*))Node_type,
     (const char*(*)(void*))Node_name,
     (const char*(*)(void*, const char*))Node_attribute,
+    (const char*(*)(void*))Node_class,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
@@ -307,6 +315,66 @@ void attributeSelector() {
 
 
 
+void classSelector() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 6.4. Class selectors
+   */
+
+  test::Node root = test::Node::parse(
+"<div>"
+
+"<h1>Not green</h1>"
+"<h1 class=\"pastoral\">Very green</h1>"
+
+"<p class=\"pastoral blue\">Skip</p>"
+"<p class=\"pastoral blue aqua marine\">Marine</p>"
+
+"</div>"
+  );
+
+
+
+  selector = cssom.parseSelector("*.pastoral");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1 class=\"pastoral\">Very green</h1>"
+"<p class=\"pastoral blue\">Skip</p>"
+"<p class=\"pastoral blue aqua marine\">Marine</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector(".pastoral");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1 class=\"pastoral\">Very green</h1>"
+"<p class=\"pastoral blue\">Skip</p>"
+"<p class=\"pastoral blue aqua marine\">Marine</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("h1.pastoral");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1 class=\"pastoral\">Very green</h1>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("p.pastoral.marine");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p class=\"pastoral blue aqua marine\">Marine</p>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -319,6 +387,7 @@ void selector() {
   typeSelector();
   universalSelector();
   attributeSelector();
+  classSelector();
 }
 
 
