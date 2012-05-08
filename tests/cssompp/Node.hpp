@@ -38,7 +38,6 @@ class Node {
     bool operator==(const test::Node &rhs) const;
     std::string str() const;
     void swap(test::Node &rhs);
-    bool isNull() const;
     test::Node::Impl* impl() const;
 
     const std::string& name() const;

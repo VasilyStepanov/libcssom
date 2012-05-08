@@ -23,42 +23,30 @@ namespace {
 
 
 
-inline void* wrap(test::Node::Impl *impl) {
-  return reinterpret_cast<void*>(impl);
+const char* Node_name(test::Node::Impl *node) {
+  return node->name().c_str();
 }
 
 
 
-inline test::Node::Impl* unwrap(void *p) {
-  return reinterpret_cast<test::Node::Impl*>(p);
+test::Node::Impl* Node_children(test::Node::Impl *node) {
+  if (node->children()->empty()) return NULL;
+  return (*node->children())[0];
 }
 
 
 
-const char* Node_name(void *node) {
-  return unwrap(node)->name().c_str();
-}
-
-
-
-void* Node_children(void *node) {
-  if (unwrap(node)->children()->empty()) return NULL;
-  return wrap((*unwrap(node)->children())[0]);
-}
-
-
-
-void* Node_next(void *node) {
-  if (unwrap(node)->nextSibling() == NULL) return NULL;
-  return wrap(unwrap(node)->nextSibling());
+test::Node::Impl* Node_next(test::Node::Impl *node) {
+  if (node->nextSibling() == NULL) return NULL;
+  return node->nextSibling();
 }
 
 
 
 void Selection_append(std::deque<test::Node> *selection,
-  void *node)
+  test::Node::Impl *node)
 {
-  selection->push_back(test::Node(unwrap(node)));
+  selection->push_back(test::Node(node));
 }
 
 
@@ -84,7 +72,7 @@ void select(const test::Node &root, cssom::Selector &selector,
 {
   std::deque<test::Node> ret;
 
-  selector.select(wrap(root.impl()), (void*)&ret);
+  selector.select((void*)root.impl(), (void*)&ret);
 
   selection.swap(ret);
 }
@@ -106,15 +94,15 @@ void selectorText() {
 
 void universalSelector() {
   CSSOM_DOMAPI domapi = {
-    Node_name,
-    Node_children,
-    Node_next,
+    (const char*(*)(void*))Node_name,
+    (void*(*)(void*))Node_children,
+    (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
   };
 
   cssom::CSSOM cssom;
   cssom.setDOMAPI(&domapi);
-  cssom::Selector selector = cssom.parseSelector("span");
+  cssom::Selector selector = cssom.parseSelector("*");
 
   test::Node root = test::Node::parse(
 "<div>\n"

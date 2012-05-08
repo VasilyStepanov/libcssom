@@ -175,12 +175,6 @@ void Node::swap(test::Node &rhs) {
 
 
 
-bool Node::isNull() const {
-  return _impl == NULL;
-}
-
-
-
 test::NodeImpl* Node::impl() const {
   return _impl;
 }
