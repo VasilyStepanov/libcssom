@@ -489,6 +489,50 @@ void descendantCombinator() {
 
 
 
+void childCombinator() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 8.2. Child combinators
+   */
+
+  test::Node root = test::Node::parse(
+"<body>"
+
+"<p>Hello from body.</p>"
+"<div><p>Hello from div.</p></div>"
+
+"<div><span>"
+  "<ol>"
+    "<li><span><p>Hello from li.</p></span></li>"
+    "<span><li><span><p>Hello from span.</p></span></li></span>"
+  "</ol>"
+"</span></div>"
+
+"</body>"
+  );
+
+
+
+  selector = cssom.parseSelector("body > p");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p>Hello from body.</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("div ol>li p");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p>Hello from li.</p>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -504,6 +548,7 @@ void selector() {
   classSelector();
   idSelector();
   descendantCombinator();
+  childCombinator();
 }
 
 

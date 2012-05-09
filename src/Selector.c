@@ -524,6 +524,21 @@ static int descendant(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
 
 
 
+static int child(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
+  void *node)
+{
+  void *parent;
+
+  parent = domapi->Node_parent(node);
+  if (parent == NULL) return 0;
+
+  if (selected(domapi, selector, parent) != 0) return 1;
+
+  return 0;
+}
+
+
+
 static int selected(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
   void *node)
 {
@@ -570,8 +585,14 @@ static int selected(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
       }
       return 1;
     case SAC_CHILD_SELECTOR:
-      fprintf(stderr, "Child selector not implemented.\n");
-      return 0;
+      if (selected(domapi, selector->desc.descendant.simpleSelector, node) == 0)
+        return 0;
+      if (child(domapi,
+        selector->desc.descendant.descendantSelector, node) == 0)
+      {
+        return 0;
+      }
+      return 1;
     case SAC_DIRECT_ADJACENT_SELECTOR:
       printf("Direct adjacent selector not implemented.\n");
       return 0;
