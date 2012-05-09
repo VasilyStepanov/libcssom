@@ -679,3 +679,105 @@ void CSSOM_Selector_select(CSSOM_Selector *selector, void *root,
 {
   Selector_walk(selector, CSSOM_getDOMAPI(selector->cssom), root, selection);
 }
+
+
+
+static void selectorSpecificity(const SAC_Selector *selector,
+  unsigned long *a, unsigned long *b, unsigned long *c);
+
+
+
+static void conditionSpecificity(const SAC_Condition *condition,
+  unsigned long *a, unsigned long *b, unsigned long *c)
+{
+  switch (condition->conditionType) {
+    case SAC_AND_CONDITION:
+    case SAC_OR_CONDITION:
+      conditionSpecificity(condition->desc.combinator.firstCondition, a, b, c);
+      conditionSpecificity(condition->desc.combinator.secondCondition, a, b, c);
+      break;
+    case SAC_NEGATIVE_CONDITION:
+      selectorSpecificity(condition->desc.selector, a, b, c);
+      break;
+    case SAC_POSITIONAL_CONDITION:
+      break;
+    case SAC_ID_CONDITION:
+      ++*a;
+      break;
+    case SAC_PREFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUFFIX_ATTRIBUTE_CONDITION:
+    case SAC_SUBSTRING_ATTRIBUTE_CONDITION:
+    case SAC_ATTRIBUTE_CONDITION:
+    case SAC_LANG_CONDITION:
+    case SAC_ONE_OF_ATTRIBUTE_CONDITION:
+    case SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION:
+    case SAC_CLASS_CONDITION:
+    case SAC_PSEUDO_CLASS_CONDITION:
+      ++*b;
+      break;
+    case SAC_PSEUDO_ELEMENT_CONDITION:
+      ++*c;
+      break;
+    case SAC_ONLY_CHILD_CONDITION:
+      break;
+    case SAC_ONLY_TYPE_CONDITION:
+      break;
+    case SAC_CONTENT_CONDITION:
+      break;
+  }
+}
+
+
+
+static void selectorSpecificity(const SAC_Selector *selector,
+  unsigned long *a, unsigned long *b, unsigned long *c)
+{
+  switch (selector->selectorType) {
+    case SAC_CONDITIONAL_SELECTOR:
+      selectorSpecificity(selector->desc.conditional.simpleSelector, a, b, c);
+      conditionSpecificity(selector->desc.conditional.condition, a, b, c);
+      break;
+    case SAC_ANY_NODE_SELECTOR:
+      break;
+    case SAC_ELEMENT_NODE_SELECTOR:
+      ++*c;
+      break;
+    case SAC_TEXT_NODE_SELECTOR:
+      break;
+    case SAC_CDATA_SECTION_NODE_SELECTOR:
+      break;
+    case SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
+      break;
+    case SAC_COMMENT_NODE_SELECTOR:
+      break;
+    case SAC_DESCENDANT_SELECTOR:
+    case SAC_CHILD_SELECTOR:
+      selectorSpecificity(selector->desc.descendant.simpleSelector, a, b, c);
+      selectorSpecificity(selector->desc.descendant.descendantSelector,
+        a, b, c);
+      break;
+    case SAC_DIRECT_ADJACENT_SELECTOR:
+    case SAC_GENERAL_ADJACENT_SELECTOR:
+      selectorSpecificity(selector->desc.sibling.secondSelector, a, b, c);
+      selectorSpecificity(selector->desc.sibling.firstSelector, a, b, c);
+      break;
+  }
+}
+
+
+
+unsigned long CSSOM_Selector_specificity(const CSSOM_Selector * selector)
+{
+  unsigned long a;
+  unsigned long b;
+  unsigned long c;
+  const SAC_Selector **it;
+
+  a = 0;
+  b = 0;
+  c = 0;
+  for (it = selector->selectors; *it != NULL; ++it)
+    selectorSpecificity(*it, &a, &b, &c);
+
+  return (a << 0x10) + (b << 0x8) + (c);
+}

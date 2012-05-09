@@ -100,6 +100,12 @@ cssom::CSSRule Selector::parentRule() const {
 
 
 
+unsigned long Selector::specificity() const {
+  return CSSOM_Selector_specificity(_impl);
+}
+
+
+
 void Selector::select(void * root, void * selection) {
   return CSSOM_Selector_select(_impl, root, selection);
 }

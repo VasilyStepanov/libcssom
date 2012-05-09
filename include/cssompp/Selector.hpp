@@ -49,6 +49,8 @@ class Selector {
 
     cssom::CSSRule parentRule() const;
 
+    unsigned long specificity() const;
+
     void select(void * root, void * selection);
 
   protected:

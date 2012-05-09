@@ -133,6 +133,31 @@ void selectorText() {
 
 
 
+void specificity() {
+  cssom::CSSOM cssom;
+
+  assert(cssom.parseSelector("*").specificity() ==
+    (0 << 0x10) + (0 << 0x8) + (0));
+  assert(cssom.parseSelector("LI").specificity() == 
+    (0 << 0x10) + (0 << 0x8) + (1));
+  assert(cssom.parseSelector("UL LI").specificity() ==
+    (0 << 0x10) + (0 << 0x8) + (2));
+  assert(cssom.parseSelector("UL OL+LI").specificity() ==
+    (0 << 0x10) + (0 << 0x8) + (3));
+  assert(cssom.parseSelector("H1 + *[REL=up]").specificity() ==
+    (0 << 0x10) + (1 << 0x8) + (1));
+  assert(cssom.parseSelector("UL OL LI.red").specificity() ==
+    (0 << 0x10) + (1 << 0x8) + (3));
+  assert(cssom.parseSelector("LI.red.level").specificity() ==
+    (0 << 0x10) + (2 << 0x8) + (1));
+  assert(cssom.parseSelector("#x34y").specificity() ==
+    (1 << 0x10) + (0 << 0x8) + (0));
+  assert(cssom.parseSelector("#s12:not(FOO)").specificity() ==
+    (1 << 0x10) + (0 << 0x8) + (1));
+}
+
+
+
 cssom::CSSOM setup() {
   CSSOM_DOMAPI domapi = {
     (CSSOM_NodeType(*)(void*))Node_type,
@@ -614,6 +639,34 @@ void siblingCombinator() {
 
 
 
+void selectorGroup() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  test::Node root = test::Node::parse(
+"<div>"
+
+"<h1>1</h1>"
+"<h2>1.1</h2>"
+"<h3>1.1.1</h3>"
+
+"</div>"
+  );
+
+
+
+  selector = cssom.parseSelector("h1, h2, h3");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1>1</h1>"
+"<h2>1.1</h2>"
+"<h3>1.1.1</h3>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -622,6 +675,7 @@ namespace test {
 
 void selector() {
   selectorText();
+  specificity();
 
   typeSelector();
   universalSelector();
@@ -631,6 +685,7 @@ void selector() {
   descendantCombinator();
   childCombinator();
   siblingCombinator();
+  selectorGroup();
 }
 
 

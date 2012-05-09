@@ -1,6 +1,7 @@
 interface Selector {
            attribute DOMString selectorText;
   readonly attribute CSSRule parentRule;
+  readonly attribute unsigned long specificity;
 
   void select(any root, any selection);
 };

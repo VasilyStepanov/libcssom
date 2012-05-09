@@ -41,6 +41,10 @@ CSSOM_CSSRule* CSSOM_Selector_parentRule(const CSSOM_Selector * selector);
 
 
 
+unsigned long CSSOM_Selector_specificity(const CSSOM_Selector * selector);
+
+
+
 void CSSOM_Selector_select(CSSOM_Selector * selector, void * root, void * selection);
 
 
