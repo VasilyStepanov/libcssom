@@ -50,6 +50,13 @@ const char* Node_class(test::Node::Impl *node) {
 
 
 
+const char* Node_id(test::Node::Impl *node) {
+  if (!node->hasAttribute("id")) return NULL;
+  return node->getAttribute("id").c_str();
+}
+
+
+
 test::Node::Impl* Node_children(test::Node::Impl *node) {
   if (node->children()->empty()) return NULL;
   return (*node->children())[0];
@@ -119,6 +126,7 @@ cssom::CSSOM setup() {
     (const char*(*)(void*))Node_name,
     (const char*(*)(void*, const char*))Node_attribute,
     (const char*(*)(void*))Node_class,
+    (const char*(*)(void*))Node_id,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
@@ -375,6 +383,55 @@ void classSelector() {
 
 
 
+void idSelector() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 6.5. ID selectors
+   */
+
+  test::Node root = test::Node::parse(
+"<div>"
+
+"<h1 id=\"chapter1\">Chapter 1</h1>"
+
+"<p id=\"chapter1\">Paragraph 1</p>"
+
+"<p id=\"z98y\">Paragraph 2</p>"
+
+"</div>"
+  );
+
+
+
+  selector = cssom.parseSelector("h1#chapter1");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1 id=\"chapter1\">Chapter 1</h1>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("#chapter1");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h1 id=\"chapter1\">Chapter 1</h1>"
+"<p id=\"chapter1\">Paragraph 1</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("*#z98y");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p id=\"z98y\">Paragraph 2</p>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -388,6 +445,7 @@ void selector() {
   universalSelector();
   attributeSelector();
   classSelector();
+  idSelector();
 }
 
 

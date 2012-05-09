@@ -61,6 +61,7 @@ typedef struct {
   const char * (*Node_name)(void *node);
   const char * (*Node_attribute)(void *node, const char *name);
   const char * (*Node_class)(void *node);
+  const char * (*Node_id)(void *node);
   void* (*Node_children)(void *node);
   void* (*Node_next)(void *node);
   void (*Selection_append)(void *selection, void *node);

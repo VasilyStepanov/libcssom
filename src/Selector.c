@@ -431,8 +431,16 @@ static int performed(const CSSOM_DOMAPI *domapi, const SAC_Condition *condition,
         return 0;
       }
     case SAC_ID_CONDITION:
-      fprintf(stderr, "Id condition not implemented.\n");
-      return 0;
+      {
+        const char *attribute = domapi->Node_id(node);
+
+        if (attribute == NULL) return 0;
+
+        if (strcmp(attribute, condition->desc.attribute.value) == 0)
+          return 1;
+
+        return 0;
+      }
     case SAC_LANG_CONDITION:
       fprintf(stderr, "Lang condition not implemented.\n");
       return 0;
@@ -475,7 +483,6 @@ static int performed(const CSSOM_DOMAPI *domapi, const SAC_Condition *condition,
 
         return 0;
       }
-      return 0;
     case SAC_PSEUDO_CLASS_CONDITION:
       fprintf(stderr, "Pseudo class condition not implemented.\n");
       return 0;
