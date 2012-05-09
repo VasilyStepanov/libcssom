@@ -48,20 +48,18 @@ typedef int (*CSSOM_ErrorHandler)(void *userData,
 
 
 
-typedef enum {
-  CSSOM_TEXT_NODE,
-  CSSOM_ELEMENT_NODE
-} CSSOM_NodeType;
-
-
-
-
 typedef struct {
-  CSSOM_NodeType (*Node_type)(void *node);
-  const char * (*Node_name)(void *node);
-  const char * (*Node_attribute)(void *node, const char *name);
-  const char * (*Node_class)(void *node);
-  const char * (*Node_id)(void *node);
+  int (*Node_elementMatch)(void *node, const char *name);
+  int (*Node_attributeMatch)(void *node, const char *name, const char *value);
+  int (*Node_attributePrefix)(void *node, const char *name, const char *value);
+  int (*Node_attributeSuffix)(void *node, const char *name, const char *value);
+  int (*Node_attributeSubstring)(void *node, const char *name,
+    const char *value);
+  int (*Node_attributeOneOf)(void *node, const char *name, const char *value);
+  int (*Node_attributeBeginHyphen)(void *node, const char *name,
+    const char *value);
+  int (*Node_class)(void *node, const char *value);
+  int (*Node_id)(void *node, const char *value);
   void* (*Node_parent)(void *node);
   void* (*Node_children)(void *node);
   void* (*Node_prev)(void *node);

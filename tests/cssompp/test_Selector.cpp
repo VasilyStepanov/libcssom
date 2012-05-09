@@ -18,41 +18,116 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 namespace {
 
 
 
-CSSOM_NodeType Node_type(test::Node::Impl *node) {
-  if (node->name() == "#text") return CSSOM_TEXT_NODE;
-  return CSSOM_ELEMENT_NODE;
+int Node_elementMatch(test::Node::Impl *node, const char *name) {
+  if (node->name() == "#text") return 0;
+  return node->name() == name;
 }
 
 
 
-const char* Node_name(test::Node::Impl *node) {
-  return node->name().c_str();
+int Node_attributeMatch(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+  if (value == NULL) return 1;
+  return node->getAttribute(name) == value;
 }
 
 
 
-const char* Node_attribute(test::Node::Impl *node, const char *name) {
-  if (!node->hasAttribute(name)) return NULL;
-  return node->getAttribute(name).c_str();
+int Node_attributePrefix(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+  return node->getAttribute(name).find(value) == 0;
 }
 
 
 
-const char* Node_class(test::Node::Impl *node) {
-  if (!node->hasAttribute("class")) return NULL;
-  return node->getAttribute("class").c_str();
+int Node_attributeSuffix(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+  const std::string &attribute = node->getAttribute(name);
+  const std::string &svalue = value;
+  return attribute.rfind(svalue) == attribute.length() - svalue.length();
 }
 
 
 
-const char* Node_id(test::Node::Impl *node) {
-  if (!node->hasAttribute("id")) return NULL;
-  return node->getAttribute("id").c_str();
+int Node_attributeSubstring(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+  return node->getAttribute(name).find(value) != std::string::npos;
+}
+
+
+
+int oneof(const char *attribute, const char *value) {
+  const char *lhs;
+  const char *rhs;
+
+  for (lhs = attribute; *lhs == ' '; ++lhs);
+  while (*lhs != '\0') {
+    for (rhs = lhs + 1; *rhs != ' ' && *rhs != '\0'; ++rhs);
+
+    if (strncmp(lhs, value, rhs - lhs) == 0) return 1;
+
+    for (lhs = rhs; *lhs == ' '; ++lhs);
+  }
+
+  return 0;
+}
+
+
+
+int Node_attributeOneOf(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+
+  return oneof(node->getAttribute(name).c_str(), value);
+}
+
+
+
+int Node_attributeBeginHyphen(test::Node::Impl *node,
+  const char *name, const char *value)
+{
+  if (!node->hasAttribute(name)) return 0;
+
+  const char *lhs;
+  const char *rhs;
+  const char *attribute = node->getAttribute(name).c_str();
+
+  for (
+    lhs = attribute, rhs = value;
+    *lhs != '\0' && *rhs != '\0';
+    ++lhs, ++rhs)
+  {
+    if (*lhs != *rhs) return 0;
+  }
+
+  return (*lhs == '\0' || *lhs == '-') && *rhs == '\0';
+}
+
+
+
+int Node_class(test::Node::Impl *node, const char *value) {
+  return Node_attributeOneOf(node, "class", value);
+}
+
+
+
+int Node_id(test::Node::Impl *node, const char *value) {
+  return Node_attributeMatch(node, "id", value);
 }
 
 
@@ -72,7 +147,9 @@ test::Node::Impl* Node_children(test::Node::Impl *node) {
 
 test::Node::Impl* Node_prev(test::Node::Impl *node) {
   if (node->previousSibling() == NULL) return NULL;
-  return node->previousSibling();
+  test::Node::Impl* previous = node->previousSibling();
+  if (previous->name() == "#text") return Node_prev(previous);
+  return previous;
 }
 
 
@@ -160,11 +237,15 @@ void specificity() {
 
 cssom::CSSOM setup() {
   CSSOM_DOMAPI domapi = {
-    (CSSOM_NodeType(*)(void*))Node_type,
-    (const char*(*)(void*))Node_name,
-    (const char*(*)(void*, const char*))Node_attribute,
-    (const char*(*)(void*))Node_class,
-    (const char*(*)(void*))Node_id,
+    (int (*)(void*, const char*))Node_elementMatch,
+    (int (*)(void*, const char*, const char*))Node_attributeMatch,
+    (int (*)(void*, const char*, const char*))Node_attributePrefix,
+    (int (*)(void*, const char*, const char*))Node_attributeSuffix,
+    (int (*)(void*, const char*, const char*))Node_attributeSubstring,
+    (int (*)(void*, const char*, const char*))Node_attributeOneOf,
+    (int (*)(void*, const char*, const char*))Node_attributeBeginHyphen,
+    (int (*)(void*, const char*))Node_class,
+    (int (*)(void*, const char*))Node_id,
     (void*(*)(void*))Node_parent,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_prev,
