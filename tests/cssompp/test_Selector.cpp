@@ -70,6 +70,13 @@ test::Node::Impl* Node_children(test::Node::Impl *node) {
 
 
 
+test::Node::Impl* Node_prev(test::Node::Impl *node) {
+  if (node->previousSibling() == NULL) return NULL;
+  return node->previousSibling();
+}
+
+
+
 test::Node::Impl* Node_next(test::Node::Impl *node) {
   if (node->nextSibling() == NULL) return NULL;
   return node->nextSibling();
@@ -135,6 +142,7 @@ cssom::CSSOM setup() {
     (const char*(*)(void*))Node_id,
     (void*(*)(void*))Node_parent,
     (void*(*)(void*))Node_children,
+    (void*(*)(void*))Node_prev,
     (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
   };
@@ -214,7 +222,7 @@ void attributeSelector() {
   cssom::Selector selector;
 
   /**
-   * 6.3.1. Attribute presence and value selectors
+   * 6.3. Attribute selectors
    */
 
   test::Node root = test::Node::parse(
@@ -251,6 +259,10 @@ void attributeSelector() {
   );
 
 
+
+  /**
+   * 6.3.1. Attribute presence and value selectors
+   */
 
   selector = cssom.parseSelector("h1[title]");
   select(root, selector, selection);
@@ -304,6 +316,10 @@ void attributeSelector() {
   ), html(selection));
 
 
+
+  /**
+   * 6.3.2. Substring matching attribute selectors
+   */
 
   selector = cssom.parseSelector("object[type^=\"image/\"]");
   select(root, selector, selection);
@@ -533,6 +549,71 @@ void childCombinator() {
 
 
 
+void siblingCombinator() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 8.3. Sibling combinators
+   */
+
+  test::Node root = test::Node::parse(
+"<div>"
+
+"<math>Math element.</math>"
+"<p>Ajacent sibling paragraph.</p>"
+"<h1>Chapter 1</h1>"
+"<p>General sibling paragraph.</p>"
+
+"<h1 class=\"opener\">Chapter 1</h1>"
+"whatever"
+"<h2>Ajacent sibling to opener</h2>"
+"<h1>Chapter 2</h1>"
+"<h2>Ajacent sibling to generic title</h2>"
+
+"<h1>Definition of the function a</h1>"
+"<p>Function a(x) has to be applied to all figures in the table.</p>"
+"<pre>function a(x) = 12x/13.5</pre>"
+
+"</div>"
+  );
+
+
+
+  /**
+   * 8.3.1. Adjacent sibling combinator
+   */
+
+  selector = cssom.parseSelector("math + p");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p>Ajacent sibling paragraph.</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("h1.opener + h2");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<h2>Ajacent sibling to opener</h2>"
+  ), html(selection));
+
+
+
+  /**
+   * 8.3.2. General sibling combinator
+   */
+
+  selector = cssom.parseSelector("h1 ~ pre");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<pre>function a(x) = 12x/13.5</pre>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -549,6 +630,7 @@ void selector() {
   idSelector();
   descendantCombinator();
   childCombinator();
+  siblingCombinator();
 }
 
 

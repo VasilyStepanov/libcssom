@@ -539,6 +539,39 @@ static int child(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
 
 
 
+static int directadjacent(const CSSOM_DOMAPI *domapi,
+  const SAC_Selector *selector, void *node)
+{
+  void *adjacent;
+
+  adjacent = domapi->Node_prev(node);
+  if (adjacent == NULL) return 0;
+
+  if (domapi->Node_type(adjacent) != CSSOM_ELEMENT_NODE)
+    return directadjacent(domapi, selector, adjacent);
+
+  if (selected(domapi, selector, adjacent) != 0) return 1;
+
+  return 0;
+}
+
+
+
+static int generaladjacent(const CSSOM_DOMAPI *domapi,
+  const SAC_Selector *selector, void *node)
+{
+  void *adjacent;
+
+  adjacent = domapi->Node_prev(node);
+  if (adjacent == NULL) return 0;
+
+  if (selected(domapi, selector, adjacent) != 0) return 1;
+
+  return generaladjacent(domapi, selector, adjacent);
+}
+
+
+
 static int selected(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
   void *node)
 {
@@ -594,11 +627,23 @@ static int selected(const CSSOM_DOMAPI *domapi, const SAC_Selector *selector,
       }
       return 1;
     case SAC_DIRECT_ADJACENT_SELECTOR:
-      printf("Direct adjacent selector not implemented.\n");
-      return 0;
+      if (selected(domapi, selector->desc.sibling.secondSelector, node) == 0)
+        return 0;
+      if (directadjacent(domapi,
+        selector->desc.sibling.firstSelector, node) == 0)
+      {
+        return 0;
+      }
+      return 1;
     case SAC_GENERAL_ADJACENT_SELECTOR:
-      printf("General adjacent selector not implemented.\n");
-      return 0;
+      if (selected(domapi, selector->desc.sibling.secondSelector, node) == 0)
+        return 0;
+      if (generaladjacent(domapi,
+        selector->desc.sibling.firstSelector, node) == 0)
+      {
+        return 0;
+      }
+      return 1;
   }
   return 0;
 }

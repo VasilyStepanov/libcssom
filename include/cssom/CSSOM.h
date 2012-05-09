@@ -64,6 +64,7 @@ typedef struct {
   const char * (*Node_id)(void *node);
   void* (*Node_parent)(void *node);
   void* (*Node_children)(void *node);
+  void* (*Node_prev)(void *node);
   void* (*Node_next)(void *node);
   void (*Selection_append)(void *selection, void *node);
 } CSSOM_DOMAPI;
