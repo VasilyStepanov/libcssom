@@ -205,6 +205,12 @@ const std::string& Node::getAttribute(const std::string &name) const {
 
 
 
+test::Node Node::parent() const {
+  return test::Node(_impl->parent());
+}
+
+
+
 test::NodeList Node::children() const {
   return test::NodeList(_impl->children());
 }

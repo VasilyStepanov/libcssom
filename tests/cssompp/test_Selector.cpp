@@ -57,6 +57,12 @@ const char* Node_id(test::Node::Impl *node) {
 
 
 
+test::Node::Impl* Node_parent(test::Node::Impl *node) {
+  return node->parent();
+}
+
+
+
 test::Node::Impl* Node_children(test::Node::Impl *node) {
   if (node->children()->empty()) return NULL;
   return (*node->children())[0];
@@ -127,6 +133,7 @@ cssom::CSSOM setup() {
     (const char*(*)(void*, const char*))Node_attribute,
     (const char*(*)(void*))Node_class,
     (const char*(*)(void*))Node_id,
+    (void*(*)(void*))Node_parent,
     (void*(*)(void*))Node_children,
     (void*(*)(void*))Node_next,
     (void(*)(void*, void*))Selection_append,
@@ -432,6 +439,56 @@ void idSelector() {
 
 
 
+void descendantCombinator() {
+  cssom::CSSOM cssom = setup();
+  std::deque<test::Node> selection;
+  cssom::Selector selector;
+
+  /**
+   * 8.1. Descendant combinator
+   */
+
+  test::Node root = test::Node::parse(
+"<div>"
+
+"<h1>This <span class=\"myclass\">headline"
+"is <em>very</em> important</span></h1>"
+
+"<p>Div child paragraph.</p>"
+"<span><p>Div grandchild paragraph.</p></span>"
+
+"<p><a href=\"example.com\">example url</a></p>"
+
+"</div>"
+  );
+
+
+
+  selector = cssom.parseSelector("h1 em");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<em>very</em>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("div * p");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<p>Div grandchild paragraph.</p>"
+  ), html(selection));
+
+
+
+  selector = cssom.parseSelector("div p *[href]");
+  select(root, selector, selection);
+  assertEquals(std::string(
+"<a href=\"example.com\">example url</a>"
+  ), html(selection));
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -446,6 +503,7 @@ void selector() {
   attributeSelector();
   classSelector();
   idSelector();
+  descendantCombinator();
 }
 
 

@@ -25,6 +25,7 @@ class NodeImpl {
     std::string _name;
     std::string _content;
     std::map<std::string, std::string> _attributes;
+    test::NodeImpl *_parent;
     test::NodeListImpl *_children;
     test::NodeImpl *_previousSibling;
     test::NodeImpl *_nextSibling;
@@ -49,6 +50,8 @@ class NodeImpl {
     const std::string& content() const;
     bool hasAttribute(const std::string &name) const;
     const std::string& getAttribute(const std::string &name) const;
+    void setParent(test::NodeImpl *parent);
+    test::NodeImpl* parent() const;
     test::NodeListImpl* children() const;
     void setPreviousSibling(test::NodeImpl *sibling);
     test::NodeImpl* previousSibling() const;

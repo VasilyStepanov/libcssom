@@ -43,6 +43,7 @@ class Node {
     const std::string& name() const;
     bool hasAttribute(const std::string &name) const;
     const std::string& getAttribute(const std::string &name) const;
+    test::Node parent() const;
     test::NodeList children() const;
     test::Node previousSibling() const;
     test::Node nextSibling() const;

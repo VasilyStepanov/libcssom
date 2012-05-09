@@ -29,10 +29,14 @@ NodeImpl::NodeImpl(const std::string &ns, const std::string &name,
   _name(name),
   _content(content),
   _attributes(attributes),
+  _parent(NULL),
   _children(children),
   _previousSibling(NULL),
   _nextSibling(NULL)
-{}
+{
+  for (size_t i = 0; i < _children->size(); ++i)
+    (*_children)[i]->setParent(this);
+}
 
 
 
@@ -120,6 +124,18 @@ const std::string& NodeImpl::getAttribute(const std::string &name) const {
   if (match == _attributes.end()) return empty;
 
   return match->second;
+}
+
+
+
+void NodeImpl::setParent(test::NodeImpl *parent) {
+  _parent = parent;
+}
+
+
+
+test::NodeImpl* NodeImpl::parent() const {
+  return _parent;
 }
 
 
