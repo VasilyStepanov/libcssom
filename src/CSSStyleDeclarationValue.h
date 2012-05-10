@@ -6,6 +6,7 @@
 #include "FSM_CSSPropertyValue.h"
 
 #include <cssom/typedefs.h>
+#include <cssom/CSSProperties.h>
 
 #include <sacc.h>
 
@@ -34,6 +35,9 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property);
+
+const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
   const CSSOM_CSSStyleDeclarationValue *values, const char * property);

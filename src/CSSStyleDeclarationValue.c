@@ -114,6 +114,19 @@ const char* CSSOM_CSSStyleDeclarationValue_item(
 
 
 
+const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
+{
+  CSSOM_FSMIter_CSSPropertyValue it;
+
+  it = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
+  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return NULL;
+
+  return CSSOM_CSSPropertyValue_cssText(it->value);
+}
+
+
+
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property)
 {

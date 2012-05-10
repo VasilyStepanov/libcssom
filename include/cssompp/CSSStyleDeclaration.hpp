@@ -69,6 +69,9 @@ class CSSStyleDeclaration {
 
     cssom::CSSRule parentRule() const;
 
+    const char * azimuth() const;
+    void setAzimuth(const char * azimuth);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

@@ -15,8 +15,8 @@ interface CSSStyleDeclaration {
   readonly attribute CSSRule parentRule;
 
   // CSS Properties
-  /*
            attribute DOMString? azimuth;
+  /*
            attribute DOMString? background;
            attribute DOMString? backgroundAttachment;
            attribute DOMString? backgroundColor;

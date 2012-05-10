@@ -331,6 +331,24 @@ void parentRule() {
 
 
 
+void azimuth() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {}"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setAzimuth("center");
+  assertEquals(std::string("center"), style.azimuth());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -347,6 +365,7 @@ void cssStyleDeclaration() {
   removeProperty();
   values();
   parentRule();
+  azimuth();
 }
 
 

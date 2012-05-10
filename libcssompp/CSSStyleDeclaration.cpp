@@ -149,4 +149,16 @@ cssom::CSSRule CSSStyleDeclaration::parentRule() const {
 
 
 
+const char * CSSStyleDeclaration::azimuth() const {
+  return CSSOM_CSSStyleDeclaration_azimuth(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setAzimuth(const char * azimuth) {
+  CSSOM_CSSStyleDeclaration_setAzimuth(_impl, azimuth);
+}
+
+
+
 } // cssom

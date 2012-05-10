@@ -73,6 +73,14 @@ CSSOM_CSSRule* CSSOM_CSSStyleDeclaration_parentRule(const CSSOM_CSSStyleDeclarat
 
 
 
+const char * CSSOM_CSSStyleDeclaration_azimuth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * azimuth);
+
+
+
 #ifdef __cplusplus
 }
 #endif

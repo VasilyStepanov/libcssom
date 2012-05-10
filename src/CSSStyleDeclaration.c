@@ -8,6 +8,7 @@
 #include "utility.h"
 
 #include <cssom/CSSRule.h>
+#include <cssom/CSSProperties.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -228,4 +229,22 @@ void CSSOM_CSSStyleDeclaration__keepParser(CSSOM_CSSStyleDeclaration *style,
 {
   assert(style->parser == NULL);
   style->parser = parser;
+}
+
+
+
+const char * CSSOM_CSSStyleDeclaration_azimuth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_AZIMUTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration *style,
+  const char *azimuth)
+{
+  CSSOM_CSSStyleDeclarationValue_setProperty(style->values,
+    "azimuth", azimuth);
 }
