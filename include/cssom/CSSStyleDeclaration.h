@@ -81,6 +81,46 @@ void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration * cssStyleDe
 
 
 
+const char * CSSOM_CSSStyleDeclaration_backgroundAttachment(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundAttachment(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * backgroundAttachment);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_backgroundColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * backgroundColor);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_backgroundImage(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundImage(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * backgroundImage);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_backgroundPosition(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundPosition(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * backgroundPosition);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_backgroundRepeat(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundRepeat(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * backgroundRepeat);
+
+
+
 #ifdef __cplusplus
 }
 #endif

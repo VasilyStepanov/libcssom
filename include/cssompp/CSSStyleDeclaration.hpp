@@ -72,6 +72,21 @@ class CSSStyleDeclaration {
     const char * azimuth() const;
     void setAzimuth(const char * azimuth);
 
+    const char * backgroundAttachment() const;
+    void setBackgroundAttachment(const char * backgroundAttachment);
+
+    const char * backgroundColor() const;
+    void setBackgroundColor(const char * backgroundColor);
+
+    const char * backgroundImage() const;
+    void setBackgroundImage(const char * backgroundImage);
+
+    const char * backgroundPosition() const;
+    void setBackgroundPosition(const char * backgroundPosition);
+
+    const char * backgroundRepeat() const;
+    void setBackgroundRepeat(const char * backgroundRepeat);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

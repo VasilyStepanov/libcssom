@@ -331,14 +331,15 @@ void parentRule() {
 
 
 
+cssom::CSSStyleDeclaration getStyleDeclaration(const cssom::CSSOM &cssom) {
+  return cssom::CSSStyleRule::cast(cssom.parse("p {}").cssRules()[0]).style();
+}
+
+
+
 void azimuth() {
   cssom::CSSOM cssom;
-  cssom::CSSStyleSheet styleSheet = cssom.parse(
-"p {}"
-  );
-  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
-    styleSheet.cssRules()[0]);
-  cssom::CSSStyleDeclaration style = cssRule.style();
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
 
   assert(style.azimuth() == NULL);
@@ -350,6 +351,71 @@ void azimuth() {
 
   style.setAzimuth(NULL);
   assert(style.azimuth() == NULL);
+}
+
+
+
+void backgroundAttachment() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setBackgroundAttachment("center");
+  assertEquals(std::string("center"), style.backgroundAttachment());
+}
+
+
+
+void backgroundColor() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setBackgroundColor("center");
+  assertEquals(std::string("center"), style.backgroundColor());
+}
+
+
+
+void backgroundImage() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setBackgroundImage("center");
+  assertEquals(std::string("center"), style.backgroundImage());
+}
+
+
+
+void backgroundPosition() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setBackgroundPosition("center");
+  assertEquals(std::string("center"), style.backgroundPosition());
+}
+
+
+
+void backgroundRepeat() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  assert(style.azimuth() == NULL);
+
+  style.setBackgroundRepeat("center");
+  assertEquals(std::string("center"), style.backgroundRepeat());
 }
 
 
@@ -371,6 +437,11 @@ void cssStyleDeclaration() {
   values();
   parentRule();
   azimuth();
+  backgroundAttachment();
+  backgroundColor();
+  backgroundImage();
+  backgroundPosition();
+  backgroundRepeat();
 }
 
 

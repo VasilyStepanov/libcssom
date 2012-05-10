@@ -248,3 +248,93 @@ void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration *style,
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_AZIMUTH_PROPERTY, azimuth);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_backgroundAttachment(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundAttachment(
+  CSSOM_CSSStyleDeclaration *style, const char *backgroundAttachment)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, backgroundAttachment);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_backgroundColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundColor(
+  CSSOM_CSSStyleDeclaration *style, const char *backgroundColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_COLOR_PROPERTY, backgroundColor);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_backgroundImage(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_IMAGE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundImage(
+  CSSOM_CSSStyleDeclaration *style, const char *backgroundImage)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_IMAGE_PROPERTY, backgroundImage);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_backgroundPosition(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_POSITION_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundPosition(
+  CSSOM_CSSStyleDeclaration *style, const char *backgroundPosition)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_POSITION_PROPERTY, backgroundPosition);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_backgroundRepeat(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_REPEAT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackgroundRepeat(
+  CSSOM_CSSStyleDeclaration *style, const char *backgroundRepeat)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_REPEAT_PROPERTY, backgroundRepeat);
+}

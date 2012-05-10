@@ -161,4 +161,64 @@ void CSSStyleDeclaration::setAzimuth(const char * azimuth) {
 
 
 
+const char * CSSStyleDeclaration::backgroundAttachment() const {
+  return CSSOM_CSSStyleDeclaration_backgroundAttachment(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackgroundAttachment(const char * backgroundAttachment) {
+  CSSOM_CSSStyleDeclaration_setBackgroundAttachment(_impl, backgroundAttachment);
+}
+
+
+
+const char * CSSStyleDeclaration::backgroundColor() const {
+  return CSSOM_CSSStyleDeclaration_backgroundColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackgroundColor(const char * backgroundColor) {
+  CSSOM_CSSStyleDeclaration_setBackgroundColor(_impl, backgroundColor);
+}
+
+
+
+const char * CSSStyleDeclaration::backgroundImage() const {
+  return CSSOM_CSSStyleDeclaration_backgroundImage(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackgroundImage(const char * backgroundImage) {
+  CSSOM_CSSStyleDeclaration_setBackgroundImage(_impl, backgroundImage);
+}
+
+
+
+const char * CSSStyleDeclaration::backgroundPosition() const {
+  return CSSOM_CSSStyleDeclaration_backgroundPosition(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackgroundPosition(const char * backgroundPosition) {
+  CSSOM_CSSStyleDeclaration_setBackgroundPosition(_impl, backgroundPosition);
+}
+
+
+
+const char * CSSStyleDeclaration::backgroundRepeat() const {
+  return CSSOM_CSSStyleDeclaration_backgroundRepeat(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackgroundRepeat(const char * backgroundRepeat) {
+  CSSOM_CSSStyleDeclaration_setBackgroundRepeat(_impl, backgroundRepeat);
+}
+
+
+
 } // cssom

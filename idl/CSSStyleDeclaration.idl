@@ -18,11 +18,13 @@ interface CSSStyleDeclaration {
            attribute DOMString? azimuth;
   /*
            attribute DOMString? background;
+  */
            attribute DOMString? backgroundAttachment;
            attribute DOMString? backgroundColor;
            attribute DOMString? backgroundImage;
            attribute DOMString? backgroundPosition;
            attribute DOMString? backgroundRepeat;
+  /*
            attribute DOMString? border;
            attribute DOMString? borderCollapse;
            attribute DOMString? borderColor;
