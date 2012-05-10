@@ -51,6 +51,8 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);
 
 const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom);
 
+const char** CSSOM__properties(const CSSOM *cssom);
+
 
 
 #ifdef __cplusplus

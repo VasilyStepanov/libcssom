@@ -239,6 +239,53 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
 
 
 
+static void CSSStyleDeclarationValue__fremoveProperty(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
+{
+  CSSOM_FSMIter_CSSPropertyValue match;
+  
+  match = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
+  if (match == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;
+
+  CSSOM_FSM_CSSPropertyValue_erase(values->fsm, match);
+}
+
+
+
+void CSSOM_CSSStyleDeclarationValue__fsetProperty(
+  CSSOM_CSSStyleDeclarationValue *values,
+  CSSOM_CSSPropertyType property, const char *value)
+{
+  const CSSOM *cssom;
+  CSSOM_CSSPropertyValue *propertyValue;
+  CSSOM_FSMIter_CSSPropertyValue it;
+  const char *sproperty;
+
+  if (value == NULL) {
+    CSSStyleDeclarationValue__fremoveProperty(values, property);
+    return;
+  }
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+  propertyValue = CSSOM__parsePropertyValue(cssom, values,
+    value, strlen(value), NULL, 0);
+  if (propertyValue == NULL) return;
+
+  sproperty = CSSOM__properties(cssom)[property];
+
+  it = CSSOM_FSM_CSSPropertyValue_add(values->fsm, sproperty, propertyValue);
+  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+    CSSOM_CSSPropertyValue_release(propertyValue);
+    return;
+  }
+
+  CSSOM_CSSPropertyValue__setName(propertyValue, it->key);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclarationValue_removeProperty(
   CSSOM_CSSStyleDeclarationValue *values, const char *property)
 {

@@ -50,6 +50,10 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   CSSOM_CSSStyleDeclarationValue *values,
   const char *property, const char *value, const char *priority);
 
+void CSSOM_CSSStyleDeclarationValue__fsetProperty(
+  CSSOM_CSSStyleDeclarationValue *values,
+  CSSOM_CSSPropertyType type, const char *value);
+
 
 
 CSSOM_CSSStyleDeclarationValueIter CSSOM_CSSStyleDeclarationValue__begin(

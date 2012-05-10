@@ -345,6 +345,11 @@ void azimuth() {
 
   style.setAzimuth("center");
   assertEquals(std::string("center"), style.azimuth());
+
+
+
+  style.setAzimuth(NULL);
+  assert(style.azimuth() == NULL);
 }
 
 

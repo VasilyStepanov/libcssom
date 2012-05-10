@@ -599,3 +599,9 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
 const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom) {
   return cssom->table;
 }
+
+
+
+const char** CSSOM__properties(const CSSOM *cssom) {
+  return (const char**)cssom->properties;
+}

@@ -245,6 +245,6 @@ const char * CSSOM_CSSStyleDeclaration_azimuth(
 void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration *style,
   const char *azimuth)
 {
-  CSSOM_CSSStyleDeclarationValue_setProperty(style->values,
-    "azimuth", azimuth);
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_AZIMUTH_PROPERTY, azimuth);
 }
