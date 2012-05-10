@@ -49,6 +49,7 @@ class CSSStyleDeclaration {
     void swap(cssom::CSSStyleDeclaration &rhs);
 
     const char * cssText() const;
+    void setCSSText(const char * cssText);
 
     unsigned long length() const;
 

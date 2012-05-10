@@ -440,6 +440,63 @@ ParserCSSStyleSheetState_alloc(CSSOM_CSSStyleSheet *styleSheet)
 
 
 /**
+ * CSSStyleDeclaration
+ */
+
+struct _CSSOM_ParserCSSStyleDeclarationState {
+  struct _CSSOM_ParserState super;
+  CSSOM_CSSStyleDeclaration *style;
+};
+
+
+
+static CSSOM_CSSPropertyValue* ParserCSSStyleDeclarationState_setProperty(
+  struct _CSSOM_ParserCSSStyleDeclarationState *state,
+  const SAC_STRING property,
+  const SAC_LexicalUnit *value,
+  SAC_Boolean important)
+{
+  return CSSOM_CSSStyleDeclarationValue__setProperty(
+    CSSOM_CSSStyleDeclaration_values(state->style),
+    property, value, important);
+}
+
+
+
+static struct _CSSOM_ParserState_vtable
+ParserCSSStyleDeclarationState_vtable = {
+  (CSSOM_CSSPropertyValue* (*)(struct _CSSOM_ParserState *,
+    const SAC_STRING, const SAC_LexicalUnit *, SAC_Boolean))
+  ParserCSSStyleDeclarationState_setProperty,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+};
+
+
+
+static struct _CSSOM_ParserCSSStyleDeclarationState*
+ParserCSSStyleDeclarationState_alloc(CSSOM_CSSStyleDeclaration *style)
+{
+  struct _CSSOM_ParserCSSStyleDeclarationState *state;
+
+  state = (struct _CSSOM_ParserCSSStyleDeclarationState*)CSSOM_malloc(
+    sizeof(struct _CSSOM_ParserCSSStyleDeclarationState));
+  if (state == NULL) return NULL;
+
+  ParserState_ctor((struct _CSSOM_ParserState*)state,
+    &ParserCSSStyleDeclarationState_vtable);
+  state->style = style;
+
+  return state;
+}
+
+
+
+/**
  * CSSFontFaceRule
  */
 
@@ -821,6 +878,26 @@ CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
   }
 
   return styleSheet;
+}
+
+
+
+CSSOM_CSSStyleDeclaration* CSSOM_ParserStack_pushCSSStyleDeclaration(
+  CSSOM_ParserStack *stack, CSSOM_CSSStyleDeclaration *style)
+{
+  struct _CSSOM_ParserCSSStyleDeclarationState *state;
+
+  state = ParserCSSStyleDeclarationState_alloc(style);
+  if (state == NULL) return NULL;
+
+  if (CSSOM_Stack_ParserState_push(stack->state,
+    (struct _CSSOM_ParserState*)state) == NULL)
+  {
+    ParserState_free((struct _CSSOM_ParserState*)state);
+    return NULL;
+  }
+
+  return style;
 }
 
 

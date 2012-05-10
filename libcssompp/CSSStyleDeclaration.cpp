@@ -89,6 +89,12 @@ const char * CSSStyleDeclaration::cssText() const {
 
 
 
+void CSSStyleDeclaration::setCSSText(const char * cssText) {
+  CSSOM_CSSStyleDeclaration_setCSSText(_impl, cssText);
+}
+
+
+
 unsigned long CSSStyleDeclaration::length() const {
   return CSSOM_CSSStyleDeclaration_length(_impl);
 }

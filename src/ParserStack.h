@@ -48,6 +48,9 @@ CSSOM_CSSStyleSheet* CSSOM_ParserStack_pushCSSStyleSheet(
   CSSOM_ParserStack *stack,
   CSSOM_CSSStyleSheet *styleSheet);
 
+CSSOM_CSSStyleDeclaration* CSSOM_ParserStack_pushCSSStyleDeclaration(
+  CSSOM_ParserStack *stack, CSSOM_CSSStyleDeclaration *style);
+
 CSSOM_CSSFontFaceRule* CSSOM_ParserStack_pushCSSFontFaceRule(
   CSSOM_ParserStack *stack);
 

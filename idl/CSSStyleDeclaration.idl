@@ -1,5 +1,5 @@
 interface CSSStyleDeclaration {
-  readonly attribute DOMString cssText;
+           attribute DOMString cssText;
 
   readonly attribute unsigned long length;
   DOMString? item(unsigned long index);

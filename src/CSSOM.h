@@ -20,6 +20,9 @@ CSSOM_CSSRule* CSSOM__parseRule(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, CSSOM_CSSStyleSheet *styleSheet,
   const char *cssText, int len);
 
+CSSOM_CSSStyleDeclaration* CSSOM__parseStyleDeclaration(const CSSOM *cssom,
+  CSSOM_CSSRule *parentRule, const char *cssText, int len);
+
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, const char *mediaText, int len);
 

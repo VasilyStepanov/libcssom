@@ -288,6 +288,50 @@ CSSOM_CSSRule* CSSOM__parseRule(const CSSOM *cssom,
 
 
 
+CSSOM_CSSStyleDeclaration* CSSOM__parseStyleDeclaration(const CSSOM *cssom,
+  CSSOM_CSSRule *parentRule, const char *cssText, int len)
+{
+  SAC_Parser parser;
+  CSSOM_ParserStack *stack;
+  CSSOM_CSSStyleDeclaration *style;
+
+  parser = SAC_CreateParser();
+  if (parser == NULL) return NULL;
+
+  stack = CSSOM_ParserStack_alloc(cssom);
+  if (stack == NULL) {
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  style = CSSOM_CSSStyleDeclaration__alloc(parentRule);
+  if (style == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+
+  if (CSSOM_ParserStack_pushCSSStyleDeclaration(stack, style) == NULL) {
+    CSSOM_CSSStyleDeclaration_release(style);
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  CSSOM_Parser_setup(parser, stack);
+
+  SAC_ParseStyleDeclaration(parser, cssText, len);
+
+  CSSOM_ParserStack_free(stack);
+
+  CSSOM_CSSStyleDeclaration__keepParser(style, parser);
+
+  return style;
+}
+
+
+
 CSSOM_MediaList* CSSOM__parseMedia(const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, const char *mediaText, int len)
 {

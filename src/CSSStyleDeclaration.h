@@ -5,6 +5,8 @@
 
 #include <cssom/typedefs.h>
 
+#include <sacc.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,6 +15,9 @@ extern "C" {
 
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
   CSSOM_CSSRule *parentRule);
+
+void CSSOM_CSSStyleDeclaration__keepParser(CSSOM_CSSStyleDeclaration *style,
+  SAC_Parser parser);
 
 
 

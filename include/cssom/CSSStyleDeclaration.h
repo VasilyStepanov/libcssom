@@ -33,6 +33,10 @@ const char * CSSOM_CSSStyleDeclaration_cssText(const CSSOM_CSSStyleDeclaration *
 
 
 
+void CSSOM_CSSStyleDeclaration_setCSSText(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cssText);
+
+
+
 unsigned long CSSOM_CSSStyleDeclaration_length(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

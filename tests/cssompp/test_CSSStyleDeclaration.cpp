@@ -19,8 +19,11 @@ namespace {
 
 
 void cssText() {
+  test::Errors errors;
   std::string cssText;
   cssom::CSSOM cssom;
+  cssom.setUserData(&errors);
+  cssom.setErrorHandler(test::errorHandler);
   cssom::CSSStyleSheet styleSheet = cssom.parse(
 "p {\n"
 " color : green;\n"
@@ -34,6 +37,24 @@ void cssText() {
 
 
   cssText = "color : green; background-color : maroon;";
+  assertEquals(cssText, style.cssText());
+
+
+
+  /**
+   * set cssText
+   */
+
+  cssText = "background-color : red; color : red;";
+  style.setCSSText("background-color : red; color : red;");
+  assertEquals(cssText, style.cssText());
+
+
+
+  assert(errors.syntaxErrors == 0);
+  cssText = "";
+  style.setCSSText("invalid");
+  assert(errors.syntaxErrors == 1);
   assertEquals(cssText, style.cssText());
 }
 
