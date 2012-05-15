@@ -78,8 +78,7 @@ CSSOM* CSSOM_create(const char * * properties) {
     propertiesCopy = (char**)properties;
   }
 
-  table = CSSOM_FSMTable_CSSPropertyValue_alloc(properties, 
-    CSSOM_CSSPropertyValue_release);
+  table = CSSOM_FSMTable_CSSPropertyValue_alloc(properties);
   if (table == NULL) {
     freeProperties(propertiesCopy);
     return NULL;

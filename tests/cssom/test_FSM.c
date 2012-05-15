@@ -29,7 +29,7 @@ static void test_FSM_insert(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
@@ -107,7 +107,7 @@ static void test_FSM_iterate(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
@@ -163,7 +163,7 @@ static void test_FSM_ffind(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
@@ -245,7 +245,7 @@ static void test_FSM_order(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
@@ -378,7 +378,7 @@ static void test_FSM_erase_first(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
   fsm = CSSOM_FSM_Int_alloc(table);
 
 
@@ -443,7 +443,7 @@ static void test_FSM_erase_last(void) {
   CSSOM_FSM_Int *fsm;
   CSSOM_FSMIter_Int it;
 
-  table = CSSOM_FSMTable_Int_alloc(map, NULL);
+  table = CSSOM_FSMTable_Int_alloc(map);
   fsm = CSSOM_FSM_Int_alloc(table);
 
 
