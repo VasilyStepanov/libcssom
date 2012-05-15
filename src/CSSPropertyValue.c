@@ -30,7 +30,7 @@ struct _CSSOM_CSSPropertyValue {
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
-  CSSOM_CSSStyleDeclarationValue *parentValues,
+  CSSOM_CSSStyleDeclarationValue *parentValues, const char *name,
   const SAC_LexicalUnit *value, SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
@@ -42,7 +42,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   property->handles = 1;
   property->parentValues = parentValues;
   property->parser = NULL;
-  property->name = NULL;
+  property->name = name;
   property->value = value;
   property->important = important;
   property->cssText = NULL;
@@ -74,16 +74,6 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
   CSSOM_native_free(property->cssText);
   SAC_DisposeParser(property->parser);
   CSSOM_free(property);
-}
-
-
-
-void CSSOM_CSSPropertyValue__setName(CSSOM_CSSPropertyValue *property,
-  const char *name)
-{
-  property->name = name;
-  CSSOM_native_free(property->cssText);
-  property->cssText = NULL;
 }
 
 
@@ -151,7 +141,7 @@ void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
       CSSOM_CSSStyleDeclaration_parentRule(
         CSSOM_CSSStyleDeclarationValue_parentStyle(property->parentValues))));
   newProperty = CSSOM__parsePropertyValue(cssom, property->parentValues,
-    cssText, strlen(cssText), NULL, 0);
+    property->name, cssText, strlen(cssText), NULL, 0);
   if (newProperty == NULL) return;
 
   CSSPropertyValue_swap(property, newProperty);
