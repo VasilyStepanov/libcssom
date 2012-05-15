@@ -16,7 +16,7 @@ CSSOM_FSM_DEFINE(int, Int)
 
 
 
-static void test_FSM_add(void) {
+static void test_FSM_insert(void) {
   const char *map[] = {
     "a",
     "b",
@@ -33,9 +33,9 @@ static void test_FSM_add(void) {
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
-  it = CSSOM_FSM_Int_add(fsm, "a", 1);
+  it = CSSOM_FSM_Int_insert(fsm, "a", 1);
   assert(it->value == 1);
-  it = CSSOM_FSM_Int_add(fsm, "b", 2);
+  it = CSSOM_FSM_Int_insert(fsm, "b", 2);
   assert(it->value == 2);
 
   assert(CSSOM_FSM_Int_size(fsm) == 2);
@@ -66,9 +66,9 @@ static void test_FSM_add(void) {
 
 
 
-  it = CSSOM_FSM_Int_add(fsm, "c", 3);
+  it = CSSOM_FSM_Int_insert(fsm, "c", 3);
   assert(it->value == 3);
-  it = CSSOM_FSM_Int_add(fsm, "d", 4);
+  it = CSSOM_FSM_Int_insert(fsm, "d", 4);
   assert(it->value == 4);
   assert(CSSOM_FSM_Int_size(fsm) == 4);
 
@@ -111,10 +111,10 @@ static void test_FSM_iterate(void) {
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
-  CSSOM_FSM_Int_add(fsm, "a", 1);
-  CSSOM_FSM_Int_add(fsm, "b", 2);
-  CSSOM_FSM_Int_add(fsm, "c", 3);
-  CSSOM_FSM_Int_add(fsm, "d", 4);
+  CSSOM_FSM_Int_insert(fsm, "a", 1);
+  CSSOM_FSM_Int_insert(fsm, "b", 2);
+  CSSOM_FSM_Int_insert(fsm, "c", 3);
+  CSSOM_FSM_Int_insert(fsm, "d", 4);
 
   it = CSSOM_FSM_Int_begin(fsm);
   assert(it != CSSOM_FSM_Int_end(fsm));
@@ -180,10 +180,10 @@ static void test_FSM_ffind(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "a", 1);
-  CSSOM_FSM_Int_add(fsm, "b", 2);
-  CSSOM_FSM_Int_add(fsm, "c", 3);
-  CSSOM_FSM_Int_add(fsm, "d", 4);
+  CSSOM_FSM_Int_insert(fsm, "a", 1);
+  CSSOM_FSM_Int_insert(fsm, "b", 2);
+  CSSOM_FSM_Int_insert(fsm, "c", 3);
+  CSSOM_FSM_Int_insert(fsm, "d", 4);
 
 
 
@@ -249,10 +249,10 @@ static void test_FSM_order(void) {
 
   fsm = CSSOM_FSM_Int_alloc(table);
 
-  CSSOM_FSM_Int_add(fsm, "d", 4);
-  CSSOM_FSM_Int_add(fsm, "c", 3);
-  CSSOM_FSM_Int_add(fsm, "b", 2);
-  CSSOM_FSM_Int_add(fsm, "a", 1);
+  CSSOM_FSM_Int_insert(fsm, "d", 4);
+  CSSOM_FSM_Int_insert(fsm, "c", 3);
+  CSSOM_FSM_Int_insert(fsm, "b", 2);
+  CSSOM_FSM_Int_insert(fsm, "a", 1);
 
   /**
    * d c b a
@@ -281,7 +281,9 @@ static void test_FSM_order(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "c", 30);
+  it = CSSOM_FSM_Int_insert(fsm, "c", 30);
+  assert(it->value == 3);
+  it->value = 30;
 
   /**
    * d b a c
@@ -306,7 +308,9 @@ static void test_FSM_order(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "c", 300);
+  it = CSSOM_FSM_Int_insert(fsm, "c", 300);
+  assert(it->value == 30);
+  it->value = 300;
 
   /**
    * d b a c
@@ -379,7 +383,7 @@ static void test_FSM_erase_first(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "Background-Color", 1);
+  CSSOM_FSM_Int_insert(fsm, "Background-Color", 1);
 
   assert(CSSOM_FSM_Int_size(fsm) == 1);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -391,7 +395,7 @@ static void test_FSM_erase_first(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "Background", 2);
+  CSSOM_FSM_Int_insert(fsm, "Background", 2);
 
   assert(CSSOM_FSM_Int_size(fsm) == 2);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -444,7 +448,7 @@ static void test_FSM_erase_last(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "Background-Color", 1);
+  CSSOM_FSM_Int_insert(fsm, "Background-Color", 1);
 
   assert(CSSOM_FSM_Int_size(fsm) == 1);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -456,7 +460,7 @@ static void test_FSM_erase_last(void) {
 
 
 
-  CSSOM_FSM_Int_add(fsm, "Background", 2);
+  CSSOM_FSM_Int_insert(fsm, "Background", 2);
 
   assert(CSSOM_FSM_Int_size(fsm) == 2);
   it = CSSOM_FSM_Int_begin(fsm);
@@ -493,7 +497,7 @@ static void test_FSM_erase_last(void) {
 
 
 void test_FSM(void) {
-  test_FSM_add();
+  test_FSM_insert();
   test_FSM_iterate();
   test_FSM_ffind();
   test_FSM_order();

@@ -32,7 +32,7 @@ extern "C" {
     const CSSOM_FSMTable_##suffix *table); \
   void CSSOM_FSM_##suffix##_free(CSSOM_FSM_##suffix *fsm); \
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm); \
-  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_add( \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_insert( \
     CSSOM_FSM_##suffix *fsm, const char *key, T value); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_erase( \
     CSSOM_FSM_##suffix *fsm, CSSOM_FSMIter_##suffix position); \

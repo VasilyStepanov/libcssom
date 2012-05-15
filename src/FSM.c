@@ -432,7 +432,7 @@
   \
   \
   \
-  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_add(CSSOM_FSM_##suffix *fsm, \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_insert(CSSOM_FSM_##suffix *fsm, \
     const char *key, T value) \
   { \
     CSSOM_FSMItem_##suffix item; \
@@ -443,19 +443,20 @@
     hash = FSMTable_##suffix##_add(fsm->table, fsm->state, key); \
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
-    item.key = FSMTable_##suffix##_key(fsm->table, hash); \
-    item.hash = hash; \
-    item.value = value; \
+    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
+    \
+    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) { \
+      item = **at; \
+      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, *at); \
+    } else { \
+      item.key = FSMTable_##suffix##_key(fsm->table, hash); \
+      item.hash = hash; \
+      item.value = value; \
+    } \
     \
     itemit = CSSOM_Deque_FSMItem_##suffix##_append(fsm->data, item); \
     if (itemit == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
       return CSSOM_FSM_##suffix##_end(fsm); \
-    \
-    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
-    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) { \
-      CSSOM_FSMTable_##suffix##_release(fsm->table, &(**at).value); \
-      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, *at); \
-    } \
     \
     *at = itemit; \
     \
