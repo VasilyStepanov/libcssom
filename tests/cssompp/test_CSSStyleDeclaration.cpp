@@ -254,6 +254,34 @@ void setProperty() {
 
 
 
+void setPropertyOrder() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+" color : green;\n"
+" background-color : maroon;\n"
+"}\n"
+  );
+  cssom::CSSStyleRule cssRule = cssom::CSSStyleRule::cast(
+    styleSheet.cssRules()[0]);
+  cssom::CSSStyleDeclaration style = cssRule.style();
+
+
+
+  cssText = "color : green; background-color : maroon;";
+  assertEquals(cssText, style.cssText());
+
+
+
+  cssText = "color : green; background-color : maroon;";
+  style.setProperty("color", "& invalid");
+  assertEquals(cssText, style.cssText());
+}
+
+
+
+
 void removeProperty() {
   std::string cssText;
   cssom::CSSOM cssom;
@@ -433,6 +461,7 @@ void cssStyleDeclaration() {
   getPropertyValue();
   getPropertyPriority();
   setProperty();
+  setPropertyOrder();
   removeProperty();
   values();
   parentRule();

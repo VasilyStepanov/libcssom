@@ -420,15 +420,12 @@
     if (hash == -1) return CSSOM_FSM_##suffix##_end(fsm); \
     \
     at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + hash; \
+    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
+      return (CSSOM_FSMIter_##suffix)*at; \
     \
-    if (*at != CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) { \
-      item = **at; \
-      CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, *at); \
-    } else { \
-      item.key = FSMTable_##suffix##_key(fsm->table, hash); \
-      item.hash = hash; \
-      item.value = value; \
-    } \
+    item.key = FSMTable_##suffix##_key(fsm->table, hash); \
+    item.hash = hash; \
+    item.value = value; \
     \
     itemit = CSSOM_Deque_FSMItem_##suffix##_append(fsm->data, item); \
     if (itemit == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
@@ -437,6 +434,31 @@
     *at = itemit; \
     \
     return (CSSOM_FSMIter_##suffix)itemit; \
+  } \
+  \
+  \
+  \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_update(CSSOM_FSM_##suffix *fsm, \
+    CSSOM_FSMIter_##suffix position) \
+  { \
+    CSSOM_VectorIter_FSMItemPtr_##suffix at; \
+    CSSOM_DequeIter_FSMItem_##suffix prevPosition; \
+    CSSOM_DequeIter_FSMItem_##suffix newPosition; \
+    CSSOM_FSMItem_##suffix item; \
+    \
+    at = CSSOM_Vector_FSMItemPtr_##suffix##_begin(fsm->refs) + position->hash; \
+    prevPosition = *at; \
+    item = *prevPosition; \
+    \
+    newPosition = CSSOM_Deque_FSMItem_##suffix##_append(fsm->data, item); \
+    if (newPosition == CSSOM_Deque_FSMItem_##suffix##_end(fsm->data)) \
+      return CSSOM_FSM_##suffix##_end(fsm); \
+    \
+    CSSOM_Deque_FSMItem_##suffix##_erase(fsm->data, prevPosition); \
+    \
+    *at = newPosition; \
+    \
+    return (CSSOM_FSMIter_##suffix)newPosition; \
   } \
   \
   \

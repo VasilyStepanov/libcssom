@@ -284,6 +284,7 @@ static void test_FSM_order(void) {
   it = CSSOM_FSM_Int_insert(fsm, "c", 30);
   assert(it->value == 3);
   it->value = 30;
+  it = CSSOM_FSM_Int_update(fsm, it);
 
   /**
    * d b a c
@@ -311,6 +312,7 @@ static void test_FSM_order(void) {
   it = CSSOM_FSM_Int_insert(fsm, "c", 300);
   assert(it->value == 30);
   it->value = 300;
+  it = CSSOM_FSM_Int_update(fsm, it);
 
   /**
    * d b a c

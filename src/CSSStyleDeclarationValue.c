@@ -195,7 +195,14 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__setProperty(
     return NULL;
   }
 
-  if (it->value != NULL) CSSOM_CSSPropertyValue_release(it->value);
+  if (it->value != NULL) {
+    it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
+    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+      CSSOM_CSSPropertyValue_release(propertyValue);
+      return NULL;
+    }
+    CSSOM_CSSPropertyValue_release(it->value);
+  }
   it->value = propertyValue;
 
   return propertyValue;
@@ -246,7 +253,14 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
     return;
   }
 
-  if (it->value != NULL) CSSOM_CSSPropertyValue_release(it->value);
+  if (it->value != NULL) {
+    it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
+    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+      CSSOM_CSSPropertyValue_release(propertyValue);
+      return;
+    }
+    CSSOM_CSSPropertyValue_release(it->value);
+  }
   it->value = propertyValue;
 
 }
@@ -297,7 +311,14 @@ void CSSOM_CSSStyleDeclarationValue__fsetProperty(
     return;
   }
 
-  if (it->value != NULL) CSSOM_CSSPropertyValue_release(it->value);
+  if (it->value != NULL) {
+    it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
+    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+      CSSOM_CSSPropertyValue_release(propertyValue);
+      return;
+    }
+    CSSOM_CSSPropertyValue_release(it->value);
+  }
   it->value = propertyValue;
 
 }

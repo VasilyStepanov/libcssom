@@ -33,6 +33,8 @@ extern "C" {
   size_t CSSOM_FSM_##suffix##_size(const CSSOM_FSM_##suffix *fsm); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_insert( \
     CSSOM_FSM_##suffix *fsm, const char *key, T value); \
+  CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_update( \
+    CSSOM_FSM_##suffix *fsm, CSSOM_FSMIter_##suffix position); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_erase( \
     CSSOM_FSM_##suffix *fsm, CSSOM_FSMIter_##suffix position); \
   CSSOM_FSMIter_##suffix CSSOM_FSM_##suffix##_ffind( \
