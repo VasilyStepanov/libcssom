@@ -59,6 +59,32 @@ void parseSelector() {
 
 
 
+void malformedProperty() {
+  std::string cssText;
+  cssom::CSSOM cssom;
+
+  cssom::CSSStyleSheet styleSheet = cssom.parse(
+"p {\n"
+"  aaa : bbb;\n"
+"  color : green;\n"
+"  xxx : yyy;\n"
+"}\n"
+  );
+
+  cssom::CSSRuleList cssRules = styleSheet.cssRules();
+  assert(cssRules.length() == 1);
+
+  cssom::CSSRule cssRule = cssRules[0];
+  assert(cssRule.type() == cssom::CSSRule::STYLE_RULE);
+
+  cssom::CSSStyleRule &styleRule = static_cast<cssom::CSSStyleRule&>(cssRule);
+
+  cssText = "p { color : green; }" ;
+  assertEquals(cssText, styleRule.cssText());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -68,6 +94,7 @@ namespace test {
 void cssom() {
   parse();
   parseSelector();
+  malformedProperty();
 }
 
 

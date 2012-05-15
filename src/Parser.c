@@ -13,11 +13,8 @@ static int propertyHandler(void *userData,
   
   stack = (CSSOM_ParserStack*)userData;
 
-  if (CSSOM_ParserStack_setProperty(stack,
-    propertyName, value, important) == NULL)
-  {
+  if (CSSOM_ParserStack_setProperty(stack, propertyName, value, important) < 0)
     return 1;
-  }
 
   return 0;
 }

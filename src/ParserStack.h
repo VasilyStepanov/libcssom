@@ -22,9 +22,10 @@ CSSOM_ParserStack* CSSOM_ParserStack_alloc(const CSSOM *cssom);
 
 void CSSOM_ParserStack_free(CSSOM_ParserStack *stack);
 
-const CSSOM_ParserStats* CSSOM_ParserStack_stats(const CSSOM_ParserStack *stack);
+const CSSOM_ParserStats* CSSOM_ParserStack_stats(
+  const CSSOM_ParserStack *stack);
 
-CSSOM_CSSPropertyValue* CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
+int CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
   const SAC_STRING propertyName,
   const SAC_LexicalUnit *value,
   SAC_Boolean important);
