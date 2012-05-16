@@ -390,8 +390,32 @@ void backgroundAttachment() {
 
   assert(style.azimuth() == NULL);
 
-  style.setBackgroundAttachment("center");
-  assertEquals(std::string("center"), style.backgroundAttachment());
+  style.setBackgroundAttachment("scroll");
+  assertEquals(std::string("scroll"), style.backgroundAttachment());
+
+  style.setBackgroundAttachment("fixed");
+  assertEquals(std::string("fixed"), style.backgroundAttachment());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundAttachment("SCROLL");
+  assertEquals(std::string("SCROLL"), style.backgroundAttachment());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundAttachment("FIXED");
+  assertEquals(std::string("FIXED"), style.backgroundAttachment());
+
+  style.setBackgroundAttachment("inherit");
+  assertEquals(std::string("inherit"), style.backgroundAttachment());
+
+  style.setBackgroundAttachment("INHERIT");
+  assertEquals(std::string("inherit"), style.backgroundAttachment());
+
+  style.setBackgroundAttachment("invalid");
+  assertEquals(std::string("inherit"), style.backgroundAttachment());
 }
 
 

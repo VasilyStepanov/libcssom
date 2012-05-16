@@ -3,6 +3,7 @@
 #include "CSSOM.h"
 #include "CSSStyleSheet.h"
 #include "FSM_CSSPropertyValue.h"
+#include "gcc.h"
 #include "memory.h"
 
 #include <cssom/CSSStyleDeclaration.h>
@@ -10,6 +11,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <strings.h>
 
 
 
@@ -178,6 +180,158 @@ const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
 
 
 
+static int CSSStyleDeclarationValue_propertySetterBackgroundAttachment(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit *value)
+{
+  if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("scroll", value->desc.ident) == 0) return 1;
+    if (strcasecmp("fixed", value->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_INHERIT) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+static int CSSStyleDeclarationValue_propertySetter(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property,
+  const SAC_LexicalUnit *value)
+{
+  switch (property) {
+    case CSSOM_AZIMUTH_PROPERTY:
+    case CSSOM_BACKGROUND_PROPERTY:
+      break;
+    case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
+      return CSSStyleDeclarationValue_propertySetterBackgroundAttachment(values,
+        value);
+    case CSSOM_BACKGROUND_COLOR_PROPERTY:
+    case CSSOM_BACKGROUND_IMAGE_PROPERTY:
+    case CSSOM_BACKGROUND_POSITION_PROPERTY:
+    case CSSOM_BACKGROUND_REPEAT_PROPERTY:
+    case CSSOM_BORDER_PROPERTY:
+    case CSSOM_BORDER_COLLAPSE_PROPERTY:
+    case CSSOM_BORDER_COLOR_PROPERTY:
+    case CSSOM_BORDER_SPACING_PROPERTY:
+    case CSSOM_BORDER_STYLE_PROPERTY:
+    case CSSOM_BORDER_TOP_PROPERTY:
+    case CSSOM_BORDER_RIGHT_PROPERTY:
+    case CSSOM_BORDER_BOTTOM_PROPERTY:
+    case CSSOM_BORDER_LEFT_PROPERTY:
+    case CSSOM_BORDER_TOP_COLOR_PROPERTY:
+    case CSSOM_BORDER_RIGHT_COLOR_PROPERTY:
+    case CSSOM_BORDER_BOTTOM_COLOR_PROPERTY:
+    case CSSOM_BORDER_LEFT_COLOR_PROPERTY:
+    case CSSOM_BORDER_TOP_STYLE_PROPERTY:
+    case CSSOM_BORDER_RIGHT_STYLE_PROPERTY:
+    case CSSOM_BORDER_BOTTOM_STYLE_PROPERTY:
+    case CSSOM_BORDER_LEFT_STYLE_PROPERTY:
+    case CSSOM_BORDER_TOP_WIDTH_PROPERTY:
+    case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
+    case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:
+    case CSSOM_BORDER_LEFT_WIDTH_PROPERTY:
+    case CSSOM_BORDER_WIDTH_PROPERTY:
+    case CSSOM_BOTTOM_PROPERTY:
+    case CSSOM_CAPTION_SIDE_PROPERTY:
+    case CSSOM_CLEAR_PROPERTY:
+    case CSSOM_CLIP_PROPERTY:
+    case CSSOM_COLOR_PROPERTY:
+    case CSSOM_CONTENT_PROPERTY:
+    case CSSOM_COUNTER_INCREMENT_PROPERTY:
+    case CSSOM_COUNTER_RESET_PROPERTY:
+    case CSSOM_CUE_PROPERTY:
+    case CSSOM_CUE_AFTER_PROPERTY:
+    case CSSOM_CUE_BEFORE_PROPERTY:
+    case CSSOM_CURSOR_PROPERTY:
+    case CSSOM_DIRECTION_PROPERTY:
+    case CSSOM_DISPLAY_PROPERTY:
+    case CSSOM_ELEVATION_PROPERTY:
+    case CSSOM_EMPTY_CELLS_PROPERTY:
+    case CSSOM_FLOAT_PROPERTY:
+    case CSSOM_FONT_PROPERTY:
+    case CSSOM_FONT_FAMILY_PROPERTY:
+    case CSSOM_FONT_SIZE_PROPERTY:
+    case CSSOM_FONT_SIZE_ADJUST_PROPERTY:
+    case CSSOM_FONT_STRETCH_PROPERTY:
+    case CSSOM_FONT_STYLE_PROPERTY:
+    case CSSOM_FONT_VARIANT_PROPERTY:
+    case CSSOM_FONT_WEIGHT_PROPERTY:
+    case CSSOM_HEIGHT_PROPERTY:
+    case CSSOM_LEFT_PROPERTY:
+    case CSSOM_LETTER_SPACING_PROPERTY:
+    case CSSOM_LINE_HEIGHT_PROPERTY:
+    case CSSOM_LIST_STYLE_PROPERTY:
+    case CSSOM_LIST_STYLE_IMAGE_PROPERTY:
+    case CSSOM_LIST_STYLE_POSITION_PROPERTY:
+    case CSSOM_LIST_STYLE_TYPE_PROPERTY:
+    case CSSOM_MARGIN_PROPERTY:
+    case CSSOM_MARGIN_TOP_PROPERTY:
+    case CSSOM_MARGIN_RIGHT_PROPERTY:
+    case CSSOM_MARGIN_BOTTOM_PROPERTY:
+    case CSSOM_MARGIN_LEFT_PROPERTY:
+    case CSSOM_MARKER_OFFSET_PROPERTY:
+    case CSSOM_MARKS_PROPERTY:
+    case CSSOM_MAX_HEIGHT_PROPERTY:
+    case CSSOM_MAX_WIDTH_PROPERTY:
+    case CSSOM_MIN_HEIGHT_PROPERTY:
+    case CSSOM_MIN_WIDTH_PROPERTY:
+    case CSSOM_ORPHANS_PROPERTY:
+    case CSSOM_OUTLINE_PROPERTY:
+    case CSSOM_OUTLINE_COLOR_PROPERTY:
+    case CSSOM_OUTLINE_STYLE_PROPERTY:
+    case CSSOM_OUTLINE_WIDTH_PROPERTY:
+    case CSSOM_OVERFLOW_PROPERTY:
+    case CSSOM_PADDING_PROPERTY:
+    case CSSOM_PADDING_TOP_PROPERTY:
+    case CSSOM_PADDING_RIGHT_PROPERTY:
+    case CSSOM_PADDING_BOTTOM_PROPERTY:
+    case CSSOM_PADDING_LEFT_PROPERTY:
+    case CSSOM_PAGE_PROPERTY:
+    case CSSOM_PAGE_BREAK_AFTER_PROPERTY:
+    case CSSOM_PAGE_BREAK_BEFORE_PROPERTY:
+    case CSSOM_PAGE_BREAK_INSIDE_PROPERTY:
+    case CSSOM_PAUSE_PROPERTY:
+    case CSSOM_PAUSE_AFTER_PROPERTY:
+    case CSSOM_PAUSE_BEFORE_PROPERTY:
+    case CSSOM_PITCH_PROPERTY:
+    case CSSOM_PITCH_RANGE_PROPERTY:
+    case CSSOM_PLAY_DURING_PROPERTY:
+    case CSSOM_POSITION_PROPERTY:
+    case CSSOM_QUOTES_PROPERTY:
+    case CSSOM_RICHNESS_PROPERTY:
+    case CSSOM_RIGHT_PROPERTY:
+    case CSSOM_SIZE_PROPERTY:
+    case CSSOM_SPEAK_PROPERTY:
+    case CSSOM_SPEAK_HEADER_PROPERTY:
+    case CSSOM_SPEAK_NUMERAL_PROPERTY:
+    case CSSOM_SPEAK_PUNCTUATION_PROPERTY:
+    case CSSOM_SPEECH_RATE_PROPERTY:
+    case CSSOM_STRESS_PROPERTY:
+    case CSSOM_TABLE_LAYOUT_PROPERTY:
+    case CSSOM_TEXT_ALIGN_PROPERTY:
+    case CSSOM_TEXT_DECORATION_PROPERTY:
+    case CSSOM_TEXT_INDENT_PROPERTY:
+    case CSSOM_TEXT_SHADOW_PROPERTY:
+    case CSSOM_TEXT_TRANSFORM_PROPERTY:
+    case CSSOM_TOP_PROPERTY:
+    case CSSOM_UNICODE_BIDI_PROPERTY:
+    case CSSOM_VERTICAL_ALIGN_PROPERTY:
+    case CSSOM_VISIBILITY_PROPERTY:
+    case CSSOM_VOICE_FAMILY_PROPERTY:
+    case CSSOM_VOLUME_PROPERTY:
+    case CSSOM_WHITE_SPACE_PROPERTY:
+    case CSSOM_WIDOWS_PROPERTY:
+    case CSSOM_WIDTH_PROPERTY:
+    case CSSOM_WORD_SPACING_PROPERTY:
+    case CSSOM_Z_INDEX_PROPERTY:
+      return 1;
+  }
+  return 1;
+}
+
+
+
 int CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
   const char *property, const SAC_LexicalUnit *value, SAC_Boolean priority)
@@ -187,6 +341,11 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
 
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
+
+  if (CSSStyleDeclarationValue_propertySetter(values, it->hash, value) == 0) {
+    if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
+    return 1;
+  }
 
   propertyValue = CSSOM_CSSPropertyValue__alloc(values, it->key,
     value, priority);
@@ -253,6 +412,14 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
     return;
   }
 
+  if (CSSStyleDeclarationValue_propertySetter(values, it->hash,
+    CSSOM_CSSPropertyValue__value(propertyValue)) == 0)
+  {
+    CSSOM_CSSPropertyValue_release(propertyValue);
+    if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
+    return;
+  }
+
   if (it->value != NULL) {
     it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
     if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
@@ -307,6 +474,14 @@ void CSSOM_CSSStyleDeclarationValue__fsetProperty(
   propertyValue = CSSOM__parsePropertyValue(cssom, values, it->key,
     value, strlen(value), NULL, 0);
   if (propertyValue == NULL) {
+    if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
+    return;
+  }
+
+  if (CSSStyleDeclarationValue_propertySetter(values, it->hash,
+    CSSOM_CSSPropertyValue__value(propertyValue)) == 0)
+  {
+    CSSOM_CSSPropertyValue_release(propertyValue);
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return;
   }
