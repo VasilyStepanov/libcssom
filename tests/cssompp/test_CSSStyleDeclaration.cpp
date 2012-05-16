@@ -387,14 +387,16 @@ void backgroundAttachment() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
+  assert(style.backgroundAttachment() == NULL);
 
-  assert(style.azimuth() == NULL);
+
+
+  /**
+   * scroll
+   */
 
   style.setBackgroundAttachment("scroll");
   assertEquals(std::string("scroll"), style.backgroundAttachment());
-
-  style.setBackgroundAttachment("fixed");
-  assertEquals(std::string("fixed"), style.backgroundAttachment());
 
   /**
    * TODO: Replace with case insensitive implementation.
@@ -402,17 +404,38 @@ void backgroundAttachment() {
   style.setBackgroundAttachment("SCROLL");
   assertEquals(std::string("SCROLL"), style.backgroundAttachment());
 
+
+
+  /**
+   * fixed
+   */
+
+  style.setBackgroundAttachment("fixed");
+  assertEquals(std::string("fixed"), style.backgroundAttachment());
+
   /**
    * TODO: Replace with case insensitive implementation.
    */
   style.setBackgroundAttachment("FIXED");
   assertEquals(std::string("FIXED"), style.backgroundAttachment());
 
+
+
+  /**
+   * inherit
+   */
+
   style.setBackgroundAttachment("inherit");
   assertEquals(std::string("inherit"), style.backgroundAttachment());
 
   style.setBackgroundAttachment("INHERIT");
   assertEquals(std::string("inherit"), style.backgroundAttachment());
+
+
+
+  /**
+   * errors
+   */
 
   style.setBackgroundAttachment("invalid");
   assertEquals(std::string("inherit"), style.backgroundAttachment());
@@ -424,11 +447,134 @@ void backgroundColor() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
+  assert(style.backgroundColor() == NULL);
 
-  assert(style.azimuth() == NULL);
 
-  style.setBackgroundColor("center");
-  assertEquals(std::string("center"), style.backgroundColor());
+
+  /**
+   * color
+   */
+
+  style.setBackgroundColor("aqua");
+  assertEquals(std::string("aqua"), style.backgroundColor());
+
+  style.setBackgroundColor("black");
+  assertEquals(std::string("black"), style.backgroundColor());
+
+  style.setBackgroundColor("blue");
+  assertEquals(std::string("blue"), style.backgroundColor());
+
+  style.setBackgroundColor("fuchsia");
+  assertEquals(std::string("fuchsia"), style.backgroundColor());
+
+  style.setBackgroundColor("gray");
+  assertEquals(std::string("gray"), style.backgroundColor());
+
+  style.setBackgroundColor("green");
+  assertEquals(std::string("green"), style.backgroundColor());
+
+  style.setBackgroundColor("lime");
+  assertEquals(std::string("lime"), style.backgroundColor());
+
+  style.setBackgroundColor("maroon");
+  assertEquals(std::string("maroon"), style.backgroundColor());
+
+  style.setBackgroundColor("navy");
+  assertEquals(std::string("navy"), style.backgroundColor());
+
+  style.setBackgroundColor("olive");
+  assertEquals(std::string("olive"), style.backgroundColor());
+
+  style.setBackgroundColor("orange");
+  assertEquals(std::string("orange"), style.backgroundColor());
+
+  style.setBackgroundColor("purple");
+  assertEquals(std::string("purple"), style.backgroundColor());
+
+  style.setBackgroundColor("red");
+  assertEquals(std::string("red"), style.backgroundColor());
+
+  style.setBackgroundColor("silver");
+  assertEquals(std::string("silver"), style.backgroundColor());
+
+  style.setBackgroundColor("teal");
+  assertEquals(std::string("teal"), style.backgroundColor());
+
+  style.setBackgroundColor("white");
+  assertEquals(std::string("white"), style.backgroundColor());
+
+  style.setBackgroundColor("yellow");
+  assertEquals(std::string("yellow"), style.backgroundColor());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+
+  style.setBackgroundColor("YELLOW");
+  assertEquals(std::string("YELLOW"), style.backgroundColor());
+
+  style.setBackgroundColor("#f00");
+  assertEquals(std::string("rgb(255, 0, 0)"), style.backgroundColor());
+
+  style.setBackgroundColor("#00ff00");
+  assertEquals(std::string("rgb(0, 255, 0)"), style.backgroundColor());
+
+  style.setBackgroundColor("rgb(0, 0, 255)");
+  assertEquals(std::string("rgb(0, 0, 255)"), style.backgroundColor());
+
+
+
+  /**
+   * transparent
+   */
+
+  style.setBackgroundColor("transparent");
+  assertEquals(std::string("transparent"), style.backgroundColor());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundColor("TRANSPARENT");
+  assertEquals(std::string("TRANSPARENT"), style.backgroundColor());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBackgroundColor("inherit");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("INHERIT");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBackgroundColor("invalid");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("#00");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("#0000");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("#00ff000");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("rgb(0, 0, -1)");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("rgb(0, 0, 256)");
+  assertEquals(std::string("inherit"), style.backgroundColor());
+
+  style.setBackgroundColor("rgb(0, 0, 0, 0)");
+  assertEquals(std::string("inherit"), style.backgroundColor());
 }
 
 

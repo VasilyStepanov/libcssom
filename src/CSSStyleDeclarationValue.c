@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <string.h>
 #include <strings.h>
+#include <stdio.h>
 
 
 
@@ -195,6 +196,89 @@ static int CSSStyleDeclarationValue_propertySetterBackgroundAttachment(
 
 
 
+
+int isColor(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_RGBCOLOR) {
+    const SAC_LexicalUnit *red;
+    const SAC_LexicalUnit *green;
+    const SAC_LexicalUnit *blue;
+
+    if (value->desc.function.parameters[0] == NULL) return 0;
+    red = value->desc.function.parameters[0];
+
+
+    if (red->lexicalUnitType != SAC_INTEGER) return 0;
+    if (red->desc.integer < 0 || red->desc.integer > 255) return 0;
+
+    if (value->desc.function.parameters[1] == NULL) return 0;
+    if (value->desc.function.parameters[1]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[2] == NULL) return 0;
+    green = value->desc.function.parameters[2];
+
+    if (green->lexicalUnitType != SAC_INTEGER) return 0;
+    if (green->desc.integer < 0 || green->desc.integer > 255) return 0;
+
+    if (value->desc.function.parameters[3] == NULL) return 0;
+    if (value->desc.function.parameters[3]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[4] == NULL) return 0;
+    blue = value->desc.function.parameters[4];
+
+    if (blue->lexicalUnitType != SAC_INTEGER) return 0;
+    if (blue->desc.integer < 0 || blue->desc.integer > 255) return 0;
+
+    if (value->desc.function.parameters[5] != NULL) return 0;
+
+    return 1;
+  } else if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("aqua", value->desc.ident) == 0) return 1;
+    if (strcasecmp("black", value->desc.ident) == 0) return 1;
+    if (strcasecmp("blue", value->desc.ident) == 0) return 1;
+    if (strcasecmp("fuchsia", value->desc.ident) == 0) return 1;
+    if (strcasecmp("gray", value->desc.ident) == 0) return 1;
+    if (strcasecmp("green", value->desc.ident) == 0) return 1;
+    if (strcasecmp("lime", value->desc.ident) == 0) return 1;
+    if (strcasecmp("maroon", value->desc.ident) == 0) return 1;
+    if (strcasecmp("navy", value->desc.ident) == 0) return 1;
+    if (strcasecmp("olive", value->desc.ident) == 0) return 1;
+    if (strcasecmp("orange", value->desc.ident) == 0) return 1;
+    if (strcasecmp("purple", value->desc.ident) == 0) return 1;
+    if (strcasecmp("red", value->desc.ident) == 0) return 1;
+    if (strcasecmp("silver", value->desc.ident) == 0) return 1;
+    if (strcasecmp("teal", value->desc.ident) == 0) return 1;
+    if (strcasecmp("white", value->desc.ident) == 0) return 1;
+    if (strcasecmp("yellow", value->desc.ident) == 0) return 1;
+  }
+  return 0;
+}
+
+
+
+static int CSSStyleDeclarationValue_propertySetterBackgroundColor(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit *value)
+{
+  if (isColor(value)) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("transparent", value->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_INHERIT) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
 static int CSSStyleDeclarationValue_propertySetter(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property,
   const SAC_LexicalUnit *value)
@@ -207,6 +291,8 @@ static int CSSStyleDeclarationValue_propertySetter(
       return CSSStyleDeclarationValue_propertySetterBackgroundAttachment(values,
         value);
     case CSSOM_BACKGROUND_COLOR_PROPERTY:
+      return CSSStyleDeclarationValue_propertySetterBackgroundColor(values,
+        value);
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:

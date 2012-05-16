@@ -211,10 +211,14 @@ static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
         if (*arg != NULL) {
           if (emit_lexicalUnit(out, *arg) != 0) return 1;
           while (*(++arg) != NULL) {
-            if (fprintf(out, " ") < 0) return 1;
+            if ((**arg).lexicalUnitType != SAC_OPERATOR_COMMA) {
+              if (fprintf(out, " ") < 0) return 1;
+            }
             if (emit_lexicalUnit(out, *arg) != 0) return 1;
           }
         }
+
+        if (fprintf(out, ")") < 0) return 1;
       }
       break;
     case SAC_IDENT:
