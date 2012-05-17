@@ -522,6 +522,9 @@ void backgroundColor() {
   style.setBackgroundColor("rgb(0, 0, 255)");
   assertEquals(std::string("rgb(0, 0, 255)"), style.backgroundColor());
 
+  style.setBackgroundColor("RGB(0, 0, 255)");
+  assertEquals(std::string("rgb(0, 0, 255)"), style.backgroundColor());
+
 
 
   /**
@@ -583,11 +586,62 @@ void backgroundImage() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
+  assert(style.backgroundImage() == NULL);
 
-  assert(style.azimuth() == NULL);
 
-  style.setBackgroundImage("center");
-  assertEquals(std::string("center"), style.backgroundImage());
+  
+  /**
+   * uri
+   */
+
+  style.setBackgroundImage("url(\"http://example.com/\")");
+  assertEquals(std::string("url(\"http://example.com/\")"),
+    style.backgroundImage());
+
+  style.setBackgroundImage("url('http://example.com/')");
+  assertEquals(std::string("url(\"http://example.com/\")"),
+    style.backgroundImage());
+
+  style.setBackgroundImage("URL(\"HTTP://EXAMPLE.COM/\")");
+  assertEquals(std::string("url(\"HTTP://EXAMPLE.COM/\")"),
+    style.backgroundImage());
+
+
+
+  /**
+   * none
+   */
+
+  style.setBackgroundImage("none");
+  assertEquals(std::string("none"), style.backgroundImage());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundImage("NONE");
+  assertEquals(std::string("NONE"), style.backgroundImage());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBackgroundImage("inherit");
+  assertEquals(std::string("inherit"), style.backgroundImage());
+
+  style.setBackgroundImage("INHERIT");
+  assertEquals(std::string("inherit"), style.backgroundImage());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBackgroundImage("invalid");
+  assertEquals(std::string("inherit"), style.backgroundImage());
+
 }
 
 

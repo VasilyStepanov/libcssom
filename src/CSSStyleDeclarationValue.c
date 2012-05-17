@@ -197,7 +197,7 @@ static int CSSStyleDeclarationValue_propertySetterBackgroundAttachment(
 
 
 
-int isColor(const SAC_LexicalUnit *value) {
+static int isColor(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_RGBCOLOR) {
     const SAC_LexicalUnit *red;
     const SAC_LexicalUnit *green;
@@ -263,6 +263,13 @@ int isColor(const SAC_LexicalUnit *value) {
 
 
 
+static int isUrl(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_URI) return 1;
+  return 0;
+}
+
+
+
 static int CSSStyleDeclarationValue_propertySetterBackgroundColor(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit *value)
@@ -271,6 +278,22 @@ static int CSSStyleDeclarationValue_propertySetterBackgroundColor(
     return 1;
   } else if (value->lexicalUnitType == SAC_IDENT) {
     if (strcasecmp("transparent", value->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_INHERIT) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+static int CSSStyleDeclarationValue_propertySetterBackgroundImage(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit *value)
+{
+  if (isUrl(value)) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("none", value->desc.ident) == 0) return 1;
   } else if (value->lexicalUnitType == SAC_INHERIT) {
     return 1;
   }
@@ -294,6 +317,8 @@ static int CSSStyleDeclarationValue_propertySetter(
       return CSSStyleDeclarationValue_propertySetterBackgroundColor(values,
         value);
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
+      return CSSStyleDeclarationValue_propertySetterBackgroundImage(values,
+        value);
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
     case CSSOM_BORDER_PROPERTY:
