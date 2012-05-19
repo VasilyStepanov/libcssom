@@ -663,11 +663,89 @@ void backgroundRepeat() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
+  assert(style.backgroundRepeat() == NULL);
 
-  assert(style.azimuth() == NULL);
 
-  style.setBackgroundRepeat("center");
-  assertEquals(std::string("center"), style.backgroundRepeat());
+
+  /**
+   * repeat
+   */
+
+  style.setBackgroundRepeat("repeat");
+  assertEquals(std::string("repeat"), style.backgroundRepeat());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundRepeat("REPEAT");
+  assertEquals(std::string("REPEAT"), style.backgroundRepeat());
+
+
+
+  /**
+   * repeat-x
+   */
+
+  style.setBackgroundRepeat("repeat-x");
+  assertEquals(std::string("repeat-x"), style.backgroundRepeat());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundRepeat("REPEAT-X");
+  assertEquals(std::string("REPEAT-X"), style.backgroundRepeat());
+
+
+
+  /**
+   * repeat-y
+   */
+
+  style.setBackgroundRepeat("repeat-y");
+  assertEquals(std::string("repeat-y"), style.backgroundRepeat());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundRepeat("REPEAT-Y");
+  assertEquals(std::string("REPEAT-Y"), style.backgroundRepeat());
+
+
+
+  /**
+   * no-repeat
+   */
+
+  style.setBackgroundRepeat("no-repeat");
+  assertEquals(std::string("no-repeat"), style.backgroundRepeat());
+
+  /**
+   * TODO: Replace with case insensitive implementation.
+   */
+  style.setBackgroundRepeat("NO-REPEAT");
+  assertEquals(std::string("NO-REPEAT"), style.backgroundRepeat());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBackgroundRepeat("inherit");
+  assertEquals(std::string("inherit"), style.backgroundRepeat());
+
+  style.setBackgroundRepeat("INHERIT");
+  assertEquals(std::string("inherit"), style.backgroundRepeat());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBackgroundRepeat("invalid");
+  assertEquals(std::string("inherit"), style.backgroundRepeat());
+
 }
 
 

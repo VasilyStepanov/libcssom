@@ -302,6 +302,23 @@ static int CSSStyleDeclarationValue_propertySetterBackgroundImage(
 
 
 
+static int CSSStyleDeclarationValue_propertySetterBackgroundRepeat(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit *value)
+{
+  if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("repeat", value->desc.ident) == 0) return 1;
+    if (strcasecmp("repeat-x", value->desc.ident) == 0) return 1;
+    if (strcasecmp("repeat-y", value->desc.ident) == 0) return 1;
+    if (strcasecmp("no-repeat", value->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_INHERIT) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
 static int CSSStyleDeclarationValue_propertySetter(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property,
   const SAC_LexicalUnit *value)
@@ -320,7 +337,10 @@ static int CSSStyleDeclarationValue_propertySetter(
       return CSSStyleDeclarationValue_propertySetterBackgroundImage(values,
         value);
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
+      return 1;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
+      return CSSStyleDeclarationValue_propertySetterBackgroundRepeat(values,
+        value);
     case CSSOM_BORDER_PROPERTY:
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
     case CSSOM_BORDER_COLOR_PROPERTY:
