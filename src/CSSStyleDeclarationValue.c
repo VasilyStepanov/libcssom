@@ -5,6 +5,7 @@
 #include "FSM_CSSPropertyValue.h"
 #include "gcc.h"
 #include "memory.h"
+#include "utility.h"
 
 #include <cssom/CSSStyleDeclaration.h>
 #include <cssom/CSSStyleRule.h>
@@ -181,6 +182,74 @@ const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
 
 
 
+static int isAngle(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_DEGREE) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_GRADIAN) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_RADIAN) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+static int CSSStyleDeclarationValue_propertySetterAzimuth(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit *value)
+{
+  if (isAngle(value)) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("left-side", value->desc.ident) == 0) return 1;
+    if (strcasecmp("far-left", value->desc.ident) == 0) return 1;
+    if (strcasecmp("left", value->desc.ident) == 0) return 1;
+    if (strcasecmp("center-left", value->desc.ident) == 0) return 1;
+    if (strcasecmp("center", value->desc.ident) == 0) return 1;
+    if (strcasecmp("center-right", value->desc.ident) == 0) return 1;
+    if (strcasecmp("right", value->desc.ident) == 0) return 1;
+    if (strcasecmp("far-right", value->desc.ident) == 0) return 1;
+    if (strcasecmp("right-side", value->desc.ident) == 0) return 1;
+    if (strcasecmp("behind", value->desc.ident) == 0) return 1;
+    if (strcasecmp("leftwards", value->desc.ident) == 0) return 1;
+    if (strcasecmp("rightwards", value->desc.ident) == 0) return 1;
+    if (strcasecmp("inherit", value->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_SUB_EXPRESSION) {
+    const SAC_LexicalUnit *angle;
+    const SAC_LexicalUnit *behind;
+
+    if (value->desc.subValues[0] == NULL) return 0;
+    angle = value->desc.subValues[0];
+    if (angle->lexicalUnitType != SAC_IDENT) return 0;
+
+    if (value->desc.subValues[1] == NULL) return 0;
+    behind = value->desc.subValues[1];
+    if (behind->lexicalUnitType != SAC_IDENT) return 0;
+
+    if (value->desc.subValues[2] != NULL) return 0;
+
+    if (strcasecmp("behind", angle->desc.ident) == 0) SWAP(angle, behind);
+    if (strcasecmp("behind", behind->desc.ident) != 0) return 0;
+
+    if (strcasecmp("left-side", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("far-left", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("left", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("center-left", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("center", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("center-right", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("right", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("far-right", angle->desc.ident) == 0) return 1;
+    if (strcasecmp("right-side", angle->desc.ident) == 0) return 1;
+  } else if (value->lexicalUnitType == SAC_INHERIT) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+
 static int CSSStyleDeclarationValue_propertySetterBackgroundAttachment(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit *value)
@@ -325,6 +394,8 @@ static int CSSStyleDeclarationValue_propertySetter(
 {
   switch (property) {
     case CSSOM_AZIMUTH_PROPERTY:
+      return CSSStyleDeclarationValue_propertySetterAzimuth(values,
+        value);
     case CSSOM_BACKGROUND_PROPERTY:
       break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:

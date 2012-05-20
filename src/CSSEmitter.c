@@ -234,7 +234,7 @@ static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
       {
         SAC_LexicalUnit **sub;
 
-        sub = value->desc.function.parameters;
+        sub = value->desc.subValues;
         if (*sub != NULL) {
           if (emit_lexicalUnit(out, *sub) != 0) return 1;
           while (*(++sub) != NULL) {
