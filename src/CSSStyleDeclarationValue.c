@@ -195,56 +195,65 @@ static int isAngle(const SAC_LexicalUnit *value) {
 
 
 
-static int CSSStyleDeclarationValue_propertySetterAzimuth(
-  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
-  const SAC_LexicalUnit *value)
-{
-  if (isAngle(value)) {
-    return 1;
-  } else if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("left-side", value->desc.ident) == 0) return 1;
-    if (strcasecmp("far-left", value->desc.ident) == 0) return 1;
-    if (strcasecmp("left", value->desc.ident) == 0) return 1;
-    if (strcasecmp("center-left", value->desc.ident) == 0) return 1;
-    if (strcasecmp("center", value->desc.ident) == 0) return 1;
-    if (strcasecmp("center-right", value->desc.ident) == 0) return 1;
-    if (strcasecmp("right", value->desc.ident) == 0) return 1;
-    if (strcasecmp("far-right", value->desc.ident) == 0) return 1;
-    if (strcasecmp("right-side", value->desc.ident) == 0) return 1;
-    if (strcasecmp("behind", value->desc.ident) == 0) return 1;
-    if (strcasecmp("leftwards", value->desc.ident) == 0) return 1;
-    if (strcasecmp("rightwards", value->desc.ident) == 0) return 1;
-    if (strcasecmp("inherit", value->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_SUB_EXPRESSION) {
-    const SAC_LexicalUnit *angle;
-    const SAC_LexicalUnit *behind;
-
-    if (value->desc.subValues[0] == NULL) return 0;
-    angle = value->desc.subValues[0];
-    if (angle->lexicalUnitType != SAC_IDENT) return 0;
-
-    if (value->desc.subValues[1] == NULL) return 0;
-    behind = value->desc.subValues[1];
-    if (behind->lexicalUnitType != SAC_IDENT) return 0;
-
-    if (value->desc.subValues[2] != NULL) return 0;
-
-    if (strcasecmp("behind", angle->desc.ident) == 0) SWAP(angle, behind);
-    if (strcasecmp("behind", behind->desc.ident) != 0) return 0;
-
-    if (strcasecmp("left-side", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("far-left", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("left", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("center-left", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("center", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("center-right", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("right", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("far-right", angle->desc.ident) == 0) return 1;
-    if (strcasecmp("right-side", angle->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_INHERIT) {
-    return 1;
-  }
+static int azimuth_isAngleIdent(const char *ident) {
+  if (strcasecmp("left-side", ident) == 0) return 1;
+  if (strcasecmp("far-left", ident) == 0) return 1;
+  if (strcasecmp("left", ident) == 0) return 1;
+  if (strcasecmp("center-left", ident) == 0) return 1;
+  if (strcasecmp("center", ident) == 0) return 1;
+  if (strcasecmp("center-right", ident) == 0) return 1;
+  if (strcasecmp("right", ident) == 0) return 1;
+  if (strcasecmp("far-right", ident) == 0) return 1;
+  if (strcasecmp("right-side", ident) == 0) return 1;
   return 0;
+}
+
+
+
+static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **expr) {
+  if (expr[0] != NULL) {
+    if (expr[0]->lexicalUnitType == SAC_IDENT) {
+      if (strcasecmp("behind", expr[0]->desc.ident) == 0) return &expr[1];
+    }
+  }
+  return &expr[0];
+}
+
+
+
+static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **expr) {
+  if (expr[0] != NULL) {
+    if (expr[0]->lexicalUnitType == SAC_IDENT) {
+      if (azimuth_isAngleIdent(expr[0]->desc.ident)) return &expr[1];
+    }
+  }
+  return &expr[0];
+}
+
+
+
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_propertySetterAzimuth(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **expr)
+{
+  if (expr[0] != NULL) {
+    if (isAngle(expr[0])) {
+      return &expr[1];
+    } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+      if (strcasecmp("leftwards", expr[0]->desc.ident) == 0) return &expr[1];
+      if (strcasecmp("rightwards", expr[0]->desc.ident) == 0) return &expr[1];
+
+      if (azimuth_isAngleIdent(expr[0]->desc.ident))
+        return azimuth_angle(&expr[1]);
+
+      if (strcasecmp("behind", expr[0]->desc.ident) == 0)
+        return azimuth_behind(&expr[1]);
+
+    } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+      return &expr[1];
+    }
+  }
+  return &expr[0];
 }
 
 
@@ -394,8 +403,19 @@ static int CSSStyleDeclarationValue_propertySetter(
 {
   switch (property) {
     case CSSOM_AZIMUTH_PROPERTY:
-      return CSSStyleDeclarationValue_propertySetterAzimuth(values,
-        value);
+      {
+        const SAC_LexicalUnit *arr[2];
+        const SAC_LexicalUnit **expr;
+        if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
+          arr[0] = value;
+          arr[1] = NULL;
+          expr = arr;
+        } else {
+          expr = (const SAC_LexicalUnit**)value->desc.subValues;
+        }
+        return *CSSStyleDeclarationValue_propertySetterAzimuth(values,
+          expr) == NULL;
+      }
     case CSSOM_BACKGROUND_PROPERTY:
       break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
