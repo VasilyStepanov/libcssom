@@ -9,12 +9,26 @@ static int propertyHandler(void *userData,
   const SAC_LexicalUnit *value,
   SAC_Boolean important)
 {
+  const SAC_LexicalUnit **begin;
+  const SAC_LexicalUnit **end;
   CSSOM_ParserStack *stack;
   
   stack = (CSSOM_ParserStack*)userData;
 
-  if (CSSOM_ParserStack_setProperty(stack, propertyName, value, important) < 0)
+  if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
+    begin = &value;
+    end = NULL;
+  } else {
+    begin = (const SAC_LexicalUnit**)value->desc.subValues;
+    end = begin;
+    while (*end != NULL) ++end;
+  }
+
+  if (CSSOM_ParserStack_setProperty(stack, propertyName, begin, end,
+    important) < 0)
+  {
     return 1;
+  }
 
   return 0;
 }

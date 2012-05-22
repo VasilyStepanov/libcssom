@@ -31,7 +31,8 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue_parentStyle(
 
 int CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const SAC_LexicalUnit *value, SAC_Boolean priority);
+  const char *property, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, SAC_Boolean priority);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property);

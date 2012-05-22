@@ -560,10 +560,15 @@ static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
 int CSSOM_CSSEmitter_property(FILE *out,
   const CSSOM_CSSPropertyValue *property)
 {
-  if (emit_lexicalUnit(out, CSSOM_CSSPropertyValue__value(
-    property)) != 0)
-  {
-    return 1;
+  const SAC_LexicalUnit **it;
+
+  it = CSSOM_CSSPropertyValue__begin(property);
+  if (it != CSSOM_CSSPropertyValue__end(property)) {
+    if (emit_lexicalUnit(out, *it) != 0) return 1;
+    while (++it != CSSOM_CSSPropertyValue__end(property)) {
+      if (fprintf(out, " ") < 0) return 1;
+      if (emit_lexicalUnit(out, *it) != 0) return 1;
+    }
   }
 
   return 0;

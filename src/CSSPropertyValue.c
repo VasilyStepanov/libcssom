@@ -23,7 +23,9 @@ struct _CSSOM_CSSPropertyValue {
   CSSOM_CSSPropertyValue *shorthand;
   SAC_Parser parser;
   const char *name;
-  const SAC_LexicalUnit *value;
+  const SAC_LexicalUnit *holder[2];
+  const SAC_LexicalUnit **begin;
+  const SAC_LexicalUnit **end;
   SAC_Boolean important;
   char *cssText;
 };
@@ -33,7 +35,8 @@ struct _CSSOM_CSSPropertyValue {
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, const char *name,
-  const SAC_LexicalUnit *value, SAC_Boolean important)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
 
@@ -46,7 +49,17 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   property->shorthand = shorthand;
   property->parser = NULL;
   property->name = name;
-  property->value = value;
+  if (end == NULL) {
+    property->holder[0] = *begin;
+    property->holder[1] = NULL;
+    property->begin = &property->holder[0];
+    property->end = &property->holder[1];
+  } else {
+    property->holder[0] = NULL;
+    property->holder[1] = NULL;
+    property->begin = begin;
+    property->end = end;
+  }
   property->important = important;
   property->cssText = NULL;
 
@@ -126,9 +139,17 @@ static void CSSPropertyValue_swap(
   CSSOM_CSSPropertyValue *lhs, CSSOM_CSSPropertyValue *rhs)
 {
   SWAP(lhs->parentValues, rhs->parentValues);
+  SWAP(lhs->shorthand, rhs->shorthand);
   SWAP(lhs->parser, rhs->parser);
   SWAP(lhs->name, rhs->name);
-  SWAP(lhs->value, rhs->value);
+  SWAP(lhs->holder[0], rhs->holder[0]);
+  SWAP(lhs->holder[1], rhs->holder[1]);
+  SWAP(lhs->begin, rhs->begin);
+  SWAP(lhs->end, rhs->end);
+  if (lhs->begin == &rhs->holder[0]) lhs->begin = &lhs->holder[0];
+  if (lhs->end == &rhs->holder[1]) lhs->end = &lhs->holder[1];
+  if (rhs->begin == &lhs->holder[0]) rhs->begin = &rhs->holder[0];
+  if (rhs->end == &lhs->holder[1]) rhs->end = &rhs->holder[1];
   SWAPS(lhs->important, rhs->important);
   SWAP(lhs->cssText, rhs->cssText);
 }
@@ -172,8 +193,16 @@ void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
 
 
 
-const SAC_LexicalUnit* CSSOM_CSSPropertyValue__value(
+const SAC_LexicalUnit** CSSOM_CSSPropertyValue__begin(
   const CSSOM_CSSPropertyValue *property)
 {
-  return property->value;
+  return property->begin;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_CSSPropertyValue__end(
+  const CSSOM_CSSPropertyValue *property)
+{
+  return property->end;
 }

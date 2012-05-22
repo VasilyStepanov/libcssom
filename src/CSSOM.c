@@ -545,6 +545,8 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
   const SAC_LexicalUnit *lu;
+  const SAC_LexicalUnit **begin;
+  const SAC_LexicalUnit **end;
   SAC_Boolean important;
   CSSOM_CSSPropertyValue *propertyValue;
 
@@ -579,8 +581,17 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     important = rval == 1 ? SAC_TRUE : SAC_FALSE;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, name, lu,
-    important);
+  if (lu->lexicalUnitType != SAC_SUB_EXPRESSION) {
+    begin = &lu;
+    end = NULL;
+  } else {
+    begin = (const SAC_LexicalUnit**)lu->desc.subValues;
+    end = begin;
+    while (*end != NULL) ++end;
+  }
+
+  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, name,
+    begin, end, important);
   if (propertyValue == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);

@@ -24,6 +24,11 @@ cssom::CSSStyleDeclaration getStyleDeclaration(const cssom::CSSOM &cssom) {
 
 
 void backgroundAttachment() {
+
+  /**
+   * scroll | fixed | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
@@ -84,6 +89,11 @@ void backgroundAttachment() {
 
 
 void backgroundColor() {
+  
+  /**
+   * <color> | transparent | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
@@ -223,6 +233,11 @@ void backgroundColor() {
 
 
 void backgroundImage() {
+
+  /**
+   * <uri> | none | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
@@ -287,6 +302,13 @@ void backgroundImage() {
 
 
 void backgroundPosition() {
+  
+  /**
+   * [ [ <percentage> | <length> | left | center | right ] [ <percentage> |
+   *  <length> | top | center | bottom ]? ] | [ [ left | center | right ] ||
+   *  [ top | center | bottom ] ] | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
@@ -620,6 +642,11 @@ void backgroundPosition() {
 
 
 void backgroundRepeat() {
+
+  /**
+   * repeat | repeat-x | repeat-y | no-repeat | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
@@ -719,12 +746,53 @@ void background() {
 
 
   /**
+   * attachment
+   */
+
+  style.setBackground("scroll");
+  assertEquals(std::string("scroll"), style.background());
+  assertEquals(std::string("scroll"), style.backgroundAttachment());
+
+
+
+  /**
    * color
    */
 
   style.setBackground("#808080");
   assertEquals(std::string("rgb(128, 128, 128)"), style.background());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
+
+
+
+  /**
+   * image
+   */
+
+  style.setBackground("url(\"http://example.com/\")");
+  assertEquals(std::string("url(\"http://example.com/\")"), style.background());
+  assertEquals(std::string("url(\"http://example.com/\")"),
+    style.backgroundImage());
+
+
+
+  /**
+   * position
+   */
+
+  style.setBackground("center center");
+  assertEquals(std::string("center center"), style.background());
+  assertEquals(std::string("center center"), style.backgroundPosition());
+
+
+
+  /**
+   * repeat
+   */
+
+  style.setBackground("repeat");
+  assertEquals(std::string("repeat"), style.background());
+  assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 }
 

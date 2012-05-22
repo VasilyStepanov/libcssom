@@ -14,7 +14,8 @@ extern "C" {
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, const char *name,
-  const SAC_LexicalUnit *value, SAC_Boolean important);
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  SAC_Boolean important);
 
 const char* CSSOM_CSSPropertyValue__name(
   const CSSOM_CSSPropertyValue *property);
@@ -24,7 +25,10 @@ int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property);
 void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
   SAC_Parser parser);
 
-const SAC_LexicalUnit* CSSOM_CSSPropertyValue__value(
+const SAC_LexicalUnit** CSSOM_CSSPropertyValue__begin(
+  const CSSOM_CSSPropertyValue *property);
+
+const SAC_LexicalUnit** CSSOM_CSSPropertyValue__end(
   const CSSOM_CSSPropertyValue *property);
 
 
