@@ -232,7 +232,7 @@ static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **expr) {
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_propertySetterAzimuth(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setAzimuth(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -259,17 +259,17 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_propertySetterAzimuth(
 
 
 
-static int CSSStyleDeclarationValue_propertySetterBackgroundAttachment(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundAttachment(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
-  const SAC_LexicalUnit *value)
+  const SAC_LexicalUnit **expr)
 {
-  if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("scroll", value->desc.ident) == 0) return 1;
-    if (strcasecmp("fixed", value->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_INHERIT) {
-    return 1;
+  if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("scroll", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("fixed", expr[0]->desc.ident) == 0) return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
   }
-  return 0;
+  return &expr[0];
 }
 
 
@@ -348,51 +348,51 @@ static int isUrl(const SAC_LexicalUnit *value) {
 
 
 
-static int CSSStyleDeclarationValue_propertySetterBackgroundColor(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundColor(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
-  const SAC_LexicalUnit *value)
+  const SAC_LexicalUnit **expr)
 {
-  if (isColor(value)) {
-    return 1;
-  } else if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("transparent", value->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_INHERIT) {
-    return 1;
+  if (isColor(expr[0])) {
+    return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("transparent", expr[0]->desc.ident) == 0) return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
   }
-  return 0;
+  return &expr[0];
 }
 
 
 
-static int CSSStyleDeclarationValue_propertySetterBackgroundImage(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundImage(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
-  const SAC_LexicalUnit *value)
+  const SAC_LexicalUnit **expr)
 {
-  if (isUrl(value)) {
-    return 1;
-  } else if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("none", value->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_INHERIT) {
-    return 1;
+  if (isUrl(expr[0])) {
+    return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("none", expr[0]->desc.ident) == 0) return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
   }
-  return 0;
+  return &expr[0];
 }
 
 
 
-static int CSSStyleDeclarationValue_propertySetterBackgroundRepeat(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundRepeat(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
-  const SAC_LexicalUnit *value)
+  const SAC_LexicalUnit **expr)
 {
-  if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("repeat", value->desc.ident) == 0) return 1;
-    if (strcasecmp("repeat-x", value->desc.ident) == 0) return 1;
-    if (strcasecmp("repeat-y", value->desc.ident) == 0) return 1;
-    if (strcasecmp("no-repeat", value->desc.ident) == 0) return 1;
-  } else if (value->lexicalUnitType == SAC_INHERIT) {
-    return 1;
+  if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("repeat", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("repeat-x", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("repeat-y", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("no-repeat", expr[0]->desc.ident) == 0) return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
   }
-  return 0;
+  return &expr[0];
 }
 
 
@@ -401,37 +401,35 @@ static int CSSStyleDeclarationValue_propertySetter(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property,
   const SAC_LexicalUnit *value)
 {
+  const SAC_LexicalUnit *arr[2];
+  const SAC_LexicalUnit **expr;
+  if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
+    arr[0] = value;
+    arr[1] = NULL;
+    expr = arr;
+  } else {
+    expr = (const SAC_LexicalUnit**)value->desc.subValues;
+  }
   switch (property) {
     case CSSOM_AZIMUTH_PROPERTY:
-      {
-        const SAC_LexicalUnit *arr[2];
-        const SAC_LexicalUnit **expr;
-        if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
-          arr[0] = value;
-          arr[1] = NULL;
-          expr = arr;
-        } else {
-          expr = (const SAC_LexicalUnit**)value->desc.subValues;
-        }
-        return *CSSStyleDeclarationValue_propertySetterAzimuth(values,
-          expr) == NULL;
-      }
+      return *CSSStyleDeclarationValue_setAzimuth(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_PROPERTY:
       break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
-      return CSSStyleDeclarationValue_propertySetterBackgroundAttachment(values,
-        value);
+      return *CSSStyleDeclarationValue_setBackgroundAttachment(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_COLOR_PROPERTY:
-      return CSSStyleDeclarationValue_propertySetterBackgroundColor(values,
-        value);
+      return *CSSStyleDeclarationValue_setBackgroundColor(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
-      return CSSStyleDeclarationValue_propertySetterBackgroundImage(values,
-        value);
+      return *CSSStyleDeclarationValue_setBackgroundImage(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
       return 1;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
-      return CSSStyleDeclarationValue_propertySetterBackgroundRepeat(values,
-        value);
+      return *CSSStyleDeclarationValue_setBackgroundRepeat(values,
+        expr) == NULL;
     case CSSOM_BORDER_PROPERTY:
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
     case CSSOM_BORDER_COLOR_PROPERTY:
