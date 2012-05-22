@@ -26,6 +26,44 @@ struct _CSSOM_CSSStyleDeclarationValue {
 
 
 
+static int CSSStyleDeclarationValue__assignProperties(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
+  size_t size)
+{
+  const CSSOM *cssom;
+  size_t i;
+  CSSOM_FSMIter_CSSPropertyValue it;
+  CSSOM_CSSPropertyValue *propertyValue;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+
+  for (i = 0; i < size; ++i) {
+    propertyValue = properties[i];
+
+    if (propertyValue == NULL) continue;
+
+    it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm,
+      CSSOM_CSSPropertyValue__name(propertyValue), NULL);
+    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
+
+    if (it->value != NULL) {
+      it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
+      if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+        CSSOM_CSSPropertyValue_release(propertyValue);
+        return -1;
+      }
+      CSSOM_CSSPropertyValue_release(it->value);
+    }
+    it->value = propertyValue;
+  }
+
+  return 0;
+}
+
+
+
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   CSSOM_CSSStyleDeclaration *parentStyle)
 {
@@ -232,7 +270,7 @@ static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **expr) {
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setAzimuth(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_azimuth(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -257,7 +295,7 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setAzimuth(
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundAttachment(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_backgroundAttachment(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -346,7 +384,7 @@ static int isUrl(const SAC_LexicalUnit *value) {
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundColor(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_backgroundColor(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -362,7 +400,7 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundColor(
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundImage(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_backgroundImage(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -436,7 +474,7 @@ static const SAC_LexicalUnit** backgroundPosition_vertical(
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundPosition(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_backgroundPosition(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -475,7 +513,7 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundPosition(
 
 
 
-static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundRepeat(
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_backgroundRepeat(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
@@ -488,6 +526,102 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundRepeat(
     return &expr[1];
   }
   return &expr[0];
+}
+
+
+
+typedef const SAC_LexicalUnit**(*PropertyHandler)(
+  CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **expr);
+
+
+
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_shorthand(
+  CSSOM_CSSStyleDeclarationValue *values, PropertyHandler *handlers,
+  CSSOM_CSSPropertyType *types, CSSOM_CSSPropertyValue **properties,
+  size_t size, const SAC_LexicalUnit **expr)
+{
+  const CSSOM *cssom;
+  size_t i;
+  const SAC_LexicalUnit **at;
+  const SAC_LexicalUnit **tail;
+  CSSOM_CSSPropertyValue *property;
+  const char *sproperty;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+
+  at = expr;
+  while (*at != NULL) {
+    const SAC_LexicalUnit *value;
+
+    for (i = 0; i < size; ++i) {
+      if (handlers[i] == NULL) continue;
+
+      tail = handlers[i](values, at);
+      if (tail != at) {
+        handlers[i] = NULL;
+        break;
+      }
+    }
+
+    if (tail == at) break;
+
+    value = *at;
+    sproperty = CSSOM__properties(cssom)[types[i]];
+
+    property = CSSOM_CSSPropertyValue__alloc(values, NULL, sproperty, value,
+      SAC_FALSE);
+    if (property == NULL) return &expr[0];
+
+    properties[i] = property;
+
+    at = tail;
+  }
+
+  if (*at != NULL || CSSStyleDeclarationValue__assignProperties(values,
+    properties, size) != 0)
+  {
+    for (i = 0; i < sizeof(handlers) / sizeof(handlers[0]); ++i) {
+      CSSOM_CSSPropertyValue_release(properties[i]);
+      properties[i] = NULL;
+    }
+  }
+
+  return at;
+}
+
+
+
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_background(
+  CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **expr)
+{
+  PropertyHandler handlers[] = {
+    CSSStyleDeclarationValue_backgroundAttachment,
+    CSSStyleDeclarationValue_backgroundColor,
+    CSSStyleDeclarationValue_backgroundImage,
+    CSSStyleDeclarationValue_backgroundPosition,
+    CSSStyleDeclarationValue_backgroundRepeat
+  };
+
+  CSSOM_CSSPropertyType types[] = {
+    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+    CSSOM_BACKGROUND_COLOR_PROPERTY,
+    CSSOM_BACKGROUND_IMAGE_PROPERTY,
+    CSSOM_BACKGROUND_POSITION_PROPERTY,
+    CSSOM_BACKGROUND_REPEAT_PROPERTY
+  };
+
+  CSSOM_CSSPropertyValue *properties[] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  };
+
+  return CSSStyleDeclarationValue_shorthand(values, handlers, types, properties,
+    sizeof(handlers) / sizeof(handlers[0]), expr);
 }
 
 
@@ -507,24 +641,25 @@ static int CSSStyleDeclarationValue_propertySetter(
   }
   switch (property) {
     case CSSOM_AZIMUTH_PROPERTY:
-      return *CSSStyleDeclarationValue_setAzimuth(values,
+      return *CSSStyleDeclarationValue_azimuth(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_PROPERTY:
-      break;
+      return *CSSStyleDeclarationValue_background(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
-      return *CSSStyleDeclarationValue_setBackgroundAttachment(values,
+      return *CSSStyleDeclarationValue_backgroundAttachment(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_COLOR_PROPERTY:
-      return *CSSStyleDeclarationValue_setBackgroundColor(values,
+      return *CSSStyleDeclarationValue_backgroundColor(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
-      return *CSSStyleDeclarationValue_setBackgroundImage(values,
+      return *CSSStyleDeclarationValue_backgroundImage(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
-      return *CSSStyleDeclarationValue_setBackgroundPosition(values,
+      return *CSSStyleDeclarationValue_backgroundPosition(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
-      return *CSSStyleDeclarationValue_setBackgroundRepeat(values,
+      return *CSSStyleDeclarationValue_backgroundRepeat(values,
         expr) == NULL;
     case CSSOM_BORDER_PROPERTY:
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
@@ -663,8 +798,8 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
     return 1;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(values, it->key,
-    value, priority);
+  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, it->key, value,
+    priority);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return -1;

@@ -251,6 +251,24 @@ void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration *style,
 
 
 
+const char * CSSOM_CSSStyleDeclaration_background(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BACKGROUND_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackground(CSSOM_CSSStyleDeclaration *style,
+  const char *background)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BACKGROUND_PROPERTY, background);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_backgroundAttachment(
   const CSSOM_CSSStyleDeclaration *style)
 {

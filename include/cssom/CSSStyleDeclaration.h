@@ -81,6 +81,14 @@ void CSSOM_CSSStyleDeclaration_setAzimuth(CSSOM_CSSStyleDeclaration * cssStyleDe
 
 
 
+const char * CSSOM_CSSStyleDeclaration_background(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBackground(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * background);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_backgroundAttachment(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

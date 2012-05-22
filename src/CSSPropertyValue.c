@@ -20,6 +20,7 @@
 struct _CSSOM_CSSPropertyValue {
   size_t handles;
   CSSOM_CSSStyleDeclarationValue *parentValues;
+  CSSOM_CSSPropertyValue *shorthand;
   SAC_Parser parser;
   const char *name;
   const SAC_LexicalUnit *value;
@@ -30,7 +31,8 @@ struct _CSSOM_CSSPropertyValue {
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
-  CSSOM_CSSStyleDeclarationValue *parentValues, const char *name,
+  CSSOM_CSSStyleDeclarationValue *parentValues,
+  CSSOM_CSSPropertyValue *shorthand, const char *name,
   const SAC_LexicalUnit *value, SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
@@ -41,6 +43,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
 
   property->handles = 1;
   property->parentValues = parentValues;
+  property->shorthand = shorthand;
   property->parser = NULL;
   property->name = name;
   property->value = value;
@@ -57,6 +60,7 @@ void CSSOM_CSSPropertyValue_acquire(CSSOM_CSSPropertyValue *property) {
 
   ++property->handles;
   CSSOM_CSSStyleDeclarationValue_acquire(property->parentValues);
+  CSSOM_CSSPropertyValue_acquire(property->shorthand);
 }
 
 
@@ -67,6 +71,7 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
   assert(property->handles > 0);
   --property->handles;
   if (property->handles > 0) {
+    CSSOM_CSSPropertyValue_release(property->shorthand);
     CSSOM_CSSStyleDeclarationValue_release(property->parentValues);
     return;
   }

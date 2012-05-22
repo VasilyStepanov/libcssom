@@ -16,9 +16,7 @@ interface CSSStyleDeclaration {
 
   // CSS Properties
            attribute DOMString? azimuth;
-  /*
            attribute DOMString? background;
-  */
            attribute DOMString? backgroundAttachment;
            attribute DOMString? backgroundColor;
            attribute DOMString? backgroundImage;

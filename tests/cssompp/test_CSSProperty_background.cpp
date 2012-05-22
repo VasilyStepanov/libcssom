@@ -710,6 +710,26 @@ void backgroundRepeat() {
 
 
 
+void background() {
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.background() == NULL);
+
+
+
+  /**
+   * color
+   */
+
+  style.setBackground("#808080");
+  assertEquals(std::string("rgb(128, 128, 128)"), style.background());
+  assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
+
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -722,6 +742,7 @@ void cssPropertyBackground() {
   backgroundImage();
   backgroundPosition();
   backgroundRepeat();
+  background();
 }
 
 

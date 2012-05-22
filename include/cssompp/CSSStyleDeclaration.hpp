@@ -72,6 +72,9 @@ class CSSStyleDeclaration {
     const char * azimuth() const;
     void setAzimuth(const char * azimuth);
 
+    const char * background() const;
+    void setBackground(const char * background);
+
     const char * backgroundAttachment() const;
     void setBackgroundAttachment(const char * backgroundAttachment);
 

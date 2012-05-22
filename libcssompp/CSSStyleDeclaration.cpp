@@ -161,6 +161,18 @@ void CSSStyleDeclaration::setAzimuth(const char * azimuth) {
 
 
 
+const char * CSSStyleDeclaration::background() const {
+  return CSSOM_CSSStyleDeclaration_background(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBackground(const char * background) {
+  CSSOM_CSSStyleDeclaration_setBackground(_impl, background);
+}
+
+
+
 const char * CSSStyleDeclaration::backgroundAttachment() const {
   return CSSOM_CSSStyleDeclaration_backgroundAttachment(_impl);
 }
