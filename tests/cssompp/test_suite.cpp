@@ -3,6 +3,8 @@
 #include "test_CSSMediaRule.hpp"
 #include "test_CSSNamespaceRule.hpp"
 #include "test_CSSPageRule.hpp"
+#include "test_CSSProperty_azimuth.hpp"
+#include "test_CSSProperty_background.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -29,6 +31,8 @@ int main() {
   test::cssStyleDeclaration();
   test::cssStyleDeclarationValue();
   test::cssPropertyValue();
+  test::cssPropertyAzimuth();
+  test::cssPropertyBackground();
   test::selector();
   return 0;
 }
