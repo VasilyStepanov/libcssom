@@ -236,22 +236,20 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setAzimuth(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
 {
-  if (expr[0] != NULL) {
-    if (isAngle(expr[0])) {
-      return &expr[1];
-    } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
-      if (strcasecmp("leftwards", expr[0]->desc.ident) == 0) return &expr[1];
-      if (strcasecmp("rightwards", expr[0]->desc.ident) == 0) return &expr[1];
+  if (isAngle(expr[0])) {
+    return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("leftwards", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("rightwards", expr[0]->desc.ident) == 0) return &expr[1];
 
-      if (azimuth_isAngleIdent(expr[0]->desc.ident))
-        return azimuth_angle(&expr[1]);
+    if (azimuth_isAngleIdent(expr[0]->desc.ident))
+      return azimuth_angle(&expr[1]);
 
-      if (strcasecmp("behind", expr[0]->desc.ident) == 0)
-        return azimuth_behind(&expr[1]);
+    if (strcasecmp("behind", expr[0]->desc.ident) == 0)
+      return azimuth_behind(&expr[1]);
 
-    } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
-      return &expr[1];
-    }
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
   }
   return &expr[0];
 }
@@ -380,6 +378,103 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundImage(
 
 
 
+static int isPercentage(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_PERCENTAGE) return 1;
+  return 0;
+}
+
+
+
+static int isLength(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_LENGTH_EM) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_EX) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_PIXEL) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_INCH) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_CENTIMETER) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_POINT) return 1;
+  if (value->lexicalUnitType == SAC_LENGTH_PICA) return 1;
+  if (value->lexicalUnitType == SAC_REAL && value->desc.real == 0) return 1;
+  if (value->lexicalUnitType == SAC_INTEGER && value->desc.integer == 0)
+    return 1;
+  return 0;
+}
+
+
+
+static const SAC_LexicalUnit** backgroundPosition_horizontal(
+  const SAC_LexicalUnit **expr)
+{
+  if (expr[0] == NULL) {
+    return &expr[0];
+  } else if (isPercentage(expr[0])) {
+    return &expr[1];
+  } else if (isLength(expr[0])) {
+    return &expr[1];
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("top", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("center", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("bottom", expr[0]->desc.ident) == 0) return &expr[1];
+  }
+
+  return &expr[0];
+}
+
+
+
+static const SAC_LexicalUnit** backgroundPosition_vertical(
+  const SAC_LexicalUnit **expr)
+{
+  if (expr[0] == NULL) {
+    return &expr[0];
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcasecmp("left", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("center", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcasecmp("right", expr[0]->desc.ident) == 0) return &expr[1];
+  }
+  return &expr[0];
+}
+
+
+
+static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundPosition(
+  CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **expr)
+{
+  if (isPercentage(expr[0]) || isLength(expr[0])) {
+    return backgroundPosition_horizontal(&expr[1]);
+  } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
+
+    if (strcasecmp("left", expr[0]->desc.ident) == 0)
+      return backgroundPosition_horizontal(&expr[1]);
+
+    if (strcasecmp("right", expr[0]->desc.ident) == 0)
+      return backgroundPosition_horizontal(&expr[1]);
+
+    if (strcasecmp("top", expr[0]->desc.ident) == 0)
+      return backgroundPosition_vertical(&expr[1]);
+
+    if (strcasecmp("bottom", expr[0]->desc.ident) == 0)
+      return backgroundPosition_vertical(&expr[1]);
+
+    if (strcasecmp("center", expr[0]->desc.ident) == 0) {
+      const SAC_LexicalUnit **tail;
+
+      if (expr[1] == NULL) return &expr[1];
+
+      tail = backgroundPosition_horizontal(&expr[1]);
+      if (tail != &expr[1]) return tail;
+
+      return backgroundPosition_vertical(&expr[1]);
+    }
+
+  } else if (expr[0]->lexicalUnitType == SAC_INHERIT) {
+    return &expr[1];
+  }
+  return &expr[0];
+}
+
+
+
 static const SAC_LexicalUnit** CSSStyleDeclarationValue_setBackgroundRepeat(
   CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
   const SAC_LexicalUnit **expr)
@@ -426,7 +521,8 @@ static int CSSStyleDeclarationValue_propertySetter(
       return *CSSStyleDeclarationValue_setBackgroundImage(values,
         expr) == NULL;
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
-      return 1;
+      return *CSSStyleDeclarationValue_setBackgroundPosition(values,
+        expr) == NULL;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
       return *CSSStyleDeclarationValue_setBackgroundRepeat(values,
         expr) == NULL;
