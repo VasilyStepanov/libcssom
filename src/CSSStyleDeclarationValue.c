@@ -577,7 +577,7 @@ static const SAC_LexicalUnit** CSSStyleDeclarationValue_shorthand(
     sproperty = CSSOM__properties(cssom)[types[i]];
 
     property = CSSOM_CSSPropertyValue__alloc(values, shorthand, sproperty,
-      at, tail, SAC_FALSE);
+      at, tail, SAC_FALSE, NULL);
     if (property == NULL) return &begin[0];
 
     properties[i] = property;
@@ -789,15 +789,16 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
 {
   CSSOM_FSMIter_CSSPropertyValue it;
   CSSOM_CSSPropertyValue *propertyValue;
+  int error;
 
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
   propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, it->key,
-    begin, end, priority);
+    begin, end, priority, &error);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
-    return -1;
+    return error;
   }
 
   if (CSSStyleDeclarationValue_propertySetter(values, propertyValue, it->hash,

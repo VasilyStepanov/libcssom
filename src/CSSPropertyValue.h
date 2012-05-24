@@ -15,7 +15,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, const char *name,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important);
+  SAC_Boolean important, int *error);
 
 const char* CSSOM_CSSPropertyValue__name(
   const CSSOM_CSSPropertyValue *property);

@@ -591,7 +591,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   }
 
   propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, name,
-    begin, end, important);
+    begin, end, important, NULL);
   if (propertyValue == NULL) {
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
