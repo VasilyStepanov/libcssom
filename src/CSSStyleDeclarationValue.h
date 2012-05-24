@@ -26,6 +26,10 @@ typedef CSSOM_FSMConstIter_CSSPropertyValue
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   CSSOM_CSSStyleDeclaration *parentStyle);
 
+int CSSOM_CSSStyleDeclarationValue__assignProperties(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
+  size_t size);
+
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue_parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values);
 

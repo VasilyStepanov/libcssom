@@ -2,6 +2,7 @@
 #define _CSSOM_CSS_PROPERTY_VALUE_H
 
 #include <cssom/CSSPropertyValue.h>
+#include <cssom/CSSProperties.h>
 
 #include <sacc.h>
 
@@ -13,8 +14,8 @@ extern "C" {
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, const char *name,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
+  const char *name, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   SAC_Boolean important, int *error);
 
 const char* CSSOM_CSSPropertyValue__name(

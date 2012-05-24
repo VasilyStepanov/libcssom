@@ -539,8 +539,9 @@ int CSSOM__parsePriority(const CSSOM *cssom, const char *priority, int len) {
 
 
 CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *values, const char *name,
-  const char *value, int valueLen, const char *priority, int priorityLen)
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType type,
+  const char *name, const char *value, int valueLen, const char *priority,
+  int priorityLen)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -590,7 +591,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     while (*end != NULL) ++end;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, name,
+  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, type, name,
     begin, end, important, NULL);
   if (propertyValue == NULL) {
     CSSOM_ParserStack_free(stack);
