@@ -589,7 +589,7 @@ struct _CSSOM_CSSPropertyValue {
   SAC_Parser parser;
   CSSOM_CSSPropertyType type;
   const char *name;
-  const SAC_LexicalUnit *holder[2];
+  const SAC_LexicalUnit **holder;
   const SAC_LexicalUnit **begin;
   const SAC_LexicalUnit **end;
   SAC_Boolean important;
@@ -604,7 +604,21 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   const char *name, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   SAC_Boolean important, int *error)
 {
+  const SAC_LexicalUnit **holder;
   CSSOM_CSSPropertyValue *property;
+
+  if (end == NULL) {
+    holder = (const SAC_LexicalUnit**)CSSOM_malloc(
+      sizeof(const SAC_LexicalUnit*) * 2);
+    if (holder == NULL) {
+      *error = -1;
+      return NULL;
+    }
+    holder[0] = *begin;
+    holder[1] = NULL;
+  } else {
+    holder = NULL;
+  }
 
   property = (CSSOM_CSSPropertyValue*)CSSOM_malloc(
     sizeof(CSSOM_CSSPropertyValue));
@@ -619,14 +633,11 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   property->parser = NULL;
   property->type = type;
   property->name = name;
-  if (end == NULL) {
-    property->holder[0] = *begin;
-    property->holder[1] = NULL;
+  property->holder = holder;
+  if (property->holder != NULL) {
     property->begin = &property->holder[0];
     property->end = &property->holder[1];
   } else {
-    property->holder[0] = NULL;
-    property->holder[1] = NULL;
     property->begin = begin;
     property->end = end;
   }
@@ -636,7 +647,10 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   if (CSSStyleDeclarationValue_propertySetter(parentValues, property,
     property->type, property->begin, property->end) != 1)
   {
-    if (error != NULL) *error = 1;
+    if (error != NULL) {
+      CSSOM_CSSPropertyValue_release(property);
+      *error = 1;
+    }
     return NULL;
   }
 
@@ -669,6 +683,7 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
   }
 
   CSSOM_native_free(property->cssText);
+  CSSOM_free(property->holder);
   SAC_DisposeParser(property->parser);
   CSSOM_free(property);
 }
@@ -722,14 +737,9 @@ static void CSSPropertyValue_swap(
   SWAP(lhs->parser, rhs->parser);
   SWAPS(lhs->type, rhs->type);
   SWAP(lhs->name, rhs->name);
-  SWAP(lhs->holder[0], rhs->holder[0]);
-  SWAP(lhs->holder[1], rhs->holder[1]);
+  SWAP(lhs->holder, rhs->holder);
   SWAP(lhs->begin, rhs->begin);
   SWAP(lhs->end, rhs->end);
-  if (lhs->begin == &rhs->holder[0]) lhs->begin = &lhs->holder[0];
-  if (lhs->end == &rhs->holder[1]) lhs->end = &lhs->holder[1];
-  if (rhs->begin == &lhs->holder[0]) rhs->begin = &rhs->holder[0];
-  if (rhs->end == &lhs->holder[1]) rhs->end = &rhs->holder[1];
   SWAPS(lhs->important, rhs->important);
   SWAP(lhs->cssText, rhs->cssText);
 }
