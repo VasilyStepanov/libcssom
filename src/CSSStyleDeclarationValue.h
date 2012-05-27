@@ -30,7 +30,7 @@ int CSSOM_CSSStyleDeclarationValue__assignProperties(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
   size_t size);
 
-CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue_parentStyle(
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue__parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values);
 
 int CSSOM_CSSStyleDeclarationValue__setProperty(

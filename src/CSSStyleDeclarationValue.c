@@ -135,7 +135,7 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
-CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue_parentStyle(
+CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue__parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values)
 {
   return values->parentStyle;
@@ -225,14 +225,19 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   const char *property, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, SAC_Boolean priority)
 {
+  const CSSOM *cssom;
   CSSOM_FSMIter_CSSPropertyValue it;
   CSSOM_CSSPropertyValue *propertyValue;
   int error;
 
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
+
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(values, NULL, it->hash, it->key,
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, NULL, it->hash,
     begin, end, priority, &error);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
@@ -290,8 +295,8 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
   } else {
     priorityLen = strlen(priority);
   }
-  propertyValue = CSSOM__parsePropertyValue(cssom, values, it->hash, it->key,
-    value, strlen(value), priority, priorityLen);
+  propertyValue = CSSOM__parsePropertyValue(cssom, values, it->hash, value,
+    strlen(value), priority, priorityLen);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return;
@@ -348,8 +353,8 @@ void CSSOM_CSSStyleDeclarationValue__fsetProperty(
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, sproperty, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;
 
-  propertyValue = CSSOM__parsePropertyValue(cssom, values, it->hash, it->key,
-    value, strlen(value), NULL, 0);
+  propertyValue = CSSOM__parsePropertyValue(cssom, values, it->hash, value,
+    strlen(value), NULL, 0);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return;

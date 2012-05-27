@@ -13,9 +13,9 @@ extern "C" {
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
-  CSSOM_CSSStyleDeclarationValue *parentValues,
+  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  const char *name, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   SAC_Boolean important, int *error);
 
 const char* CSSOM_CSSPropertyValue__name(
