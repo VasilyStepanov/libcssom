@@ -24,6 +24,36 @@ typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
 
 
 
+static SAC_LexicalUnit backgroundDefaultValue[] = {
+  {
+    SAC_IDENT,
+    { (long)"transparent" }
+  }, {
+    SAC_IDENT,
+    { (long)"none" }
+  }, {
+    SAC_IDENT,
+    { (long)"repeat" }
+  }, {
+    SAC_IDENT,
+    { (long)"scroll" }
+  }
+};
+static const SAC_LexicalUnit *backgroundColorBegin = &backgroundDefaultValue[0];
+static const SAC_LexicalUnit *backgroundColorEnd = &backgroundDefaultValue[1];
+static const SAC_LexicalUnit *backgroundImageBegin = &backgroundDefaultValue[1];
+static const SAC_LexicalUnit *backgroundImageEnd = &backgroundDefaultValue[2];
+static const SAC_LexicalUnit *backgroundRepeatBegin =
+  &backgroundDefaultValue[2];
+static const SAC_LexicalUnit *backgroundRepeatEnd = &backgroundDefaultValue[3];
+static const SAC_LexicalUnit *backgroundAttachmentBegin =
+  &backgroundDefaultValue[3];
+static const SAC_LexicalUnit *backgroundAttachmentEnd =
+  &backgroundDefaultValue[4];
+
+
+
+
 static int isAngle(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_DEGREE) {
     return 1;
@@ -420,22 +450,23 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   const SAC_LexicalUnit **end, int *error)
 {
   int rval;
+  size_t i;
   const SAC_LexicalUnit **tail;
   
   PropertyHandler handlers[] = {
-    CSSPropertyValue_backgroundAttachment,
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
-    CSSPropertyValue_backgroundPosition,
-    CSSPropertyValue_backgroundRepeat
+    CSSPropertyValue_backgroundRepeat,
+    CSSPropertyValue_backgroundAttachment,
+    CSSPropertyValue_backgroundPosition
   };
 
   CSSOM_CSSPropertyType types[] = {
-    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
     CSSOM_BACKGROUND_COLOR_PROPERTY,
     CSSOM_BACKGROUND_IMAGE_PROPERTY,
-    CSSOM_BACKGROUND_POSITION_PROPERTY,
-    CSSOM_BACKGROUND_REPEAT_PROPERTY
+    CSSOM_BACKGROUND_REPEAT_PROPERTY,
+    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+    CSSOM_BACKGROUND_POSITION_PROPERTY
   };
 
   CSSOM_CSSPropertyValue *properties[] = {
@@ -448,12 +479,82 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
 
   const size_t size = sizeof(handlers) / sizeof(handlers[0]);
 
+  const CSSOM *cssom;
+
+  cssom = CSSOM_CSSStyleSheet__cssom(
+    CSSOM_CSSRule_parentStyleSheet(
+      CSSOM_CSSStyleDeclaration_parentRule(
+        CSSOM_CSSStyleDeclarationValue_parentStyle(property->parentValues))));
+
   tail = CSSPropertyValue_shorthand(property, handlers, types,
     properties, size, begin, end);
 
   if (*tail != *end) {
     if (error != NULL) *error = 1;
     return begin;
+  }
+
+  for (i = 0; i < size; ++i) {
+    if (properties[i] == NULL) {
+      switch (types[i]) {
+        case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
+          {
+            properties[i] = CSSOM_CSSPropertyValue__alloc(
+              property->parentValues, property, types[i],
+              CSSOM__properties(cssom)[types[i]], &backgroundAttachmentBegin,
+              &backgroundAttachmentEnd, SAC_FALSE, &rval);
+            if (properties[i] == NULL) {
+              releaseProperties(properties, size);
+              if (error != NULL) *error = rval;
+              return begin;
+            }
+          }
+          break;
+        case CSSOM_BACKGROUND_COLOR_PROPERTY:
+          {
+            properties[i] = CSSOM_CSSPropertyValue__alloc(
+              property->parentValues, property, types[i],
+              CSSOM__properties(cssom)[types[i]], &backgroundColorBegin,
+              &backgroundColorEnd, SAC_FALSE, &rval);
+            if (properties[i] == NULL) {
+              releaseProperties(properties, size);
+              if (error != NULL) *error = rval;
+              return begin;
+            }
+          }
+          break;
+        case CSSOM_BACKGROUND_IMAGE_PROPERTY:
+          {
+            properties[i] = CSSOM_CSSPropertyValue__alloc(
+              property->parentValues, property, types[i],
+              CSSOM__properties(cssom)[types[i]], &backgroundImageBegin,
+              &backgroundImageEnd, SAC_FALSE, &rval);
+            if (properties[i] == NULL) {
+              releaseProperties(properties, size);
+              if (error != NULL) *error = rval;
+              return begin;
+            }
+          }
+          break;
+        case CSSOM_BACKGROUND_POSITION_PROPERTY:
+          break;
+        case CSSOM_BACKGROUND_REPEAT_PROPERTY:
+          {
+            properties[i] = CSSOM_CSSPropertyValue__alloc(
+              property->parentValues, property, types[i],
+              CSSOM__properties(cssom)[types[i]], &backgroundRepeatBegin,
+              &backgroundRepeatEnd, SAC_FALSE, &rval);
+            if (properties[i] == NULL) {
+              releaseProperties(properties, size);
+              if (error != NULL) *error = rval;
+              return begin;
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
