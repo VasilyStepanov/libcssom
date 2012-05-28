@@ -29,6 +29,34 @@ typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
 
 
 
+static SAC_LexicalUnit unit_transparent;
+static SAC_LexicalUnit unit_none;
+static SAC_LexicalUnit unit_repeat;
+static SAC_LexicalUnit unit_scroll;
+static SAC_LexicalUnit unit_50pct;
+
+
+
+void CSSOM_CSSPropertyValue__initGlobals(void) {
+  unit_transparent.lexicalUnitType = SAC_IDENT;
+  unit_transparent.desc.ident = "transparent";
+
+  unit_none.lexicalUnitType = SAC_IDENT;
+  unit_none.desc.ident = "none";
+
+  unit_repeat.lexicalUnitType = SAC_IDENT;
+  unit_repeat.desc.ident = "repeat";
+
+  unit_scroll.lexicalUnitType = SAC_IDENT;
+  unit_scroll.desc.ident = "scroll";
+
+  unit_50pct.lexicalUnitType = SAC_PERCENTAGE;
+  unit_50pct.desc.dimension.unit = "%";
+  unit_50pct.desc.dimension.value.sreal = 50;
+}
+
+
+
 static int isAngle(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_DEGREE) {
     return 1;
@@ -534,40 +562,24 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   size_t i;
   const SAC_LexicalUnit **tail;
   
-  static const SAC_LexicalUnit identTransparent = {
-    SAC_IDENT,
-    { (long)"transparent" }
-  };
-
-  static const SAC_LexicalUnit identNone = {
-    SAC_IDENT,
-    { (long)"none" }
-  };
-
-  static const SAC_LexicalUnit identRepeat = {
-    SAC_IDENT,
-    { (long)"repeat" }
-  };
-
-  static const SAC_LexicalUnit identScroll = {
-    SAC_IDENT,
-    { (long)"scroll" }
-  };
-
   static const SAC_LexicalUnit *initialColor[] = {
-    &identTransparent
+    &unit_transparent
   };
 
   static const SAC_LexicalUnit *initialImage[] = {
-    &identNone
+    &unit_none
   };
 
   static const SAC_LexicalUnit *initialRepeat[] = {
-    &identRepeat
+    &unit_repeat
   };
 
   static const SAC_LexicalUnit *initialAttachment[] = {
-    &identScroll
+    &unit_scroll
+  };
+
+  static const SAC_LexicalUnit *initialPosition[] = {
+    &unit_50pct, &unit_50pct
   };
 
   static const SAC_LexicalUnit **initial[][2] = {
@@ -575,7 +587,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     INITIAL(initialImage),
     INITIAL(initialRepeat),
     INITIAL(initialAttachment),
-    { NULL, NULL }
+    INITIAL(initialPosition)
   };
 
   static const CSSOM_CSSPropertyType types[] = {
@@ -613,31 +625,16 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   }
 
   for (i = 0; i < size; ++i) {
+    if (properties[i] != NULL) continue;
+
+    properties[i] = CSSOM_CSSPropertyValue__alloc(
+      cssom, property->parentValues, property, types[i],
+      initial[i][0], initial[i][1], SAC_FALSE, &rval);
+
     if (properties[i] == NULL) {
-      switch (types[i]) {
-        case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
-        case CSSOM_BACKGROUND_COLOR_PROPERTY:
-        case CSSOM_BACKGROUND_IMAGE_PROPERTY:
-        case CSSOM_BACKGROUND_REPEAT_PROPERTY:
-          {
-            properties[i] = CSSOM_CSSPropertyValue__alloc(
-              cssom, property->parentValues, property, types[i],
-              initial[i][0], initial[i][1], SAC_FALSE,
-              &rval);
-            if (properties[i] == NULL) {
-              releaseProperties(properties, size);
-              if (error != NULL) *error = rval;
-              return begin;
-            }
-          }
-          break;
-        case CSSOM_BACKGROUND_POSITION_PROPERTY:
-          CSSOM_CSSStyleDeclarationValue_removeProperty(property->parentValues,
-            CSSOM__properties(cssom)[types[i]]);
-          break;
-        default:
-          break;
-      }
+      releaseProperties(properties, size);
+      if (error != NULL) *error = rval;
+      return begin;
     }
   }
 

@@ -53,6 +53,8 @@ CSSOM* CSSOM_create(void) {
   cssom->errorHandler = NULL;
   cssom->userData = NULL;
 
+  CSSOM_CSSPropertyValue__initGlobals();
+
   return cssom;
 }
 

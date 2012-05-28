@@ -750,7 +750,7 @@ void background() {
    */
 
   style.setBackground("scroll");
-  assertEquals(std::string("transparent none repeat scroll"),
+  assertEquals(std::string("transparent none repeat scroll 50% 50%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
@@ -764,7 +764,7 @@ void background() {
    */
 
   style.setBackground("#808080");
-  assertEquals(std::string("rgb(128, 128, 128) none repeat scroll"),
+  assertEquals(std::string("rgb(128, 128, 128) none repeat scroll 50% 50%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
@@ -779,7 +779,8 @@ void background() {
 
   style.setBackground("url(\"http://example.com/\")");
   assertEquals(
-    std::string("transparent url(\"http://example.com/\") repeat scroll"),
+    std::string("transparent url(\"http://example.com/\") repeat scroll "
+      "50% 50%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
@@ -810,7 +811,7 @@ void background() {
    */
 
   style.setBackground("repeat");
-  assertEquals(std::string("transparent none repeat scroll"),
+  assertEquals(std::string("transparent none repeat scroll 50% 50%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());

@@ -13,6 +13,8 @@ extern "C" {
 
 
 
+void CSSOM_CSSPropertyValue__initGlobals(void);
+
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
