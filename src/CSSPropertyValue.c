@@ -19,38 +19,13 @@
 
 
 
+#define INITIAL(initial) \
+  { (initial), &(initial)[sizeof(initial) / sizeof(initial[0])] }
+
+
+
 typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end);
-
-
-
-static SAC_LexicalUnit backgroundDefaultValue[] = {
-  {
-    SAC_IDENT,
-    { (long)"transparent" }
-  }, {
-    SAC_IDENT,
-    { (long)"none" }
-  }, {
-    SAC_IDENT,
-    { (long)"repeat" }
-  }, {
-    SAC_IDENT,
-    { (long)"scroll" }
-  }
-};
-static const SAC_LexicalUnit *backgroundColorBegin = &backgroundDefaultValue[0];
-static const SAC_LexicalUnit *backgroundColorEnd = &backgroundDefaultValue[1];
-static const SAC_LexicalUnit *backgroundImageBegin = &backgroundDefaultValue[1];
-static const SAC_LexicalUnit *backgroundImageEnd = &backgroundDefaultValue[2];
-static const SAC_LexicalUnit *backgroundRepeatBegin =
-  &backgroundDefaultValue[2];
-static const SAC_LexicalUnit *backgroundRepeatEnd = &backgroundDefaultValue[3];
-static const SAC_LexicalUnit *backgroundAttachmentBegin =
-  &backgroundDefaultValue[3];
-static const SAC_LexicalUnit *backgroundAttachmentEnd =
-  &backgroundDefaultValue[4];
-
 
 
 
@@ -324,7 +299,7 @@ static void releaseProperties(CSSOM_CSSPropertyValue **properties,
 
 static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
-  PropertyHandler *handlers, CSSOM_CSSPropertyType *types,
+  PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
   CSSOM_CSSPropertyValue **properties, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
@@ -551,7 +526,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
 
 
 
-
 static const SAC_LexicalUnit** CSSPropertyValue_background(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
@@ -560,20 +534,64 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   size_t i;
   const SAC_LexicalUnit **tail;
   
+  static const SAC_LexicalUnit identTransparent = {
+    SAC_IDENT,
+    { (long)"transparent" }
+  };
+
+  static const SAC_LexicalUnit identNone = {
+    SAC_IDENT,
+    { (long)"none" }
+  };
+
+  static const SAC_LexicalUnit identRepeat = {
+    SAC_IDENT,
+    { (long)"repeat" }
+  };
+
+  static const SAC_LexicalUnit identScroll = {
+    SAC_IDENT,
+    { (long)"scroll" }
+  };
+
+  static const SAC_LexicalUnit *initialColor[] = {
+    &identTransparent
+  };
+
+  static const SAC_LexicalUnit *initialImage[] = {
+    &identNone
+  };
+
+  static const SAC_LexicalUnit *initialRepeat[] = {
+    &identRepeat
+  };
+
+  static const SAC_LexicalUnit *initialAttachment[] = {
+    &identScroll
+  };
+
+  static const SAC_LexicalUnit **initial[][2] = {
+    INITIAL(initialColor),
+    INITIAL(initialImage),
+    INITIAL(initialRepeat),
+    INITIAL(initialAttachment),
+    { NULL, NULL }
+  };
+
+  static const CSSOM_CSSPropertyType types[] = {
+    CSSOM_BACKGROUND_COLOR_PROPERTY,
+    CSSOM_BACKGROUND_IMAGE_PROPERTY,
+    CSSOM_BACKGROUND_REPEAT_PROPERTY,
+    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+    CSSOM_BACKGROUND_POSITION_PROPERTY
+  };
+
   PropertyHandler handlers[] = {
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
     CSSPropertyValue_backgroundRepeat,
     CSSPropertyValue_backgroundAttachment,
     CSSPropertyValue_backgroundPosition
-  };
-
-  CSSOM_CSSPropertyType types[] = {
-    CSSOM_BACKGROUND_COLOR_PROPERTY,
-    CSSOM_BACKGROUND_IMAGE_PROPERTY,
-    CSSOM_BACKGROUND_REPEAT_PROPERTY,
-    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
-    CSSOM_BACKGROUND_POSITION_PROPERTY
   };
 
   CSSOM_CSSPropertyValue *properties[] = {
@@ -584,7 +602,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     NULL
   };
 
-  const size_t size = sizeof(handlers) / sizeof(handlers[0]);
+  const size_t size = sizeof(types) / sizeof(types[0]);
 
   tail = CSSPropertyValue_shorthand(cssom, property, handlers, types,
     properties, size, begin, end);
@@ -598,36 +616,14 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     if (properties[i] == NULL) {
       switch (types[i]) {
         case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
-          {
-            properties[i] = CSSOM_CSSPropertyValue__alloc(
-              cssom, property->parentValues, property, types[i],
-              &backgroundAttachmentBegin, &backgroundAttachmentEnd, SAC_FALSE,
-              &rval);
-            if (properties[i] == NULL) {
-              releaseProperties(properties, size);
-              if (error != NULL) *error = rval;
-              return begin;
-            }
-          }
-          break;
         case CSSOM_BACKGROUND_COLOR_PROPERTY:
-          {
-            properties[i] = CSSOM_CSSPropertyValue__alloc(
-              cssom, property->parentValues, property, types[i],
-              &backgroundColorBegin, &backgroundColorEnd,
-              SAC_FALSE, &rval);
-            if (properties[i] == NULL) {
-              releaseProperties(properties, size);
-              if (error != NULL) *error = rval;
-              return begin;
-            }
-          }
-          break;
         case CSSOM_BACKGROUND_IMAGE_PROPERTY:
+        case CSSOM_BACKGROUND_REPEAT_PROPERTY:
           {
             properties[i] = CSSOM_CSSPropertyValue__alloc(
               cssom, property->parentValues, property, types[i],
-              &backgroundImageBegin, &backgroundImageEnd, SAC_FALSE, &rval);
+              initial[i][0], initial[i][1], SAC_FALSE,
+              &rval);
             if (properties[i] == NULL) {
               releaseProperties(properties, size);
               if (error != NULL) *error = rval;
@@ -638,18 +634,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
         case CSSOM_BACKGROUND_POSITION_PROPERTY:
           CSSOM_CSSStyleDeclarationValue_removeProperty(property->parentValues,
             CSSOM__properties(cssom)[types[i]]);
-          break;
-        case CSSOM_BACKGROUND_REPEAT_PROPERTY:
-          {
-            properties[i] = CSSOM_CSSPropertyValue__alloc(
-              cssom, property->parentValues, property, types[i],
-              &backgroundRepeatBegin, &backgroundRepeatEnd, SAC_FALSE, &rval);
-            if (properties[i] == NULL) {
-              releaseProperties(properties, size);
-              if (error != NULL) *error = rval;
-              return begin;
-            }
-          }
           break;
         default:
           break;
