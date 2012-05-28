@@ -132,7 +132,6 @@ static int isColor(const SAC_LexicalUnit *value) {
 }
 
 
-
 static int isUrl(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_URI) return 1;
   return 0;
@@ -163,7 +162,14 @@ static int isLength(const SAC_LexicalUnit *value) {
 
 
 
+struct _CSSOM_CSSPropertyValue_vtable {
+  int (*emit)(const CSSOM_CSSPropertyValue *property, FILE *out);
+};
+
+
+
 struct _CSSOM_CSSPropertyValue {
+  struct _CSSOM_CSSPropertyValue_vtable *vtable;
   size_t handles;
   CSSOM_CSSStyleDeclarationValue *parentValues;
   CSSOM_CSSPropertyValue *shorthand;
@@ -175,6 +181,39 @@ struct _CSSOM_CSSPropertyValue {
   const SAC_LexicalUnit **end;
   SAC_Boolean important;
   char *cssText;
+};
+
+
+
+static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
+  FILE *out)
+{
+  return property->vtable->emit(property, out);
+}
+
+
+
+static int GenericCSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
+  FILE *out)
+{
+  const SAC_LexicalUnit **it;
+
+  it = property->begin;
+  if (it != property->end) {
+    if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
+    while (++it != property->end) {
+      if (fprintf(out, " ") < 0) return 1;
+      if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
+static struct _CSSOM_CSSPropertyValue_vtable GenericCSSPropertyValue_vtable = {
+  (int (*)(const CSSOM_CSSPropertyValue*, FILE*))&GenericCSSPropertyValue_emit
 };
 
 
@@ -710,7 +749,8 @@ static int CSSPropertyValue_init(const CSSOM *cssom,
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
-  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
+  const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   SAC_Boolean important, int *error)
@@ -739,6 +779,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
     return NULL;
   }
 
+  property->vtable = &GenericCSSPropertyValue_vtable;
   property->handles = 1;
   property->parentValues = parentValues;
   property->shorthand = shorthand;
@@ -810,23 +851,6 @@ const char* CSSOM_CSSPropertyValue__name(
 
 
 
-static int emit_property(FILE *out, const CSSOM_CSSPropertyValue *property) {
-  const SAC_LexicalUnit **it;
-
-  it = property->begin;
-  if (it != property->end) {
-    if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
-    while (++it != property->end) {
-      if (fprintf(out, " ") < 0) return 1;
-      if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
-    }
-  }
-
-  return 0;
-}
-
-
-
 const char* CSSOM_CSSPropertyValue_cssText(
   const CSSOM_CSSPropertyValue *property)
 {
@@ -840,7 +864,7 @@ const char* CSSOM_CSSPropertyValue_cssText(
   out = open_memstream(&buf, &bufsize);
   if (out == NULL) return NULL;
 
-  if (emit_property(out, property) != 0) {
+  if (CSSPropertyValue_emit(property, out) != 0) {
     fclose(out);
     CSSOM_native_free(buf);
     return NULL;
