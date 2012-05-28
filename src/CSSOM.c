@@ -3,6 +3,7 @@
 #include "MediaList.h"
 #include "CSSMediaRule.h"
 #include "CSSPageRule.h"
+#include "CSSProperties.h"
 #include "CSSPropertyValue.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
@@ -14,8 +15,6 @@
 #include "memory.h"
 #include "gcc.h"
 
-#include <cssom/CSSProperties.h>
-
 #include <sacc.h>
 
 #include <string.h>
@@ -26,7 +25,7 @@
 
 struct _CSSOM {
   size_t handles;
-  char * * properties;
+  const char **properties;
   CSSOM_FSMTable_CSSPropertyValue * table;
   CSSOM_ErrorHandler errorHandler;
   void * userData;
@@ -35,64 +34,21 @@ struct _CSSOM {
 
 
 
-static void freeProperties(char **properties) {
-  char **it;
-
-  if (properties == (char**)CSSOM_CSSProperties) return;
-
-  for (it = properties; *it != NULL; ++it)
-    CSSOM_free(*it);
-
-  CSSOM_free(properties);
-}
-
-
-
-CSSOM* CSSOM_create(const char * * properties) {
-  char **propertiesCopy;
+CSSOM* CSSOM_create(void) {
   CSSOM_FSMTable_CSSPropertyValue *table;
   CSSOM *cssom;
 
-  if (properties != CSSOM_CSSProperties) {
-    char **itlhs;
-    const char **itrhs;
-    size_t size;
-
-    for (itrhs = properties, size = 0; *itrhs != NULL; ++itrhs, ++size);
-
-    propertiesCopy = (char**)CSSOM_malloc(sizeof(char*) * (size + 1));
-    if (propertiesCopy == NULL) return NULL;
-
-    for (
-      itrhs = properties, itlhs = propertiesCopy;
-      *itrhs != NULL;
-      ++itrhs, ++itlhs)
-    {
-      *itlhs = strdup(*itrhs);
-      if (*itlhs == NULL) {
-        freeProperties(propertiesCopy);
-        return NULL;
-      }
-    }
-  } else {
-    propertiesCopy = (char**)properties;
-  }
-
-  table = CSSOM_FSMTable_CSSPropertyValue_alloc(properties);
-  if (table == NULL) {
-    freeProperties(propertiesCopy);
-    return NULL;
-  }
+  table = CSSOM_FSMTable_CSSPropertyValue_alloc(CSSOM_CSSProperties);
+  if (table == NULL) return NULL;
 
   cssom = (CSSOM*)CSSOM_malloc(sizeof(CSSOM));
   if (cssom == NULL) {
-    freeProperties(propertiesCopy);
     CSSOM_FSMTable_CSSPropertyValue_free(table);
     return NULL;
   }
 
   cssom->handles = 1;
-  cssom->properties = propertiesCopy;
+  cssom->properties = CSSOM_CSSProperties;
   cssom->table = table;
   cssom->errorHandler = NULL;
   cssom->userData = NULL;
@@ -116,7 +72,6 @@ void CSSOM_release(CSSOM *cssom) {
   if (cssom->handles > 0) return;
 
   CSSOM_FSMTable_CSSPropertyValue_free(cssom->table);
-  freeProperties(cssom->properties);
   CSSOM_free(cssom);
 }
 

@@ -13,8 +13,8 @@
 namespace cssom {
 
 
-CSSOM::CSSOM(const char **properties) :
-  _impl(CSSOM_create(properties))
+CSSOM::CSSOM() :
+  _impl(CSSOM_create())
 {
   if (_impl == NULL) throw std::bad_alloc();
 }

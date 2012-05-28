@@ -2,13 +2,13 @@
 
 #include "CSSEmitter.h"
 #include "CSSOM.h"
+#include "CSSProperties.h"
 #include "CSSStyleSheet.h"
 #include "CSSStyleDeclarationValue.h"
 #include "memory.h"
 #include "utility.h"
 
 #include <cssom/CSSRule.h>
-#include <cssom/CSSProperties.h>
 
 #include <stdio.h>
 #include <assert.h>

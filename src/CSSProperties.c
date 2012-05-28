@@ -1,4 +1,4 @@
-#include <cssom/CSSProperties.h>
+#include "CSSProperties.h"
 
 #include <stddef.h>
 
@@ -109,6 +109,7 @@ const char *CSSOM_CSSProperties[] = {
   "speak-numeral",
   "speak-punctuation",
   "speech-rate",
+  "src",
   "stress",
   "table-layout",
   "text-align",
@@ -127,6 +128,5 @@ const char *CSSOM_CSSProperties[] = {
   "width",
   "word-spacing",
   "z-index",
-  "src",
   NULL
 };

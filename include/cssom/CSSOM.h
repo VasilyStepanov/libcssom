@@ -69,7 +69,7 @@ typedef struct {
 
 
 
-CSSOM * CSSOM_create(const char * * properties);
+CSSOM * CSSOM_create(void);
 
 void CSSOM_acquire(CSSOM * cssom);
 

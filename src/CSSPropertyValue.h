@@ -1,8 +1,9 @@
 #ifndef _CSSOM_CSS_PROPERTY_VALUE_H
 #define _CSSOM_CSS_PROPERTY_VALUE_H
 
+#include "CSSProperties.h"
+
 #include <cssom/CSSPropertyValue.h>
-#include <cssom/CSSProperties.h>
 
 #include <sacc.h>
 

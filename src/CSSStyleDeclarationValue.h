@@ -3,10 +3,10 @@
 
 #include <cssom/CSSStyleDeclarationValue.h>
 
+#include "CSSProperties.h"
 #include "FSM_CSSPropertyValue.h"
 
 #include <cssom/typedefs.h>
-#include <cssom/CSSProperties.h>
 
 #include <sacc.h>
 

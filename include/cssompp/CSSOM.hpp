@@ -2,7 +2,6 @@
 #define CSSOMPP_CSSOM_HPP
 
 #include <cssom/CSSOM.h>
-#include <cssom/CSSProperties.h>
 
 #include <string>
 
@@ -26,7 +25,7 @@ namespace cssom {
 
 class CSSOM {
   public:
-    explicit CSSOM(const char **properties = CSSOM_CSSProperties);
+    CSSOM();
     CSSOM(const cssom::CSSOM &copy);
     ~CSSOM();
 
