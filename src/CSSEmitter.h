@@ -13,8 +13,7 @@ extern "C" {
 
 
 
-int CSSOM_CSSEmitter_property(FILE *out,
-  const CSSOM_CSSPropertyValue *property);
+int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value);
 
 int CSSOM_CSSEmitter_selector(FILE *out, const CSSOM_Selector *selector);
 

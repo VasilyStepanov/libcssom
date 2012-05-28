@@ -810,6 +810,23 @@ const char* CSSOM_CSSPropertyValue__name(
 
 
 
+static int emit_property(FILE *out, const CSSOM_CSSPropertyValue *property) {
+  const SAC_LexicalUnit **it;
+
+  it = property->begin;
+  if (it != property->end) {
+    if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
+    while (++it != property->end) {
+      if (fprintf(out, " ") < 0) return 1;
+      if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
 const char* CSSOM_CSSPropertyValue_cssText(
   const CSSOM_CSSPropertyValue *property)
 {
@@ -823,7 +840,7 @@ const char* CSSOM_CSSPropertyValue_cssText(
   out = open_memstream(&buf, &bufsize);
   if (out == NULL) return NULL;
 
-  if (CSSOM_CSSEmitter_property(out, property) != 0) {
+  if (emit_property(out, property) != 0) {
     fclose(out);
     CSSOM_native_free(buf);
     return NULL;
@@ -891,20 +908,4 @@ void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
 {
   assert(property->parser == NULL);
   property->parser = parser;
-}
-
-
-
-const SAC_LexicalUnit** CSSOM_CSSPropertyValue__begin(
-  const CSSOM_CSSPropertyValue *property)
-{
-  return property->begin;
-}
-
-
-
-const SAC_LexicalUnit** CSSOM_CSSPropertyValue__end(
-  const CSSOM_CSSPropertyValue *property)
-{
-  return property->end;
 }

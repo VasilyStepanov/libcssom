@@ -40,7 +40,7 @@ static int emit_name(FILE *out,
 
 
 
-static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
+int CSSOM_CSSEmitter_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
   switch (value->lexicalUnitType) {
     case SAC_OPERATOR_PLUS:
       if (fprintf(out, "+") < 0) return 1;
@@ -209,12 +209,12 @@ static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
         arg = value->desc.function.parameters;
         if (*arg != NULL) {
-          if (emit_lexicalUnit(out, *arg) != 0) return 1;
+          if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
           while (*(++arg) != NULL) {
             if ((**arg).lexicalUnitType != SAC_OPERATOR_COMMA) {
               if (fprintf(out, " ") < 0) return 1;
             }
-            if (emit_lexicalUnit(out, *arg) != 0) return 1;
+            if (CSSOM_CSSEmitter_lexicalUnit(out, *arg) != 0) return 1;
           }
         }
 
@@ -236,10 +236,10 @@ static int emit_lexicalUnit(FILE *out, const SAC_LexicalUnit *value) {
 
         sub = value->desc.subValues;
         if (*sub != NULL) {
-          if (emit_lexicalUnit(out, *sub) != 0) return 1;
+          if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
           while (*(++sub) != NULL) {
             if (fprintf(out, " ") < 0) return 1;
-            if (emit_lexicalUnit(out, *sub) != 0) return 1;
+            if (CSSOM_CSSEmitter_lexicalUnit(out, *sub) != 0) return 1;
           }
         }
       }
@@ -353,7 +353,7 @@ static int emit_condition(FILE *out, const SAC_Condition *condition) {
             if (fprintf(out, "?") < 0) return 1;
             break;
         }
-        if (emit_lexicalUnit(out, condition->desc.pseudo) != 0)
+        if (CSSOM_CSSEmitter_lexicalUnit(out, condition->desc.pseudo) != 0)
           return 1;
       }
       break;
@@ -528,7 +528,7 @@ static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
       break;
     case SAC_FEATURE_MEDIA_QUERY:
       if (fprintf(out, "(%s: ", mediaQuery->desc.feature.name) < 0) return 1;
-      if (emit_lexicalUnit(out,
+      if (CSSOM_CSSEmitter_lexicalUnit(out,
         mediaQuery->desc.feature.value) != 0)
       {
         return 1;
@@ -550,25 +550,6 @@ static int emit_media_query(FILE *out, const SAC_MediaQuery *mediaQuery) {
       if (fprintf(out, "not ") < 0) return 1;
       if (emit_media_query(out, mediaQuery->desc.subQuery) != 0) return 1;
       break;
-  }
-
-  return 0;
-}
-
-
-
-int CSSOM_CSSEmitter_property(FILE *out,
-  const CSSOM_CSSPropertyValue *property)
-{
-  const SAC_LexicalUnit **it;
-
-  it = CSSOM_CSSPropertyValue__begin(property);
-  if (it != CSSOM_CSSPropertyValue__end(property)) {
-    if (emit_lexicalUnit(out, *it) != 0) return 1;
-    while (++it != CSSOM_CSSPropertyValue__end(property)) {
-      if (fprintf(out, " ") < 0) return 1;
-      if (emit_lexicalUnit(out, *it) != 0) return 1;
-    }
   }
 
   return 0;

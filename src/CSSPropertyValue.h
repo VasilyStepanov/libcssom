@@ -26,11 +26,6 @@ int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property);
 void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
   SAC_Parser parser);
 
-const SAC_LexicalUnit** CSSOM_CSSPropertyValue__begin(
-  const CSSOM_CSSPropertyValue *property);
-
-const SAC_LexicalUnit** CSSOM_CSSPropertyValue__end(
-  const CSSOM_CSSPropertyValue *property);
 
 
 #ifdef __cplusplus
