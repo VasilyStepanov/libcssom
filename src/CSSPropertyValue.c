@@ -218,6 +218,82 @@ static struct _CSSOM_CSSPropertyValue_vtable GenericCSSPropertyValue_vtable = {
 
 
 
+static int BackgroundCSSPropertyValue_emit(
+  const CSSOM_CSSPropertyValue *property, FILE *out)
+{
+  int emited;
+  const char *cssText;
+
+  emited = 0;
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    property->parentValues, CSSOM_BACKGROUND_COLOR_PROPERTY);
+  if (cssText != NULL) {
+    if (emited) {
+      if (fprintf(out, " ") < 0) return 1;
+    } else {
+      emited = 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    property->parentValues, CSSOM_BACKGROUND_IMAGE_PROPERTY);
+  if (cssText != NULL) {
+    if (emited) {
+      if (fprintf(out, " ") < 0) return 1;
+    } else {
+      emited = 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    property->parentValues, CSSOM_BACKGROUND_REPEAT_PROPERTY);
+  if (cssText != NULL) {
+    if (emited) {
+      if (fprintf(out, " ") < 0) return 1;
+    } else {
+      emited = 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    property->parentValues, CSSOM_BACKGROUND_ATTACHMENT_PROPERTY);
+  if (cssText != NULL) {
+    if (emited) {
+      if (fprintf(out, " ") < 0) return 1;
+    } else {
+      emited = 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    property->parentValues, CSSOM_BACKGROUND_POSITION_PROPERTY);
+  if (cssText != NULL) {
+    if (emited) {
+      if (fprintf(out, " ") < 0) return 1;
+    } else {
+      emited = 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  return 0;
+}
+
+
+
+static struct _CSSOM_CSSPropertyValue_vtable
+BackgroundCSSPropertyValue_vtable = {
+  (int (*)(const CSSOM_CSSPropertyValue*, FILE*))
+  &BackgroundCSSPropertyValue_emit
+};
+
+
+
 static int azimuth_isAngleIdent(const char *ident) {
   if (strcasecmp("left-side", ident) == 0) return 1;
   if (strcasecmp("far-left", ident) == 0) return 1;
@@ -560,6 +636,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
           }
           break;
         case CSSOM_BACKGROUND_POSITION_PROPERTY:
+          CSSOM_CSSStyleDeclarationValue_removeProperty(property->parentValues,
+            CSSOM__properties(cssom)[types[i]]);
           break;
         case CSSOM_BACKGROUND_REPEAT_PROPERTY:
           {
@@ -610,6 +688,7 @@ static int CSSPropertyValue_init(const CSSOM *cssom,
       {
         return error;
       }
+      property->vtable = &BackgroundCSSPropertyValue_vtable;
       break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
       if (CSSPropertyValue_backgroundAttachment(begin, end) != end) return 1;
