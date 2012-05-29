@@ -19,8 +19,11 @@
 
 
 
+#define ASIZE(array) \
+  (sizeof(array) / sizeof(array[0]))
+
 #define INITIAL(initial) \
-  { (initial), &(initial)[sizeof(initial) / sizeof(initial[0])] }
+  { (initial), &(initial)[ASIZE(initial)] }
 
 
 
@@ -328,14 +331,22 @@ static void releaseProperties(CSSOM_CSSPropertyValue **properties,
 static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
   PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
-  CSSOM_CSSPropertyValue **properties, size_t size,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **properties,
+  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  int *error)
 {
   size_t i;
   size_t length;
   const SAC_LexicalUnit **at;
   const SAC_LexicalUnit **tail;
   CSSOM_CSSPropertyValue *property;
+  int rval;
+
+
+
+  /**
+   * analyze input
+   */
 
   at = begin;
   while (*at != NULL) {
@@ -357,6 +368,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
       shorthand, types[i], at, tail, SAC_FALSE, NULL);
     if (property == NULL) {
       releaseProperties(properties, size);
+      if (error != NULL) *error = 1;
       return &begin[0];
     }
 
@@ -365,10 +377,48 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
     at = tail;
   }
 
+
+
+  /**
+   * add initial
+   */
+
+  for (i = 0; i < size; ++i) {
+    if (properties[i] != NULL) continue;
+
+    properties[i] = CSSOM_CSSPropertyValue__alloc(cssom, property->parentValues,
+      property, types[i], initial[i][0], initial[i][1], SAC_FALSE, &rval);
+
+    if (properties[i] == NULL) {
+      releaseProperties(properties, size);
+      if (error != NULL) *error = rval;
+      return &begin[0];
+    }
+  }
+
+
+
+  /**
+   * assign values
+   */
+
+  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
+    property->parentValues, properties, size)) != 0)
+  {
+    releaseProperties(properties, size);
+    if (error != NULL) *error = rval;
+    return &begin[0];
+  }
+
+  if (error != NULL) *error = 0;
   return at;
 }
 
 
+
+/**
+ * azimuth
+ */
 
 static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end)
@@ -419,6 +469,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
 
 
 
+/**
+ * background-attachment
+ */
 
 static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
@@ -434,6 +487,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
 
 
 
+/**
+ * background-color
+ */
 
 static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
@@ -450,6 +506,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
 
 
 
+/**
+ * background-image
+ */
+
 static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
@@ -464,6 +524,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
 }
 
 
+
+/**
+ * background-position
+ */
 
 static const SAC_LexicalUnit** backgroundPosition_horizontal(
   const SAC_LexicalUnit **expr)
@@ -538,6 +602,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
 
 
 
+/**
+ * background-repeat
+ */
+
 static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
@@ -554,14 +622,14 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
 
 
 
+/**
+ * background
+ */
+
 static const SAC_LexicalUnit** CSSPropertyValue_background(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
 {
-  int rval;
-  size_t i;
-  const SAC_LexicalUnit **tail;
-  
   static const SAC_LexicalUnit *initialColor[] = {
     &unit_transparent
   };
@@ -582,14 +650,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     &unit_50pct, &unit_50pct
   };
 
-  static const SAC_LexicalUnit **initial[][2] = {
-    INITIAL(initialColor),
-    INITIAL(initialImage),
-    INITIAL(initialRepeat),
-    INITIAL(initialAttachment),
-    INITIAL(initialPosition)
-  };
-
   static const CSSOM_CSSPropertyType types[] = {
     CSSOM_BACKGROUND_COLOR_PROPERTY,
     CSSOM_BACKGROUND_IMAGE_PROPERTY,
@@ -598,7 +658,15 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     CSSOM_BACKGROUND_POSITION_PROPERTY
   };
 
-  PropertyHandler handlers[] = {
+  static const SAC_LexicalUnit **initial[ASIZE(types)][2] = {
+    INITIAL(initialColor),
+    INITIAL(initialImage),
+    INITIAL(initialRepeat),
+    INITIAL(initialAttachment),
+    INITIAL(initialPosition)
+  };
+
+  PropertyHandler handlers[ASIZE(types)] = {
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
     CSSPropertyValue_backgroundRepeat,
@@ -606,7 +674,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     CSSPropertyValue_backgroundPosition
   };
 
-  CSSOM_CSSPropertyValue *properties[] = {
+  CSSOM_CSSPropertyValue *properties[ASIZE(types)] = {
     NULL,
     NULL,
     NULL,
@@ -614,40 +682,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     NULL
   };
 
-  const size_t size = sizeof(types) / sizeof(types[0]);
-
-  tail = CSSPropertyValue_shorthand(cssom, property, handlers, types,
-    properties, size, begin, end);
-
-  if (*tail != *end) {
-    if (error != NULL) *error = 1;
-    return begin;
-  }
-
-  for (i = 0; i < size; ++i) {
-    if (properties[i] != NULL) continue;
-
-    properties[i] = CSSOM_CSSPropertyValue__alloc(
-      cssom, property->parentValues, property, types[i],
-      initial[i][0], initial[i][1], SAC_FALSE, &rval);
-
-    if (properties[i] == NULL) {
-      releaseProperties(properties, size);
-      if (error != NULL) *error = rval;
-      return begin;
-    }
-  }
-
-  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    property->parentValues, properties, size)) != 0)
+  if (CSSPropertyValue_shorthand(cssom, property, handlers, types, initial,
+    properties, ASIZE(types), begin, end, error) != end)
   {
-    releaseProperties(properties, size);
-    if (error != NULL) *error = rval;
     return begin;
   }
 
   if (error != NULL) *error = 0;
-
   return end;
 }
 
