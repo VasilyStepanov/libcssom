@@ -875,10 +875,8 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(
   if ((rval = CSSPropertyValue_init(cssom, property, property->begin,
     property->end)) != 0)
   {
-    if (error != NULL) {
-      CSSOM_CSSPropertyValue_release(property);
-      *error = rval;
-    }
+    CSSOM_CSSPropertyValue_release(property);
+    if (error != NULL) *error = rval;
     return NULL;
   }
 
