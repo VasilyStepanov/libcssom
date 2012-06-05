@@ -21,9 +21,12 @@ static void dumpFree(const char * file, int line CSSOM_UNUSED,
   const char * function CSSOM_UNUSED, void * ptr)
 {
   FILE * f;
-  f = fopen("free", "a");
-  fprintf(f, "%x %s\n", (int)ptr, file);
-  fclose(f);
+
+  if (ptr != NULL) {
+    f = fopen("free", "a");
+    fprintf(f, "%x %s\n", (int)ptr, file);
+    fclose(f);
+  }
 }
 
 
