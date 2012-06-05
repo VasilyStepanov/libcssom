@@ -38,6 +38,14 @@ static SAC_LexicalUnit unit_repeat;
 static SAC_LexicalUnit unit_scroll;
 static SAC_LexicalUnit unit_50pct;
 
+static const CSSOM_CSSPropertyType shorthand_background[] = {
+  CSSOM_BACKGROUND_COLOR_PROPERTY,
+  CSSOM_BACKGROUND_IMAGE_PROPERTY,
+  CSSOM_BACKGROUND_REPEAT_PROPERTY,
+  CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+  CSSOM_BACKGROUND_POSITION_PROPERTY
+};
+
 
 
 void CSSOM_CSSPropertyValue__initGlobals(void) {
@@ -169,6 +177,8 @@ static int isLength(const SAC_LexicalUnit *value) {
 
 
 struct _CSSOM_CSSPropertyValue_vtable {
+  const CSSOM_CSSPropertyType *types;
+  const size_t ntypes;
   int (*emit)(const CSSOM_CSSPropertyValue *property, FILE *out);
 };
 
@@ -199,6 +209,10 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 
 
+/**
+ * Generic CSSProperty
+ */
+
 static int GenericCSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   FILE *out)
 {
@@ -219,72 +233,37 @@ static int GenericCSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 
 static struct _CSSOM_CSSPropertyValue_vtable GenericCSSPropertyValue_vtable = {
-  (int (*)(const CSSOM_CSSPropertyValue*, FILE*))&GenericCSSPropertyValue_emit
+  NULL,
+  0,
+  &GenericCSSPropertyValue_emit
 };
 
 
 
-static int BackgroundCSSPropertyValue_emit(
+/**
+ * Shorthand CSSProperty
+ */
+
+static int ShorthandCSSPropertyValue_emit(
   const CSSOM_CSSPropertyValue *property, FILE *out)
 {
+  size_t i;
   int emited;
   const char *cssText;
 
   emited = 0;
 
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    property->parentValues, CSSOM_BACKGROUND_COLOR_PROPERTY);
-  if (cssText != NULL) {
-    if (emited) {
-      if (fprintf(out, " ") < 0) return 1;
-    } else {
-      emited = 1;
+  for (i = 0; i < property->vtable->ntypes; ++i) {
+    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+      property->parentValues, property->vtable->types[i]);
+    if (cssText != NULL) {
+      if (emited) {
+        if (fprintf(out, " ") < 0) return 1;
+      } else {
+        emited = 1;
+      }
+      if (fprintf(out, "%s", cssText) < 0) return 1;
     }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-  }
-
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    property->parentValues, CSSOM_BACKGROUND_IMAGE_PROPERTY);
-  if (cssText != NULL) {
-    if (emited) {
-      if (fprintf(out, " ") < 0) return 1;
-    } else {
-      emited = 1;
-    }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-  }
-
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    property->parentValues, CSSOM_BACKGROUND_REPEAT_PROPERTY);
-  if (cssText != NULL) {
-    if (emited) {
-      if (fprintf(out, " ") < 0) return 1;
-    } else {
-      emited = 1;
-    }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-  }
-
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    property->parentValues, CSSOM_BACKGROUND_ATTACHMENT_PROPERTY);
-  if (cssText != NULL) {
-    if (emited) {
-      if (fprintf(out, " ") < 0) return 1;
-    } else {
-      emited = 1;
-    }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-  }
-
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    property->parentValues, CSSOM_BACKGROUND_POSITION_PROPERTY);
-  if (cssText != NULL) {
-    if (emited) {
-      if (fprintf(out, " ") < 0) return 1;
-    } else {
-      emited = 1;
-    }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
   }
 
   return 0;
@@ -294,28 +273,14 @@ static int BackgroundCSSPropertyValue_emit(
 
 static struct _CSSOM_CSSPropertyValue_vtable
 BackgroundCSSPropertyValue_vtable = {
-  (int (*)(const CSSOM_CSSPropertyValue*, FILE*))
-  &BackgroundCSSPropertyValue_emit
+  shorthand_background,
+  ASIZE(shorthand_background),
+  &ShorthandCSSPropertyValue_emit
 };
 
 
 
-static int azimuth_isAngleIdent(const char *ident) {
-  if (strcasecmp("left-side", ident) == 0) return 1;
-  if (strcasecmp("far-left", ident) == 0) return 1;
-  if (strcasecmp("left", ident) == 0) return 1;
-  if (strcasecmp("center-left", ident) == 0) return 1;
-  if (strcasecmp("center", ident) == 0) return 1;
-  if (strcasecmp("center-right", ident) == 0) return 1;
-  if (strcasecmp("right", ident) == 0) return 1;
-  if (strcasecmp("far-right", ident) == 0) return 1;
-  if (strcasecmp("right-side", ident) == 0) return 1;
-  return 0;
-}
-
-
-
-static void releaseProperties(CSSOM_CSSPropertyValue **properties,
+static void releaseStorage(CSSOM_CSSPropertyValue **properties,
   size_t size)
 {
   size_t i;
@@ -331,7 +296,7 @@ static void releaseProperties(CSSOM_CSSPropertyValue **properties,
 static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
   PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
-  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **properties,
+  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **storage,
   size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   int *error)
 {
@@ -367,12 +332,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
     property = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
       shorthand, types[i], at, tail, SAC_FALSE, NULL);
     if (property == NULL) {
-      releaseProperties(properties, size);
+      releaseStorage(storage, size);
       if (error != NULL) *error = 1;
       return &begin[0];
     }
 
-    properties[i] = property;
+    storage[i] = property;
 
     at = tail;
   }
@@ -384,13 +349,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
    */
 
   for (i = 0; i < size; ++i) {
-    if (properties[i] != NULL) continue;
+    if (storage[i] != NULL) continue;
 
-    properties[i] = CSSOM_CSSPropertyValue__alloc(cssom, property->parentValues,
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, property->parentValues,
       property, types[i], initial[i][0], initial[i][1], SAC_FALSE, &rval);
 
-    if (properties[i] == NULL) {
-      releaseProperties(properties, size);
+    if (storage[i] == NULL) {
+      releaseStorage(storage, size);
       if (error != NULL) *error = rval;
       return &begin[0];
     }
@@ -403,9 +368,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
    */
 
   if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    property->parentValues, properties, size)) != 0)
+    property->parentValues, storage, size)) != 0)
   {
-    releaseProperties(properties, size);
+    releaseStorage(storage, size);
     if (error != NULL) *error = rval;
     return &begin[0];
   }
@@ -419,6 +384,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
 /**
  * azimuth
  */
+
+static int azimuth_isAngleIdent(const char *ident) {
+  if (strcasecmp("left-side", ident) == 0) return 1;
+  if (strcasecmp("far-left", ident) == 0) return 1;
+  if (strcasecmp("left", ident) == 0) return 1;
+  if (strcasecmp("center-left", ident) == 0) return 1;
+  if (strcasecmp("center", ident) == 0) return 1;
+  if (strcasecmp("center-right", ident) == 0) return 1;
+  if (strcasecmp("right", ident) == 0) return 1;
+  if (strcasecmp("far-right", ident) == 0) return 1;
+  if (strcasecmp("right-side", ident) == 0) return 1;
+  return 0;
+}
+
+
 
 static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end)
@@ -630,43 +610,35 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
 {
-  static const SAC_LexicalUnit *initialColor[] = {
+  static const SAC_LexicalUnit *color[] = {
     &unit_transparent
   };
 
-  static const SAC_LexicalUnit *initialImage[] = {
+  static const SAC_LexicalUnit *image[] = {
     &unit_none
   };
 
-  static const SAC_LexicalUnit *initialRepeat[] = {
+  static const SAC_LexicalUnit *repeat[] = {
     &unit_repeat
   };
 
-  static const SAC_LexicalUnit *initialAttachment[] = {
+  static const SAC_LexicalUnit *attachment[] = {
     &unit_scroll
   };
 
-  static const SAC_LexicalUnit *initialPosition[] = {
+  static const SAC_LexicalUnit *position[] = {
     &unit_50pct, &unit_50pct
   };
 
-  static const CSSOM_CSSPropertyType types[] = {
-    CSSOM_BACKGROUND_COLOR_PROPERTY,
-    CSSOM_BACKGROUND_IMAGE_PROPERTY,
-    CSSOM_BACKGROUND_REPEAT_PROPERTY,
-    CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
-    CSSOM_BACKGROUND_POSITION_PROPERTY
+  static const SAC_LexicalUnit **initial[ASIZE(shorthand_background)][2] = {
+    INITIAL(color),
+    INITIAL(image),
+    INITIAL(repeat),
+    INITIAL(attachment),
+    INITIAL(position)
   };
 
-  static const SAC_LexicalUnit **initial[ASIZE(types)][2] = {
-    INITIAL(initialColor),
-    INITIAL(initialImage),
-    INITIAL(initialRepeat),
-    INITIAL(initialAttachment),
-    INITIAL(initialPosition)
-  };
-
-  PropertyHandler handlers[ASIZE(types)] = {
+  PropertyHandler handlers[ASIZE(shorthand_background)] = {
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
     CSSPropertyValue_backgroundRepeat,
@@ -674,7 +646,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     CSSPropertyValue_backgroundPosition
   };
 
-  CSSOM_CSSPropertyValue *properties[ASIZE(types)] = {
+  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_background)] = {
     NULL,
     NULL,
     NULL,
@@ -682,8 +654,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     NULL
   };
 
-  if (CSSPropertyValue_shorthand(cssom, property, handlers, types, initial,
-    properties, ASIZE(types), begin, end, error) != end)
+  if (CSSPropertyValue_shorthand(cssom, property, handlers,
+    shorthand_background, initial, storage, ASIZE(shorthand_background),
+    begin, end, error) != end)
   {
     return begin;
   }
