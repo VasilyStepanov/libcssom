@@ -301,7 +301,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   int *error)
 {
   size_t i;
-  size_t length;
   const SAC_LexicalUnit **at;
   const SAC_LexicalUnit **tail;
   CSSOM_CSSPropertyValue *property;
@@ -326,8 +325,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
       }
     }
 
-    length = tail - at;
-    if (length == 0) break;
+    if (tail - at == 0) break;
 
     property = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
       shorthand, types[i], at, tail, SAC_FALSE, NULL);
@@ -342,6 +340,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
     at = tail;
   }
 
+  if (at != end) {
+    releaseStorage(storage, size);
+    if (error != NULL) *error = 1;
+    return &begin[0];
+  }
+
 
 
   /**
@@ -351,8 +355,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   for (i = 0; i < size; ++i) {
     if (storage[i] != NULL) continue;
 
-    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, property->parentValues,
-      property, types[i], initial[i][0], initial[i][1], SAC_FALSE, &rval);
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+      shorthand, types[i], initial[i][0], initial[i][1], SAC_FALSE, &rval);
 
     if (storage[i] == NULL) {
       releaseStorage(storage, size);
@@ -368,7 +372,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
    */
 
   if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    property->parentValues, storage, size)) != 0)
+    shorthand->parentValues, storage, size)) != 0)
   {
     releaseStorage(storage, size);
     if (error != NULL) *error = rval;
