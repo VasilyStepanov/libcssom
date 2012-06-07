@@ -292,24 +292,15 @@ static void releaseStorage(CSSOM_CSSPropertyValue **properties,
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
+static const SAC_LexicalUnit** CSSPropertyValue_shorthandLinearStrategy(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
   PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
-  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **storage,
-  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  int *error)
+  CSSOM_CSSPropertyValue **storage, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
 {
   size_t i;
   const SAC_LexicalUnit **at;
   const SAC_LexicalUnit **tail;
-  CSSOM_CSSPropertyValue *property;
-  int rval;
-
-
-
-  /**
-   * analyze input
-   */
 
   at = begin;
   while (*at != NULL) {
@@ -326,15 +317,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
 
     if (tail - at == 0) break;
 
-    property = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
       shorthand, types[i], at, tail, SAC_FALSE, NULL);
-    if (property == NULL) {
+    if (storage[i] == NULL) {
       releaseStorage(storage, size);
       if (error != NULL) *error = 1;
-      return &begin[0];
+      return begin;
     }
-
-    storage[i] = property;
 
     at = tail;
   }
@@ -342,7 +331,36 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   if (at != end) {
     releaseStorage(storage, size);
     if (error != NULL) *error = 1;
-    return &begin[0];
+    return begin;
+  }
+
+  return end;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
+  const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
+  PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
+  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **storage,
+  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  int *error)
+{
+  size_t i;
+  const SAC_LexicalUnit **tail;
+  int rval;
+
+
+
+  tail = CSSPropertyValue_shorthandLinearStrategy(cssom, shorthand, handlers,
+    types, storage, size, begin, end, &rval);
+  if (tail != end) {
+    if (rval < 0) {
+      if (error != NULL) *error = rval;
+      return begin;
+    }
+    if (error != NULL) *error = rval;
+    return begin;
   }
 
 
@@ -360,7 +378,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
     if (storage[i] == NULL) {
       releaseStorage(storage, size);
       if (error != NULL) *error = rval;
-      return &begin[0];
+      return begin;
     }
   }
 
@@ -375,11 +393,11 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
   {
     releaseStorage(storage, size);
     if (error != NULL) *error = rval;
-    return &begin[0];
+    return begin;
   }
 
   if (error != NULL) *error = 0;
-  return at;
+  return end;
 }
 
 
