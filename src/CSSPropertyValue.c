@@ -292,55 +292,54 @@ static void releaseStorage(CSSOM_CSSPropertyValue **properties,
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_shorthandLinearStrategy(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
-  PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
-  CSSOM_CSSPropertyValue **storage, size_t size,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
+  CSSOM_CSSPropertyValue *shorthand, const PropertyHandler *handlers,
+  const CSSOM_CSSPropertyType *types, CSSOM_CSSPropertyValue **storage,
+  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  int *error)
 {
   size_t i;
-  const SAC_LexicalUnit **at;
   const SAC_LexicalUnit **tail;
+  int rval;
 
-  at = begin;
-  while (*at != NULL) {
+  if (begin == end) {
+    if (error != NULL) *error = 0;
+    return end;
+  }
 
-    for (i = 0; i < size; ++i) {
-      if (handlers[i] == NULL) continue;
+  for (i = 0; i < size; ++i) {
+    if (storage[i] != NULL) continue;
 
-      tail = handlers[i](at, end);
-      if (tail != at) {
-        handlers[i] = NULL;
-        break;
-      }
-    }
-
-    if (tail - at == 0) break;
+    tail = handlers[i](begin, end);
+    if (tail == begin) continue;
 
     storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-      shorthand, types[i], at, tail, SAC_FALSE, NULL);
-    if (storage[i] == NULL) {
-      releaseStorage(storage, size);
-      if (error != NULL) *error = 1;
-      return begin;
+      shorthand, types[i], begin, tail, SAC_FALSE, error);
+    if (storage[i] == NULL) return begin;
+
+    if (CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage, size,
+      tail, end, &rval) != end)
+    {
+      CSSOM_CSSPropertyValue_release(storage[i]);
+      storage[i] = NULL;
+      if (rval < 0) {
+        if (error != NULL) *error = rval;
+        return begin;
+      }
+    } else {
+      if (error != NULL) *error = 0;
+      return end;
     }
-
-    at = tail;
   }
 
-  if (at != end) {
-    releaseStorage(storage, size);
-    if (error != NULL) *error = 1;
-    return begin;
-  }
-
-  return end;
+  if (error != NULL) *error = 1;
+  return begin;
 }
 
 
 
 static const SAC_LexicalUnit** CSSPropertyValue_shorthand(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *shorthand, PropertyHandler *handlers,
+  CSSOM_CSSPropertyValue *shorthand, const PropertyHandler *handlers,
   const CSSOM_CSSPropertyType *types, const SAC_LexicalUnit **(*initial)[2],
   CSSOM_CSSPropertyValue **storage, size_t size, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, int *error)
@@ -351,8 +350,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(const CSSOM *cssom,
 
 
 
-  tail = CSSPropertyValue_shorthandLinearStrategy(cssom, shorthand, handlers,
-    types, storage, size, begin, end, &rval);
+  tail = CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage, size,
+    begin, end, &rval);
   if (tail != end) {
     if (rval < 0) {
       if (error != NULL) *error = rval;
@@ -658,7 +657,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     INITIAL(position)
   };
 
-  PropertyHandler handlers[ASIZE(shorthand_background)] = {
+  static const PropertyHandler handlers[ASIZE(shorthand_background)] = {
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
     CSSPropertyValue_backgroundRepeat,

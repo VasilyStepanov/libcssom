@@ -749,7 +749,7 @@ void background() {
    * color image
    */
 
-  style.setBackground("#808080 inherit");
+  style.setBackground("inherit #808080");
   assertEquals(std::string("rgb(128, 128, 128) inherit repeat scroll 50% 50%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
