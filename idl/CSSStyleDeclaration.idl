@@ -24,7 +24,9 @@ interface CSSStyleDeclaration {
            attribute DOMString? backgroundRepeat;
   /*
            attribute DOMString? border;
+  */
            attribute DOMString? borderCollapse;
+  /*
            attribute DOMString? borderColor;
            attribute DOMString? borderSpacing;
            attribute DOMString? borderStyle;

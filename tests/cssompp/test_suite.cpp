@@ -5,6 +5,7 @@
 #include "test_CSSPageRule.hpp"
 #include "test_CSSProperty_azimuth.hpp"
 #include "test_CSSProperty_background.hpp"
+#include "test_CSSProperty_border.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -33,6 +34,7 @@ int main() {
   test::cssPropertyValue();
   test::cssPropertyAzimuth();
   test::cssPropertyBackground();
+  test::cssPropertyBorder();
   test::selector();
   return 0;
 }

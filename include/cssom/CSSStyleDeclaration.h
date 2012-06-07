@@ -129,6 +129,14 @@ void CSSOM_CSSStyleDeclaration_setBackgroundRepeat(CSSOM_CSSStyleDeclaration * c
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderCollapse(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderCollapse(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderCollapse);
+
+
+
 #ifdef __cplusplus
 }
 #endif

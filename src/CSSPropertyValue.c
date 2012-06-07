@@ -697,6 +697,24 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
 
 
 
+/**
+ * border-collapse
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("collapse", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("separate", begin[0]->desc.ident) == 0) return &begin[1];
+  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
   CSSOM_CSSPropertyType type)
 {
@@ -865,7 +883,10 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
       if (CSSPropertyValue_backgroundRepeat(begin, end) != end) return 1;
       break;
     case CSSOM_BORDER_PROPERTY:
+      break;
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
+      if (CSSPropertyValue_borderCollapse(begin, end) != end) return 1;
+      break;
     case CSSOM_BORDER_COLOR_PROPERTY:
     case CSSOM_BORDER_SPACING_PROPERTY:
     case CSSOM_BORDER_STYLE_PROPERTY:

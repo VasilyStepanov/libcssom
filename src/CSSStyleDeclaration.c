@@ -356,3 +356,21 @@ void CSSOM_CSSStyleDeclaration_setBackgroundRepeat(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BACKGROUND_REPEAT_PROPERTY, backgroundRepeat);
 }
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderCollapse(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_COLLAPSE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderCollapse(
+  CSSOM_CSSStyleDeclaration *style, const char *borderCollapse)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_COLLAPSE_PROPERTY, borderCollapse);
+}
