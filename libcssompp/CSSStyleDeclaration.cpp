@@ -245,4 +245,16 @@ void CSSStyleDeclaration::setBorderCollapse(const char * borderCollapse) {
 
 
 
+const char * CSSStyleDeclaration::borderSpacing() const {
+  return CSSOM_CSSStyleDeclaration_borderSpacing(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderSpacing(const char * borderSpacing) {
+  CSSOM_CSSStyleDeclaration_setBorderSpacing(_impl, borderSpacing);
+}
+
+
+
 } // cssom

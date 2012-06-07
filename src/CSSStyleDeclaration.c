@@ -359,7 +359,7 @@ void CSSOM_CSSStyleDeclaration_setBackgroundRepeat(
 
 
 
-const char * CSSOM_CSSStyleDeclaration_borderCollapse(
+const char* CSSOM_CSSStyleDeclaration_borderCollapse(
   const CSSOM_CSSStyleDeclaration *style)
 {
   return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
@@ -373,4 +373,22 @@ void CSSOM_CSSStyleDeclaration_setBorderCollapse(
 {
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_COLLAPSE_PROPERTY, borderCollapse);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderSpacing(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_SPACING_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderSpacing(
+  CSSOM_CSSStyleDeclaration *style, const char *borderSpacing)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_SPACING_PROPERTY, borderSpacing);
 }

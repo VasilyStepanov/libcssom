@@ -93,6 +93,9 @@ class CSSStyleDeclaration {
     const char * borderCollapse() const;
     void setBorderCollapse(const char * borderCollapse);
 
+    const char * borderSpacing() const;
+    void setBorderSpacing(const char * borderSpacing);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

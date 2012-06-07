@@ -89,6 +89,80 @@ void borderCollapse() {
 
 
 
+void borderSpacing() {
+
+  /**
+   * <length> <length>? | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderSpacing() == NULL);
+
+
+
+  /**
+   * <length>
+   */
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("50px");
+  assertEquals(std::string("50px"), style.borderSpacing());
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("0");
+  assertEquals(std::string("0"), style.borderSpacing());
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("50PX");
+  assertEquals(std::string("50px"), style.borderSpacing());
+
+
+
+  /**
+   * <length> <length>
+   */
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("40px 60px");
+  assertEquals(std::string("40px 60px"), style.borderSpacing());
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("0 0");
+  assertEquals(std::string("0 0"), style.borderSpacing());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("inherit");
+  assertEquals(std::string("inherit"), style.borderSpacing());
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("INHERIT");
+  assertEquals(std::string("inherit"), style.borderSpacing());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("invalid");
+  assert(style.borderSpacing() == NULL);
+
+  style.setBorderSpacing(NULL);
+  style.setBorderSpacing("1");
+  assert(style.borderSpacing() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -97,6 +171,7 @@ namespace test {
 
 void cssPropertyBorder() {
   borderCollapse();
+  borderSpacing();
 }
 
 

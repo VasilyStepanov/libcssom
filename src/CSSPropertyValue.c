@@ -715,6 +715,24 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
 
 
 
+/**
+ * border-spacing
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isLength(begin[0])) {
+    if (&begin[1] != end && isLength(begin[1])) return &begin[2];
+    return &begin[1];
+  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
   CSSOM_CSSPropertyType type)
 {
@@ -888,7 +906,10 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
       if (CSSPropertyValue_borderCollapse(begin, end) != end) return 1;
       break;
     case CSSOM_BORDER_COLOR_PROPERTY:
+      break;
     case CSSOM_BORDER_SPACING_PROPERTY:
+      if (CSSPropertyValue_borderSpacing(begin, end) != end) return 1;
+      break;
     case CSSOM_BORDER_STYLE_PROPERTY:
     case CSSOM_BORDER_TOP_PROPERTY:
     case CSSOM_BORDER_RIGHT_PROPERTY:
