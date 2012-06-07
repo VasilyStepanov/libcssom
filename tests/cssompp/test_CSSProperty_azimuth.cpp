@@ -71,11 +71,8 @@ void azimuth() {
   style.setAzimuth("left-side");
   assertEquals(std::string("left-side"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("LEFT-SIDE");
-  assertEquals(std::string("LEFT-SIDE"), style.azimuth());
+  assertEquals(std::string("left-side"), style.azimuth());
 
 
 
@@ -89,11 +86,8 @@ void azimuth() {
   style.setAzimuth("behind left-side");
   assertEquals(std::string("behind left-side"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND LEFT-SIDE");
-  assertEquals(std::string("BEHIND LEFT-SIDE"), style.azimuth());
+  assertEquals(std::string("behind left-side"), style.azimuth());
 
 
 
@@ -104,11 +98,8 @@ void azimuth() {
   style.setAzimuth("far-left");
   assertEquals(std::string("far-left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("FAR-LEFT");
-  assertEquals(std::string("FAR-LEFT"), style.azimuth());
+  assertEquals(std::string("far-left"), style.azimuth());
 
 
 
@@ -122,11 +113,8 @@ void azimuth() {
   style.setAzimuth("behind far-left");
   assertEquals(std::string("behind far-left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND FAR-LEFT");
-  assertEquals(std::string("BEHIND FAR-LEFT"), style.azimuth());
+  assertEquals(std::string("behind far-left"), style.azimuth());
 
 
 
@@ -137,11 +125,8 @@ void azimuth() {
   style.setAzimuth("left");
   assertEquals(std::string("left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("LEFT");
-  assertEquals(std::string("LEFT"), style.azimuth());
+  assertEquals(std::string("left"), style.azimuth());
 
 
 
@@ -155,11 +140,8 @@ void azimuth() {
   style.setAzimuth("behind left");
   assertEquals(std::string("behind left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND LEFT");
-  assertEquals(std::string("BEHIND LEFT"), style.azimuth());
+  assertEquals(std::string("behind left"), style.azimuth());
 
 
 
@@ -170,11 +152,8 @@ void azimuth() {
   style.setAzimuth("center-left");
   assertEquals(std::string("center-left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("CENTER-LEFT");
-  assertEquals(std::string("CENTER-LEFT"), style.azimuth());
+  assertEquals(std::string("center-left"), style.azimuth());
 
 
 
@@ -188,11 +167,8 @@ void azimuth() {
   style.setAzimuth("behind center-left");
   assertEquals(std::string("behind center-left"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND CENTER-LEFT");
-  assertEquals(std::string("BEHIND CENTER-LEFT"), style.azimuth());
+  assertEquals(std::string("behind center-left"), style.azimuth());
 
 
 
@@ -203,11 +179,8 @@ void azimuth() {
   style.setAzimuth("center");
   assertEquals(std::string("center"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("CENTER");
-  assertEquals(std::string("CENTER"), style.azimuth());
+  assertEquals(std::string("center"), style.azimuth());
 
 
 
@@ -221,11 +194,8 @@ void azimuth() {
   style.setAzimuth("behind center");
   assertEquals(std::string("behind center"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND CENTER");
-  assertEquals(std::string("BEHIND CENTER"), style.azimuth());
+  assertEquals(std::string("behind center"), style.azimuth());
 
 
 
@@ -236,11 +206,8 @@ void azimuth() {
   style.setAzimuth("center-right");
   assertEquals(std::string("center-right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("CENTER-RIGHT");
-  assertEquals(std::string("CENTER-RIGHT"), style.azimuth());
+  assertEquals(std::string("center-right"), style.azimuth());
 
 
 
@@ -254,11 +221,8 @@ void azimuth() {
   style.setAzimuth("behind center-right");
   assertEquals(std::string("behind center-right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND CENTER-RIGHT");
-  assertEquals(std::string("BEHIND CENTER-RIGHT"), style.azimuth());
+  assertEquals(std::string("behind center-right"), style.azimuth());
 
 
 
@@ -269,11 +233,8 @@ void azimuth() {
   style.setAzimuth("right");
   assertEquals(std::string("right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("RIGHT");
-  assertEquals(std::string("RIGHT"), style.azimuth());
+  assertEquals(std::string("right"), style.azimuth());
 
 
 
@@ -287,11 +248,8 @@ void azimuth() {
   style.setAzimuth("behind right");
   assertEquals(std::string("behind right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND RIGHT");
-  assertEquals(std::string("BEHIND RIGHT"), style.azimuth());
+  assertEquals(std::string("behind right"), style.azimuth());
 
 
 
@@ -302,11 +260,8 @@ void azimuth() {
   style.setAzimuth("far-right");
   assertEquals(std::string("far-right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("FAR-RIGHT");
-  assertEquals(std::string("FAR-RIGHT"), style.azimuth());
+  assertEquals(std::string("far-right"), style.azimuth());
 
 
 
@@ -320,11 +275,8 @@ void azimuth() {
   style.setAzimuth("behind far-right");
   assertEquals(std::string("behind far-right"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND FAR-RIGHT");
-  assertEquals(std::string("BEHIND FAR-RIGHT"), style.azimuth());
+  assertEquals(std::string("behind far-right"), style.azimuth());
 
 
 
@@ -335,11 +287,8 @@ void azimuth() {
   style.setAzimuth("right-side");
   assertEquals(std::string("right-side"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("RIGHT-SIDE");
-  assertEquals(std::string("RIGHT-SIDE"), style.azimuth());
+  assertEquals(std::string("right-side"), style.azimuth());
 
 
 
@@ -353,11 +302,8 @@ void azimuth() {
   style.setAzimuth("behind right-side");
   assertEquals(std::string("behind right-side"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("BEHIND RIGHT-SIDE");
-  assertEquals(std::string("BEHIND RIGHT-SIDE"), style.azimuth());
+  assertEquals(std::string("behind right-side"), style.azimuth());
 
 
 
@@ -368,11 +314,8 @@ void azimuth() {
   style.setAzimuth("leftwards");
   assertEquals(std::string("leftwards"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("LEFTWARDS");
-  assertEquals(std::string("LEFTWARDS"), style.azimuth());
+  assertEquals(std::string("leftwards"), style.azimuth());
 
 
 
@@ -383,11 +326,8 @@ void azimuth() {
   style.setAzimuth("rightwards");
   assertEquals(std::string("rightwards"), style.azimuth());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setAzimuth("RIGHTWARDS");
-  assertEquals(std::string("RIGHTWARDS"), style.azimuth());
+  assertEquals(std::string("rightwards"), style.azimuth());
 
 
 

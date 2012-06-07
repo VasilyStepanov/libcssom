@@ -15,7 +15,6 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 
 
 
@@ -124,23 +123,23 @@ static int isColor(const SAC_LexicalUnit *value) {
 
     return 1;
   } else if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("aqua", value->desc.ident) == 0) return 1;
-    if (strcasecmp("black", value->desc.ident) == 0) return 1;
-    if (strcasecmp("blue", value->desc.ident) == 0) return 1;
-    if (strcasecmp("fuchsia", value->desc.ident) == 0) return 1;
-    if (strcasecmp("gray", value->desc.ident) == 0) return 1;
-    if (strcasecmp("green", value->desc.ident) == 0) return 1;
-    if (strcasecmp("lime", value->desc.ident) == 0) return 1;
-    if (strcasecmp("maroon", value->desc.ident) == 0) return 1;
-    if (strcasecmp("navy", value->desc.ident) == 0) return 1;
-    if (strcasecmp("olive", value->desc.ident) == 0) return 1;
-    if (strcasecmp("orange", value->desc.ident) == 0) return 1;
-    if (strcasecmp("purple", value->desc.ident) == 0) return 1;
-    if (strcasecmp("red", value->desc.ident) == 0) return 1;
-    if (strcasecmp("silver", value->desc.ident) == 0) return 1;
-    if (strcasecmp("teal", value->desc.ident) == 0) return 1;
-    if (strcasecmp("white", value->desc.ident) == 0) return 1;
-    if (strcasecmp("yellow", value->desc.ident) == 0) return 1;
+    if (strcmp("aqua", value->desc.ident) == 0) return 1;
+    if (strcmp("black", value->desc.ident) == 0) return 1;
+    if (strcmp("blue", value->desc.ident) == 0) return 1;
+    if (strcmp("fuchsia", value->desc.ident) == 0) return 1;
+    if (strcmp("gray", value->desc.ident) == 0) return 1;
+    if (strcmp("green", value->desc.ident) == 0) return 1;
+    if (strcmp("lime", value->desc.ident) == 0) return 1;
+    if (strcmp("maroon", value->desc.ident) == 0) return 1;
+    if (strcmp("navy", value->desc.ident) == 0) return 1;
+    if (strcmp("olive", value->desc.ident) == 0) return 1;
+    if (strcmp("orange", value->desc.ident) == 0) return 1;
+    if (strcmp("purple", value->desc.ident) == 0) return 1;
+    if (strcmp("red", value->desc.ident) == 0) return 1;
+    if (strcmp("silver", value->desc.ident) == 0) return 1;
+    if (strcmp("teal", value->desc.ident) == 0) return 1;
+    if (strcmp("white", value->desc.ident) == 0) return 1;
+    if (strcmp("yellow", value->desc.ident) == 0) return 1;
   }
   return 0;
 }
@@ -390,15 +389,15 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(
  */
 
 static int azimuth_isAngleIdent(const char *ident) {
-  if (strcasecmp("left-side", ident) == 0) return 1;
-  if (strcasecmp("far-left", ident) == 0) return 1;
-  if (strcasecmp("left", ident) == 0) return 1;
-  if (strcasecmp("center-left", ident) == 0) return 1;
-  if (strcasecmp("center", ident) == 0) return 1;
-  if (strcasecmp("center-right", ident) == 0) return 1;
-  if (strcasecmp("right", ident) == 0) return 1;
-  if (strcasecmp("far-right", ident) == 0) return 1;
-  if (strcasecmp("right-side", ident) == 0) return 1;
+  if (strcmp("left-side", ident) == 0) return 1;
+  if (strcmp("far-left", ident) == 0) return 1;
+  if (strcmp("left", ident) == 0) return 1;
+  if (strcmp("center-left", ident) == 0) return 1;
+  if (strcmp("center", ident) == 0) return 1;
+  if (strcmp("center-right", ident) == 0) return 1;
+  if (strcmp("right", ident) == 0) return 1;
+  if (strcmp("far-right", ident) == 0) return 1;
+  if (strcmp("right-side", ident) == 0) return 1;
   return 0;
 }
 
@@ -409,7 +408,7 @@ static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
 {
   if (begin != end) {
     if (begin[0]->lexicalUnitType == SAC_IDENT) {
-      if (strcasecmp("behind", begin[0]->desc.ident) == 0) return &begin[1];
+      if (strcmp("behind", begin[0]->desc.ident) == 0) return &begin[1];
     }
   }
   return &begin[0];
@@ -436,13 +435,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
   if (isAngle(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("leftwards", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcasecmp("rightwards", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("leftwards", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("rightwards", begin[0]->desc.ident) == 0) return &begin[1];
 
     if (azimuth_isAngleIdent(begin[0]->desc.ident))
       return azimuth_angle(&begin[1], end);
 
-    if (strcasecmp("behind", begin[0]->desc.ident) == 0)
+    if (strcmp("behind", begin[0]->desc.ident) == 0)
       return azimuth_behind(&begin[1], end);
 
   } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
@@ -461,8 +460,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("scroll", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcasecmp("fixed", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("scroll", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("fixed", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
     return &begin[1];
   }
@@ -481,7 +480,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
   if (isColor(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
     return &begin[1];
   }
@@ -500,7 +499,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
   if (isUrl(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("none", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("none", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
     return &begin[1];
   }
@@ -523,9 +522,9 @@ static const SAC_LexicalUnit** backgroundPosition_horizontal(
   } else if (isLength(expr[0])) {
     return &expr[1];
   } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("top", expr[0]->desc.ident) == 0) return &expr[1];
-    if (strcasecmp("center", expr[0]->desc.ident) == 0) return &expr[1];
-    if (strcasecmp("bottom", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("top", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("center", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("bottom", expr[0]->desc.ident) == 0) return &expr[1];
   }
 
   return &expr[0];
@@ -539,9 +538,9 @@ static const SAC_LexicalUnit** backgroundPosition_vertical(
   if (expr[0] == NULL) {
     return &expr[0];
   } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("left", expr[0]->desc.ident) == 0) return &expr[1];
-    if (strcasecmp("center", expr[0]->desc.ident) == 0) return &expr[1];
-    if (strcasecmp("right", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("left", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("center", expr[0]->desc.ident) == 0) return &expr[1];
+    if (strcmp("right", expr[0]->desc.ident) == 0) return &expr[1];
   }
   return &expr[0];
 }
@@ -555,19 +554,19 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
     return backgroundPosition_horizontal(&begin[1]);
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
 
-    if (strcasecmp("left", begin[0]->desc.ident) == 0)
+    if (strcmp("left", begin[0]->desc.ident) == 0)
       return backgroundPosition_horizontal(&begin[1]);
 
-    if (strcasecmp("right", begin[0]->desc.ident) == 0)
+    if (strcmp("right", begin[0]->desc.ident) == 0)
       return backgroundPosition_horizontal(&begin[1]);
 
-    if (strcasecmp("top", begin[0]->desc.ident) == 0)
+    if (strcmp("top", begin[0]->desc.ident) == 0)
       return backgroundPosition_vertical(&begin[1]);
 
-    if (strcasecmp("bottom", begin[0]->desc.ident) == 0)
+    if (strcmp("bottom", begin[0]->desc.ident) == 0)
       return backgroundPosition_vertical(&begin[1]);
 
-    if (strcasecmp("center", begin[0]->desc.ident) == 0) {
+    if (strcmp("center", begin[0]->desc.ident) == 0) {
       const SAC_LexicalUnit **tail;
 
       if (begin[1] == NULL) return &begin[1];
@@ -594,10 +593,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcasecmp("repeat", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcasecmp("repeat-x", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcasecmp("repeat-y", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcasecmp("no-repeat", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("repeat", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("repeat-x", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("repeat-y", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("no-repeat", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
     return &begin[1];
   }

@@ -41,7 +41,7 @@ void cssText() {
 
   cssText =
 "@font-face { "
-  "font-family : Gentium; "
+  "font-family : gentium; "
   "src : url(\"http://example.com/fonts/Gentium.ttf\"); "
 "}";
   assertEquals(cssText, cssRule.cssText());
@@ -60,7 +60,7 @@ void cssText() {
   );
   cssText =
 "@font-face { "
-  "font-family : Foo; "
+  "font-family : foo; "
   "src : url(\"http://example.com/fonts/Foo.ttf\"); "
 "}";
   assert(cssRule.type() == cssom::CSSRule::FONT_FACE_RULE);

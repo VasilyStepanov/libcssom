@@ -43,11 +43,8 @@ void backgroundAttachment() {
   style.setBackgroundAttachment("scroll");
   assertEquals(std::string("scroll"), style.backgroundAttachment());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundAttachment("SCROLL");
-  assertEquals(std::string("SCROLL"), style.backgroundAttachment());
+  assertEquals(std::string("scroll"), style.backgroundAttachment());
 
 
 
@@ -58,11 +55,8 @@ void backgroundAttachment() {
   style.setBackgroundAttachment("fixed");
   assertEquals(std::string("fixed"), style.backgroundAttachment());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundAttachment("FIXED");
-  assertEquals(std::string("FIXED"), style.backgroundAttachment());
+  assertEquals(std::string("fixed"), style.backgroundAttachment());
 
 
 
@@ -156,12 +150,8 @@ void backgroundColor() {
   style.setBackgroundColor("yellow");
   assertEquals(std::string("yellow"), style.backgroundColor());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
-
   style.setBackgroundColor("YELLOW");
-  assertEquals(std::string("YELLOW"), style.backgroundColor());
+  assertEquals(std::string("yellow"), style.backgroundColor());
 
   style.setBackgroundColor("#f00");
   assertEquals(std::string("rgb(255, 0, 0)"), style.backgroundColor());
@@ -184,11 +174,8 @@ void backgroundColor() {
   style.setBackgroundColor("transparent");
   assertEquals(std::string("transparent"), style.backgroundColor());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundColor("TRANSPARENT");
-  assertEquals(std::string("TRANSPARENT"), style.backgroundColor());
+  assertEquals(std::string("transparent"), style.backgroundColor());
 
 
 
@@ -270,11 +257,8 @@ void backgroundImage() {
   style.setBackgroundImage("none");
   assertEquals(std::string("none"), style.backgroundImage());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundImage("NONE");
-  assertEquals(std::string("NONE"), style.backgroundImage());
+  assertEquals(std::string("none"), style.backgroundImage());
 
 
 
@@ -329,29 +313,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left");
   assertEquals(std::string("left"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT");
-  assertEquals(std::string("LEFT"), style.backgroundPosition());
+  assertEquals(std::string("left"), style.backgroundPosition());
 
   style.setBackgroundPosition("center");
   assertEquals(std::string("center"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER");
-  assertEquals(std::string("CENTER"), style.backgroundPosition());
+  assertEquals(std::string("center"), style.backgroundPosition());
 
   style.setBackgroundPosition("right");
   assertEquals(std::string("right"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT");
-  assertEquals(std::string("RIGHT"), style.backgroundPosition());
+  assertEquals(std::string("right"), style.backgroundPosition());
 
 
 
@@ -380,29 +355,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left 50%");
   assertEquals(std::string("left 50%"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT 50%");
-  assertEquals(std::string("LEFT 50%"), style.backgroundPosition());
+  assertEquals(std::string("left 50%"), style.backgroundPosition());
 
   style.setBackgroundPosition("center 50%");
   assertEquals(std::string("center 50%"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER 50%");
-  assertEquals(std::string("CENTER 50%"), style.backgroundPosition());
+  assertEquals(std::string("center 50%"), style.backgroundPosition());
 
   style.setBackgroundPosition("right 50%");
   assertEquals(std::string("right 50%"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT 50%");
-  assertEquals(std::string("RIGHT 50%"), style.backgroundPosition());
+  assertEquals(std::string("right 50%"), style.backgroundPosition());
 
 
 
@@ -419,29 +385,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left 50px");
   assertEquals(std::string("left 50px"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT 50px");
-  assertEquals(std::string("LEFT 50px"), style.backgroundPosition());
+  assertEquals(std::string("left 50px"), style.backgroundPosition());
 
   style.setBackgroundPosition("center 50px");
   assertEquals(std::string("center 50px"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER 50px");
-  assertEquals(std::string("CENTER 50px"), style.backgroundPosition());
+  assertEquals(std::string("center 50px"), style.backgroundPosition());
 
   style.setBackgroundPosition("right 50px");
   assertEquals(std::string("right 50px"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT 50px");
-  assertEquals(std::string("RIGHT 50px"), style.backgroundPosition());
+  assertEquals(std::string("right 50px"), style.backgroundPosition());
 
 
 
@@ -458,29 +415,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left top");
   assertEquals(std::string("left top"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT TOP");
-  assertEquals(std::string("LEFT TOP"), style.backgroundPosition());
+  assertEquals(std::string("left top"), style.backgroundPosition());
 
   style.setBackgroundPosition("center top");
   assertEquals(std::string("center top"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER TOP");
-  assertEquals(std::string("CENTER TOP"), style.backgroundPosition());
+  assertEquals(std::string("center top"), style.backgroundPosition());
 
   style.setBackgroundPosition("right top");
   assertEquals(std::string("right top"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT TOP");
-  assertEquals(std::string("RIGHT TOP"), style.backgroundPosition());
+  assertEquals(std::string("right top"), style.backgroundPosition());
 
 
 
@@ -497,29 +445,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left center");
   assertEquals(std::string("left center"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT CENTER");
-  assertEquals(std::string("LEFT CENTER"), style.backgroundPosition());
+  assertEquals(std::string("left center"), style.backgroundPosition());
 
   style.setBackgroundPosition("center center");
   assertEquals(std::string("center center"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER CENTER");
-  assertEquals(std::string("CENTER CENTER"), style.backgroundPosition());
+  assertEquals(std::string("center center"), style.backgroundPosition());
 
   style.setBackgroundPosition("right center");
   assertEquals(std::string("right center"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT CENTER");
-  assertEquals(std::string("RIGHT CENTER"), style.backgroundPosition());
+  assertEquals(std::string("right center"), style.backgroundPosition());
 
 
 
@@ -536,29 +475,20 @@ void backgroundPosition() {
   style.setBackgroundPosition("left bottom");
   assertEquals(std::string("left bottom"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("LEFT BOTTOM");
-  assertEquals(std::string("LEFT BOTTOM"), style.backgroundPosition());
+  assertEquals(std::string("left bottom"), style.backgroundPosition());
 
   style.setBackgroundPosition("center center");
   assertEquals(std::string("center center"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("CENTER BOTTOM");
-  assertEquals(std::string("CENTER BOTTOM"), style.backgroundPosition());
+  assertEquals(std::string("center bottom"), style.backgroundPosition());
 
   style.setBackgroundPosition("right bottom");
   assertEquals(std::string("right bottom"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundPosition("RIGHT BOTTOM");
-  assertEquals(std::string("RIGHT BOTTOM"), style.backgroundPosition());
+  assertEquals(std::string("right bottom"), style.backgroundPosition());
 
 
 
@@ -575,12 +505,8 @@ void backgroundPosition() {
   style.setBackgroundPosition("top right");
   assertEquals(std::string("top right"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
-
   style.setBackgroundPosition("TOP LEFT");
-  assertEquals(std::string("TOP LEFT"), style.backgroundPosition());
+  assertEquals(std::string("top left"), style.backgroundPosition());
 
   style.setBackgroundPosition("center left");
   assertEquals(std::string("center left"), style.backgroundPosition());
@@ -588,12 +514,8 @@ void backgroundPosition() {
   style.setBackgroundPosition("center right");
   assertEquals(std::string("center right"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
-
   style.setBackgroundPosition("CENTER LEFT");
-  assertEquals(std::string("CENTER LEFT"), style.backgroundPosition());
+  assertEquals(std::string("center left"), style.backgroundPosition());
 
   style.setBackgroundPosition("bottom left");
   assertEquals(std::string("bottom left"), style.backgroundPosition());
@@ -604,12 +526,8 @@ void backgroundPosition() {
   style.setBackgroundPosition("bottom right");
   assertEquals(std::string("bottom right"), style.backgroundPosition());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
-
   style.setBackgroundPosition("BOTTOM LEFT");
-  assertEquals(std::string("BOTTOM LEFT"), style.backgroundPosition());
+  assertEquals(std::string("bottom left"), style.backgroundPosition());
 
 
 
@@ -661,11 +579,8 @@ void backgroundRepeat() {
   style.setBackgroundRepeat("repeat");
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundRepeat("REPEAT");
-  assertEquals(std::string("REPEAT"), style.backgroundRepeat());
+  assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 
 
@@ -676,11 +591,8 @@ void backgroundRepeat() {
   style.setBackgroundRepeat("repeat-x");
   assertEquals(std::string("repeat-x"), style.backgroundRepeat());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundRepeat("REPEAT-X");
-  assertEquals(std::string("REPEAT-X"), style.backgroundRepeat());
+  assertEquals(std::string("repeat-x"), style.backgroundRepeat());
 
 
 
@@ -691,11 +603,8 @@ void backgroundRepeat() {
   style.setBackgroundRepeat("repeat-y");
   assertEquals(std::string("repeat-y"), style.backgroundRepeat());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundRepeat("REPEAT-Y");
-  assertEquals(std::string("REPEAT-Y"), style.backgroundRepeat());
+  assertEquals(std::string("repeat-y"), style.backgroundRepeat());
 
 
 
@@ -706,11 +615,8 @@ void backgroundRepeat() {
   style.setBackgroundRepeat("no-repeat");
   assertEquals(std::string("no-repeat"), style.backgroundRepeat());
 
-  /**
-   * TODO: Replace with case insensitive implementation.
-   */
   style.setBackgroundRepeat("NO-REPEAT");
-  assertEquals(std::string("NO-REPEAT"), style.backgroundRepeat());
+  assertEquals(std::string("no-repeat"), style.backgroundRepeat());
 
 
 
