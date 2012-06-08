@@ -372,11 +372,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_shorthand(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *shorthand, const PropertyHandler *handlers,
-  const CSSOM_CSSPropertyType *types, const SAC_LexicalUnit **(*initial)[2],
-  CSSOM_CSSPropertyValue **storage, size_t size, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
+  const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
+  const PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
+  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **storage,
+  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  int *error)
 {
   size_t i;
   const SAC_LexicalUnit **tail;
@@ -443,6 +444,102 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(const CSSOM *cssom,
     shorthand->parentValues, storage, size)) != 0)
   {
     releaseStorage(storage, size);
+    if (error != NULL) *error = rval;
+    return begin;
+  }
+
+  if (error != NULL) *error = 0;
+  return end;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
+  CSSOM_CSSPropertyValue *shorthand, PropertyHandler handler,
+  const CSSOM_CSSPropertyType *types, CSSOM_CSSPropertyValue **storage,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+{
+  const SAC_LexicalUnit **begins[4];
+  const SAC_LexicalUnit **ends[4];
+  size_t i;
+  int rval;
+
+  switch (end - begin) {
+    case 1:
+      if (handler(begin, end) != end) {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      begins[0] = &begin[0]; ends[0] = &begin[1];
+      begins[1] = &begin[0]; ends[1] = &begin[1];
+      begins[2] = &begin[0]; ends[2] = &begin[1];
+      begins[3] = &begin[0]; ends[3] = &begin[1];
+
+      break;
+    case 2:
+      if (handler(&begin[0], &begin[1]) != &begin[1] ||
+        handler(&begin[1], &begin[2]) != &begin[2])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      begins[0] = &begin[0]; ends[0] = &begin[1];
+      begins[1] = &begin[1]; ends[1] = &begin[2];
+      begins[2] = &begin[0]; ends[2] = &begin[1];
+      begins[3] = &begin[1]; ends[3] = &begin[2];
+
+      break;
+    case 3:
+      if (handler(&begin[0], &begin[1]) != &begin[1] ||
+        handler(&begin[1], &begin[2]) != &begin[2] ||
+        handler(&begin[2], &begin[3]) != &begin[3])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      begins[0] = &begin[0]; ends[0] = &begin[1];
+      begins[1] = &begin[1]; ends[1] = &begin[2];
+      begins[2] = &begin[2]; ends[2] = &begin[3];
+      begins[3] = &begin[1]; ends[3] = &begin[2];
+
+      break;
+    case 4:
+      if (handler(&begin[0], &begin[1]) != &begin[1] ||
+        handler(&begin[1], &begin[2]) != &begin[2] ||
+        handler(&begin[2], &begin[3]) != &begin[3] ||
+        handler(&begin[3], &begin[4]) != &begin[4])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      begins[0] = &begin[0]; ends[0] = &begin[1];
+      begins[1] = &begin[1]; ends[1] = &begin[2];
+      begins[2] = &begin[2]; ends[2] = &begin[3];
+      begins[3] = &begin[3]; ends[3] = &begin[4];
+
+      break;
+  }
+
+  for (i = 0; i < 4; ++i) {
+    storage[i] = CSSPropertyValue_allocTrusted(cssom,
+      shorthand->parentValues, shorthand, types[i], begins[i], ends[i],
+      SAC_FALSE);
+
+    if (storage[i] == NULL) {
+      releaseStorage(storage, 4);
+      if (error != NULL) *error = -1;
+      return begin;
+    }
+  }
+
+  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
+    shorthand->parentValues, storage, 4)) != 0)
+  {
+    releaseStorage(storage, 4);
     if (error != NULL) *error = rval;
     return begin;
   }
@@ -726,7 +823,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     NULL
   };
 
-  if (CSSPropertyValue_shorthand(cssom, property, handlers,
+  if (CSSPropertyValue_genericShorthand(cssom, property, handlers,
     shorthand_background, initial, storage, ASIZE(shorthand_background),
     begin, end, error) != end)
   {
@@ -775,138 +872,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
     NULL,
   };
 
-  size_t i;
-  int rval;
-
-  switch (end - begin) {
-    case 1:
-      if (CSSPropertyValue_borderDirectionColor(begin, end) != end) {
-        if (error != NULL) *error = 1;
-        return begin;
-      }
-
-      for (i = 0; i < ASIZE(storage); ++i) {
-        storage[i] = CSSPropertyValue_allocTrusted(cssom,
-          property->parentValues, property, property->vtable->types[i], begin,
-          end, SAC_FALSE);
-
-        if (storage[i] == NULL) {
-          releaseStorage(storage, ASIZE(storage));
-          if (error != NULL) *error = -1;
-          return begin;
-        }
-      }
-
-      break;
-    case 2:
-      if (CSSPropertyValue_borderDirectionColor(&begin[0],
-        &begin[1]) != &begin[1] ||
-        CSSPropertyValue_borderDirectionColor(&begin[1],
-        &begin[2]) != &begin[2])
-      {
-        if (error != NULL) *error = 1;
-        return begin;
-      }
-
-      storage[0] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[0], &begin[0],
-        &begin[1], SAC_FALSE);
-      storage[1] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[1], &begin[1],
-        &begin[2], SAC_FALSE);
-      storage[2] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[2], &begin[0],
-        &begin[1], SAC_FALSE);
-      storage[3] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[3], &begin[1],
-        &begin[2], SAC_FALSE);
-
-      for (i = 0; i < ASIZE(storage); ++i) {
-        if (storage[i] == NULL) {
-          releaseStorage(storage, ASIZE(storage));
-          if (error != NULL) *error = -1;
-          return begin;
-        }
-      }
-
-      break;
-    case 3:
-      if (CSSPropertyValue_borderDirectionColor(&begin[0],
-        &begin[1]) != &begin[1] ||
-        CSSPropertyValue_borderDirectionColor(&begin[1],
-        &begin[2]) != &begin[2] ||
-        CSSPropertyValue_borderDirectionColor(&begin[2],
-        &begin[3]) != &begin[3])
-      {
-        if (error != NULL) *error = 1;
-        return begin;
-      }
-
-      storage[0] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[0], &begin[0],
-        &begin[1], SAC_FALSE);
-      storage[1] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[1], &begin[1],
-        &begin[2], SAC_FALSE);
-      storage[2] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[2], &begin[2],
-        &begin[3], SAC_FALSE);
-      storage[3] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[3], &begin[1],
-        &begin[2], SAC_FALSE);
-
-      for (i = 0; i < ASIZE(storage); ++i) {
-        if (storage[i] == NULL) {
-          releaseStorage(storage, ASIZE(storage));
-          if (error != NULL) *error = -1;
-          return begin;
-        }
-      }
-
-      break;
-    case 4:
-      if (CSSPropertyValue_borderDirectionColor(&begin[0],
-        &begin[1]) != &begin[1] ||
-        CSSPropertyValue_borderDirectionColor(&begin[1],
-        &begin[2]) != &begin[2] ||
-        CSSPropertyValue_borderDirectionColor(&begin[2],
-        &begin[3]) != &begin[3] ||
-        CSSPropertyValue_borderDirectionColor(&begin[3],
-        &begin[4]) != &begin[4])
-      {
-        if (error != NULL) *error = 1;
-        return begin;
-      }
-
-      storage[0] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[0], &begin[0],
-        &begin[1], SAC_FALSE);
-      storage[1] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[1], &begin[1],
-        &begin[2], SAC_FALSE);
-      storage[2] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[2], &begin[2],
-        &begin[3], SAC_FALSE);
-      storage[3] = CSSPropertyValue_allocTrusted(cssom,
-        property->parentValues, property, property->vtable->types[3], &begin[3],
-        &begin[4], SAC_FALSE);
-
-      for (i = 0; i < ASIZE(storage); ++i) {
-        if (storage[i] == NULL) {
-          releaseStorage(storage, ASIZE(storage));
-          if (error != NULL) *error = -1;
-          return begin;
-        }
-      }
-
-      break;
-  }
-
-  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    property->parentValues, storage, ASIZE(storage))) != 0)
+  if (CSSPropertyValue_boxShorthand(cssom, property,
+    CSSPropertyValue_borderDirectionColor, shorthand_borderColor, storage,
+    begin, end, error) != end)
   {
-    releaseStorage(storage, ASIZE(storage));
-    if (error != NULL) *error = rval;
     return begin;
   }
 
