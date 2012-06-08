@@ -780,12 +780,12 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("#808080");
-  assertEquals(std::string("rgb(128, 128, 128) none repeat scroll 50% 50%"),
+  assertEquals(std::string("rgb(128, 128, 128) none repeat scroll 0% 0%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 
@@ -798,13 +798,13 @@ void background() {
   style.setBackground("url(\"http://example.com/\")");
   assertEquals(
     std::string("transparent url(\"http://example.com/\") repeat scroll "
-      "50% 50%"),
+      "0% 0%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("url(\"http://example.com/\")"),
     style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 
@@ -815,12 +815,12 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("repeat");
-  assertEquals(std::string("transparent none repeat scroll 50% 50%"),
+  assertEquals(std::string("transparent none repeat scroll 0% 0%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 
@@ -831,12 +831,12 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("scroll");
-  assertEquals(std::string("transparent none repeat scroll 50% 50%"),
+  assertEquals(std::string("transparent none repeat scroll 0% 0%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 
@@ -864,12 +864,12 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("fixed no-repeat");
-  assertEquals(std::string("transparent none no-repeat fixed 50% 50%"),
+  assertEquals(std::string("transparent none no-repeat fixed 0% 0%"),
     style.background());
   assertEquals(std::string("fixed"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("no-repeat"), style.backgroundRepeat());
 
 
@@ -880,12 +880,12 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("inherit #808080");
-  assertEquals(std::string("rgb(128, 128, 128) inherit repeat scroll 50% 50%"),
+  assertEquals(std::string("rgb(128, 128, 128) inherit repeat scroll 0% 0%"),
     style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
   assertEquals(std::string("inherit"), style.backgroundImage());
-  assertEquals(std::string("50% 50%"), style.backgroundPosition());
+  assertEquals(std::string("0% 0%"), style.backgroundPosition());
   assertEquals(std::string("repeat"), style.backgroundRepeat());
 
 

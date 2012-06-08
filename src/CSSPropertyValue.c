@@ -43,7 +43,7 @@ static SAC_LexicalUnit unit_transparent;
 static SAC_LexicalUnit unit_none;
 static SAC_LexicalUnit unit_repeat;
 static SAC_LexicalUnit unit_scroll;
-static SAC_LexicalUnit unit_50pct;
+static SAC_LexicalUnit unit_0pct;
 
 static const CSSOM_CSSPropertyType shorthand_background[] = {
   CSSOM_BACKGROUND_COLOR_PROPERTY,
@@ -75,9 +75,9 @@ void CSSOM_CSSPropertyValue__initGlobals(void) {
   unit_scroll.lexicalUnitType = SAC_IDENT;
   unit_scroll.desc.ident = "scroll";
 
-  unit_50pct.lexicalUnitType = SAC_PERCENTAGE;
-  unit_50pct.desc.dimension.unit = "%";
-  unit_50pct.desc.dimension.value.sreal = 50;
+  unit_0pct.lexicalUnitType = SAC_PERCENTAGE;
+  unit_0pct.desc.dimension.unit = "%";
+  unit_0pct.desc.dimension.value.sreal = 0;
 }
 
 
@@ -796,7 +796,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   };
 
   static const SAC_LexicalUnit *position[] = {
-    &unit_50pct, &unit_50pct
+    &unit_0pct, &unit_0pct
   };
 
   static const SAC_LexicalUnit **initial[ASIZE(shorthand_background)][2] = {
