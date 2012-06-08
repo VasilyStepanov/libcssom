@@ -165,19 +165,6 @@ const char* CSSOM_CSSStyleDeclarationValue_item(
 
 
 
-const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
-{
-  CSSOM_FSMIter_CSSPropertyValue it;
-
-  it = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
-  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return NULL;
-
-  return CSSOM_CSSPropertyValue_cssText(it->value);
-}
-
-
-
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property)
 {
@@ -191,31 +178,28 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(
 
 
 
-const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
-  const CSSOM_CSSStyleDeclarationValue *values, const char *property)
+CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
+  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
 {
-  CSSOM_CSSPropertyValue *value;
+  CSSOM_FSMIter_CSSPropertyValue it;
 
-  value = CSSOM_CSSStyleDeclarationValue_getProperty(values, property);
+  it = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
+  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return NULL;
 
-  if (value == NULL) return NULL;
-
-  return CSSOM_CSSPropertyValue_cssText(value);
+  return it->value;
 }
 
 
 
-const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
-  const CSSOM_CSSStyleDeclarationValue *values, const char * property)
+const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
 {
   CSSOM_CSSPropertyValue *value;
 
-  value = CSSOM_CSSStyleDeclarationValue_getProperty(values, property);
+  value = CSSOM_CSSStyleDeclarationValue__fgetProperty(values, property);
+  if (value == NULL) return NULL;
 
-  if (value == NULL) return "";
-  if (CSSOM_CSSPropertyValue__important(value) == 0) return "";
-
-  return "important";
+  return CSSOM_CSSPropertyValue_cssText(value);
 }
 
 

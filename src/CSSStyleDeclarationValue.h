@@ -42,14 +42,11 @@ int CSSOM_CSSStyleDeclarationValue__assignProperties(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
   size_t size);
 
-const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
-  const CSSOM_CSSStyleDeclarationValue *values, const char *property);
+CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
+  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType type);
 
 const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property);
-
-const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
-  const CSSOM_CSSStyleDeclarationValue *values, const char * property);
 
 
 

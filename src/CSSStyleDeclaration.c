@@ -112,8 +112,13 @@ const char* CSSOM_CSSStyleDeclaration_item(CSSOM_CSSStyleDeclaration *style,
 const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
   const CSSOM_CSSStyleDeclaration *style, const char *property)
 {
-  return CSSOM_CSSStyleDeclarationValue__getPropertyValue(
-    style->values, property);
+  CSSOM_CSSPropertyValue *value;
+
+  value = CSSOM_CSSStyleDeclarationValue_getProperty(style->values, property);
+
+  if (value == NULL) return NULL;
+
+  return CSSOM_CSSPropertyValue_cssText(value);
 }
 
 
@@ -121,8 +126,14 @@ const char* CSSOM_CSSStyleDeclaration_getPropertyValue(
 const char* CSSOM_CSSStyleDeclaration_getPropertyPriority(
   const CSSOM_CSSStyleDeclaration *style, const char *property)
 {
-  return CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
-    style->values, property);
+  CSSOM_CSSPropertyValue *value;
+
+  value = CSSOM_CSSStyleDeclarationValue_getProperty(style->values, property);
+
+  if (value == NULL) return "";
+  if (CSSOM_CSSPropertyValue__important(value) == 0) return "";
+
+  return "important";
 }
 
 
