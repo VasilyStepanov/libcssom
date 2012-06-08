@@ -137,6 +137,14 @@ void CSSOM_CSSStyleDeclaration_setBorderCollapse(CSSOM_CSSStyleDeclaration * css
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderColor);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_borderSpacing(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

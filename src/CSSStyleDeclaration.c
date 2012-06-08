@@ -377,6 +377,24 @@ void CSSOM_CSSStyleDeclaration_setBorderCollapse(
 
 
 
+const char* CSSOM_CSSStyleDeclaration_borderColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderColor(
+  CSSOM_CSSStyleDeclaration *style, const char *borderColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_COLOR_PROPERTY, borderColor);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_borderSpacing(
   const CSSOM_CSSStyleDeclaration *style)
 {

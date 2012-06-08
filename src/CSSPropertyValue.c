@@ -53,6 +53,13 @@ static const CSSOM_CSSPropertyType shorthand_background[] = {
   CSSOM_BACKGROUND_POSITION_PROPERTY
 };
 
+static const CSSOM_CSSPropertyType shorthand_borderColor[] = {
+  CSSOM_BORDER_TOP_COLOR_PROPERTY,
+  CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
+  CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
+  CSSOM_BORDER_LEFT_COLOR_PROPERTY
+};
+
 
 
 void CSSOM_CSSPropertyValue__initGlobals(void) {
@@ -289,6 +296,15 @@ static struct _CSSOM_CSSPropertyValue_vtable
 BackgroundCSSPropertyValue_vtable = {
   shorthand_background,
   ASIZE(shorthand_background),
+  &ShorthandCSSPropertyValue_emit
+};
+
+
+
+static struct _CSSOM_CSSPropertyValue_vtable
+BorderColorCSSPropertyValue_vtable = {
+  shorthand_borderColor,
+  ASIZE(shorthand_borderColor),
   &ShorthandCSSPropertyValue_emit
 };
 
@@ -742,6 +758,165 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
 
 
 /**
+ * border-color
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
+  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+{
+  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderColor)] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };
+
+  size_t i;
+  int rval;
+
+  switch (end - begin) {
+    case 1:
+      if (CSSPropertyValue_borderDirectionColor(begin, end) != end) {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      for (i = 0; i < ASIZE(storage); ++i) {
+        storage[i] = CSSPropertyValue_allocTrusted(cssom,
+          property->parentValues, property, property->vtable->types[i], begin,
+          end, SAC_FALSE);
+
+        if (storage[i] == NULL) {
+          releaseStorage(storage, ASIZE(storage));
+          if (error != NULL) *error = -1;
+          return begin;
+        }
+      }
+
+      break;
+    case 2:
+      if (CSSPropertyValue_borderDirectionColor(&begin[0],
+        &begin[1]) != &begin[1] ||
+        CSSPropertyValue_borderDirectionColor(&begin[1],
+        &begin[2]) != &begin[2])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      storage[0] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[0], &begin[0],
+        &begin[1], SAC_FALSE);
+      storage[1] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[1], &begin[1],
+        &begin[2], SAC_FALSE);
+      storage[2] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[2], &begin[0],
+        &begin[1], SAC_FALSE);
+      storage[3] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[3], &begin[1],
+        &begin[2], SAC_FALSE);
+
+      for (i = 0; i < ASIZE(storage); ++i) {
+        if (storage[i] == NULL) {
+          releaseStorage(storage, ASIZE(storage));
+          if (error != NULL) *error = -1;
+          return begin;
+        }
+      }
+
+      break;
+    case 3:
+      if (CSSPropertyValue_borderDirectionColor(&begin[0],
+        &begin[1]) != &begin[1] ||
+        CSSPropertyValue_borderDirectionColor(&begin[1],
+        &begin[2]) != &begin[2] ||
+        CSSPropertyValue_borderDirectionColor(&begin[2],
+        &begin[3]) != &begin[3])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      storage[0] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[0], &begin[0],
+        &begin[1], SAC_FALSE);
+      storage[1] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[1], &begin[1],
+        &begin[2], SAC_FALSE);
+      storage[2] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[2], &begin[2],
+        &begin[3], SAC_FALSE);
+      storage[3] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[3], &begin[1],
+        &begin[2], SAC_FALSE);
+
+      for (i = 0; i < ASIZE(storage); ++i) {
+        if (storage[i] == NULL) {
+          releaseStorage(storage, ASIZE(storage));
+          if (error != NULL) *error = -1;
+          return begin;
+        }
+      }
+
+      break;
+    case 4:
+      if (CSSPropertyValue_borderDirectionColor(&begin[0],
+        &begin[1]) != &begin[1] ||
+        CSSPropertyValue_borderDirectionColor(&begin[1],
+        &begin[2]) != &begin[2] ||
+        CSSPropertyValue_borderDirectionColor(&begin[2],
+        &begin[3]) != &begin[3] ||
+        CSSPropertyValue_borderDirectionColor(&begin[3],
+        &begin[4]) != &begin[4])
+      {
+        if (error != NULL) *error = 1;
+        return begin;
+      }
+
+      storage[0] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[0], &begin[0],
+        &begin[1], SAC_FALSE);
+      storage[1] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[1], &begin[1],
+        &begin[2], SAC_FALSE);
+      storage[2] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[2], &begin[2],
+        &begin[3], SAC_FALSE);
+      storage[3] = CSSPropertyValue_allocTrusted(cssom,
+        property->parentValues, property, property->vtable->types[3], &begin[3],
+        &begin[4], SAC_FALSE);
+
+      for (i = 0; i < ASIZE(storage); ++i) {
+        if (storage[i] == NULL) {
+          releaseStorage(storage, ASIZE(storage));
+          if (error != NULL) *error = -1;
+          return begin;
+        }
+      }
+
+      break;
+  }
+
+  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
+    property->parentValues, storage, ASIZE(storage))) != 0)
+  {
+    releaseStorage(storage, ASIZE(storage));
+    if (error != NULL) *error = rval;
+    return begin;
+  }
+
+  if (error != NULL) *error = 0;
+  return end;
+}
+
+
+
+/**
  * border-spacing
  */
 
@@ -793,7 +968,6 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
     case CSSOM_BORDER_PROPERTY:
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
-    case CSSOM_BORDER_COLOR_PROPERTY:
     case CSSOM_BORDER_SPACING_PROPERTY:
     case CSSOM_BORDER_STYLE_PROPERTY:
     case CSSOM_BORDER_TOP_PROPERTY:
@@ -910,6 +1084,8 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
       return &GenericCSSPropertyValue_vtable;
     case CSSOM_BACKGROUND_PROPERTY:
       return &BackgroundCSSPropertyValue_vtable;
+    case CSSOM_BORDER_COLOR_PROPERTY:
+      return &BorderColorCSSPropertyValue_vtable;
   }
   return NULL;
 }
@@ -954,6 +1130,11 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
       if (CSSPropertyValue_borderCollapse(begin, end) != end) return 1;
       break;
     case CSSOM_BORDER_COLOR_PROPERTY:
+      if (CSSPropertyValue_borderColor(cssom, property, begin, end,
+        &error) != end)
+      {
+        return error;
+      }
       break;
     case CSSOM_BORDER_SPACING_PROPERTY:
       if (CSSPropertyValue_borderSpacing(begin, end) != end) return 1;

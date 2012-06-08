@@ -459,6 +459,101 @@ void borderLeftColor() {
 
 
 
+void borderColor() {
+
+  /**
+   * [ <color> | transparent ]{1,4} | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderColor() == NULL);
+
+
+
+  /**
+   * <color>
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("red");
+  assertEquals(std::string("red red red red"), style.borderColor());
+  assertEquals(std::string("red"), style.borderTopColor());
+  assertEquals(std::string("red"), style.borderRightColor());
+  assertEquals(std::string("red"), style.borderBottomColor());
+  assertEquals(std::string("red"), style.borderLeftColor());
+
+
+
+  /**
+   * <color> <color>
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("red green");
+  assertEquals(std::string("red green red green"), style.borderColor());
+  assertEquals(std::string("red"), style.borderTopColor());
+  assertEquals(std::string("green"), style.borderRightColor());
+  assertEquals(std::string("red"), style.borderBottomColor());
+  assertEquals(std::string("green"), style.borderLeftColor());
+
+
+
+  /**
+   * <color> <color> <color>
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("red green blue");
+  assertEquals(std::string("red green blue green"), style.borderColor());
+  assertEquals(std::string("red"), style.borderTopColor());
+  assertEquals(std::string("green"), style.borderRightColor());
+  assertEquals(std::string("blue"), style.borderBottomColor());
+  assertEquals(std::string("green"), style.borderLeftColor());
+
+
+
+  /**
+   * <color> <color> <color> <color>
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("red green blue yellow");
+  assertEquals(std::string("red green blue yellow"), style.borderColor());
+  assertEquals(std::string("red"), style.borderTopColor());
+  assertEquals(std::string("green"), style.borderRightColor());
+  assertEquals(std::string("blue"), style.borderBottomColor());
+  assertEquals(std::string("yellow"), style.borderLeftColor());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("inherit");
+  assertEquals(std::string("inherit inherit inherit inherit"),
+    style.borderColor());
+  assertEquals(std::string("inherit"), style.borderTopColor());
+  assertEquals(std::string("inherit"), style.borderRightColor());
+  assertEquals(std::string("inherit"), style.borderBottomColor());
+  assertEquals(std::string("inherit"), style.borderLeftColor());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("invalid");
+  assert(style.borderColor() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -472,6 +567,7 @@ void cssPropertyBorder() {
   borderRightColor();
   borderBottomColor();
   borderLeftColor();
+  borderColor();
 }
 
 

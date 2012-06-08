@@ -245,6 +245,18 @@ void CSSStyleDeclaration::setBorderCollapse(const char * borderCollapse) {
 
 
 
+const char * CSSStyleDeclaration::borderColor() const {
+  return CSSOM_CSSStyleDeclaration_borderColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderColor(const char * borderColor) {
+  CSSOM_CSSStyleDeclaration_setBorderColor(_impl, borderColor);
+}
+
+
+
 const char * CSSStyleDeclaration::borderSpacing() const {
   return CSSOM_CSSStyleDeclaration_borderSpacing(_impl);
 }
