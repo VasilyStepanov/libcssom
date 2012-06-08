@@ -26,10 +26,6 @@ typedef CSSOM_FSMConstIter_CSSPropertyValue
 CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
   CSSOM_CSSStyleDeclaration *parentStyle);
 
-int CSSOM_CSSStyleDeclarationValue__assignProperties(
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
-  size_t size);
-
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue__parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values);
 
@@ -37,6 +33,14 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   CSSOM_CSSStyleDeclarationValue *values,
   const char *property, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, SAC_Boolean priority);
+
+void CSSOM_CSSStyleDeclarationValue__fsetProperty(
+  CSSOM_CSSStyleDeclarationValue *values,
+  CSSOM_CSSPropertyType type, const char *value);
+
+int CSSOM_CSSStyleDeclarationValue__assignProperties(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
+  size_t size);
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, const char *property);
@@ -46,18 +50,6 @@ const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
 
 const char* CSSOM_CSSStyleDeclarationValue__getPropertyPriority(
   const CSSOM_CSSStyleDeclarationValue *values, const char * property);
-
-void CSSOM_CSSStyleDeclarationValue_setProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const char *value);
-
-void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
-  CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const char *value, const char *priority);
-
-void CSSOM_CSSStyleDeclarationValue__fsetProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  CSSOM_CSSPropertyType type, const char *value);
 
 
 
