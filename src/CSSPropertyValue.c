@@ -75,6 +75,13 @@ void CSSOM_CSSPropertyValue__initGlobals(void) {
 
 
 
+static int isInherit(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_INHERIT) return 1; 
+  return 0;
+}
+
+
+
 static int isAngle(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_DEGREE) {
     return 1;
@@ -361,33 +368,52 @@ static const SAC_LexicalUnit** CSSPropertyValue_shorthand(const CSSOM *cssom,
 
 
 
-  tail = CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage, size,
-    begin, end, &rval);
-  if (tail != end) {
-    if (rval < 0) {
-      if (error != NULL) *error = rval;
-      return begin;
-    }
-    if (error != NULL) *error = rval;
-    return begin;
-  }
-
-
-
   /**
-   * add initial
+   * inherit
    */
 
-  for (i = 0; i < size; ++i) {
-    if (storage[i] != NULL) continue;
+  if (&begin[1] == end && isInherit(begin[0])) {
+    for (i = 0; i < size; ++i) {
+      if (storage[i] != NULL) continue;
 
-    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-      shorthand, types[i], initial[i][0], initial[i][1], SAC_FALSE, &rval);
+      storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
+        shorthand, types[i], begin, end, SAC_FALSE);
 
-    if (storage[i] == NULL) {
-      releaseStorage(storage, size);
-      if (error != NULL) *error = rval;
-      return begin;
+      if (storage[i] == NULL) {
+        releaseStorage(storage, size);
+        if (error != NULL) *error = -1;
+        return begin;
+      }
+    }
+  } else {
+
+
+
+    /**
+     * walk
+     */
+
+    tail = CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage,
+      size, begin, end, error);
+    if (tail != end) return begin;
+
+
+
+    /**
+     * add initial
+     */
+
+    for (i = 0; i < size; ++i) {
+      if (storage[i] != NULL) continue;
+
+      storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
+        shorthand, types[i], initial[i][0], initial[i][1], SAC_FALSE);
+
+      if (storage[i] == NULL) {
+        releaseStorage(storage, size);
+        if (error != NULL) *error = -1;
+        return begin;
+      }
     }
   }
 
@@ -471,7 +497,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
     if (strcmp("behind", begin[0]->desc.ident) == 0)
       return azimuth_behind(&begin[1], end);
 
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -489,7 +515,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("scroll", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("fixed", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -508,7 +534,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -527,7 +553,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("none", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -604,7 +630,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
       return backgroundPosition_vertical(&begin[1]);
     }
 
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -624,7 +650,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
     if (strcmp("repeat-x", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("repeat-y", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("no-repeat", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -707,7 +733,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("collapse", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("separate", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -725,7 +751,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
   if (isLength(begin[0])) {
     if (&begin[1] != end && isLength(begin[1])) return &begin[2];
     return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -747,7 +773,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_INHERIT) {
+  } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];

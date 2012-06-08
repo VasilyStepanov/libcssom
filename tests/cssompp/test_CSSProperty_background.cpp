@@ -890,6 +890,21 @@ void background() {
 
 
 
+  /**
+   * inherit
+   */
+
+  style.setBackground(NULL);
+  style.setBackground("inherit");
+  assertEquals(std::string("inherit inherit inherit inherit inherit"),
+    style.background());
+  assertEquals(std::string("inherit"), style.backgroundAttachment());
+  assertEquals(std::string("inherit"), style.backgroundColor());
+  assertEquals(std::string("inherit"), style.backgroundImage());
+  assertEquals(std::string("inherit"), style.backgroundPosition());
+  assertEquals(std::string("inherit"), style.backgroundRepeat());
+
+
 
   /**
    * error
