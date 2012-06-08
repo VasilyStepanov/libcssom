@@ -145,6 +145,38 @@ void CSSOM_CSSStyleDeclaration_setBorderSpacing(CSSOM_CSSStyleDeclaration * cssS
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderTopColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTopColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderTopColor);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderRightColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRightColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderRightColor);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderBottomColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottomColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderBottomColor);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderLeftColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeftColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderLeftColor);
+
+
+
 #ifdef __cplusplus
 }
 #endif

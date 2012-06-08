@@ -36,10 +36,12 @@ interface CSSStyleDeclaration {
            attribute DOMString? borderRight;
            attribute DOMString? borderBottom;
            attribute DOMString? borderLeft;
+  */
            attribute DOMString? borderTopColor;
            attribute DOMString? borderRightColor;
            attribute DOMString? borderBottomColor;
            attribute DOMString? borderLeftColor;
+  /*
            attribute DOMString? borderTopStyle;
            attribute DOMString? borderRightStyle;
            attribute DOMString? borderBottomStyle;

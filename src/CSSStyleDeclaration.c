@@ -392,3 +392,75 @@ void CSSOM_CSSStyleDeclaration_setBorderSpacing(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_SPACING_PROPERTY, borderSpacing);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderTopColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_TOP_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTopColor(
+  CSSOM_CSSStyleDeclaration *style, const char *borderTopColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_TOP_COLOR_PROPERTY, borderTopColor);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderRightColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_RIGHT_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRightColor(
+  CSSOM_CSSStyleDeclaration *style, const char *borderRightColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_RIGHT_COLOR_PROPERTY, borderRightColor);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderBottomColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_BOTTOM_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottomColor(
+  CSSOM_CSSStyleDeclaration *style, const char *borderBottomColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, borderBottomColor);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderLeftColor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_LEFT_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeftColor(
+  CSSOM_CSSStyleDeclaration *style, const char *borderLeftColor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_LEFT_COLOR_PROPERTY, borderLeftColor);
+}

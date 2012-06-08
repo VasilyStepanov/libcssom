@@ -257,4 +257,52 @@ void CSSStyleDeclaration::setBorderSpacing(const char * borderSpacing) {
 
 
 
+const char * CSSStyleDeclaration::borderTopColor() const {
+  return CSSOM_CSSStyleDeclaration_borderTopColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderTopColor(const char * borderTopColor) {
+  CSSOM_CSSStyleDeclaration_setBorderTopColor(_impl, borderTopColor);
+}
+
+
+
+const char * CSSStyleDeclaration::borderRightColor() const {
+  return CSSOM_CSSStyleDeclaration_borderRightColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderRightColor(const char * borderRightColor) {
+  CSSOM_CSSStyleDeclaration_setBorderRightColor(_impl, borderRightColor);
+}
+
+
+
+const char * CSSStyleDeclaration::borderBottomColor() const {
+  return CSSOM_CSSStyleDeclaration_borderBottomColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderBottomColor(const char * borderBottomColor) {
+  CSSOM_CSSStyleDeclaration_setBorderBottomColor(_impl, borderBottomColor);
+}
+
+
+
+const char * CSSStyleDeclaration::borderLeftColor() const {
+  return CSSOM_CSSStyleDeclaration_borderLeftColor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderLeftColor(const char * borderLeftColor) {
+  CSSOM_CSSStyleDeclaration_setBorderLeftColor(_impl, borderLeftColor);
+}
+
+
+
 } // cssom
