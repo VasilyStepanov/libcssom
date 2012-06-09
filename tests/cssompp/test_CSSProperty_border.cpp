@@ -534,8 +534,7 @@ void borderColor() {
 
   style.setBorderColor(NULL);
   style.setBorderColor("inherit");
-  assertEquals(std::string("inherit inherit inherit inherit"),
-    style.borderColor());
+  assertEquals(std::string("inherit"), style.borderColor());
   assertEquals(std::string("inherit"), style.borderTopColor());
   assertEquals(std::string("inherit"), style.borderRightColor());
   assertEquals(std::string("inherit"), style.borderBottomColor());

@@ -265,12 +265,36 @@ static struct _CSSOM_CSSPropertyValue_vtable GenericCSSPropertyValue_vtable = {
  * Shorthand CSSProperty
  */
 
+static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
+  size_t i;
+  CSSOM_CSSPropertyValue *property;
+
+  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
+    property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+      shorthand->parentValues, shorthand->vtable->types[i]);
+
+    if (property == NULL) return 0;
+    if (property->end - property->begin != 1) return 0;
+    if (isInherit(property->begin[0]) == 0) return 0;
+  }
+  return 1;
+}
+
+
+
 static int ShorthandCSSPropertyValue_emit(
   const CSSOM_CSSPropertyValue *property, FILE *out)
 {
   size_t i;
   int emited;
   const char *cssText;
+
+  if (isInheritShorthand(property)) {
+    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+      property->parentValues, property->vtable->types[0]);
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+    return 0;
+  }
 
   emited = 0;
 
