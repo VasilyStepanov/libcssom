@@ -99,6 +99,9 @@ class CSSStyleDeclaration {
     const char * borderSpacing() const;
     void setBorderSpacing(const char * borderSpacing);
 
+    const char * borderStyle() const;
+    void setBorderStyle(const char * borderStyle);
+
     const char * borderTopColor() const;
     void setBorderTopColor(const char * borderTopColor);
 

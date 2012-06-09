@@ -60,6 +60,13 @@ static const CSSOM_CSSPropertyType shorthand_borderColor[] = {
   CSSOM_BORDER_LEFT_COLOR_PROPERTY
 };
 
+static const CSSOM_CSSPropertyType shorthand_borderStyle[] = {
+  CSSOM_BORDER_TOP_STYLE_PROPERTY,
+  CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
+  CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
+  CSSOM_BORDER_LEFT_STYLE_PROPERTY
+};
+
 
 
 void CSSOM_CSSPropertyValue__initGlobals(void) {
@@ -542,6 +549,15 @@ static struct _CSSOM_CSSPropertyValue_vtable
 BorderColorCSSPropertyValue_vtable = {
   shorthand_borderColor,
   ASIZE(shorthand_borderColor),
+  &BoxShorthandCSSPropertyValue_emit
+};
+
+
+
+static struct _CSSOM_CSSPropertyValue_vtable
+BorderStyleCSSPropertyValue_vtable = {
+  shorthand_borderStyle,
+  ASIZE(shorthand_borderStyle),
   &BoxShorthandCSSPropertyValue_emit
 };
 
@@ -1138,6 +1154,36 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
 
 
 /**
+ * border-style
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
+  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+{
+  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderStyle)] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };
+
+  if (CSSPropertyValue_boxShorthand(cssom, property,
+    CSSPropertyValue_borderDirectionStyle, storage, begin, end, error) != end)
+  {
+    return begin;
+  }
+
+  if (error != NULL) *error = 0;
+  return end;
+}
+
+
+
+/**
  * border-top-color
  * border-right-color
  * border-bottom-color
@@ -1192,7 +1238,6 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
     case CSSOM_BORDER_PROPERTY:
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
     case CSSOM_BORDER_SPACING_PROPERTY:
-    case CSSOM_BORDER_STYLE_PROPERTY:
     case CSSOM_BORDER_TOP_PROPERTY:
     case CSSOM_BORDER_RIGHT_PROPERTY:
     case CSSOM_BORDER_BOTTOM_PROPERTY:
@@ -1309,6 +1354,8 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
       return &BackgroundCSSPropertyValue_vtable;
     case CSSOM_BORDER_COLOR_PROPERTY:
       return &BorderColorCSSPropertyValue_vtable;
+    case CSSOM_BORDER_STYLE_PROPERTY:
+      return &BorderStyleCSSPropertyValue_vtable;
   }
   return NULL;
 }
@@ -1363,6 +1410,12 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
       if (CSSPropertyValue_borderSpacing(begin, end) != end) return 1;
       break;
     case CSSOM_BORDER_STYLE_PROPERTY:
+      if (CSSPropertyValue_borderStyle(cssom, property, begin, end,
+        &error) != end)
+      {
+        return error;
+      }
+      break;
     case CSSOM_BORDER_TOP_PROPERTY:
     case CSSOM_BORDER_RIGHT_PROPERTY:
     case CSSOM_BORDER_BOTTOM_PROPERTY:

@@ -424,6 +424,24 @@ void CSSOM_CSSStyleDeclaration_setBorderSpacing(
 
 
 
+const char* CSSOM_CSSStyleDeclaration_borderStyle(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_STYLE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderStyle(
+  CSSOM_CSSStyleDeclaration *style, const char *borderStyle)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_STYLE_PROPERTY, borderStyle);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_borderTopColor(
   const CSSOM_CSSStyleDeclaration *style)
 {

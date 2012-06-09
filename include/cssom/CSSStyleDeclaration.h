@@ -153,6 +153,14 @@ void CSSOM_CSSStyleDeclaration_setBorderSpacing(CSSOM_CSSStyleDeclaration * cssS
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderStyle(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderStyle(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderStyle);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_borderTopColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

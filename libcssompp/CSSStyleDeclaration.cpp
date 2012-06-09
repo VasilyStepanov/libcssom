@@ -269,6 +269,18 @@ void CSSStyleDeclaration::setBorderSpacing(const char * borderSpacing) {
 
 
 
+const char * CSSStyleDeclaration::borderStyle() const {
+  return CSSOM_CSSStyleDeclaration_borderStyle(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderStyle(const char * borderStyle) {
+  CSSOM_CSSStyleDeclaration_setBorderStyle(_impl, borderStyle);
+}
+
+
+
 const char * CSSStyleDeclaration::borderTopColor() const {
   return CSSOM_CSSStyleDeclaration_borderTopColor(_impl);
 }

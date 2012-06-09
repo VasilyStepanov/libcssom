@@ -905,6 +905,100 @@ void borderLeftStyle() {
 
 
 
+void borderStyle() {
+
+  /**
+   * <border-style>{1,4} | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderStyle() == NULL);
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("none");
+  assertEquals(std::string("none"), style.borderStyle());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("none"), style.borderRightStyle());
+  assertEquals(std::string("none"), style.borderBottomStyle());
+  assertEquals(std::string("none"), style.borderLeftStyle());
+
+
+
+  /**
+   * <border-style> <border-style>
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("none hidden");
+  assertEquals(std::string("none hidden"), style.borderStyle());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("hidden"), style.borderRightStyle());
+  assertEquals(std::string("none"), style.borderBottomStyle());
+  assertEquals(std::string("hidden"), style.borderLeftStyle());
+
+
+
+  /**
+   * <border-style> <border-style> <border-style>
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("none hidden dotted");
+  assertEquals(std::string("none hidden dotted"), style.borderStyle());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("hidden"), style.borderRightStyle());
+  assertEquals(std::string("dotted"), style.borderBottomStyle());
+  assertEquals(std::string("hidden"), style.borderLeftStyle());
+
+
+
+  /**
+   * <border-style> <border-style> <border-style> <border-style>
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("none hidden dotted dashed");
+  assertEquals(std::string("none hidden dotted dashed"), style.borderStyle());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("hidden"), style.borderRightStyle());
+  assertEquals(std::string("dotted"), style.borderBottomStyle());
+  assertEquals(std::string("dashed"), style.borderLeftStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("inherit");
+  assertEquals(std::string("inherit"), style.borderStyle());
+  assertEquals(std::string("inherit"), style.borderTopStyle());
+  assertEquals(std::string("inherit"), style.borderRightStyle());
+  assertEquals(std::string("inherit"), style.borderBottomStyle());
+  assertEquals(std::string("inherit"), style.borderLeftStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("invalid");
+  assert(style.borderStyle() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -923,6 +1017,7 @@ void cssPropertyBorder() {
   borderRightStyle();
   borderBottomStyle();
   borderLeftStyle();
+  borderStyle();
 }
 
 
