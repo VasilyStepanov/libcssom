@@ -222,6 +222,135 @@ struct _CSSOM_CSSPropertyValue {
 
 
 
+static int LexicalUnit_eq(const SAC_LexicalUnit *lhs,
+  const SAC_LexicalUnit *rhs)
+{
+  if (lhs->lexicalUnitType != rhs->lexicalUnitType) return 0;
+
+  switch (lhs->lexicalUnitType) {
+    case SAC_OPERATOR_PLUS:
+    case SAC_OPERATOR_MINUS:
+    case SAC_OPERATOR_COMMA:
+    case SAC_OPERATOR_SLASH:
+    case SAC_OPERATOR_MULTIPLY:
+    case SAC_OPERATOR_MOD:
+    case SAC_OPERATOR_EXP:
+    case SAC_OPERATOR_LT:
+    case SAC_OPERATOR_GT:
+    case SAC_OPERATOR_LE:
+    case SAC_OPERATOR_GE:
+    case SAC_OPERATOR_TILDE:
+    case SAC_INHERIT:
+      break;
+    case SAC_INTEGER:
+      if (lhs->desc.integer != rhs->desc.integer) return 0;
+      break;
+    case SAC_REAL:
+      if (lhs->desc.real != rhs->desc.real) return 0;
+      break;
+    case SAC_DIMENSION:
+      if (strcmp(lhs->desc.dimension.unit, rhs->desc.dimension.unit) != 0)
+        return 0;
+      /* no breaks */
+    case SAC_LENGTH_EM:
+    case SAC_LENGTH_EX:
+    case SAC_LENGTH_PIXEL:
+    case SAC_LENGTH_INCH:
+    case SAC_LENGTH_CENTIMETER:
+    case SAC_LENGTH_MILLIMETER:
+    case SAC_LENGTH_POINT:
+    case SAC_LENGTH_PICA:
+    case SAC_PERCENTAGE:
+    case SAC_DEGREE:
+    case SAC_GRADIAN:
+    case SAC_RADIAN:
+    case SAC_MILLISECOND:
+    case SAC_SECOND:
+    case SAC_HERTZ:
+    case SAC_KILOHERTZ:
+    case SAC_DOTS_PER_INCH:
+    case SAC_DOTS_PER_CENTIMETER:
+      if (lhs->desc.dimension.value.sreal != rhs->desc.dimension.value.sreal)
+        return 0;
+      break;
+    case SAC_URI:
+      if (strcmp(lhs->desc.uri, rhs->desc.uri) != 0) return 0;
+      break;
+    case SAC_FUNCTION:
+      if (strcmp(lhs->desc.function.name, rhs->desc.function.name) < 0)
+        return 0;
+      /* no breaks */
+    case SAC_RGBCOLOR:
+    case SAC_ATTR_FUNCTION:
+    case SAC_RECT_FUNCTION:
+    case SAC_COUNTER_FUNCTION:
+    case SAC_COUNTERS_FUNCTION:
+    case SAC_NTH_CHILD_FUNCTION:
+    case SAC_NTH_LAST_CHILD_FUNCTION:
+    case SAC_NTH_OF_TYPE_FUNCTION:
+    case SAC_NTH_LAST_OF_TYPE_FUNCTION:
+      {
+        SAC_LexicalUnit **lhsarg;
+        SAC_LexicalUnit **rhsarg;
+
+        for (
+          lhsarg = lhs->desc.function.parameters,
+          rhsarg = rhs->desc.function.parameters;
+          *lhsarg != NULL || *rhsarg != NULL;
+          ++lhsarg, ++rhsarg)
+        {
+          if (*lhsarg == NULL || *rhsarg == NULL) return 0;
+          if (LexicalUnit_eq(*lhsarg, *rhsarg) == 0) return 0;
+        }
+      }
+      break;
+    case SAC_IDENT:
+      if (strcmp(lhs->desc.ident, rhs->desc.ident) != 0) return 0;
+      break;
+    case SAC_STRING_VALUE:
+      if (strcmp(lhs->desc.stringValue, rhs->desc.stringValue) != 0) return 0;
+      break;
+    case SAC_UNICODERANGE:
+      if (strcmp(lhs->desc.unicodeRange, rhs->desc.unicodeRange) != 0) return 0;
+      break;
+    case SAC_SUB_EXPRESSION:
+      {
+        SAC_LexicalUnit **lhssub;
+        SAC_LexicalUnit **rhssub;
+
+        for (
+          lhssub = lhs->desc.subValues,
+          rhssub = rhs->desc.subValues;
+          *lhssub != NULL || *rhssub != NULL;
+          ++lhssub, ++rhssub)
+        {
+          if (LexicalUnit_eq(*lhssub, *rhssub) == 0) return 0;
+        }
+      }
+      break;
+  };
+  return 1;
+}
+
+
+
+static int CSSPropertyValue_eq(const CSSOM_CSSPropertyValue *lhs,
+  const CSSOM_CSSPropertyValue *rhs)
+{
+  const SAC_LexicalUnit **lit;
+  const SAC_LexicalUnit **rit;
+
+  if (lhs->end - lhs->begin != rhs->end - rhs->begin) return 0;
+
+  for (lit = lhs->begin, rit = rhs->begin; lit != lhs->end; ++lit, ++rit) {
+    if (LexicalUnit_eq(*lit, *rit) == 0) return 0;
+  }
+
+  return 1;
+}
+
+
+
 static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   FILE *out)
 {
@@ -282,7 +411,7 @@ static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
 
 
 
-static int ShorthandCSSPropertyValue_emit(
+static int GenericShorthandCSSPropertyValue_emit(
   const CSSOM_CSSPropertyValue *property, FILE *out)
 {
   size_t i;
@@ -297,7 +426,6 @@ static int ShorthandCSSPropertyValue_emit(
   }
 
   emited = 0;
-
   for (i = 0; i < property->vtable->ntypes; ++i) {
     cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
       property->parentValues, property->vtable->types[i]);
@@ -316,11 +444,77 @@ static int ShorthandCSSPropertyValue_emit(
 
 
 
+static int BoxShorthandCSSPropertyValue_emit(
+  const CSSOM_CSSPropertyValue *property, FILE *out)
+{
+  CSSOM_CSSPropertyValue *top;
+  CSSOM_CSSPropertyValue *right;
+  CSSOM_CSSPropertyValue *bottom;
+  CSSOM_CSSPropertyValue *left;
+  CSSOM_CSSPropertyValue *print[4] = { NULL, NULL, NULL, NULL };
+  size_t i;
+  const char *cssText;
+  int topbottom;
+  int rightleft;
+  int topright;
+
+  top = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, property->vtable->types[0]);
+  right = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, property->vtable->types[1]);
+  bottom = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, property->vtable->types[2]);
+  left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, property->vtable->types[3]);
+
+  if (top == NULL || right == NULL || bottom == NULL || left == NULL) return 0;
+
+  topbottom = CSSPropertyValue_eq(top, bottom);
+  rightleft = CSSPropertyValue_eq(right, left);
+  topright = CSSPropertyValue_eq(top, right);
+
+  if (rightleft) {
+    if (topbottom) {
+      if (topright) {
+        print[0] = top;
+      } else {
+        print[0] = top;
+        print[1] = right;
+      }
+    } else {
+      print[0] = top;
+      print[1] = right;
+      print[2] = bottom;
+    }
+  } else {
+    print[0] = top;
+    print[1] = right;
+    print[2] = bottom;
+    print[3] = left;
+  }
+
+  for (i = 0; i < 4; ++i) {
+    if (print[i] == NULL) break;
+
+    cssText = CSSOM_CSSPropertyValue_cssText(print[i]);
+
+    if (cssText == NULL) return 1;
+    if (i != 0) {
+      if (fprintf(out, " ") < 0) return 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  return 0;
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable
 BackgroundCSSPropertyValue_vtable = {
   shorthand_background,
   ASIZE(shorthand_background),
-  &ShorthandCSSPropertyValue_emit
+  &GenericShorthandCSSPropertyValue_emit
 };
 
 
@@ -329,7 +523,7 @@ static struct _CSSOM_CSSPropertyValue_vtable
 BorderColorCSSPropertyValue_vtable = {
   shorthand_borderColor,
   ASIZE(shorthand_borderColor),
-  &ShorthandCSSPropertyValue_emit
+  &BoxShorthandCSSPropertyValue_emit
 };
 
 
