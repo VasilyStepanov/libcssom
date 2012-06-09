@@ -493,3 +493,75 @@ void CSSOM_CSSStyleDeclaration_setBorderLeftColor(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_LEFT_COLOR_PROPERTY, borderLeftColor);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderTopStyle(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_TOP_STYLE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTopStyle(
+  CSSOM_CSSStyleDeclaration *style, const char *borderTopStyle)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_TOP_STYLE_PROPERTY, borderTopStyle);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderRightStyle(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_RIGHT_STYLE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRightStyle(
+  CSSOM_CSSStyleDeclaration *style, const char *borderRightStyle)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_RIGHT_STYLE_PROPERTY, borderRightStyle);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderBottomStyle(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_BOTTOM_STYLE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottomStyle(
+  CSSOM_CSSStyleDeclaration *style, const char *borderBottomStyle)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, borderBottomStyle);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderLeftStyle(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_LEFT_STYLE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeftStyle(
+  CSSOM_CSSStyleDeclaration *style, const char *borderLeftStyle)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_LEFT_STYLE_PROPERTY, borderLeftStyle);
+}

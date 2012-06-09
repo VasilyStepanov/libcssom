@@ -167,6 +167,25 @@ static int isColor(const SAC_LexicalUnit *value) {
 }
 
 
+
+static int isBorderStyle(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("none", value->desc.ident) == 0) return 1;
+    if (strcmp("hidden", value->desc.ident) == 0) return 1;
+    if (strcmp("dotted", value->desc.ident) == 0) return 1;
+    if (strcmp("dashed", value->desc.ident) == 0) return 1;
+    if (strcmp("solid", value->desc.ident) == 0) return 1;
+    if (strcmp("double", value->desc.ident) == 0) return 1;
+    if (strcmp("groove", value->desc.ident) == 0) return 1;
+    if (strcmp("ridge", value->desc.ident) == 0) return 1;
+    if (strcmp("inset", value->desc.ident) == 0) return 1;
+    if (strcmp("outset", value->desc.ident) == 0) return 1;
+  }
+  return 0;
+}
+
+
+
 static int isUrl(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_URI) return 1;
   return 0;
@@ -1140,6 +1159,26 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
 
 
 
+/**
+ * border-top-style
+ * border-right-style
+ * border-bottom-style
+ * border-left-style
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isBorderStyle(begin[0])) {
+    return &begin[1];
+  } else if (isInherit(begin[0])) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
   CSSOM_CSSPropertyType type)
 {
@@ -1339,6 +1378,8 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
     case CSSOM_BORDER_RIGHT_STYLE_PROPERTY:
     case CSSOM_BORDER_BOTTOM_STYLE_PROPERTY:
     case CSSOM_BORDER_LEFT_STYLE_PROPERTY:
+      if (CSSPropertyValue_borderDirectionStyle(begin, end) != end) return 1;
+      break;
     case CSSOM_BORDER_TOP_WIDTH_PROPERTY:
     case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
     case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:

@@ -111,6 +111,18 @@ class CSSStyleDeclaration {
     const char * borderLeftColor() const;
     void setBorderLeftColor(const char * borderLeftColor);
 
+    const char * borderTopStyle() const;
+    void setBorderTopStyle(const char * borderTopStyle);
+
+    const char * borderRightStyle() const;
+    void setBorderRightStyle(const char * borderRightStyle);
+
+    const char * borderBottomStyle() const;
+    void setBorderBottomStyle(const char * borderBottomStyle);
+
+    const char * borderLeftStyle() const;
+    void setBorderLeftStyle(const char * borderLeftStyle);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

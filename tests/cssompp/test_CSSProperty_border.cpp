@@ -553,6 +553,358 @@ void borderColor() {
 
 
 
+void borderTopStyle() {
+
+  /**
+   * <border-style> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderTopStyle() == NULL);
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("none");
+  assertEquals(std::string("none"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("hidden");
+  assertEquals(std::string("hidden"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("dotted");
+  assertEquals(std::string("dotted"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("dashed");
+  assertEquals(std::string("dashed"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("solid");
+  assertEquals(std::string("solid"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("double");
+  assertEquals(std::string("double"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("groove");
+  assertEquals(std::string("groove"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("ridge");
+  assertEquals(std::string("ridge"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("inset");
+  assertEquals(std::string("inset"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("outset");
+  assertEquals(std::string("outset"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("NONE");
+  assertEquals(std::string("none"), style.borderTopStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("inherit");
+  assertEquals(std::string("inherit"), style.borderTopStyle());
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("INHERIT");
+  assertEquals(std::string("inherit"), style.borderTopStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderTopStyle(NULL);
+  style.setBorderTopStyle("invalid");
+  assert(style.borderTopStyle() == NULL);
+}
+
+
+
+void borderRightStyle() {
+
+  /**
+   * <border-style> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderRightStyle() == NULL);
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("none");
+  assertEquals(std::string("none"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("hidden");
+  assertEquals(std::string("hidden"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("dotted");
+  assertEquals(std::string("dotted"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("dashed");
+  assertEquals(std::string("dashed"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("solid");
+  assertEquals(std::string("solid"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("double");
+  assertEquals(std::string("double"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("groove");
+  assertEquals(std::string("groove"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("ridge");
+  assertEquals(std::string("ridge"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("inset");
+  assertEquals(std::string("inset"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("outset");
+  assertEquals(std::string("outset"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("NONE");
+  assertEquals(std::string("none"), style.borderRightStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("inherit");
+  assertEquals(std::string("inherit"), style.borderRightStyle());
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("INHERIT");
+  assertEquals(std::string("inherit"), style.borderRightStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderRightStyle(NULL);
+  style.setBorderRightStyle("invalid");
+  assert(style.borderRightStyle() == NULL);
+}
+
+
+
+void borderBottomStyle() {
+
+  /**
+   * <border-style> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderBottomStyle() == NULL);
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("none");
+  assertEquals(std::string("none"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("hidden");
+  assertEquals(std::string("hidden"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("dotted");
+  assertEquals(std::string("dotted"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("dashed");
+  assertEquals(std::string("dashed"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("solid");
+  assertEquals(std::string("solid"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("double");
+  assertEquals(std::string("double"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("groove");
+  assertEquals(std::string("groove"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("ridge");
+  assertEquals(std::string("ridge"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("inset");
+  assertEquals(std::string("inset"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("outset");
+  assertEquals(std::string("outset"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("NONE");
+  assertEquals(std::string("none"), style.borderBottomStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("inherit");
+  assertEquals(std::string("inherit"), style.borderBottomStyle());
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("INHERIT");
+  assertEquals(std::string("inherit"), style.borderBottomStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderBottomStyle(NULL);
+  style.setBorderBottomStyle("invalid");
+  assert(style.borderBottomStyle() == NULL);
+}
+
+
+
+void borderLeftStyle() {
+
+  /**
+   * <border-style> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderLeftStyle() == NULL);
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("none");
+  assertEquals(std::string("none"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("hidden");
+  assertEquals(std::string("hidden"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("dotted");
+  assertEquals(std::string("dotted"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("dashed");
+  assertEquals(std::string("dashed"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("solid");
+  assertEquals(std::string("solid"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("double");
+  assertEquals(std::string("double"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("groove");
+  assertEquals(std::string("groove"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("ridge");
+  assertEquals(std::string("ridge"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("inset");
+  assertEquals(std::string("inset"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("outset");
+  assertEquals(std::string("outset"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("NONE");
+  assertEquals(std::string("none"), style.borderLeftStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("inherit");
+  assertEquals(std::string("inherit"), style.borderLeftStyle());
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("INHERIT");
+  assertEquals(std::string("inherit"), style.borderLeftStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderLeftStyle(NULL);
+  style.setBorderLeftStyle("invalid");
+  assert(style.borderLeftStyle() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -567,6 +919,10 @@ void cssPropertyBorder() {
   borderBottomColor();
   borderLeftColor();
   borderColor();
+  borderTopStyle();
+  borderRightStyle();
+  borderBottomStyle();
+  borderLeftStyle();
 }
 
 
