@@ -325,9 +325,8 @@ static void releaseStorage(CSSOM_CSSPropertyValue **properties,
 
 static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
   CSSOM_CSSPropertyValue *shorthand, const PropertyHandler *handlers,
-  const CSSOM_CSSPropertyType *types, CSSOM_CSSPropertyValue **storage,
-  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  int *error)
+  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, int *error)
 {
   size_t i;
   const SAC_LexicalUnit **tail;
@@ -338,21 +337,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
     return end;
   }
 
-  for (i = 0; i < size; ++i) {
+  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
     if (storage[i] != NULL) continue;
 
     tail = handlers[i](begin, end);
     if (tail == begin) continue;
 
     storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
-      shorthand, types[i], begin, tail, SAC_FALSE);
+      shorthand, shorthand->vtable->types[i], begin, tail, SAC_FALSE);
     if (storage[i] == NULL) {
       if (error != NULL) *error = -1;
       return begin;
     }
 
-    if (CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage, size,
-      tail, end, &rval) != end)
+    if (CSSPropertyValue_walk(cssom, shorthand, handlers, storage, tail, end,
+      &rval) != end)
     {
       CSSOM_CSSPropertyValue_release(storage[i]);
       storage[i] = NULL;
@@ -374,10 +373,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
 
 static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
-  const PropertyHandler *handlers, const CSSOM_CSSPropertyType *types,
-  const SAC_LexicalUnit **(*initial)[2], CSSOM_CSSPropertyValue **storage,
-  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  int *error)
+  const PropertyHandler *handlers, const SAC_LexicalUnit **(*initial)[2],
+  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, int *error)
 {
   size_t i;
   const SAC_LexicalUnit **tail;
@@ -390,14 +388,14 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
    */
 
   if (&begin[1] == end && isInherit(begin[0])) {
-    for (i = 0; i < size; ++i) {
+    for (i = 0; i < shorthand->vtable->ntypes; ++i) {
       if (storage[i] != NULL) continue;
 
       storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
-        shorthand, types[i], begin, end, SAC_FALSE);
+        shorthand, shorthand->vtable->types[i], begin, end, SAC_FALSE);
 
       if (storage[i] == NULL) {
-        releaseStorage(storage, size);
+        releaseStorage(storage, shorthand->vtable->ntypes);
         if (error != NULL) *error = -1;
         return begin;
       }
@@ -410,8 +408,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
      * walk
      */
 
-    tail = CSSPropertyValue_walk(cssom, shorthand, handlers, types, storage,
-      size, begin, end, error);
+    tail = CSSPropertyValue_walk(cssom, shorthand, handlers, storage, begin,
+      end, error);
     if (tail != end) return begin;
 
 
@@ -420,14 +418,15 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
      * add initial
      */
 
-    for (i = 0; i < size; ++i) {
+    for (i = 0; i < shorthand->vtable->ntypes; ++i) {
       if (storage[i] != NULL) continue;
 
       storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
-        shorthand, types[i], initial[i][0], initial[i][1], SAC_FALSE);
+        shorthand, shorthand->vtable->types[i], initial[i][0], initial[i][1],
+        SAC_FALSE);
 
       if (storage[i] == NULL) {
-        releaseStorage(storage, size);
+        releaseStorage(storage, shorthand->vtable->ntypes);
         if (error != NULL) *error = -1;
         return begin;
       }
@@ -441,9 +440,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
    */
 
   if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    shorthand->parentValues, storage, size)) != 0)
+    shorthand->parentValues, storage, shorthand->vtable->ntypes)) != 0)
   {
-    releaseStorage(storage, size);
+    releaseStorage(storage, shorthand->vtable->ntypes);
     if (error != NULL) *error = rval;
     return begin;
   }
@@ -456,8 +455,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
 
 static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
   CSSOM_CSSPropertyValue *shorthand, PropertyHandler handler,
-  const CSSOM_CSSPropertyType *types, CSSOM_CSSPropertyValue **storage,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, int *error)
 {
   const SAC_LexicalUnit **begins[4];
   const SAC_LexicalUnit **ends[4];
@@ -526,8 +525,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
 
   for (i = 0; i < 4; ++i) {
     storage[i] = CSSPropertyValue_allocTrusted(cssom,
-      shorthand->parentValues, shorthand, types[i], begins[i], ends[i],
-      SAC_FALSE);
+      shorthand->parentValues, shorthand, shorthand->vtable->types[i],
+      begins[i], ends[i], SAC_FALSE);
 
     if (storage[i] == NULL) {
       releaseStorage(storage, 4);
@@ -823,9 +822,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     NULL
   };
 
-  if (CSSPropertyValue_genericShorthand(cssom, property, handlers,
-    shorthand_background, initial, storage, ASIZE(shorthand_background),
-    begin, end, error) != end)
+  if (CSSPropertyValue_genericShorthand(cssom, property, handlers, initial,
+    storage, begin, end, error) != end)
   {
     return begin;
   }
@@ -873,8 +871,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
   };
 
   if (CSSPropertyValue_boxShorthand(cssom, property,
-    CSSPropertyValue_borderDirectionColor, shorthand_borderColor, storage,
-    begin, end, error) != end)
+    CSSPropertyValue_borderDirectionColor, storage, begin, end, error) != end)
   {
     return begin;
   }
