@@ -549,6 +549,10 @@ void borderColor() {
   style.setBorderColor(NULL);
   style.setBorderColor("invalid");
   assert(style.borderColor() == NULL);
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("inherit inherit inherit inherit");
+  assert(style.borderColor() == NULL);
 }
 
 
@@ -995,6 +999,10 @@ void borderStyle() {
   style.setBorderStyle(NULL);
   style.setBorderStyle("invalid");
   assert(style.borderStyle() == NULL);
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("inherit inherit inherit inherit");
+  assert(style.borderStyle() == NULL);
 }
 
 
@@ -1392,6 +1400,10 @@ void borderWidth() {
 
   width.setBorderWidth(NULL);
   width.setBorderWidth("invalid");
+  assert(width.borderWidth() == NULL);
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("inherit inherit inherit inherit");
   assert(width.borderWidth() == NULL);
 }
 

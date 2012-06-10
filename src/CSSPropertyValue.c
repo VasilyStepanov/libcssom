@@ -268,6 +268,37 @@ static int isPercentage(const SAC_LexicalUnit *value) {
 
 
 
+static const SAC_LexicalUnit** borderColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isColor(begin[0])) {
+    return &begin[1];
+  } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** borderStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isBorderStyle(begin[0])) return &begin[1];
+  return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** borderWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isBorderWidth(begin[0])) return &begin[1];
+  return &begin[0];
+}
+
+
+
 struct _CSSOM_CSSPropertyValue_vtable {
   const CSSOM_CSSPropertyType *types;
   const size_t ntypes;
@@ -772,7 +803,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
 
   switch (end - begin) {
     case 1:
-      if (handler(begin, end) != end) {
+      if (!isInherit(begin[0]) && handler(begin, end) != end) {
         if (error != NULL) *error = 1;
         return begin;
       }
@@ -1163,9 +1194,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
  * border-color
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
-
 static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
@@ -1177,8 +1205,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
     NULL,
   };
 
-  if (CSSPropertyValue_boxShorthand(cssom, property,
-    CSSPropertyValue_borderDirectionColor, storage, begin, end, error) != end)
+  if (CSSPropertyValue_boxShorthand(cssom, property, borderColor, storage,
+    begin, end, error) != end)
   {
     return begin;
   }
@@ -1211,9 +1239,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
  * border-style
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
-
 static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
   const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
@@ -1225,8 +1250,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
     NULL,
   };
 
-  if (CSSPropertyValue_boxShorthand(cssom, property,
-    CSSPropertyValue_borderDirectionStyle, storage, begin, end, error) != end)
+  if (CSSPropertyValue_boxShorthand(cssom, property, borderStyle, storage,
+    begin, end, error) != end)
   {
     return begin;
   }
@@ -1245,12 +1270,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
  */
 
 static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (isColor(begin[0])) {
+  if (borderColor(begin, end) == &begin[1]) {
     return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (isInherit(begin[0])) {
     return &begin[1];
   }
@@ -1267,9 +1290,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
  */
 
 static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (isBorderStyle(begin[0])) {
+  if (borderStyle(begin, end) == &begin[1]) {
     return &begin[1];
   } else if (isInherit(begin[0])) {
     return &begin[1];
@@ -1287,9 +1310,9 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
  */
 
 static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (isBorderWidth(begin[0])) {
+  if (borderWidth(begin, end) == &begin[1]) {
     return &begin[1];
   } else if (isInherit(begin[0])) {
     return &begin[1];
@@ -1314,8 +1337,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
     NULL,
   };
 
-  if (CSSPropertyValue_boxShorthand(cssom, property,
-    CSSPropertyValue_borderDirectionWidth, storage, begin, end, error) != end)
+  if (CSSPropertyValue_boxShorthand(cssom, property, borderWidth, storage,
+    begin, end, error) != end)
   {
     return begin;
   }

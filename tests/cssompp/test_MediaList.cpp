@@ -34,7 +34,7 @@ void mediaText(void) {
 
   cssText = "screen and (min-width: 400px) and (max-width: 700px), projection";
   assertEquals(cssText, media.mediaText());
-  assertEquals(cssText, std::string(media));
+  assertEquals(cssText, std::string(media).c_str());
 
 
 
@@ -150,7 +150,7 @@ void sacCare(void) {
   }
 
   cssText = "screen and (min-width: 400px) and (max-width: 700px), projection";
-  assertEquals(cssText, std::string(media));
+  assertEquals(cssText, std::string(media).c_str());
 }
 
 

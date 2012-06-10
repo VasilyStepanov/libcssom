@@ -9,11 +9,19 @@
 
 #define assertEquals(lhs, rhs) \
   do { \
-    bool match = (lhs) == (rhs); \
-    if (!match) { \
-      std::cerr << "'" << (lhs) << "'" << " != " \
-        << "'" << (rhs) << "'" << std::endl; \
-      assert((lhs) == (rhs)); \
+    std::string lhsval = (lhs); \
+    const char *rhsval = (rhs); \
+    \
+    if (rhsval == NULL) { \
+      std::cerr << "'" << lhsval << "' != NULL" << std::endl; \
+      assert(rhsval != NULL); \
+    } else { \
+      bool match = lhsval == rhsval; \
+      if (!match) { \
+        std::cerr << "'" << lhsval << "'" << " != " \
+          << "'" << rhsval << "'" << std::endl; \
+        assert(lhsval == rhsval); \
+      } \
     } \
   } while (0)
 

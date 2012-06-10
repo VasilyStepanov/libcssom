@@ -169,7 +169,8 @@ void Selection_append(std::deque<test::Node> *selection,
 
 
 
-std::string html(const std::deque<test::Node> &nodes) {
+const char* html(const std::deque<test::Node> &nodes) {
+  static std::string buf;
   std::ostringstream oss;
 
   for (
@@ -180,7 +181,8 @@ std::string html(const std::deque<test::Node> &nodes) {
     oss << it->str();
   }
 
-  return oss.str();
+  buf = oss.str();
+  return buf.c_str();
 }
 
 
