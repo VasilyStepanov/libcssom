@@ -543,6 +543,17 @@ void borderColor() {
 
 
   /**
+   * imposible shorthand
+   */
+
+  style.setBorderColor(NULL);
+  style.setBorderColor("red");
+  style.setBorderTopColor("inherit");
+  assertEquals(std::string(""), style.borderColor());
+
+
+
+  /**
    * errors
    */
 
@@ -993,6 +1004,17 @@ void borderStyle() {
 
 
   /**
+   * imposible shorthand
+   */
+
+  style.setBorderStyle(NULL);
+  style.setBorderStyle("none");
+  style.setBorderTopStyle("inherit");
+  assertEquals(std::string(""), style.borderStyle());
+
+
+
+  /**
    * errors
    */
 
@@ -1314,69 +1336,69 @@ void borderLeftWidth() {
 void borderWidth() {
 
   /**
-   * <border-width>{1,4} | inherit
+   * <border-style>{1,4} | inherit
    */
 
   cssom::CSSOM cssom;
-  cssom::CSSStyleDeclaration width = getStyleDeclaration(cssom);
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(width.borderWidth() == NULL);
-
-
-
-  /**
-   * <border-width>
-   */
-
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("1px");
-  assertEquals(std::string("1px"), width.borderWidth());
-  assertEquals(std::string("1px"), width.borderTopWidth());
-  assertEquals(std::string("1px"), width.borderRightWidth());
-  assertEquals(std::string("1px"), width.borderBottomWidth());
-  assertEquals(std::string("1px"), width.borderLeftWidth());
+  assert(style.borderWidth() == NULL);
 
 
 
   /**
-   * <border-width> <border-width>
+   * <border-style>
    */
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("1px 2px");
-  assertEquals(std::string("1px 2px"), width.borderWidth());
-  assertEquals(std::string("1px"), width.borderTopWidth());
-  assertEquals(std::string("2px"), width.borderRightWidth());
-  assertEquals(std::string("1px"), width.borderBottomWidth());
-  assertEquals(std::string("2px"), width.borderLeftWidth());
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("1px");
+  assertEquals(std::string("1px"), style.borderWidth());
+  assertEquals(std::string("1px"), style.borderTopWidth());
+  assertEquals(std::string("1px"), style.borderRightWidth());
+  assertEquals(std::string("1px"), style.borderBottomWidth());
+  assertEquals(std::string("1px"), style.borderLeftWidth());
 
 
 
   /**
-   * <border-width> <border-width> <border-width>
+   * <border-style> <border-style>
    */
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("1px 2px 3px");
-  assertEquals(std::string("1px 2px 3px"), width.borderWidth());
-  assertEquals(std::string("1px"), width.borderTopWidth());
-  assertEquals(std::string("2px"), width.borderRightWidth());
-  assertEquals(std::string("3px"), width.borderBottomWidth());
-  assertEquals(std::string("2px"), width.borderLeftWidth());
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("1px 2px");
+  assertEquals(std::string("1px 2px"), style.borderWidth());
+  assertEquals(std::string("1px"), style.borderTopWidth());
+  assertEquals(std::string("2px"), style.borderRightWidth());
+  assertEquals(std::string("1px"), style.borderBottomWidth());
+  assertEquals(std::string("2px"), style.borderLeftWidth());
 
 
 
   /**
-   * <border-width> <border-width> <border-width> <border-width>
+   * <border-style> <border-style> <border-style>
    */
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("1px 2px 3px 4px");
-  assertEquals(std::string("1px 2px 3px 4px"), width.borderWidth());
-  assertEquals(std::string("1px"), width.borderTopWidth());
-  assertEquals(std::string("2px"), width.borderRightWidth());
-  assertEquals(std::string("3px"), width.borderBottomWidth());
-  assertEquals(std::string("4px"), width.borderLeftWidth());
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("1px 2px 3px");
+  assertEquals(std::string("1px 2px 3px"), style.borderWidth());
+  assertEquals(std::string("1px"), style.borderTopWidth());
+  assertEquals(std::string("2px"), style.borderRightWidth());
+  assertEquals(std::string("3px"), style.borderBottomWidth());
+  assertEquals(std::string("2px"), style.borderLeftWidth());
+
+
+
+  /**
+   * <border-style> <border-style> <border-style> <border-style>
+   */
+
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("1px 2px 3px 4px");
+  assertEquals(std::string("1px 2px 3px 4px"), style.borderWidth());
+  assertEquals(std::string("1px"), style.borderTopWidth());
+  assertEquals(std::string("2px"), style.borderRightWidth());
+  assertEquals(std::string("3px"), style.borderBottomWidth());
+  assertEquals(std::string("4px"), style.borderLeftWidth());
 
 
 
@@ -1384,13 +1406,24 @@ void borderWidth() {
    * inherit
    */
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("inherit");
-  assertEquals(std::string("inherit"), width.borderWidth());
-  assertEquals(std::string("inherit"), width.borderTopWidth());
-  assertEquals(std::string("inherit"), width.borderRightWidth());
-  assertEquals(std::string("inherit"), width.borderBottomWidth());
-  assertEquals(std::string("inherit"), width.borderLeftWidth());
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("inherit");
+  assertEquals(std::string("inherit"), style.borderWidth());
+  assertEquals(std::string("inherit"), style.borderTopWidth());
+  assertEquals(std::string("inherit"), style.borderRightWidth());
+  assertEquals(std::string("inherit"), style.borderBottomWidth());
+  assertEquals(std::string("inherit"), style.borderLeftWidth());
+
+
+
+  /**
+   * imposible shorthand
+   */
+
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("1px");
+  style.setBorderTopWidth("inherit");
+  assertEquals(std::string(""), style.borderWidth());
 
 
 
@@ -1398,13 +1431,13 @@ void borderWidth() {
    * errors
    */
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("invalid");
-  assert(width.borderWidth() == NULL);
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("invalid");
+  assert(style.borderWidth() == NULL);
 
-  width.setBorderWidth(NULL);
-  width.setBorderWidth("inherit inherit inherit inherit");
-  assert(width.borderWidth() == NULL);
+  style.setBorderWidth(NULL);
+  style.setBorderWidth("inherit inherit inherit inherit");
+  assert(style.borderWidth() == NULL);
 }
 
 

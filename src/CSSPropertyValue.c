@@ -436,6 +436,13 @@ static int LexicalUnit_eq(const SAC_LexicalUnit *lhs,
 
 
 
+static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
+  if (property->end - property->begin != 1) return 0;
+  return isInherit(property->begin[0]);
+}
+
+
+
 static int CSSPropertyValue_eq(const CSSOM_CSSPropertyValue *lhs,
   const CSSOM_CSSPropertyValue *rhs)
 {
@@ -569,11 +576,33 @@ static int BoxShorthandCSSPropertyValue_emit(
   left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
     property->parentValues, property->vtable->types[3]);
 
+
+
+  /**
+   * Imposible shorthand
+   */
+
   if (top == NULL || right == NULL || bottom == NULL || left == NULL) return 0;
 
   topbottom = CSSPropertyValue_eq(top, bottom);
   rightleft = CSSPropertyValue_eq(right, left);
   topright = CSSPropertyValue_eq(top, right);
+
+
+
+  /**
+   * Imposible shorthand
+   */
+
+  if (!(rightleft && topbottom && topright)) {
+    if (CSSPropertyValue_isInherit(top) ||
+      CSSPropertyValue_isInherit(right) ||
+      CSSPropertyValue_isInherit(bottom) ||
+      CSSPropertyValue_isInherit(left))
+    {
+      return 0;
+    }
+  }
 
   if (rightleft) {
     if (topbottom) {
