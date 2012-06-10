@@ -31,14 +31,6 @@ typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
 
 
 
-static CSSOM_CSSPropertyValue* CSSPropertyValue_allocTrusted(
-  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important);
-
-
-
 static SAC_LexicalUnit unit_transparent;
 static SAC_LexicalUnit unit_none;
 static SAC_LexicalUnit unit_repeat;
@@ -596,10 +588,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
     tail = handlers[i](begin, end);
     if (tail == begin) continue;
 
-    storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
-      shorthand, shorthand->vtable->types[i], begin, tail, SAC_FALSE);
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+      shorthand, shorthand->vtable->types[i], begin, tail, SAC_FALSE, &rval);
     if (storage[i] == NULL) {
-      if (error != NULL) *error = -1;
+      if (error != NULL) *error = rval;
       return begin;
     }
 
@@ -644,12 +636,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
     for (i = 0; i < shorthand->vtable->ntypes; ++i) {
       if (storage[i] != NULL) continue;
 
-      storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
-        shorthand, shorthand->vtable->types[i], begin, end, SAC_FALSE);
+      storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+        shorthand, shorthand->vtable->types[i], begin, end, SAC_FALSE, &rval);
 
       if (storage[i] == NULL) {
         releaseStorage(storage, shorthand->vtable->ntypes);
-        if (error != NULL) *error = -1;
+        if (error != NULL) *error = rval;
         return begin;
       }
     }
@@ -674,13 +666,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
     for (i = 0; i < shorthand->vtable->ntypes; ++i) {
       if (storage[i] != NULL) continue;
 
-      storage[i] = CSSPropertyValue_allocTrusted(cssom, shorthand->parentValues,
+      storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
         shorthand, shorthand->vtable->types[i], initial[i][0], initial[i][1],
-        SAC_FALSE);
+        SAC_FALSE, &rval);
 
       if (storage[i] == NULL) {
         releaseStorage(storage, shorthand->vtable->ntypes);
-        if (error != NULL) *error = -1;
+        if (error != NULL) *error = rval;
         return begin;
       }
     }
@@ -777,13 +769,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
   }
 
   for (i = 0; i < 4; ++i) {
-    storage[i] = CSSPropertyValue_allocTrusted(cssom,
-      shorthand->parentValues, shorthand, shorthand->vtable->types[i],
-      begins[i], ends[i], SAC_FALSE);
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+      shorthand, shorthand->vtable->types[i], begins[i], ends[i], SAC_FALSE,
+      &rval);
 
     if (storage[i] == NULL) {
       releaseStorage(storage, 4);
-      if (error != NULL) *error = -1;
+      if (error != NULL) *error = rval;
       return begin;
     }
   }
@@ -1539,14 +1531,15 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
 
 
 
-static CSSOM_CSSPropertyValue* CSSPropertyValue_allocTrusted(
-  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
+CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important)
+  SAC_Boolean important, int *error)
 {
-  const SAC_LexicalUnit **holder;
   CSSOM_CSSPropertyValue *property;
+  const SAC_LexicalUnit **holder;
+  int rval;
 
   if (end == NULL) {
     holder = (const SAC_LexicalUnit**)CSSOM_malloc(
@@ -1562,6 +1555,7 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_allocTrusted(
     sizeof(CSSOM_CSSPropertyValue));
   if (property == NULL) {
     CSSOM_free(holder);
+    if (error != NULL) *error = -1;
     return NULL;
   }
 
@@ -1582,27 +1576,6 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_allocTrusted(
   }
   property->important = important;
   property->cssText = NULL;
-
-  return property;
-}
-
-
-
-CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important, int *error)
-{
-  CSSOM_CSSPropertyValue *property;
-  int rval;
-
-  property = CSSPropertyValue_allocTrusted(cssom, parentValues, shorthand, type,
-    begin, end, important);
-  if (property == NULL) {
-    if (error != NULL) *error = -1;
-    return NULL;
-  }
 
   if ((rval = CSSPropertyValue_validate(cssom, property, property->begin,
     property->end)) != 0)
