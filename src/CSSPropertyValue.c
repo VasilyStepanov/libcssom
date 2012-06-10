@@ -936,11 +936,17 @@ static int azimuth_isAngleIdent(const char *ident) {
 
 
 static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end)
+  const SAC_LexicalUnit **end, CSSOM_CSSPropertyType *types,
+  const SAC_LexicalUnit **(*values)[2])
 {
   if (begin != end) {
     if (begin[0]->lexicalUnitType == SAC_IDENT) {
-      if (strcmp("behind", begin[0]->desc.ident) == 0) return &begin[1];
+      if (strcmp("behind", begin[0]->desc.ident) == 0) {
+        types[0] = CSSOM_AZIMUTH_PROPERTY;
+        values[0][0] = &begin[0];
+        values[0][1] = &begin[1];
+        return &begin[1];
+      }
     }
   }
   return &begin[0];
@@ -949,11 +955,17 @@ static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
 
 
 static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end)
+  const SAC_LexicalUnit **end, CSSOM_CSSPropertyType *types,
+  const SAC_LexicalUnit **(*values)[2])
 {
   if (begin != end) {
     if (begin[0]->lexicalUnitType == SAC_IDENT) {
-      if (azimuth_isAngleIdent(begin[0]->desc.ident)) return &begin[1];
+      if (azimuth_isAngleIdent(begin[0]->desc.ident)) {
+        types[0] = CSSOM_AZIMUTH_PROPERTY;
+        values[0][0] = &begin[0];
+        values[0][1] = &begin[1];
+        return &begin[1];
+      }
     }
   }
   return &begin[0];
@@ -962,21 +974,38 @@ static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **begin,
 
 
 static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  CSSOM_CSSPropertyType *types, const SAC_LexicalUnit **(*values)[2])
 {
   if (isAngle(begin[0])) {
+    types[0] = CSSOM_AZIMUTH_PROPERTY;
+    values[0][0] = &begin[0];
+    values[0][1] = &begin[1];
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("leftwards", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcmp("rightwards", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("leftwards", begin[0]->desc.ident) == 0) {
+      types[0] = CSSOM_AZIMUTH_PROPERTY;
+      values[0][0] = &begin[0];
+      values[0][1] = &begin[1];
+      return &begin[1];
+    }
+    if (strcmp("rightwards", begin[0]->desc.ident) == 0) {
+      types[0] = CSSOM_AZIMUTH_PROPERTY;
+      values[0][0] = &begin[0];
+      values[0][1] = &begin[1];
+      return &begin[1];
+    }
 
     if (azimuth_isAngleIdent(begin[0]->desc.ident))
-      return azimuth_angle(&begin[1], end);
+      return azimuth_angle(&begin[1], end, types, values);
 
     if (strcmp("behind", begin[0]->desc.ident) == 0)
-      return azimuth_behind(&begin[1], end);
+      return azimuth_behind(&begin[1], end, types, values);
 
   } else if (isInherit(begin[0])) {
+    types[0] = CSSOM_AZIMUTH_PROPERTY;
+    values[0][0] = &begin[0];
+    values[0][1] = &begin[1];
     return &begin[1];
   }
   return &begin[0];
@@ -1524,7 +1553,14 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
 
   switch (property->type) {
     case CSSOM_AZIMUTH_PROPERTY:
-      if (CSSPropertyValue_azimuth(begin, end) != end) return 1;
+      {
+        CSSOM_CSSPropertyType types[1];
+        const SAC_LexicalUnit **values[1][2] = {
+          { NULL, NULL }
+        };
+        if (CSSPropertyValue_azimuth(begin, end, types, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BACKGROUND_PROPERTY:
       if (CSSPropertyValue_background(cssom, property, begin, end,
