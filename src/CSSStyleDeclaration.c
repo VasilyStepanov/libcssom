@@ -655,3 +655,21 @@ void CSSOM_CSSStyleDeclaration_setBorderLeftWidth(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_LEFT_WIDTH_PROPERTY, borderLeftWidth);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderWidth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_WIDTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderWidth(
+  CSSOM_CSSStyleDeclaration *style, const char *borderWidth)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_WIDTH_PROPERTY, borderWidth);
+}

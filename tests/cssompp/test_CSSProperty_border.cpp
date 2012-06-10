@@ -1303,6 +1303,100 @@ void borderLeftWidth() {
 
 
 
+void borderWidth() {
+
+  /**
+   * <border-width>{1,4} | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration width = getStyleDeclaration(cssom);
+
+  assert(width.borderWidth() == NULL);
+
+
+
+  /**
+   * <border-width>
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("1px");
+  assertEquals(std::string("1px"), width.borderWidth());
+  assertEquals(std::string("1px"), width.borderTopWidth());
+  assertEquals(std::string("1px"), width.borderRightWidth());
+  assertEquals(std::string("1px"), width.borderBottomWidth());
+  assertEquals(std::string("1px"), width.borderLeftWidth());
+
+
+
+  /**
+   * <border-width> <border-width>
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("1px 2px");
+  assertEquals(std::string("1px 2px"), width.borderWidth());
+  assertEquals(std::string("1px"), width.borderTopWidth());
+  assertEquals(std::string("2px"), width.borderRightWidth());
+  assertEquals(std::string("1px"), width.borderBottomWidth());
+  assertEquals(std::string("2px"), width.borderLeftWidth());
+
+
+
+  /**
+   * <border-width> <border-width> <border-width>
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("1px 2px 3px");
+  assertEquals(std::string("1px 2px 3px"), width.borderWidth());
+  assertEquals(std::string("1px"), width.borderTopWidth());
+  assertEquals(std::string("2px"), width.borderRightWidth());
+  assertEquals(std::string("3px"), width.borderBottomWidth());
+  assertEquals(std::string("2px"), width.borderLeftWidth());
+
+
+
+  /**
+   * <border-width> <border-width> <border-width> <border-width>
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("1px 2px 3px 4px");
+  assertEquals(std::string("1px 2px 3px 4px"), width.borderWidth());
+  assertEquals(std::string("1px"), width.borderTopWidth());
+  assertEquals(std::string("2px"), width.borderRightWidth());
+  assertEquals(std::string("3px"), width.borderBottomWidth());
+  assertEquals(std::string("4px"), width.borderLeftWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("inherit");
+  assertEquals(std::string("inherit"), width.borderWidth());
+  assertEquals(std::string("inherit"), width.borderTopWidth());
+  assertEquals(std::string("inherit"), width.borderRightWidth());
+  assertEquals(std::string("inherit"), width.borderBottomWidth());
+  assertEquals(std::string("inherit"), width.borderLeftWidth());
+
+
+
+  /**
+   * errors
+   */
+
+  width.setBorderWidth(NULL);
+  width.setBorderWidth("invalid");
+  assert(width.borderWidth() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -1326,6 +1420,7 @@ void cssPropertyBorder() {
   borderRightWidth();
   borderBottomWidth();
   borderLeftWidth();
+  borderWidth();
 }
 
 

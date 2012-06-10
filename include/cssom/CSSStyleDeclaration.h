@@ -257,6 +257,14 @@ void CSSOM_CSSStyleDeclaration_setBorderLeftWidth(CSSOM_CSSStyleDeclaration * cs
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderWidth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderWidth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderWidth);
+
+
+
 #ifdef __cplusplus
 }
 #endif

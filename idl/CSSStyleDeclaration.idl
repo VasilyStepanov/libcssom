@@ -47,8 +47,8 @@ interface CSSStyleDeclaration {
            attribute DOMString? borderRightWidth;
            attribute DOMString? borderBottomWidth;
            attribute DOMString? borderLeftWidth;
-  /*
            attribute DOMString? borderWidth;
+  /*
            attribute DOMString? bottom;
            attribute DOMString? captionSide;
            attribute DOMString? clear;

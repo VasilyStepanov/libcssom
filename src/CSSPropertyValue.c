@@ -59,6 +59,13 @@ static const CSSOM_CSSPropertyType shorthand_borderStyle[] = {
   CSSOM_BORDER_LEFT_STYLE_PROPERTY
 };
 
+static const CSSOM_CSSPropertyType shorthand_borderWidth[] = {
+  CSSOM_BORDER_TOP_WIDTH_PROPERTY,
+  CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
+  CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
+  CSSOM_BORDER_LEFT_WIDTH_PROPERTY
+};
+
 
 
 void CSSOM_CSSPropertyValue__initGlobals(void) {
@@ -596,6 +603,15 @@ static struct _CSSOM_CSSPropertyValue_vtable
 BorderStyleCSSPropertyValue_vtable = {
   shorthand_borderStyle,
   ASIZE(shorthand_borderStyle),
+  &BoxShorthandCSSPropertyValue_emit
+};
+
+
+
+static struct _CSSOM_CSSPropertyValue_vtable
+BorderWidthCSSPropertyValue_vtable = {
+  shorthand_borderWidth,
+  ASIZE(shorthand_borderWidth),
   &BoxShorthandCSSPropertyValue_emit
 };
 
@@ -1283,6 +1299,33 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionWidth(
 
 
 
+/**
+ * border-width
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
+  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+{
+  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderWidth)] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };
+
+  if (CSSPropertyValue_boxShorthand(cssom, property,
+    CSSPropertyValue_borderDirectionWidth, storage, begin, end, error) != end)
+  {
+    return begin;
+  }
+
+  if (error != NULL) *error = 0;
+  return end;
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
   CSSOM_CSSPropertyType type)
 {
@@ -1312,7 +1355,6 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
     case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
     case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:
     case CSSOM_BORDER_LEFT_WIDTH_PROPERTY:
-    case CSSOM_BORDER_WIDTH_PROPERTY:
     case CSSOM_BOTTOM_PROPERTY:
     case CSSOM_CAPTION_SIDE_PROPERTY:
     case CSSOM_CLEAR_PROPERTY:
@@ -1414,6 +1456,8 @@ static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
       return &BorderColorCSSPropertyValue_vtable;
     case CSSOM_BORDER_STYLE_PROPERTY:
       return &BorderStyleCSSPropertyValue_vtable;
+    case CSSOM_BORDER_WIDTH_PROPERTY:
+      return &BorderWidthCSSPropertyValue_vtable;
   }
   return NULL;
 }
@@ -1498,6 +1542,11 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
       if (CSSPropertyValue_borderDirectionWidth(begin, end) != end) return 1;
       break;
     case CSSOM_BORDER_WIDTH_PROPERTY:
+      if (CSSPropertyValue_borderWidth(cssom, property, begin, end,
+        &error) != end)
+      {
+        return error;
+      }
     case CSSOM_BOTTOM_PROPERTY:
     case CSSOM_CAPTION_SIDE_PROPERTY:
     case CSSOM_CLEAR_PROPERTY:

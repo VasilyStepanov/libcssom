@@ -425,4 +425,16 @@ void CSSStyleDeclaration::setBorderLeftWidth(const char * borderLeftWidth) {
 
 
 
+const char * CSSStyleDeclaration::borderWidth() const {
+  return CSSOM_CSSStyleDeclaration_borderWidth(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderWidth(const char * borderWidth) {
+  CSSOM_CSSStyleDeclaration_setBorderWidth(_impl, borderWidth);
+}
+
+
+
 } // cssom
