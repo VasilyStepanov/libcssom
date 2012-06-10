@@ -583,3 +583,75 @@ void CSSOM_CSSStyleDeclaration_setBorderLeftStyle(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_LEFT_STYLE_PROPERTY, borderLeftStyle);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderTopWidth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_TOP_WIDTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTopWidth(
+  CSSOM_CSSStyleDeclaration *style, const char *borderTopWidth)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_TOP_WIDTH_PROPERTY, borderTopWidth);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderRightWidth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_RIGHT_WIDTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRightWidth(
+  CSSOM_CSSStyleDeclaration *style, const char *borderRightWidth)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, borderRightWidth);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderBottomWidth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottomWidth(
+  CSSOM_CSSStyleDeclaration *style, const char *borderBottomWidth)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, borderBottomWidth);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderLeftWidth(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_LEFT_WIDTH_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeftWidth(
+  CSSOM_CSSStyleDeclaration *style, const char *borderLeftWidth)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_LEFT_WIDTH_PROPERTY, borderLeftWidth);
+}

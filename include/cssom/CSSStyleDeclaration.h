@@ -225,6 +225,38 @@ void CSSOM_CSSStyleDeclaration_setBorderLeftStyle(CSSOM_CSSStyleDeclaration * cs
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderTopWidth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTopWidth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderTopWidth);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderRightWidth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRightWidth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderRightWidth);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderBottomWidth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottomWidth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderBottomWidth);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderLeftWidth(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeftWidth(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderLeftWidth);
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -101,6 +101,55 @@ static int isAngle(const SAC_LexicalUnit *value) {
 
 
 
+static int isLength(const SAC_LexicalUnit *value) {
+  switch (value->lexicalUnitType) {
+    case SAC_LENGTH_EM:
+    case SAC_LENGTH_EX:
+    case SAC_LENGTH_PIXEL:
+    case SAC_LENGTH_INCH:
+    case SAC_LENGTH_CENTIMETER:
+    case SAC_LENGTH_POINT:
+    case SAC_LENGTH_PICA:
+      return 1;
+    case SAC_REAL:
+      if (value->desc.real == 0) return 1;
+      break;
+    case SAC_INTEGER:
+      if (value->desc.integer == 0) return 1;
+      break;
+    default:
+      break;
+  }
+  return 0;
+}
+
+
+
+static int isNonNegativeLength(const SAC_LexicalUnit *value) {
+  switch (value->lexicalUnitType) {
+    case SAC_LENGTH_EM:
+    case SAC_LENGTH_EX:
+    case SAC_LENGTH_PIXEL:
+    case SAC_LENGTH_INCH:
+    case SAC_LENGTH_CENTIMETER:
+    case SAC_LENGTH_POINT:
+    case SAC_LENGTH_PICA:
+      if (value->desc.dimension.value.sreal >= 0) return 1;
+      break;
+    case SAC_REAL:
+      if (value->desc.real == 0) return 1;
+      break;
+    case SAC_INTEGER:
+      if (value->desc.integer == 0) return 1;
+      break;
+    default:
+      break;
+  }
+  return 0;
+}
+
+
+
 static int isColor(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_RGBCOLOR) {
     const SAC_LexicalUnit *red;
@@ -185,6 +234,19 @@ static int isBorderStyle(const SAC_LexicalUnit *value) {
 
 
 
+static int isBorderWidth(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("thin", value->desc.ident) == 0) return 1;
+    if (strcmp("medium", value->desc.ident) == 0) return 1;
+    if (strcmp("thick", value->desc.ident) == 0) return 1;
+  } else if (isNonNegativeLength(value)) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
 static int isUrl(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_URI) return 1;
   return 0;
@@ -194,22 +256,6 @@ static int isUrl(const SAC_LexicalUnit *value) {
 
 static int isPercentage(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_PERCENTAGE) return 1;
-  return 0;
-}
-
-
-
-static int isLength(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_LENGTH_EM) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_EX) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_PIXEL) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_INCH) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_CENTIMETER) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_POINT) return 1;
-  if (value->lexicalUnitType == SAC_LENGTH_PICA) return 1;
-  if (value->lexicalUnitType == SAC_REAL && value->desc.real == 0) return 1;
-  if (value->lexicalUnitType == SAC_INTEGER && value->desc.integer == 0)
-    return 1;
   return 0;
 }
 
@@ -1217,6 +1263,26 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
 
 
 
+/**
+ * border-top-width
+ * border-right-width
+ * border-bottom-width
+ * border-left-width
+ */
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (isBorderWidth(begin[0])) {
+    return &begin[1];
+  } else if (isInherit(begin[0])) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
 static struct _CSSOM_CSSPropertyValue_vtable* CSSPropertyValue_vtable(
   CSSOM_CSSPropertyType type)
 {
@@ -1429,6 +1495,8 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
     case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
     case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:
     case CSSOM_BORDER_LEFT_WIDTH_PROPERTY:
+      if (CSSPropertyValue_borderDirectionWidth(begin, end) != end) return 1;
+      break;
     case CSSOM_BORDER_WIDTH_PROPERTY:
     case CSSOM_BOTTOM_PROPERTY:
     case CSSOM_CAPTION_SIDE_PROPERTY:

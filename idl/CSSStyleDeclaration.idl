@@ -43,11 +43,11 @@ interface CSSStyleDeclaration {
            attribute DOMString? borderRightStyle;
            attribute DOMString? borderBottomStyle;
            attribute DOMString? borderLeftStyle;
-  /*
            attribute DOMString? borderTopWidth;
            attribute DOMString? borderRightWidth;
            attribute DOMString? borderBottomWidth;
            attribute DOMString? borderLeftWidth;
+  /*
            attribute DOMString? borderWidth;
            attribute DOMString? bottom;
            attribute DOMString? captionSide;

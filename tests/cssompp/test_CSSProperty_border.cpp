@@ -999,6 +999,310 @@ void borderStyle() {
 
 
 
+void borderTopWidth() {
+
+  /**
+   * <border-width> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderTopWidth() == NULL);
+
+
+
+  /**
+   * <border-width>
+   */
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("thin");
+  assertEquals(std::string("thin"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("medium");
+  assertEquals(std::string("medium"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("thick");
+  assertEquals(std::string("thick"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("1px");
+  assertEquals(std::string("1px"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("0");
+  assertEquals(std::string("0"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("THIN");
+  assertEquals(std::string("thin"), style.borderTopWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("inherit");
+  assertEquals(std::string("inherit"), style.borderTopWidth());
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("INHERIT");
+  assertEquals(std::string("inherit"), style.borderTopWidth());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("invalid");
+  assert(style.borderTopWidth() == NULL);
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("-1px");
+  assert(style.borderTopWidth() == NULL);
+
+  style.setBorderTopWidth(NULL);
+  style.setBorderTopWidth("1");
+  assert(style.borderTopWidth() == NULL);
+}
+
+
+
+void borderRightWidth() {
+
+  /**
+   * <border-width> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderRightWidth() == NULL);
+
+
+
+  /**
+   * <border-width>
+   */
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("thin");
+  assertEquals(std::string("thin"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("medium");
+  assertEquals(std::string("medium"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("thick");
+  assertEquals(std::string("thick"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("1px");
+  assertEquals(std::string("1px"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("0");
+  assertEquals(std::string("0"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("THIN");
+  assertEquals(std::string("thin"), style.borderRightWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("inherit");
+  assertEquals(std::string("inherit"), style.borderRightWidth());
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("INHERIT");
+  assertEquals(std::string("inherit"), style.borderRightWidth());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("invalid");
+  assert(style.borderRightWidth() == NULL);
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("-1px");
+  assert(style.borderRightWidth() == NULL);
+
+  style.setBorderRightWidth(NULL);
+  style.setBorderRightWidth("1");
+  assert(style.borderRightWidth() == NULL);
+}
+
+
+
+void borderBottomWidth() {
+
+  /**
+   * <border-width> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderBottomWidth() == NULL);
+
+
+
+  /**
+   * <border-width>
+   */
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("thin");
+  assertEquals(std::string("thin"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("medium");
+  assertEquals(std::string("medium"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("thick");
+  assertEquals(std::string("thick"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("1px");
+  assertEquals(std::string("1px"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("0");
+  assertEquals(std::string("0"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("THIN");
+  assertEquals(std::string("thin"), style.borderBottomWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("inherit");
+  assertEquals(std::string("inherit"), style.borderBottomWidth());
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("INHERIT");
+  assertEquals(std::string("inherit"), style.borderBottomWidth());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("invalid");
+  assert(style.borderBottomWidth() == NULL);
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("-1px");
+  assert(style.borderBottomWidth() == NULL);
+
+  style.setBorderBottomWidth(NULL);
+  style.setBorderBottomWidth("1");
+  assert(style.borderBottomWidth() == NULL);
+}
+
+
+
+void borderLeftWidth() {
+
+  /**
+   * <border-width> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderLeftWidth() == NULL);
+
+
+
+  /**
+   * <border-width>
+   */
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("thin");
+  assertEquals(std::string("thin"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("medium");
+  assertEquals(std::string("medium"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("thick");
+  assertEquals(std::string("thick"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("1px");
+  assertEquals(std::string("1px"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("0");
+  assertEquals(std::string("0"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("THIN");
+  assertEquals(std::string("thin"), style.borderLeftWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("inherit");
+  assertEquals(std::string("inherit"), style.borderLeftWidth());
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("INHERIT");
+  assertEquals(std::string("inherit"), style.borderLeftWidth());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("invalid");
+  assert(style.borderLeftWidth() == NULL);
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("-1px");
+  assert(style.borderLeftWidth() == NULL);
+
+  style.setBorderLeftWidth(NULL);
+  style.setBorderLeftWidth("1");
+  assert(style.borderLeftWidth() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -1018,6 +1322,10 @@ void cssPropertyBorder() {
   borderBottomStyle();
   borderLeftStyle();
   borderStyle();
+  borderTopWidth();
+  borderRightWidth();
+  borderBottomWidth();
+  borderLeftWidth();
 }
 
 
