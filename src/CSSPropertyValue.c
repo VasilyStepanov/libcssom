@@ -22,12 +22,25 @@
   (sizeof(array) / sizeof(array[0]))
 
 #define INITIAL(initial) \
-  { (initial), &(initial)[ASIZE(initial)] }
+  (initial), &(initial)[ASIZE(initial)]
 
 
+
+struct _CSSOM_LexicalUnitRange {
+  CSSOM_CSSPropertyType type;
+  const SAC_LexicalUnit **begin;
+  const SAC_LexicalUnit **end;
+};
+
+#define SET_RANGE(range, type_val, begin_val, end_val) \
+  do { \
+    (range).type = (type_val); \
+    (range).begin = (begin_val); \
+    (range).end = (end_val); \
+  } while (0)
 
 typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end);
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 
 
 
@@ -268,7 +281,7 @@ static int isPercentage(const SAC_LexicalUnit *value) {
 
 
 
-static const SAC_LexicalUnit** borderColor(
+static const SAC_LexicalUnit** isBorderColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isColor(begin[0])) {
@@ -290,7 +303,7 @@ static const SAC_LexicalUnit** borderStyle(
 
 
 
-static const SAC_LexicalUnit** borderWidth(
+static const SAC_LexicalUnit** isBorderWidthToken(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isBorderWidth(begin[0])) return &begin[1];
@@ -690,227 +703,160 @@ static void releaseStorage(CSSOM_CSSPropertyValue **properties,
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_walk(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *shorthand, const PropertyHandler *handlers,
-  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_walk(
+  const PropertyHandler *handlers, struct _CSSOM_LexicalUnitRange *values,
+  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   size_t i;
   const SAC_LexicalUnit **tail;
-  int rval;
 
-  if (begin == end) {
-    if (error != NULL) *error = 0;
-    return end;
-  }
+  if (begin == end) return end;
 
-  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
-    if (storage[i] != NULL) continue;
+  for (i = 0; i < size; ++i) {
+    if (values[i].begin != NULL) continue;
 
-    tail = handlers[i](begin, end);
+    tail = handlers[i](begin, end, &values[i]);
     if (tail == begin) continue;
 
-    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-      shorthand, shorthand->vtable->types[i], begin, tail, SAC_FALSE, &rval);
-    if (storage[i] == NULL) {
-      if (error != NULL) *error = rval;
-      return begin;
-    }
-
-    if (CSSPropertyValue_walk(cssom, shorthand, handlers, storage, tail, end,
-      &rval) != end)
-    {
-      CSSOM_CSSPropertyValue_release(storage[i]);
-      storage[i] = NULL;
-      if (rval < 0) {
-        if (error != NULL) *error = rval;
-        return begin;
-      }
-    } else {
-      if (error != NULL) *error = 0;
+    if (CSSPropertyValue_walk(handlers, values, size, tail, end) == end)
       return end;
-    }
+
+    values[i].type = 0;
+    values[i].begin = NULL;
+    values[i].end = NULL;
   }
 
-  if (error != NULL) *error = 1;
   return begin;
 }
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *shorthand,
-  const PropertyHandler *handlers, const SAC_LexicalUnit **(*initial)[2],
-  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, int *error)
+static int assignProperties(const CSSOM *cssom,
+  CSSOM_CSSPropertyValue *shorthand, struct _CSSOM_LexicalUnitRange *values,
+  CSSOM_CSSPropertyValue **storage)
 {
   size_t i;
-  const SAC_LexicalUnit **tail;
   int rval;
 
+  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
+    if (values[i].begin == NULL) continue;
 
+    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
+      shorthand, values[i].type, values[i].begin, values[i].end, SAC_FALSE,
+      &rval);
 
-  /**
-   * inherit
-   */
-
-  if (&begin[1] == end && isInherit(begin[0])) {
-    for (i = 0; i < shorthand->vtable->ntypes; ++i) {
-      if (storage[i] != NULL) continue;
-
-      storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-        shorthand, shorthand->vtable->types[i], begin, end, SAC_FALSE, &rval);
-
-      if (storage[i] == NULL) {
-        releaseStorage(storage, shorthand->vtable->ntypes);
-        if (error != NULL) *error = rval;
-        return begin;
-      }
-    }
-  } else {
-
-
-
-    /**
-     * walk
-     */
-
-    tail = CSSPropertyValue_walk(cssom, shorthand, handlers, storage, begin,
-      end, error);
-    if (tail != end) return begin;
-
-
-
-    /**
-     * add initial
-     */
-
-    for (i = 0; i < shorthand->vtable->ntypes; ++i) {
-      if (storage[i] != NULL) continue;
-
-      storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-        shorthand, shorthand->vtable->types[i], initial[i][0], initial[i][1],
-        SAC_FALSE, &rval);
-
-      if (storage[i] == NULL) {
-        releaseStorage(storage, shorthand->vtable->ntypes);
-        if (error != NULL) *error = rval;
-        return begin;
-      }
+    if (storage[i] == NULL) {
+      releaseStorage(storage, shorthand->vtable->ntypes);
+      return rval;
     }
   }
-
-
-
-  /**
-   * assign values
-   */
 
   if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
     shorthand->parentValues, storage, shorthand->vtable->ntypes)) != 0)
   {
     releaseStorage(storage, shorthand->vtable->ntypes);
-    if (error != NULL) *error = rval;
-    return begin;
+    return rval;
   }
 
-  if (error != NULL) *error = 0;
+  return 0;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
+  const PropertyHandler *handlers,
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+{
+  size_t i;
+  const SAC_LexicalUnit **tail;
+
+  if (&begin[1] == end && isInherit(begin[0])) {
+
+    for (i = 0; i < size; ++i)
+      SET_RANGE(values[i], initial[i].type, begin, end);
+
+  } else {
+
+    tail = CSSPropertyValue_walk(handlers, values, size, begin, end);
+    if (tail != end) return begin;
+
+    for (i = 0; i < size; ++i) {
+      if (values[i].begin != NULL) continue;
+
+      values[i] = initial[i];
+    }
+
+  }
+
   return end;
 }
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *shorthand, PropertyHandler handler,
-  CSSOM_CSSPropertyValue **storage, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(
+  const CSSOM_CSSPropertyType *types, PropertyHandler handler,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
 {
-  const SAC_LexicalUnit **begins[4];
-  const SAC_LexicalUnit **ends[4];
-  size_t i;
-  int rval;
-
+  struct _CSSOM_LexicalUnitRange value;
   switch (end - begin) {
     case 1:
-      if (!isInherit(begin[0]) && handler(begin, end) != end) {
-        if (error != NULL) *error = 1;
+      if (!isInherit(begin[0]) && handler(begin, end, &value) != end) {
         return begin;
       }
 
-      begins[0] = &begin[0]; ends[0] = &begin[1];
-      begins[1] = &begin[0]; ends[1] = &begin[1];
-      begins[2] = &begin[0]; ends[2] = &begin[1];
-      begins[3] = &begin[0]; ends[3] = &begin[1];
+      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      SET_RANGE(values[1], types[1], &begin[0], &begin[1]);
+      SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      SET_RANGE(values[3], types[3], &begin[0], &begin[1]);
 
       break;
     case 2:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2])
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2])
       {
-        if (error != NULL) *error = 1;
         return begin;
       }
 
-      begins[0] = &begin[0]; ends[0] = &begin[1];
-      begins[1] = &begin[1]; ends[1] = &begin[2];
-      begins[2] = &begin[0]; ends[2] = &begin[1];
-      begins[3] = &begin[1]; ends[3] = &begin[2];
+      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
 
       break;
     case 3:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2] ||
-        handler(&begin[2], &begin[3]) != &begin[3])
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2] ||
+        handler(&begin[2], &begin[3], &value) != &begin[3])
       {
-        if (error != NULL) *error = 1;
         return begin;
       }
 
-      begins[0] = &begin[0]; ends[0] = &begin[1];
-      begins[1] = &begin[1]; ends[1] = &begin[2];
-      begins[2] = &begin[2]; ends[2] = &begin[3];
-      begins[3] = &begin[1]; ends[3] = &begin[2];
+      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
 
       break;
     case 4:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2] ||
-        handler(&begin[2], &begin[3]) != &begin[3] ||
-        handler(&begin[3], &begin[4]) != &begin[4])
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2] ||
+        handler(&begin[2], &begin[3], &value) != &begin[3] ||
+        handler(&begin[3], &begin[4], &value) != &begin[4])
       {
-        if (error != NULL) *error = 1;
         return begin;
       }
 
-      begins[0] = &begin[0]; ends[0] = &begin[1];
-      begins[1] = &begin[1]; ends[1] = &begin[2];
-      begins[2] = &begin[2]; ends[2] = &begin[3];
-      begins[3] = &begin[3]; ends[3] = &begin[4];
+      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      SET_RANGE(values[3], types[3], &begin[3], &begin[4]);
 
       break;
   }
 
-  for (i = 0; i < 4; ++i) {
-    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-      shorthand, shorthand->vtable->types[i], begins[i], ends[i], SAC_FALSE,
-      &rval);
-
-    if (storage[i] == NULL) {
-      releaseStorage(storage, 4);
-      if (error != NULL) *error = rval;
-      return begin;
-    }
-  }
-
-  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    shorthand->parentValues, storage, 4)) != 0)
-  {
-    releaseStorage(storage, 4);
-    if (error != NULL) *error = rval;
-    return begin;
-  }
-
-  if (error != NULL) *error = 0;
   return end;
 }
 
@@ -936,15 +882,11 @@ static int azimuth_isAngleIdent(const char *ident) {
 
 
 static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, CSSOM_CSSPropertyType *types,
-  const SAC_LexicalUnit **(*values)[2])
+  const SAC_LexicalUnit **end)
 {
   if (begin != end) {
     if (begin[0]->lexicalUnitType == SAC_IDENT) {
       if (strcmp("behind", begin[0]->desc.ident) == 0) {
-        types[0] = CSSOM_AZIMUTH_PROPERTY;
-        values[0][0] = &begin[0];
-        values[0][1] = &begin[1];
         return &begin[1];
       }
     }
@@ -955,15 +897,11 @@ static const SAC_LexicalUnit** azimuth_angle(const SAC_LexicalUnit **begin,
 
 
 static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, CSSOM_CSSPropertyType *types,
-  const SAC_LexicalUnit **(*values)[2])
+  const SAC_LexicalUnit **end)
 {
   if (begin != end) {
     if (begin[0]->lexicalUnitType == SAC_IDENT) {
       if (azimuth_isAngleIdent(begin[0]->desc.ident)) {
-        types[0] = CSSOM_AZIMUTH_PROPERTY;
-        values[0][0] = &begin[0];
-        values[0][1] = &begin[1];
         return &begin[1];
       }
     }
@@ -973,42 +911,44 @@ static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **begin,
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  CSSOM_CSSPropertyType *types, const SAC_LexicalUnit **(*values)[2])
+static const SAC_LexicalUnit** CSSPropertyValue_readAzimuth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   if (isAngle(begin[0])) {
-    types[0] = CSSOM_AZIMUTH_PROPERTY;
-    values[0][0] = &begin[0];
-    values[0][1] = &begin[1];
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("leftwards", begin[0]->desc.ident) == 0) {
-      types[0] = CSSOM_AZIMUTH_PROPERTY;
-      values[0][0] = &begin[0];
-      values[0][1] = &begin[1];
       return &begin[1];
     }
     if (strcmp("rightwards", begin[0]->desc.ident) == 0) {
-      types[0] = CSSOM_AZIMUTH_PROPERTY;
-      values[0][0] = &begin[0];
-      values[0][1] = &begin[1];
       return &begin[1];
     }
 
     if (azimuth_isAngleIdent(begin[0]->desc.ident))
-      return azimuth_angle(&begin[1], end, types, values);
+      return azimuth_angle(&begin[1], end);
 
     if (strcmp("behind", begin[0]->desc.ident) == 0)
-      return azimuth_behind(&begin[1], end, types, values);
+      return azimuth_behind(&begin[1], end);
 
   } else if (isInherit(begin[0])) {
-    types[0] = CSSOM_AZIMUTH_PROPERTY;
-    values[0][0] = &begin[0];
-    values[0][1] = &begin[1];
     return &begin[1];
   }
   return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readAzimuth(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_AZIMUTH_PROPERTY, begin, tail);
+  return tail;
 }
 
 
@@ -1017,7 +957,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
  * background-attachment
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
+static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundAttachment(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
@@ -1031,11 +971,26 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBackgroundAttachment(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * background-color
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
+static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isColor(begin[0])) {
@@ -1050,11 +1005,26 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBackgroundColor(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * background-image
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
+static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundImage(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isUrl(begin[0])) {
@@ -1065,6 +1035,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
     return &begin[1];
   }
   return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBackgroundImage(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
+  return tail;
 }
 
 
@@ -1108,7 +1093,7 @@ static const SAC_LexicalUnit** backgroundPosition_vertical(
 
 
 
-static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
+static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundPosition(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isPercentage(begin[0]) || isLength(begin[0])) {
@@ -1146,11 +1131,26 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBackgroundPosition(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * background-repeat
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
+static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundRepeat(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
@@ -1166,13 +1166,28 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBackgroundRepeat(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * background
  */
 
 static const SAC_LexicalUnit** CSSPropertyValue_background(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, 
+  struct _CSSOM_LexicalUnitRange *values)
 {
   static const SAC_LexicalUnit *color[] = {
     &unit_transparent
@@ -1194,14 +1209,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     &unit_0pct, &unit_0pct
   };
 
-  static const SAC_LexicalUnit **initial[ASIZE(shorthand_background)][2] = {
-    INITIAL(color),
-    INITIAL(image),
-    INITIAL(repeat),
-    INITIAL(attachment),
-    INITIAL(position)
-  };
-
   static const PropertyHandler handlers[ASIZE(shorthand_background)] = {
     CSSPropertyValue_backgroundColor,
     CSSPropertyValue_backgroundImage,
@@ -1210,21 +1217,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     CSSPropertyValue_backgroundPosition
   };
 
-  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_background)] = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL
+  static const struct _CSSOM_LexicalUnitRange
+  initial[ASIZE(shorthand_background)] = {
+    { CSSOM_BACKGROUND_COLOR_PROPERTY, INITIAL(color) },
+    { CSSOM_BACKGROUND_IMAGE_PROPERTY, INITIAL(image) },
+    { CSSOM_BACKGROUND_REPEAT_PROPERTY, INITIAL(repeat) },
+    { CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, INITIAL(attachment) },
+    { CSSOM_BACKGROUND_POSITION_PROPERTY, INITIAL(position) }
   };
 
-  if (CSSPropertyValue_genericShorthand(cssom, property, handlers, initial,
-    storage, begin, end, error) != end)
+  if (CSSPropertyValue_genericShorthand(handlers, initial, values,
+    ASIZE(shorthand_background), begin, end) != end)
   {
     return begin;
   }
 
-  if (error != NULL) *error = 0;
   return end;
 }
 
@@ -1234,7 +1241,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
  * border-collapse
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
+static const SAC_LexicalUnit** CSSPropertyValue_readBorderCollapse(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
@@ -1248,28 +1255,50 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBorderCollapse(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * border-color
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_borderColorToken(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
 {
-  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderColor)] = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-  };
+  const SAC_LexicalUnit **tail;
 
-  if (CSSPropertyValue_boxShorthand(cssom, property, borderColor, storage,
-    begin, end, error) != end)
+  tail = isBorderColor(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSPropertyValue_boxShorthand(shorthand_borderColor,
+    CSSPropertyValue_borderColorToken, begin, end, values) != end)
   {
     return begin;
   }
 
-  if (error != NULL) *error = 0;
   return end;
 }
 
@@ -1279,7 +1308,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
  * border-spacing
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
+static const SAC_LexicalUnit** CSSPropertyValue_readBorderSpacing(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
   if (isLength(begin[0])) {
@@ -1293,28 +1322,50 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBorderSpacing(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * border-style
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_borderStyleToken(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
 {
-  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderStyle)] = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-  };
+  const SAC_LexicalUnit **tail;
 
-  if (CSSPropertyValue_boxShorthand(cssom, property, borderStyle, storage,
-    begin, end, error) != end)
+  tail = borderStyle(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSPropertyValue_boxShorthand(shorthand_borderStyle,
+    CSSPropertyValue_borderStyleToken, begin, end, values) != end)
   {
     return begin;
   }
 
-  if (error != NULL) *error = 0;
   return end;
 }
 
@@ -1327,15 +1378,30 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
  * border-left-color
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
+static const SAC_LexicalUnit** CSSPropertyValue_readBorderTopColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (borderColor(begin, end) == &begin[1]) {
+  if (isBorderColor(begin, end) == &begin[1]) {
     return &begin[1];
   } else if (isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderTopColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBorderTopColor(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  return tail;
 }
 
 
@@ -1347,7 +1413,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionColor(
  * border-left-style
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
+static const SAC_LexicalUnit** CSSPropertyValue_readBorderTopStyle(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   if (borderStyle(begin, end) == &begin[1]) {
@@ -1360,6 +1426,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_borderTopStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBorderTopStyle(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * border-top-width
  * border-right-width
@@ -1367,10 +1448,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionStyle(
  * border-left-width
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionWidth(
+static const SAC_LexicalUnit** CSSPropertyValue_readBorderTopWidth(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (borderWidth(begin, end) == &begin[1]) {
+  if (isBorderWidthToken(begin, end) == &begin[1]) {
     return &begin[1];
   } else if (isInherit(begin[0])) {
     return &begin[1];
@@ -1380,28 +1461,50 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderDirectionWidth(
 
 
 
+static const SAC_LexicalUnit** CSSPropertyValue_borderTopWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = CSSPropertyValue_readBorderTopWidth(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 /**
  * border-width
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
-  const CSSOM *cssom, CSSOM_CSSPropertyValue *property,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, int *error)
+static const SAC_LexicalUnit** CSSPropertyValue_borderWidthToken(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
 {
-  CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderWidth)] = {
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-  };
+  const SAC_LexicalUnit **tail;
 
-  if (CSSPropertyValue_boxShorthand(cssom, property, borderWidth, storage,
-    begin, end, error) != end)
+  tail = isBorderWidthToken(begin, end);
+  if (tail == begin) return begin;
+
+  SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSPropertyValue_boxShorthand(shorthand_borderWidth,
+    CSSPropertyValue_borderWidthToken, begin, end, values) != end)
   {
     return begin;
   }
 
-  if (error != NULL) *error = 0;
   return end;
 }
 
@@ -1554,56 +1657,154 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
   switch (property->type) {
     case CSSOM_AZIMUTH_PROPERTY:
       {
-        CSSOM_CSSPropertyType types[1];
-        const SAC_LexicalUnit **values[1][2] = {
-          { NULL, NULL }
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
         };
-        if (CSSPropertyValue_azimuth(begin, end, types, values) != end)
-          return 1;
+
+        if (CSSPropertyValue_azimuth(begin, end, values) != end) return 1;
       }
       break;
     case CSSOM_BACKGROUND_PROPERTY:
-      if (CSSPropertyValue_background(cssom, property, begin, end,
-        &error) != end)
       {
-        return error;
+        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_background)] = {
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL }
+        };
+
+        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_background)] = {
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+          NULL
+        };
+
+        if (CSSPropertyValue_background(begin, end, values) != end)
+          return 1;
+
+        error = assignProperties(cssom, property, values, storage);
+        if (error != 0) return error;
       }
       break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
-      if (CSSPropertyValue_backgroundAttachment(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_backgroundAttachment(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BACKGROUND_COLOR_PROPERTY:
-      if (CSSPropertyValue_backgroundColor(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_backgroundColor(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
-      if (CSSPropertyValue_backgroundImage(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_backgroundImage(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
-      if (CSSPropertyValue_backgroundPosition(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_backgroundPosition(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
-      if (CSSPropertyValue_backgroundRepeat(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_backgroundRepeat(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BORDER_PROPERTY:
       break;
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
-      if (CSSPropertyValue_borderCollapse(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_borderCollapse(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BORDER_COLOR_PROPERTY:
-      if (CSSPropertyValue_borderColor(cssom, property, begin, end,
-        &error) != end)
       {
-        return error;
+        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderColor)] = {
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+        };
+
+        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderColor)] = {
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+        };
+
+        if (CSSPropertyValue_borderColor(begin, end, values) != end)
+          return 1;
+
+        error = assignProperties(cssom, property, values, storage);
+        if (error != 0) return error;
       }
       break;
     case CSSOM_BORDER_SPACING_PROPERTY:
-      if (CSSPropertyValue_borderSpacing(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_borderSpacing(begin, end, values) != end)
+          return 1;
+      }
       break;
     case CSSOM_BORDER_STYLE_PROPERTY:
-      if (CSSPropertyValue_borderStyle(cssom, property, begin, end,
-        &error) != end)
       {
-        return error;
+        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderStyle)] = {
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+        };
+
+        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderStyle)] = {
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+        };
+
+        if (CSSPropertyValue_borderStyle(begin, end, values) != end)
+          return 1;
+
+        error = assignProperties(cssom, property, values, storage);
+        if (error != 0) return error;
       }
       break;
     case CSSOM_BORDER_TOP_PROPERTY:
@@ -1615,26 +1816,70 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
     case CSSOM_BORDER_RIGHT_COLOR_PROPERTY:
     case CSSOM_BORDER_BOTTOM_COLOR_PROPERTY:
     case CSSOM_BORDER_LEFT_COLOR_PROPERTY:
-      if (CSSPropertyValue_borderDirectionColor(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_borderTopColor(begin, end, values) != end)
+          return 1;
+
+        values[0].type = property->type;
+      }
       break;
     case CSSOM_BORDER_TOP_STYLE_PROPERTY:
     case CSSOM_BORDER_RIGHT_STYLE_PROPERTY:
     case CSSOM_BORDER_BOTTOM_STYLE_PROPERTY:
     case CSSOM_BORDER_LEFT_STYLE_PROPERTY:
-      if (CSSPropertyValue_borderDirectionStyle(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_borderTopStyle(begin, end, values) != end)
+          return 1;
+
+        values[0].type = property->type;
+      }
       break;
     case CSSOM_BORDER_TOP_WIDTH_PROPERTY:
     case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
     case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:
     case CSSOM_BORDER_LEFT_WIDTH_PROPERTY:
-      if (CSSPropertyValue_borderDirectionWidth(begin, end) != end) return 1;
+      {
+        struct _CSSOM_LexicalUnitRange values[1] = {
+          { 0, NULL, NULL }
+        };
+
+        if (CSSPropertyValue_borderTopWidth(begin, end, values) != end)
+          return 1;
+
+        values[0].type = property->type;
+      }
       break;
     case CSSOM_BORDER_WIDTH_PROPERTY:
-      if (CSSPropertyValue_borderWidth(cssom, property, begin, end,
-        &error) != end)
       {
-        return error;
+        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderWidth)] = {
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+          { 0, NULL, NULL },
+        };
+
+        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderWidth)] = {
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+        };
+
+        if (CSSPropertyValue_borderWidth(begin, end, values) != end)
+          return 1;
+
+        error = assignProperties(cssom, property, values, storage);
+        if (error != 0) return error;
       }
+      break;
     case CSSOM_BOTTOM_PROPERTY:
     case CSSOM_CAPTION_SIDE_PROPERTY:
     case CSSOM_CLEAR_PROPERTY:

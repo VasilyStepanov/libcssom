@@ -50,10 +50,7 @@ int CSSOM_CSSStyleDeclarationValue__assignProperties(
 
     if (it->value != NULL) {
       it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
-      if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
-        CSSOM_CSSPropertyValue_release(propertyValue);
-        return -1;
-      }
+      if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return -1;
       CSSOM_CSSPropertyValue_release(it->value);
     }
     it->value = propertyValue;
