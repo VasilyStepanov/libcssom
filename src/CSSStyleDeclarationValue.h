@@ -38,9 +38,8 @@ void CSSOM_CSSStyleDeclarationValue__fsetProperty(
   CSSOM_CSSStyleDeclarationValue *values,
   CSSOM_CSSPropertyType type, const char *value);
 
-int CSSOM_CSSStyleDeclarationValue__assignProperties(
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
-  size_t size);
+int CSSOM_CSSStyleDeclarationValue__assignProperty(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue *property);
 
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
   const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType type);

@@ -819,19 +819,6 @@ static const struct _CSSOM_CSSPropertyValue_vtable *vtables[] = {
 
 
 
-static void releaseStorage(CSSOM_CSSPropertyValue **properties,
-  size_t size)
-{
-  size_t i;
-
-  for (i = 0; i < size; ++i) {
-    CSSOM_CSSPropertyValue_release(properties[i]);
-    properties[i] = NULL;
-  }
-}
-
-
-
 static const SAC_LexicalUnit** CSSPropertyValue_walk(
   const PropertyHandler *handlers, struct _CSSOM_LexicalUnitRange *values,
   size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
@@ -856,38 +843,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_walk(
   }
 
   return begin;
-}
-
-
-
-static int assignProperties(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *shorthand, struct _CSSOM_LexicalUnitRange *values,
-  CSSOM_CSSPropertyValue **storage)
-{
-  size_t i;
-  int rval;
-
-  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
-    if (values[i].begin == NULL) continue;
-
-    storage[i] = CSSOM_CSSPropertyValue__alloc(cssom, shorthand->parentValues,
-      shorthand, values[i].type, values[i].begin, values[i].end, SAC_FALSE,
-      &rval);
-
-    if (storage[i] == NULL) {
-      releaseStorage(storage, shorthand->vtable->ntypes);
-      return rval;
-    }
-  }
-
-  if ((rval = CSSOM_CSSStyleDeclarationValue__assignProperties(
-    shorthand->parentValues, storage, shorthand->vtable->ntypes)) != 0)
-  {
-    releaseStorage(storage, shorthand->vtable->ntypes);
-    return rval;
-  }
-
-  return 0;
 }
 
 
@@ -1355,12 +1310,13 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     { CSSOM_BACKGROUND_POSITION_PROPERTY, INITIAL(position) }
   };
 
-  if (CSSPropertyValue_genericShorthand(handlers, initial, values,
+  if (CSSPropertyValue_genericShorthand(handlers, initial, &values[1],
     ASIZE(shorthand_background), begin, end) != end)
   {
     return begin;
   }
 
+  SET_RANGE(values[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
   return end;
 }
 
@@ -1423,11 +1379,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
   struct _CSSOM_LexicalUnitRange *values)
 {
   if (CSSPropertyValue_boxShorthand(shorthand_borderColor,
-    CSSPropertyValue_borderColorToken, begin, end, values) != end)
+    CSSPropertyValue_borderColorToken, begin, end, &values[1]) != end)
   {
     return begin;
   }
 
+  SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
   return end;
 }
 
@@ -1490,11 +1447,12 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
   struct _CSSOM_LexicalUnitRange *values)
 {
   if (CSSPropertyValue_boxShorthand(shorthand_borderStyle,
-    CSSPropertyValue_borderStyleToken, begin, end, values) != end)
+    CSSPropertyValue_borderStyleToken, begin, end, &values[1]) != end)
   {
     return begin;
   }
 
+  SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
   return end;
 }
 
@@ -1629,35 +1587,126 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
   struct _CSSOM_LexicalUnitRange *values)
 {
   if (CSSPropertyValue_boxShorthand(shorthand_borderWidth,
-    CSSPropertyValue_borderWidthToken, begin, end, values) != end)
+    CSSPropertyValue_borderWidthToken, begin, end, &values[1]) != end)
   {
     return begin;
   }
 
+  SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
   return end;
 }
 
 
 
-static int CSSPropertyValue_validate(const CSSOM *cssom,
-  CSSOM_CSSPropertyValue *property, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end)
+static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *parentValues,
+  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
+  const SAC_LexicalUnit **holder, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, SAC_Boolean important)
 {
-  int error;
+  CSSOM_CSSPropertyValue *property;
 
-  switch (property->type) {
+  property = (CSSOM_CSSPropertyValue*)CSSOM_malloc(
+    sizeof(CSSOM_CSSPropertyValue));
+  if (property == NULL) return NULL;
+
+  property->vtable = vtables[type];
+  property->handles = 1;
+  property->parentValues = parentValues;
+  property->shorthand = shorthand;
+  property->parser = NULL;
+  property->type = type;
+  property->name = CSSOM__properties(cssom)[type];
+  property->holder = holder;
+  property->begin = begin;
+  property->end = end;
+  property->important = important;
+  property->cssText = NULL;
+
+  return property;
+}
+
+
+
+static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *parentValues, const SAC_LexicalUnit **holder,
+  struct _CSSOM_LexicalUnitRange *values, size_t size, SAC_Boolean important,
+  int *error,
+  int (*assign)(CSSOM_CSSStyleDeclarationValue *, CSSOM_CSSPropertyValue *))
+{
+  CSSOM_CSSPropertyValue *shorthand;
+  CSSOM_CSSPropertyValue *property;
+  size_t i;
+  int rval;
+
+  if (values[0].begin == NULL) {
+    if (error != NULL) *error = 1;
+    return NULL;
+  }
+
+  shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL,
+      values[0].type, holder, values[0].begin, values[0].end, important);
+  if (shorthand == NULL) {
+    if (error != NULL) *error = -1;
+    return NULL;
+  }
+
+/*
+  if ((rval = assign(parentValues, shorthand)) != 0) {
+    CSSOM_CSSPropertyValue_release(shorthand);
+    if (error != NULL) *error = rval;
+    return NULL;
+  }
+*/
+
+  for (i = 1; i < size; ++i) {
+    if (values[i].begin == NULL) continue;
+
+    property = CSSPropertyValue_alloc(cssom, parentValues, shorthand,
+      values[i].type, NULL, values[i].begin, values[i].end, important);
+    if (property == NULL) {
+      if (error != NULL) *error = -1;
+      return NULL;
+    }
+
+    if ((rval = assign(parentValues, property)) != 0) {
+      CSSOM_CSSPropertyValue_release(property);
+      if (error != NULL) *error = rval;
+      return NULL;
+    }
+  }
+
+  return shorthand;
+}
+
+
+
+static CSSOM_CSSPropertyValue* CSSPropertyValue_validate(const CSSOM *cssom,
+  CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
+  const SAC_LexicalUnit **holder, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, SAC_Boolean important, int *error,
+  int (*assign)(CSSOM_CSSStyleDeclarationValue *, CSSOM_CSSPropertyValue *))
+{
+  switch (type) {
     case CSSOM_AZIMUTH_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_azimuth(begin, end, values) != end) return 1;
+        if (CSSPropertyValue_azimuth(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_PROPERTY:
       {
-        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_background)] = {
+        struct _CSSOM_LexicalUnitRange
+        values[ASIZE(shorthand_background) + 1] = {
+          { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
@@ -1665,71 +1714,84 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
           { 0, NULL, NULL }
         };
 
-        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_background)] = {
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL
-        };
+        if (CSSPropertyValue_background(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        if (CSSPropertyValue_background(begin, end, values) != end)
-          return 1;
-
-        error = assignProperties(cssom, property, values, storage);
-        if (error != 0) return error;
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_ATTACHMENT_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_backgroundAttachment(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_backgroundAttachment(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_COLOR_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_backgroundColor(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_backgroundColor(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_IMAGE_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_backgroundImage(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_backgroundImage(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_POSITION_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_backgroundPosition(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_backgroundPosition(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BACKGROUND_REPEAT_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_backgroundRepeat(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_backgroundRepeat(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_PROPERTY:
       break;
     case CSSOM_BORDER_COLLAPSE_PROPERTY:
@@ -1738,66 +1800,66 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_borderCollapse(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_borderCollapse(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_COLOR_PROPERTY:
       {
-        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderColor)] = {
+        struct _CSSOM_LexicalUnitRange
+        values[ASIZE(shorthand_borderColor) + 1] = {
+          { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
         };
 
-        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderColor)] = {
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-        };
+        if (CSSPropertyValue_borderColor(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        if (CSSPropertyValue_borderColor(begin, end, values) != end)
-          return 1;
-
-        error = assignProperties(cssom, property, values, storage);
-        if (error != 0) return error;
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_SPACING_PROPERTY:
       {
         struct _CSSOM_LexicalUnitRange values[1] = {
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_borderSpacing(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_borderSpacing(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_STYLE_PROPERTY:
       {
-        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderStyle)] = {
+        struct _CSSOM_LexicalUnitRange
+        values[ASIZE(shorthand_borderStyle) + 1] = {
+          { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
         };
 
-        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderStyle)] = {
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-        };
+        if (CSSPropertyValue_borderStyle(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        if (CSSPropertyValue_borderStyle(begin, end, values) != end)
-          return 1;
-
-        error = assignProperties(cssom, property, values, storage);
-        if (error != 0) return error;
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_TOP_PROPERTY:
     case CSSOM_BORDER_RIGHT_PROPERTY:
     case CSSOM_BORDER_BOTTOM_PROPERTY:
@@ -1812,12 +1874,16 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_borderTopColor(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_borderTopColor(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        values[0].type = property->type;
+        values[0].type = type;
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_TOP_STYLE_PROPERTY:
     case CSSOM_BORDER_RIGHT_STYLE_PROPERTY:
     case CSSOM_BORDER_BOTTOM_STYLE_PROPERTY:
@@ -1827,12 +1893,16 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_borderTopStyle(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_borderTopStyle(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        values[0].type = property->type;
+        values[0].type = type;
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_TOP_WIDTH_PROPERTY:
     case CSSOM_BORDER_RIGHT_WIDTH_PROPERTY:
     case CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY:
@@ -1842,35 +1912,35 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
           { 0, NULL, NULL }
         };
 
-        if (CSSPropertyValue_borderTopWidth(begin, end, values) != end)
-          return 1;
+        if (CSSPropertyValue_borderTopWidth(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        values[0].type = property->type;
+        values[0].type = type;
+
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BORDER_WIDTH_PROPERTY:
       {
-        struct _CSSOM_LexicalUnitRange values[ASIZE(shorthand_borderWidth)] = {
+        struct _CSSOM_LexicalUnitRange
+        values[ASIZE(shorthand_borderWidth) + 1] = {
+          { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
           { 0, NULL, NULL },
         };
 
-        CSSOM_CSSPropertyValue *storage[ASIZE(shorthand_borderWidth)] = {
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-        };
+        if (CSSPropertyValue_borderWidth(begin, end, values) != end) {
+          if (error != NULL) *error = 1;
+          return NULL;
+        }
 
-        if (CSSPropertyValue_borderWidth(begin, end, values) != end)
-          return 1;
-
-        error = assignProperties(cssom, property, values, storage);
-        if (error != 0) return error;
+        return assignProperties(cssom, parentValues, holder, values,
+          ASIZE(values), important, error, assign);
       }
-      break;
     case CSSOM_BOTTOM_PROPERTY:
     case CSSOM_CAPTION_SIDE_PROPERTY:
     case CSSOM_CLEAR_PROPERTY:
@@ -1967,20 +2037,28 @@ static int CSSPropertyValue_validate(const CSSOM *cssom,
     case CSSOM_Z_INDEX_PROPERTY:
       break;
   }
-  return 0;
+
+  {
+    struct _CSSOM_LexicalUnitRange values[] = {
+      { 0, NULL, NULL },
+    };
+
+    SET_RANGE(values[0], type, begin, end);
+
+    return assignProperties(cssom, parentValues, holder, values,
+      ASIZE(values), important, error, assign);
+  }
 }
 
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important, int *error)
+  CSSOM_CSSPropertyType type, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, SAC_Boolean important, int *error)
 {
-  CSSOM_CSSPropertyValue *property;
   const SAC_LexicalUnit **holder;
-  int rval;
+  CSSOM_CSSPropertyValue *property;
 
   if (end == NULL) {
     holder = (const SAC_LexicalUnit**)CSSOM_malloc(
@@ -1988,46 +2066,19 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
     if (holder == NULL) return NULL;
     holder[0] = *begin;
     holder[1] = NULL;
+    begin = &holder[0];
+    end = &holder[1];
   } else {
     holder = NULL;
   }
 
-  property = (CSSOM_CSSPropertyValue*)CSSOM_malloc(
-    sizeof(CSSOM_CSSPropertyValue));
+  property = CSSPropertyValue_validate(cssom, parentValues, type, holder, begin,
+    end, important, error, CSSOM_CSSStyleDeclarationValue__assignProperty);
   if (property == NULL) {
     CSSOM_free(holder);
-    if (error != NULL) *error = -1;
     return NULL;
   }
-
-  property->vtable = vtables[type];
-  property->handles = 1;
-  property->parentValues = parentValues;
-  property->shorthand = shorthand;
-  property->parser = NULL;
-  property->type = type;
-  property->name = CSSOM__properties(cssom)[type];
-  property->holder = holder;
-  if (property->holder != NULL) {
-    property->begin = &property->holder[0];
-    property->end = &property->holder[1];
-  } else {
-    property->begin = begin;
-    property->end = end;
-  }
-  property->important = important;
-  property->cssText = NULL;
-
-  if ((rval = CSSPropertyValue_validate(cssom, property, property->begin,
-    property->end)) != 0)
-  {
-    CSSOM_CSSPropertyValue_release(property);
-    if (error != NULL) *error = rval;
-    return NULL;
-  }
-
-  if (error != NULL) *error = 0;
-
+  
   return property;
 }
 

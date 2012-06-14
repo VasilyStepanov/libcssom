@@ -411,9 +411,11 @@ void azimuth() {
   style.setAzimuth("invalid");
   assert(style.azimuth() == NULL);
 
+  style.setAzimuth(NULL);
   style.setAzimuth("left-side behind inherit");
   assert(style.azimuth() == NULL);
 
+  style.setAzimuth(NULL);
   style.setAzimuth("leftwards behind");
   assert(style.azimuth() == NULL);
 }

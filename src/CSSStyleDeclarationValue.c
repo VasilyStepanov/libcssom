@@ -26,35 +26,26 @@ struct _CSSOM_CSSStyleDeclarationValue {
 
 
 
-int CSSOM_CSSStyleDeclarationValue__assignProperties(
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue **properties,
-  size_t size)
+int CSSOM_CSSStyleDeclarationValue__assignProperty(
+  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue *property)
 {
   const CSSOM *cssom;
-  size_t i;
   CSSOM_FSMIter_CSSPropertyValue it;
-  CSSOM_CSSPropertyValue *propertyValue;
 
   cssom = CSSOM_CSSStyleSheet__cssom(
     CSSOM_CSSRule_parentStyleSheet(
       CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
 
-  for (i = 0; i < size; ++i) {
-    propertyValue = properties[i];
+  it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm,
+    CSSOM_CSSPropertyValue__name(property), NULL);
+  if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
-    if (propertyValue == NULL) continue;
-
-    it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm,
-      CSSOM_CSSPropertyValue__name(propertyValue), NULL);
-    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
-
-    if (it->value != NULL) {
-      it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
-      if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return -1;
-      CSSOM_CSSPropertyValue_release(it->value);
-    }
-    it->value = propertyValue;
+  if (it->value != NULL) {
+    it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
+    if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return -1;
+    CSSOM_CSSPropertyValue_release(it->value);
   }
+  it->value = property;
 
   return 0;
 }
@@ -218,7 +209,7 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, NULL, it->hash,
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, it->hash,
     begin, end, priority, &error);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);

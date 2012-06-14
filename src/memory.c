@@ -5,13 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* #define DETAILED */
+
 
 static void dumpMalloc(const char * file, int line CSSOM_UNUSED,
   const char * function CSSOM_UNUSED, void * ptr)
 {
   FILE * f;
   f = fopen("malloc", "a");
+#ifndef DETAILED
   fprintf(f, "%x %s\n", (int)ptr, file);
+#else
+  fprintf(f, "%x %s %d\n", (int)ptr, file, line);
+#endif
   fclose(f);
 }
 
@@ -24,7 +30,11 @@ static void dumpFree(const char * file, int line CSSOM_UNUSED,
 
   if (ptr != NULL) {
     f = fopen("free", "a");
+#ifndef DETAILED
     fprintf(f, "%x %s\n", (int)ptr, file);
+#else
+    fprintf(f, "%x %s %d\n", (int)ptr, file, line);
+#endif
     fclose(f);
   }
 }

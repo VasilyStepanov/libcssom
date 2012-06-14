@@ -547,7 +547,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     while (*end != NULL) ++end;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, NULL, type, 
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, type, 
     begin, end, important, NULL);
   if (propertyValue == NULL) {
     CSSOM_ParserStack_free(stack);
