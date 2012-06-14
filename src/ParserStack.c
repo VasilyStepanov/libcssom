@@ -56,13 +56,13 @@ struct _CSSOM_ParserState_vtable {
 
 
 struct _CSSOM_ParserState {
-  struct _CSSOM_ParserState_vtable *vtable;
+  const struct _CSSOM_ParserState_vtable *vtable;
 };
 
 
 
 static void ParserState_ctor(struct _CSSOM_ParserState *state,
-  struct _CSSOM_ParserState_vtable *vtable)
+  const struct _CSSOM_ParserState_vtable *vtable)
 {
   state->vtable = vtable;
 }
@@ -262,7 +262,8 @@ static CSSOM_CSSImportRule* ParserCSSRuleCatcherState_appendCSSImportRule(
 
 
 
-static struct _CSSOM_ParserState_vtable ParserCSSRuleCatcherState_vtable = {
+static const struct _CSSOM_ParserState_vtable
+ParserCSSRuleCatcherState_vtable = {
   NULL,
   (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
     const SAC_Selector *[]))
@@ -389,7 +390,7 @@ static CSSOM_CSSStyleRule* ParserCSSStyleSheetState_appendCSSStyleRule(
 
 
 
-static struct _CSSOM_ParserState_vtable
+static const struct _CSSOM_ParserState_vtable
 ParserCSSStyleSheetState_vtable = {
   NULL,
   (CSSOM_CSSPageRule* (*)(struct _CSSOM_ParserState *,
@@ -455,7 +456,7 @@ static int ParserCSSStyleDeclarationState_setProperty(
 
 
 
-static struct _CSSOM_ParserState_vtable
+static const struct _CSSOM_ParserState_vtable
 ParserCSSStyleDeclarationState_vtable = {
   (int (*)(struct _CSSOM_ParserState *, const SAC_STRING,
     const SAC_LexicalUnit **, const SAC_LexicalUnit **, SAC_Boolean))
@@ -512,7 +513,8 @@ static int ParserCSSFontFaceRuleState_setProperty(
 
 
 
-static struct _CSSOM_ParserState_vtable ParserCSSFontFaceRuleState_vtable = {
+static const struct _CSSOM_ParserState_vtable
+ParserCSSFontFaceRuleState_vtable = {
   (int (*)(struct _CSSOM_ParserState *, const SAC_STRING,
     const SAC_LexicalUnit **, const SAC_LexicalUnit **, SAC_Boolean))
   ParserCSSFontFaceRuleState_setProperty,
@@ -568,7 +570,7 @@ static int ParserCSSPageRuleState_setProperty(
 
 
 
-static struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
+static const struct _CSSOM_ParserState_vtable ParserCSSPageRuleState_vtable = {
   (int (*)(struct _CSSOM_ParserState *, const SAC_STRING,
     const SAC_LexicalUnit **, const SAC_LexicalUnit **, SAC_Boolean))
   ParserCSSPageRuleState_setProperty,
@@ -623,7 +625,7 @@ static CSSOM_CSSStyleRule* ParserCSSMediaRuleState_appendCSSStyleRule(
 
 
 
-static struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
+static const struct _CSSOM_ParserState_vtable ParserCSSMediaRuleState_vtable = {
   NULL,
   NULL,
   NULL,
@@ -678,7 +680,7 @@ static int ParserCSSStyleRuleState_setProperty(
 
 
 
-static struct _CSSOM_ParserState_vtable ParserCSSStyleRuleState_vtable = {
+static const struct _CSSOM_ParserState_vtable ParserCSSStyleRuleState_vtable = {
   (int (*)(struct _CSSOM_ParserState *, const SAC_STRING,
     const SAC_LexicalUnit **, const SAC_LexicalUnit **, SAC_Boolean))
   ParserCSSStyleRuleState_setProperty,

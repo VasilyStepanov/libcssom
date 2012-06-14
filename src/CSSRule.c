@@ -59,7 +59,7 @@ struct _CSSOM_CSSRule_vtable {
 
 
 struct _CSSOM_CSSRule {
-  struct _CSSOM_CSSRule_vtable *vtable;
+  const struct _CSSOM_CSSRule_vtable *vtable;
   size_t handles;
   SAC_Parser parser;
   CSSOM_CSSRule *parentRule;
@@ -71,7 +71,7 @@ struct _CSSOM_CSSRule {
 
 
 static void CSSRule_ctor(CSSOM_CSSRule *cssRule,
-  struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSRule *parentRule,
+  const struct _CSSOM_CSSRule_vtable *vtable, CSSOM_CSSRule *parentRule,
   CSSOM_CSSStyleSheet *parentStyleSheet, unsigned short type)
 {
   cssRule->vtable = vtable;
@@ -233,7 +233,7 @@ static void CSSFontFaceRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSFontFaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSFontFaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSFontFaceRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_fontFaceRule
@@ -304,7 +304,7 @@ static void CSSImportRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSImportRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSImportRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSImportRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_importRule
@@ -398,7 +398,7 @@ static void CSSStyleRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSStyleRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSStyleRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSStyleRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_styleRule
@@ -503,7 +503,7 @@ static void CSSMediaRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSMediaRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSMediaRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSMediaRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_mediaRule
@@ -665,7 +665,7 @@ static void CSSNamespaceRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSNamespaceRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSNamespaceRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSNamespaceRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_namespaceRule
@@ -739,7 +739,7 @@ static void CSSPageRule_swap(
 
 
 
-static struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
+static const struct _CSSOM_CSSRule_vtable CSSPageRule_vtable = {
   (void(*)(CSSOM_CSSRule*))&CSSPageRule_free,
   (void(*)(CSSOM_CSSRule*, CSSOM_CSSRule*))&CSSPageRule_swap,
   (int (*)(FILE*, const CSSOM_CSSRule*))&CSSOM_CSSEmitter_pageRule

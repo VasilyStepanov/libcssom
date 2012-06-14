@@ -24,7 +24,7 @@ struct _CSSOM_Selector_vtable {
 
 
 struct _CSSOM_Selector {
-  struct _CSSOM_Selector_vtable *vtable;
+  const struct _CSSOM_Selector_vtable *vtable;
   size_t handles;
   const CSSOM *cssom;
   SAC_Parser parser;
@@ -45,7 +45,7 @@ static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
 
 
 static void Selector_ctor(CSSOM_Selector *selector,
-  struct _CSSOM_Selector_vtable *vtable, const CSSOM *cssom,
+  const struct _CSSOM_Selector_vtable *vtable, const CSSOM *cssom,
   CSSOM_CSSRule *parentRule, const SAC_Selector *selectors[])
 {
   selector->vtable = vtable;
@@ -107,7 +107,7 @@ static void Selector_setSelectorText(CSSOM_Selector *selector,
 
 
 
-static struct _CSSOM_Selector_vtable Selector_vtable = {
+static const struct _CSSOM_Selector_vtable Selector_vtable = {
   Selector_selectorText,
   Selector_setSelectorText
 };
@@ -177,7 +177,7 @@ static void PageSelector_setSelectorText(CSSOM_Selector *selector,
 
 
 
-static struct _CSSOM_Selector_vtable PageSelector_vtable = {
+static const struct _CSSOM_Selector_vtable PageSelector_vtable = {
   PageSelector_selectorText,
   PageSelector_setSelectorText
 };

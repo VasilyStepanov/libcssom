@@ -504,7 +504,8 @@ static int GenericCSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 
 
-static struct _CSSOM_CSSPropertyValue_vtable GenericCSSPropertyValue_vtable = {
+static const struct _CSSOM_CSSPropertyValue_vtable
+GenericCSSPropertyValue_vtable = {
   NULL,
   0,
   &GenericCSSPropertyValue_emit
@@ -654,7 +655,7 @@ static int BoxShorthandCSSPropertyValue_emit(
 
 
 
-static struct _CSSOM_CSSPropertyValue_vtable
+static const struct _CSSOM_CSSPropertyValue_vtable
 BackgroundCSSPropertyValue_vtable = {
   shorthand_background,
   ASIZE(shorthand_background),
@@ -663,7 +664,7 @@ BackgroundCSSPropertyValue_vtable = {
 
 
 
-static struct _CSSOM_CSSPropertyValue_vtable
+static const struct _CSSOM_CSSPropertyValue_vtable
 BorderColorCSSPropertyValue_vtable = {
   shorthand_borderColor,
   ASIZE(shorthand_borderColor),
@@ -672,7 +673,7 @@ BorderColorCSSPropertyValue_vtable = {
 
 
 
-static struct _CSSOM_CSSPropertyValue_vtable
+static const struct _CSSOM_CSSPropertyValue_vtable
 BorderStyleCSSPropertyValue_vtable = {
   shorthand_borderStyle,
   ASIZE(shorthand_borderStyle),
@@ -681,7 +682,7 @@ BorderStyleCSSPropertyValue_vtable = {
 
 
 
-static struct _CSSOM_CSSPropertyValue_vtable
+static const struct _CSSOM_CSSPropertyValue_vtable
 BorderWidthCSSPropertyValue_vtable = {
   shorthand_borderWidth,
   ASIZE(shorthand_borderWidth),
