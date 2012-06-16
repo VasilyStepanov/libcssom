@@ -313,8 +313,6 @@ static const SAC_LexicalUnit** isBorderWidthToken(
 
 
 struct _CSSOM_CSSPropertyValue_vtable {
-  const CSSOM_CSSPropertyType *types;
-  const size_t ntypes;
   int (*emit)(const CSSOM_CSSPropertyValue *property, FILE *out);
 };
 
@@ -506,8 +504,6 @@ static int GenericCSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 static const struct _CSSOM_CSSPropertyValue_vtable
 GenericCSSPropertyValue_vtable = {
-  NULL,
-  0,
   &GenericCSSPropertyValue_emit
 };
 
@@ -517,148 +513,18 @@ GenericCSSPropertyValue_vtable = {
  * Shorthand CSSProperty
  */
 
-static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
-  size_t i;
-  CSSOM_CSSPropertyValue *property;
-
-  for (i = 0; i < shorthand->vtable->ntypes; ++i) {
-    property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues, shorthand->vtable->types[i]);
-
-    if (property == NULL) return 0;
-    if (property->end - property->begin != 1) return 0;
-    if (isInherit(property->begin[0]) == 0) return 0;
-  }
-  return 1;
-}
+static int BoxShorthandCSSPropertyValue_emit(
+  const CSSOM_CSSPropertyValue *property, FILE *out);
 
 
 
 static int GenericShorthandCSSPropertyValue_emit(
-  const CSSOM_CSSPropertyValue *property, FILE *out)
-{
-  size_t i;
-  int emited;
-  const char *cssText;
-
-  if (isInheritShorthand(property)) {
-    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      property->parentValues, property->vtable->types[0]);
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-    return 0;
-  }
-
-  emited = 0;
-  for (i = 0; i < property->vtable->ntypes; ++i) {
-    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      property->parentValues, property->vtable->types[i]);
-    if (cssText != NULL) {
-      if (emited) {
-        if (fprintf(out, " ") < 0) return 1;
-      } else {
-        emited = 1;
-      }
-      if (fprintf(out, "%s", cssText) < 0) return 1;
-    }
-  }
-
-  return 0;
-}
-
-
-
-static int BoxShorthandCSSPropertyValue_emit(
-  const CSSOM_CSSPropertyValue *property, FILE *out)
-{
-  CSSOM_CSSPropertyValue *top;
-  CSSOM_CSSPropertyValue *right;
-  CSSOM_CSSPropertyValue *bottom;
-  CSSOM_CSSPropertyValue *left;
-  CSSOM_CSSPropertyValue *print[4] = { NULL, NULL, NULL, NULL };
-  size_t i;
-  const char *cssText;
-  int topbottom;
-  int rightleft;
-  int topright;
-
-  top = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, property->vtable->types[0]);
-  right = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, property->vtable->types[1]);
-  bottom = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, property->vtable->types[2]);
-  left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, property->vtable->types[3]);
-
-
-
-  /**
-   * Imposible shorthand
-   */
-
-  if (top == NULL || right == NULL || bottom == NULL || left == NULL) return 0;
-
-  topbottom = CSSPropertyValue_eq(top, bottom);
-  rightleft = CSSPropertyValue_eq(right, left);
-  topright = CSSPropertyValue_eq(top, right);
-
-
-
-  /**
-   * Imposible shorthand
-   */
-
-  if (!(rightleft && topbottom && topright)) {
-    if (CSSPropertyValue_isInherit(top) ||
-      CSSPropertyValue_isInherit(right) ||
-      CSSPropertyValue_isInherit(bottom) ||
-      CSSPropertyValue_isInherit(left))
-    {
-      return 0;
-    }
-  }
-
-  if (rightleft) {
-    if (topbottom) {
-      if (topright) {
-        print[0] = top;
-      } else {
-        print[0] = top;
-        print[1] = right;
-      }
-    } else {
-      print[0] = top;
-      print[1] = right;
-      print[2] = bottom;
-    }
-  } else {
-    print[0] = top;
-    print[1] = right;
-    print[2] = bottom;
-    print[3] = left;
-  }
-
-  for (i = 0; i < 4; ++i) {
-    if (print[i] == NULL) break;
-
-    cssText = CSSOM_CSSPropertyValue_cssText(print[i]);
-
-    if (cssText == NULL) return 1;
-    if (i != 0) {
-      if (fprintf(out, " ") < 0) return 1;
-    }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-  }
-
-  return 0;
-}
+  const CSSOM_CSSPropertyValue *property, FILE *out);
 
 
 
 static const struct _CSSOM_CSSPropertyValue_vtable
 BackgroundCSSPropertyValue_vtable = {
-  shorthand_background,
-  ASIZE(shorthand_background),
   &GenericShorthandCSSPropertyValue_emit
 };
 
@@ -666,8 +532,6 @@ BackgroundCSSPropertyValue_vtable = {
 
 static const struct _CSSOM_CSSPropertyValue_vtable
 BorderColorCSSPropertyValue_vtable = {
-  shorthand_borderColor,
-  ASIZE(shorthand_borderColor),
   &BoxShorthandCSSPropertyValue_emit
 };
 
@@ -675,8 +539,6 @@ BorderColorCSSPropertyValue_vtable = {
 
 static const struct _CSSOM_CSSPropertyValue_vtable
 BorderStyleCSSPropertyValue_vtable = {
-  shorthand_borderStyle,
-  ASIZE(shorthand_borderStyle),
   &BoxShorthandCSSPropertyValue_emit
 };
 
@@ -684,8 +546,6 @@ BorderStyleCSSPropertyValue_vtable = {
 
 static const struct _CSSOM_CSSPropertyValue_vtable
 BorderWidthCSSPropertyValue_vtable = {
-  shorthand_borderWidth,
-  ASIZE(shorthand_borderWidth),
   &BoxShorthandCSSPropertyValue_emit
 };
 
@@ -1614,7 +1474,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_whatever(
 
 struct _CSSOM_CSSPropertyValue_settings {
   const struct _CSSOM_CSSPropertyValue_vtable *vtable;
-  size_t nvalues;
+  const CSSOM_CSSPropertyType *subtypes;
+  size_t nsubtypes;
   PropertyHandler handler;
 };
 
@@ -1622,275 +1483,409 @@ struct _CSSOM_CSSPropertyValue_settings {
 
 static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_AZIMUTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_azimuth },
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_azimuth },
   /* CSSOM_BACKGROUND_PROPERTY */
-  { &BackgroundCSSPropertyValue_vtable, ASIZE(shorthand_background) + 1,
-    CSSPropertyValue_background },
+  { &BackgroundCSSPropertyValue_vtable, shorthand_background,
+    ASIZE(shorthand_background), CSSPropertyValue_background },
   /* CSSOM_BACKGROUND_ATTACHMENT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_backgroundAttachment }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_backgroundAttachment },
   /* CSSOM_BACKGROUND_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_backgroundColor }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_backgroundColor },
   /* CSSOM_BACKGROUND_IMAGE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_backgroundImage }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_backgroundImage },
   /* CSSOM_BACKGROUND_POSITION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_backgroundPosition }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_backgroundPosition },
   /* CSSOM_BACKGROUND_REPEAT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_backgroundRepeat }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_backgroundRepeat },
   /* CSSOM_BORDER_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_borderCollapse }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_borderCollapse },
   /* CSSOM_BORDER_COLOR_PROPERTY */
-  { &BorderColorCSSPropertyValue_vtable, ASIZE(shorthand_borderColor) + 1,
-    CSSPropertyValue_borderColor }, 
+  { &BorderColorCSSPropertyValue_vtable, shorthand_borderColor,
+    ASIZE(shorthand_borderColor), CSSPropertyValue_borderColor },
   /* CSSOM_BORDER_SPACING_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderSpacing }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderSpacing },
   /* CSSOM_BORDER_STYLE_PROPERTY */
-  { &BorderStyleCSSPropertyValue_vtable, ASIZE(shorthand_borderStyle) + 1,
-    CSSPropertyValue_borderStyle }, 
+  { &BorderStyleCSSPropertyValue_vtable, shorthand_borderStyle,
+    ASIZE(shorthand_borderStyle), CSSPropertyValue_borderStyle },
   /* CSSOM_BORDER_TOP_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_BORDER_RIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_BORDER_BOTTOM_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_BORDER_LEFT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_BORDER_TOP_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderTopColor }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_borderTopColor },
   /* CSSOM_BORDER_RIGHT_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderRightColor }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderRightColor },
   /* CSSOM_BORDER_BOTTOM_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderBottomColor }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderBottomColor },
   /* CSSOM_BORDER_LEFT_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderLeftColor }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderLeftColor },
   /* CSSOM_BORDER_TOP_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderTopStyle }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_borderTopStyle },
   /* CSSOM_BORDER_RIGHT_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderRightStyle }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderRightStyle },
   /* CSSOM_BORDER_BOTTOM_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderBottomStyle }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderBottomStyle },
   /* CSSOM_BORDER_LEFT_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderLeftStyle }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderLeftStyle },
   /* CSSOM_BORDER_TOP_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderTopWidth }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_borderTopWidth },
   /* CSSOM_BORDER_RIGHT_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderRightWidth }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderRightWidth },
   /* CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderBottomWidth }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderBottomWidth },
   /* CSSOM_BORDER_LEFT_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1,
-    CSSPropertyValue_borderLeftWidth }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0,
+    CSSPropertyValue_borderLeftWidth },
   /* CSSOM_BORDER_WIDTH_PROPERTY */
-  { &BorderWidthCSSPropertyValue_vtable, ASIZE(shorthand_borderWidth) + 1,
-    CSSPropertyValue_borderWidth }, 
+  { &BorderWidthCSSPropertyValue_vtable, shorthand_borderWidth,
+    ASIZE(shorthand_borderWidth), CSSPropertyValue_borderWidth },
   /* CSSOM_BOTTOM_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CAPTION_SIDE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CLEAR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CLIP_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CONTENT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_COUNTER_INCREMENT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_COUNTER_RESET_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CUE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CUE_AFTER_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CUE_BEFORE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_CURSOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_DIRECTION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_DISPLAY_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_ELEVATION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_EMPTY_CELLS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FLOAT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_FAMILY_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_SIZE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_SIZE_ADJUST_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_STRETCH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_VARIANT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_FONT_WEIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_HEIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LEFT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LETTER_SPACING_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LINE_HEIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LIST_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LIST_STYLE_IMAGE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LIST_STYLE_POSITION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_LIST_STYLE_TYPE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARGIN_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARGIN_TOP_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARGIN_RIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARGIN_BOTTOM_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARGIN_LEFT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARKER_OFFSET_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MARKS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MAX_HEIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MAX_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MIN_HEIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_MIN_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_ORPHANS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_OUTLINE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_OUTLINE_COLOR_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_OUTLINE_STYLE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_OUTLINE_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_OVERFLOW_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PADDING_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PADDING_TOP_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PADDING_RIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PADDING_BOTTOM_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PADDING_LEFT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAGE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAGE_BREAK_AFTER_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAGE_BREAK_BEFORE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAGE_BREAK_INSIDE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAUSE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAUSE_AFTER_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PAUSE_BEFORE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PITCH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PITCH_RANGE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_PLAY_DURING_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_POSITION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_QUOTES_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_RICHNESS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_RIGHT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SIZE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SPEAK_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SPEAK_HEADER_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SPEAK_NUMERAL_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SPEAK_PUNCTUATION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SPEECH_RATE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_SRC_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_STRESS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TABLE_LAYOUT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TEXT_ALIGN_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TEXT_DECORATION_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TEXT_INDENT_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TEXT_SHADOW_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TEXT_TRANSFORM_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_TOP_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_UNICODE_BIDI_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_VERTICAL_ALIGN_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_VISIBILITY_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_VOICE_FAMILY_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_VOLUME_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_WHITE_SPACE_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_WIDOWS_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_WIDTH_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_WORD_SPACING_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever }, 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever },
   /* CSSOM_Z_INDEX_PROPERTY */
-  { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever } 
+  { &GenericCSSPropertyValue_vtable, NULL, 0, CSSPropertyValue_whatever }
 };
+
+
+
+static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
+  size_t i;
+  CSSOM_CSSPropertyValue *property;
+
+  for (i = 0; i < settings[shorthand->type].nsubtypes; ++i) {
+    property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+      shorthand->parentValues, settings[shorthand->type].subtypes[i]);
+
+    if (property == NULL) return 0;
+    if (property->end - property->begin != 1) return 0;
+    if (isInherit(property->begin[0]) == 0) return 0;
+  }
+  return 1;
+}
+
+
+
+static int GenericShorthandCSSPropertyValue_emit(
+  const CSSOM_CSSPropertyValue *property, FILE *out)
+{
+  size_t i;
+  int emited;
+  const char *cssText;
+
+  if (isInheritShorthand(property)) {
+    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+      property->parentValues, settings[property->type].subtypes[0]);
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+    return 0;
+  }
+
+  emited = 0;
+  for (i = 0; i < settings[property->type].nsubtypes; ++i) {
+    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+      property->parentValues, settings[property->type].subtypes[i]);
+    if (cssText != NULL) {
+      if (emited) {
+        if (fprintf(out, " ") < 0) return 1;
+      } else {
+        emited = 1;
+      }
+      if (fprintf(out, "%s", cssText) < 0) return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+
+static int BoxShorthandCSSPropertyValue_emit(
+  const CSSOM_CSSPropertyValue *property, FILE *out)
+{
+  CSSOM_CSSPropertyValue *top;
+  CSSOM_CSSPropertyValue *right;
+  CSSOM_CSSPropertyValue *bottom;
+  CSSOM_CSSPropertyValue *left;
+  CSSOM_CSSPropertyValue *print[4] = { NULL, NULL, NULL, NULL };
+  size_t i;
+  const char *cssText;
+  int topbottom;
+  int rightleft;
+  int topright;
+
+  top = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, settings[property->type].subtypes[0]);
+  right = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, settings[property->type].subtypes[1]);
+  bottom = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, settings[property->type].subtypes[2]);
+  left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    property->parentValues, settings[property->type].subtypes[3]);
+
+
+
+  /**
+   * Imposible shorthand
+   */
+
+  if (top == NULL || right == NULL || bottom == NULL || left == NULL) return 0;
+
+  topbottom = CSSPropertyValue_eq(top, bottom);
+  rightleft = CSSPropertyValue_eq(right, left);
+  topright = CSSPropertyValue_eq(top, right);
+
+
+
+  /**
+   * Imposible shorthand
+   */
+
+  if (!(rightleft && topbottom && topright)) {
+    if (CSSPropertyValue_isInherit(top) ||
+      CSSPropertyValue_isInherit(right) ||
+      CSSPropertyValue_isInherit(bottom) ||
+      CSSPropertyValue_isInherit(left))
+    {
+      return 0;
+    }
+  }
+
+  if (rightleft) {
+    if (topbottom) {
+      if (topright) {
+        print[0] = top;
+      } else {
+        print[0] = top;
+        print[1] = right;
+      }
+    } else {
+      print[0] = top;
+      print[1] = right;
+      print[2] = bottom;
+    }
+  } else {
+    print[0] = top;
+    print[1] = right;
+    print[2] = bottom;
+    print[3] = left;
+  }
+
+  for (i = 0; i < 4; ++i) {
+    if (print[i] == NULL) break;
+
+    cssText = CSSOM_CSSPropertyValue_cssText(print[i]);
+
+    if (cssText == NULL) return 1;
+    if (i != 0) {
+      if (fprintf(out, " ") < 0) return 1;
+    }
+    if (fprintf(out, "%s", cssText) < 0) return 1;
+  }
+
+  return 0;
+}
 
 
 
@@ -2048,7 +2043,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   values[0].type = type;
 
   property = assignProperties(cssom, parentValues, holder, values,
-    settings[type].nvalues, important, error);
+    settings[type].nsubtypes + 1, important, error);
   if (property == NULL) {
     CSSOM_free(holder);
     if (error != NULL) *error = 1;
