@@ -193,9 +193,8 @@ const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
 
 
 int CSSOM_CSSStyleDeclarationValue__setProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, SAC_Boolean priority)
+  CSSOM_CSSStyleDeclarationValue *values, const char *property,
+  const SAC_LexicalUnit *value, SAC_Boolean priority)
 {
   const CSSOM *cssom;
   CSSOM_FSMIter_CSSPropertyValue it;
@@ -209,8 +208,8 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, it->hash,
-    begin, end, priority, &error);
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, it->hash, value,
+    priority, &error);
   if (propertyValue == NULL) {
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return error;

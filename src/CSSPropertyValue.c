@@ -2054,22 +2054,27 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_validate(const CSSOM *cssom,
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyType type, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, SAC_Boolean important, int *error)
+  CSSOM_CSSPropertyType type, const SAC_LexicalUnit *value,
+  SAC_Boolean important, int *error)
 {
+  const SAC_LexicalUnit **begin;
+  const SAC_LexicalUnit **end;
   const SAC_LexicalUnit **holder;
   CSSOM_CSSPropertyValue *property;
 
-  if (end == NULL) {
+  if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
     holder = (const SAC_LexicalUnit**)CSSOM_malloc(
       sizeof(const SAC_LexicalUnit*) * 2);
     if (holder == NULL) return NULL;
-    holder[0] = *begin;
+    holder[0] = value;
     holder[1] = NULL;
     begin = &holder[0];
     end = &holder[1];
   } else {
     holder = NULL;
+    begin = (const SAC_LexicalUnit**)value->desc.subValues;
+    end = begin;
+    while (*end != NULL) ++end;
   }
 
   property = CSSPropertyValue_validate(cssom, parentValues, type, holder, begin,

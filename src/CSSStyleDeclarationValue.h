@@ -30,9 +30,8 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue__parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values);
 
 int CSSOM_CSSStyleDeclarationValue__setProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  const char *property, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, SAC_Boolean priority);
+  CSSOM_CSSStyleDeclarationValue *values, const char *property,
+  const SAC_LexicalUnit *value, SAC_Boolean priority);
 
 void CSSOM_CSSStyleDeclarationValue__fsetProperty(
   CSSOM_CSSStyleDeclarationValue *values,

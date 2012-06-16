@@ -26,8 +26,8 @@ const CSSOM_ParserStats* CSSOM_ParserStack_stats(
   const CSSOM_ParserStack *stack);
 
 int CSSOM_ParserStack_setProperty(CSSOM_ParserStack *stack,
-  const SAC_STRING propertyName, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, SAC_Boolean important);
+  const SAC_STRING propertyName, const SAC_LexicalUnit *value,
+  SAC_Boolean important);
 
 CSSOM_CSSImportRule* CSSOM_ParserStack_appendCSSImportRule(
   CSSOM_ParserStack *stack,
