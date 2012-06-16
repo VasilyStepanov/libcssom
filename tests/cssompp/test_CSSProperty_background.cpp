@@ -54,9 +54,11 @@ void backgroundAttachment() {
    * fixed
    */
 
+  style.setBackgroundAttachment(NULL);
   style.setBackgroundAttachment("fixed");
   assertEquals(std::string("fixed"), style.backgroundAttachment());
 
+  style.setBackgroundAttachment(NULL);
   style.setBackgroundAttachment("FIXED");
   assertEquals(std::string("fixed"), style.backgroundAttachment());
 
