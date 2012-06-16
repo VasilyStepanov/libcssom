@@ -692,35 +692,13 @@ BorderWidthCSSPropertyValue_vtable = {
 
 
 static const SAC_LexicalUnit** CSSPropertyValue_walk(
-  const PropertyHandler *handlers, struct _CSSOM_LexicalUnitRange *values,
-  size_t size, const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
-{
-  size_t i;
-  const SAC_LexicalUnit **tail;
-
-  if (begin == end) return end;
-
-  for (i = 0; i < size; ++i) {
-    if (values[i].begin != NULL) continue;
-
-    tail = handlers[i](begin, end, &values[i]);
-    if (tail == begin) continue;
-
-    if (CSSPropertyValue_walk(handlers, values, size, tail, end) == end)
-      return end;
-
-    values[i].type = 0;
-    values[i].begin = NULL;
-    values[i].end = NULL;
-  }
-
-  return begin;
-}
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
 
 
 static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
-  const PropertyHandler *handlers,
   const struct _CSSOM_LexicalUnitRange *initial,
   struct _CSSOM_LexicalUnitRange *values, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
@@ -735,7 +713,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
 
   } else {
 
-    tail = CSSPropertyValue_walk(handlers, values, size, begin, end);
+    tail = CSSPropertyValue_walk(initial, values, size, begin, end);
     if (tail != end) return begin;
 
     for (i = 0; i < size; ++i) {
@@ -1165,14 +1143,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     &unit_0pct, &unit_0pct
   };
 
-  static const PropertyHandler handlers[ASIZE(shorthand_background)] = {
-    CSSPropertyValue_backgroundColor,
-    CSSPropertyValue_backgroundImage,
-    CSSPropertyValue_backgroundRepeat,
-    CSSPropertyValue_backgroundAttachment,
-    CSSPropertyValue_backgroundPosition
-  };
-
   static const struct _CSSOM_LexicalUnitRange
   initial[ASIZE(shorthand_background)] = {
     { CSSOM_BACKGROUND_COLOR_PROPERTY, INITIAL(color) },
@@ -1182,7 +1152,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
     { CSSOM_BACKGROUND_POSITION_PROPERTY, INITIAL(position) }
   };
 
-  if (CSSPropertyValue_genericShorthand(handlers, initial, &values[1],
+  if (CSSPropertyValue_genericShorthand(initial, &values[1],
     ASIZE(shorthand_background), begin, end) != end)
   {
     return begin;
@@ -1921,6 +1891,35 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_Z_INDEX_PROPERTY */
   { &GenericCSSPropertyValue_vtable, 1, CSSPropertyValue_whatever } 
 };
+
+
+
+static const SAC_LexicalUnit** CSSPropertyValue_walk(
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+{
+  size_t i;
+  const SAC_LexicalUnit **tail;
+
+  if (begin == end) return end;
+
+  for (i = 0; i < size; ++i) {
+    if (values[i].begin != NULL) continue;
+
+    tail = settings[initial[i].type].handler(begin, end, &values[i]);
+    if (tail == begin) continue;
+
+    if (CSSPropertyValue_walk(initial, values, size, tail, end) == end)
+      return end;
+
+    values[i].type = 0;
+    values[i].begin = NULL;
+    values[i].end = NULL;
+  }
+
+  return begin;
+}
 
 
 
