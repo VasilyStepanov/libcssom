@@ -6,6 +6,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleDeclarationValue.h"
 #include "CSSStyleSheet.h"
+#include "CSSPropertyValue_utility.h"
 #include "gcc.h"
 #include "memory.h"
 #include "utility.h"
@@ -15,32 +16,6 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-
-
-
-#define ASIZE(array) \
-  (sizeof(array) / sizeof(array[0]))
-
-#define INITIAL(initial) \
-  (initial), &(initial)[ASIZE(initial)]
-
-
-
-struct _CSSOM_LexicalUnitRange {
-  CSSOM_CSSPropertyType type;
-  const SAC_LexicalUnit **begin;
-  const SAC_LexicalUnit **end;
-};
-
-#define SET_RANGE(range, type_val, begin_val, end_val) \
-  do { \
-    (range).type = (type_val); \
-    (range).begin = (begin_val); \
-    (range).end = (end_val); \
-  } while (0)
-
-typedef const SAC_LexicalUnit**(*PropertyHandler)(const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 
 
 
@@ -101,141 +76,6 @@ void CSSOM_CSSPropertyValue__initGlobals(void) {
 
 
 
-static int isInherit(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_INHERIT) return 1; 
-  return 0;
-}
-
-
-
-static int isAngle(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_DEGREE) {
-    return 1;
-  } else if (value->lexicalUnitType == SAC_GRADIAN) {
-    return 1;
-  } else if (value->lexicalUnitType == SAC_RADIAN) {
-    return 1;
-  }
-  return 0;
-}
-
-
-
-static int isLength(const SAC_LexicalUnit *value) {
-  switch (value->lexicalUnitType) {
-    case SAC_LENGTH_EM:
-    case SAC_LENGTH_EX:
-    case SAC_LENGTH_PIXEL:
-    case SAC_LENGTH_INCH:
-    case SAC_LENGTH_CENTIMETER:
-    case SAC_LENGTH_POINT:
-    case SAC_LENGTH_PICA:
-      return 1;
-    case SAC_REAL:
-      if (value->desc.real == 0) return 1;
-      break;
-    case SAC_INTEGER:
-      if (value->desc.integer == 0) return 1;
-      break;
-    default:
-      break;
-  }
-  return 0;
-}
-
-
-
-static int isNonNegativeLength(const SAC_LexicalUnit *value) {
-  switch (value->lexicalUnitType) {
-    case SAC_LENGTH_EM:
-    case SAC_LENGTH_EX:
-    case SAC_LENGTH_PIXEL:
-    case SAC_LENGTH_INCH:
-    case SAC_LENGTH_CENTIMETER:
-    case SAC_LENGTH_POINT:
-    case SAC_LENGTH_PICA:
-      if (value->desc.dimension.value.sreal >= 0) return 1;
-      break;
-    case SAC_REAL:
-      if (value->desc.real == 0) return 1;
-      break;
-    case SAC_INTEGER:
-      if (value->desc.integer == 0) return 1;
-      break;
-    default:
-      break;
-  }
-  return 0;
-}
-
-
-
-static int isColor(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_RGBCOLOR) {
-    const SAC_LexicalUnit *red;
-    const SAC_LexicalUnit *green;
-    const SAC_LexicalUnit *blue;
-
-    if (value->desc.function.parameters[0] == NULL) return 0;
-    red = value->desc.function.parameters[0];
-
-
-    if (red->lexicalUnitType != SAC_INTEGER) return 0;
-    if (red->desc.integer < 0 || red->desc.integer > 255) return 0;
-
-    if (value->desc.function.parameters[1] == NULL) return 0;
-    if (value->desc.function.parameters[1]->lexicalUnitType !=
-      SAC_OPERATOR_COMMA)
-    {
-      return 0;
-    }
-
-    if (value->desc.function.parameters[2] == NULL) return 0;
-    green = value->desc.function.parameters[2];
-
-    if (green->lexicalUnitType != SAC_INTEGER) return 0;
-    if (green->desc.integer < 0 || green->desc.integer > 255) return 0;
-
-    if (value->desc.function.parameters[3] == NULL) return 0;
-    if (value->desc.function.parameters[3]->lexicalUnitType !=
-      SAC_OPERATOR_COMMA)
-    {
-      return 0;
-    }
-
-    if (value->desc.function.parameters[4] == NULL) return 0;
-    blue = value->desc.function.parameters[4];
-
-    if (blue->lexicalUnitType != SAC_INTEGER) return 0;
-    if (blue->desc.integer < 0 || blue->desc.integer > 255) return 0;
-
-    if (value->desc.function.parameters[5] != NULL) return 0;
-
-    return 1;
-  } else if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("aqua", value->desc.ident) == 0) return 1;
-    if (strcmp("black", value->desc.ident) == 0) return 1;
-    if (strcmp("blue", value->desc.ident) == 0) return 1;
-    if (strcmp("fuchsia", value->desc.ident) == 0) return 1;
-    if (strcmp("gray", value->desc.ident) == 0) return 1;
-    if (strcmp("green", value->desc.ident) == 0) return 1;
-    if (strcmp("lime", value->desc.ident) == 0) return 1;
-    if (strcmp("maroon", value->desc.ident) == 0) return 1;
-    if (strcmp("navy", value->desc.ident) == 0) return 1;
-    if (strcmp("olive", value->desc.ident) == 0) return 1;
-    if (strcmp("orange", value->desc.ident) == 0) return 1;
-    if (strcmp("purple", value->desc.ident) == 0) return 1;
-    if (strcmp("red", value->desc.ident) == 0) return 1;
-    if (strcmp("silver", value->desc.ident) == 0) return 1;
-    if (strcmp("teal", value->desc.ident) == 0) return 1;
-    if (strcmp("white", value->desc.ident) == 0) return 1;
-    if (strcmp("yellow", value->desc.ident) == 0) return 1;
-  }
-  return 0;
-}
-
-
-
 static int isBorderStyle(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_IDENT) {
     if (strcmp("none", value->desc.ident) == 0) return 1;
@@ -259,23 +99,9 @@ static int isBorderWidth(const SAC_LexicalUnit *value) {
     if (strcmp("thin", value->desc.ident) == 0) return 1;
     if (strcmp("medium", value->desc.ident) == 0) return 1;
     if (strcmp("thick", value->desc.ident) == 0) return 1;
-  } else if (isNonNegativeLength(value)) {
+  } else if (CSSOM_LexicalUnit_isNonNegativeLength(value)) {
     return 1;
   }
-  return 0;
-}
-
-
-
-static int isUrl(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_URI) return 1;
-  return 0;
-}
-
-
-
-static int isPercentage(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_PERCENTAGE) return 1;
   return 0;
 }
 
@@ -284,7 +110,7 @@ static int isPercentage(const SAC_LexicalUnit *value) {
 static const SAC_LexicalUnit** isBorderColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (isColor(begin[0])) {
+  if (CSSOM_LexicalUnit_isColor(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
@@ -449,7 +275,7 @@ static int LexicalUnit_eq(const SAC_LexicalUnit *lhs,
 
 static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
   if (property->end - property->begin != 1) return 0;
-  return isInherit(property->begin[0]);
+  return CSSOM_LexicalUnit_isInherit(property->begin[0]);
 }
 
 
@@ -566,10 +392,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
   size_t i;
   const SAC_LexicalUnit **tail;
 
-  if (&begin[1] == end && isInherit(begin[0])) {
+  if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
 
     for (i = 0; i < size; ++i)
-      SET_RANGE(values[i], initial[i].type, begin, end);
+      _CSSOM_SET_RANGE(values[i], initial[i].type, begin, end);
 
   } else {
 
@@ -590,21 +416,23 @@ static const SAC_LexicalUnit** CSSPropertyValue_genericShorthand(
 
 
 static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(
-  const CSSOM_CSSPropertyType *types, PropertyHandler handler,
+  const CSSOM_CSSPropertyType *types, _CSSOM_PropertyHandler handler,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values)
 {
   struct _CSSOM_LexicalUnitRange value;
   switch (end - begin) {
     case 1:
-      if (!isInherit(begin[0]) && handler(begin, end, &value) != end) {
+      if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(begin, end,
+        &value) != end)
+      {
         return begin;
       }
 
-      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
-      SET_RANGE(values[1], types[1], &begin[0], &begin[1]);
-      SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
-      SET_RANGE(values[3], types[3], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[0], &begin[1]);
 
       break;
     case 2:
@@ -614,10 +442,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(
         return begin;
       }
 
-      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
-      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
-      SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
-      SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
 
       break;
     case 3:
@@ -628,10 +456,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(
         return begin;
       }
 
-      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
-      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
-      SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
-      SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
 
       break;
     case 4:
@@ -643,10 +471,10 @@ static const SAC_LexicalUnit** CSSPropertyValue_boxShorthand(
         return begin;
       }
 
-      SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
-      SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
-      SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
-      SET_RANGE(values[3], types[3], &begin[3], &begin[4]);
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[3], &begin[4]);
 
       break;
   }
@@ -708,7 +536,7 @@ static const SAC_LexicalUnit** azimuth_behind(const SAC_LexicalUnit **begin,
 static const SAC_LexicalUnit** CSSPropertyValue_readAzimuth(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  if (isAngle(begin[0])) {
+  if (CSSOM_LexicalUnit_isAngle(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("leftwards", begin[0]->desc.ident) == 0) {
@@ -724,7 +552,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readAzimuth(
     if (strcmp("behind", begin[0]->desc.ident) == 0)
       return azimuth_behind(&begin[1], end);
 
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -741,7 +569,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_azimuth(
   tail = CSSPropertyValue_readAzimuth(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_AZIMUTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_AZIMUTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -757,7 +585,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundAttachment(
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("scroll", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("fixed", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -774,7 +602,8 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
   tail = CSSPropertyValue_readBackgroundAttachment(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+    begin, tail);
   return tail;
 }
 
@@ -787,11 +616,11 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundAttachment(
 static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundColor(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (isColor(begin[0])) {
+  if (CSSOM_LexicalUnit_isColor(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -808,7 +637,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
   tail = CSSPropertyValue_readBackgroundColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -821,11 +650,11 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundColor(
 static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundImage(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (isUrl(begin[0])) {
+  if (CSSOM_LexicalUnit_isUrl(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("none", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -842,7 +671,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundImage(
   tail = CSSPropertyValue_readBackgroundImage(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -857,9 +686,9 @@ static const SAC_LexicalUnit** backgroundPosition_horizontal(
 {
   if (expr[0] == NULL) {
     return &expr[0];
-  } else if (isPercentage(expr[0])) {
+  } else if (CSSOM_LexicalUnit_isPercentage(expr[0])) {
     return &expr[1];
-  } else if (isLength(expr[0])) {
+  } else if (CSSOM_LexicalUnit_isLength(expr[0])) {
     return &expr[1];
   } else if (expr[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("top", expr[0]->desc.ident) == 0) return &expr[1];
@@ -890,7 +719,7 @@ static const SAC_LexicalUnit** backgroundPosition_vertical(
 static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundPosition(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (isPercentage(begin[0]) || isLength(begin[0])) {
+  if (CSSOM_LexicalUnit_isPercentage(begin[0]) || CSSOM_LexicalUnit_isLength(begin[0])) {
     return backgroundPosition_horizontal(&begin[1]);
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
 
@@ -917,7 +746,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundPosition(
       return backgroundPosition_vertical(&begin[1]);
     }
 
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -934,7 +763,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundPosition(
   tail = CSSPropertyValue_readBackgroundPosition(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -952,7 +781,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBackgroundRepeat(
     if (strcmp("repeat-x", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("repeat-y", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("no-repeat", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -969,7 +798,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_backgroundRepeat(
   tail = CSSPropertyValue_readBackgroundRepeat(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1004,21 +833,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
   };
 
   static const struct _CSSOM_LexicalUnitRange
-  initial[ASIZE(shorthand_background)] = {
-    { CSSOM_BACKGROUND_COLOR_PROPERTY, INITIAL(color) },
-    { CSSOM_BACKGROUND_IMAGE_PROPERTY, INITIAL(image) },
-    { CSSOM_BACKGROUND_REPEAT_PROPERTY, INITIAL(repeat) },
-    { CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, INITIAL(attachment) },
-    { CSSOM_BACKGROUND_POSITION_PROPERTY, INITIAL(position) }
+  initial[_CSSOM_ASIZE(shorthand_background)] = {
+    { CSSOM_BACKGROUND_COLOR_PROPERTY, _CSSOM_INITIAL(color) },
+    { CSSOM_BACKGROUND_IMAGE_PROPERTY, _CSSOM_INITIAL(image) },
+    { CSSOM_BACKGROUND_REPEAT_PROPERTY, _CSSOM_INITIAL(repeat) },
+    { CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, _CSSOM_INITIAL(attachment) },
+    { CSSOM_BACKGROUND_POSITION_PROPERTY, _CSSOM_INITIAL(position) }
   };
 
   if (CSSPropertyValue_genericShorthand(initial, &values[1],
-    ASIZE(shorthand_background), begin, end) != end)
+    _CSSOM_ASIZE(shorthand_background), begin, end) != end)
   {
     return begin;
   }
 
-  SET_RANGE(values[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
   return end;
 }
 
@@ -1034,7 +863,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBorderCollapse(
   if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("collapse", begin[0]->desc.ident) == 0) return &begin[1];
     if (strcmp("separate", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -1051,7 +880,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
   tail = CSSPropertyValue_readBorderCollapse(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1070,7 +899,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColorToken(
   tail = isBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1086,7 +915,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
     return begin;
   }
 
-  SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
   return end;
 }
 
@@ -1099,10 +928,14 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
 static const SAC_LexicalUnit** CSSPropertyValue_readBorderSpacing(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (isLength(begin[0])) {
-    if (&begin[1] != end && isLength(begin[1])) return &begin[2];
+  if (CSSOM_LexicalUnit_isLength(begin[0])) {
+    if (&begin[1] != end &&
+      CSSOM_LexicalUnit_isLength(begin[1]))
+    {
+      return &begin[2];
+    }
     return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -1119,7 +952,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
   tail = CSSPropertyValue_readBorderSpacing(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1138,7 +971,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyleToken(
   tail = borderStyle(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1154,7 +987,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
     return begin;
   }
 
-  SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
   return end;
 }
 
@@ -1169,7 +1002,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBorderColor(
 {
   if (isBorderColor(begin, end) == &begin[1]) {
     return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -1186,7 +1019,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderTopColor(
   tail = CSSPropertyValue_readBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1205,7 +1038,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderRightColor(
   tail = CSSPropertyValue_readBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_RIGHT_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1224,7 +1057,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderBottomColor(
   tail = CSSPropertyValue_readBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1243,7 +1076,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderLeftColor(
   tail = CSSPropertyValue_readBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_LEFT_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1258,7 +1091,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBorderStyle(
 {
   if (borderStyle(begin, end) == &begin[1]) {
     return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -1275,7 +1108,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderTopStyle(
   tail = CSSPropertyValue_readBorderStyle(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1294,7 +1127,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderRightStyle(
   tail = CSSPropertyValue_readBorderStyle(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_RIGHT_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1313,7 +1146,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderBottomStyle(
   tail = CSSPropertyValue_readBorderStyle(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1332,7 +1165,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderLeftStyle(
   tail = CSSPropertyValue_readBorderStyle(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_LEFT_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1347,7 +1180,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_readBorderWidth(
 {
   if (isBorderWidthToken(begin, end) == &begin[1]) {
     return &begin[1];
-  } else if (isInherit(begin[0])) {
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }
   return &begin[0];
@@ -1364,7 +1197,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderTopWidth(
   tail = CSSPropertyValue_readBorderWidth(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1383,7 +1216,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderRightWidth(
   tail = CSSPropertyValue_readBorderWidth(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1402,7 +1235,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderBottomWidth(
   tail = CSSPropertyValue_readBorderWidth(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1421,7 +1254,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderLeftWidth(
   tail = CSSPropertyValue_readBorderWidth(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_LEFT_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1440,7 +1273,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderWidthToken(
   tail = isBorderWidthToken(begin, end);
   if (tail == begin) return begin;
 
-  SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -1456,7 +1289,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderWidth(
     return begin;
   }
 
-  SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
   return end;
 }
 
@@ -1466,7 +1299,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_whatever(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values)
 {
-  SET_RANGE(values[0], 0, begin, end);
+  _CSSOM_SET_RANGE(values[0], 0, begin, end);
   return end;
 }
 
@@ -1477,7 +1310,7 @@ struct _CSSOM_CSSPropertyValue_settings {
   const struct _CSSOM_CSSPropertyValue_vtable *vtable;
   const CSSOM_CSSPropertyType *subtypes;
   size_t nsubtypes;
-  PropertyHandler handler;
+  _CSSOM_PropertyHandler handler;
 };
 
 
@@ -1491,7 +1324,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_BACKGROUND_PROPERTY */
   { "background",
     &BackgroundCSSPropertyValue_vtable,
-    shorthand_background, ASIZE(shorthand_background),
+    shorthand_background, _CSSOM_ASIZE(shorthand_background),
     CSSPropertyValue_background },
   /* CSSOM_BACKGROUND_ATTACHMENT_PROPERTY */
   { "background-attachment",
@@ -1531,7 +1364,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_BORDER_COLOR_PROPERTY */
   { "border-color",
     &BorderColorCSSPropertyValue_vtable,
-    shorthand_borderColor, ASIZE(shorthand_borderColor),
+    shorthand_borderColor, _CSSOM_ASIZE(shorthand_borderColor),
     CSSPropertyValue_borderColor },
   /* CSSOM_BORDER_SPACING_PROPERTY */
   { "border-spacing",
@@ -1541,7 +1374,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_BORDER_STYLE_PROPERTY */
   { "border-style",
     &BorderStyleCSSPropertyValue_vtable,
-    shorthand_borderStyle, ASIZE(shorthand_borderStyle),
+    shorthand_borderStyle, _CSSOM_ASIZE(shorthand_borderStyle),
     CSSPropertyValue_borderStyle },
   /* CSSOM_BORDER_TOP_PROPERTY */
   { "border-top",
@@ -1626,7 +1459,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
   /* CSSOM_BORDER_WIDTH_PROPERTY */
   { "border-width",
     &BorderWidthCSSPropertyValue_vtable,
-    shorthand_borderWidth, ASIZE(shorthand_borderWidth),
+    shorthand_borderWidth, _CSSOM_ASIZE(shorthand_borderWidth),
     CSSPropertyValue_borderWidth },
   /* CSSOM_BOTTOM_PROPERTY */
   { "bottom",
@@ -2112,7 +1945,7 @@ static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
 
     if (property == NULL) return 0;
     if (property->end - property->begin != 1) return 0;
-    if (isInherit(property->begin[0]) == 0) return 0;
+    if (CSSOM_LexicalUnit_isInherit(property->begin[0]) == 0) return 0;
   }
   return 1;
 }
