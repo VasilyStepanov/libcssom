@@ -35,20 +35,34 @@ struct _CSSOM {
 
 
 CSSOM* CSSOM_create(void) {
+  size_t i;
+  const char **properties;
   CSSOM_FSMTable_CSSPropertyValue *table;
   CSSOM *cssom;
 
-  table = CSSOM_FSMTable_CSSPropertyValue_alloc(CSSOM_CSSProperties);
-  if (table == NULL) return NULL;
+  properties = (const char**)CSSOM_malloc(
+    sizeof(const char *) * (CSSOM_nproperties + 1));
+  if (properties == NULL) return NULL;
+
+  for (i = 0; i < CSSOM_nproperties; ++i)
+    properties[i] = CSSOM_propertySettings[i].name;
+  properties[CSSOM_nproperties] = NULL;
+
+  table = CSSOM_FSMTable_CSSPropertyValue_alloc(properties);
+  if (table == NULL) {
+    CSSOM_free(properties);
+    return NULL;
+  }
 
   cssom = (CSSOM*)CSSOM_malloc(sizeof(CSSOM));
   if (cssom == NULL) {
+    CSSOM_free(properties);
     CSSOM_FSMTable_CSSPropertyValue_free(table);
     return NULL;
   }
 
   cssom->handles = 1;
-  cssom->properties = CSSOM_CSSProperties;
+  cssom->properties = properties;
   cssom->table = table;
   cssom->errorHandler = NULL;
   cssom->userData = NULL;
@@ -74,6 +88,7 @@ void CSSOM_release(CSSOM *cssom) {
   if (cssom->handles > 0) return;
 
   CSSOM_FSMTable_CSSPropertyValue_free(cssom->table);
+  CSSOM_free(cssom->properties);
   CSSOM_free(cssom);
 }
 

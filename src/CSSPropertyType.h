@@ -1,6 +1,8 @@
 #ifndef _CSSOM_CSS_PROPERTY_TYPE_H
 #define _CSSOM_CSS_PROPERTY_TYPE_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -132,6 +134,8 @@ typedef enum _CSSOM_CSSPropertyType {
   CSSOM_WORD_SPACING_PROPERTY = 121,
   CSSOM_Z_INDEX_PROPERTY = 122
 } CSSOM_CSSPropertyType;
+
+extern const size_t CSSOM_nproperties;
 
 
 

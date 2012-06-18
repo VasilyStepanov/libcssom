@@ -40,6 +40,7 @@ libcssom_la_HEADERS = $(top_srcdir)/include/cssom/CSSOM.h \
 libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
                       CSSPropertySettings.c \
+                      CSSPropertyType.c \
                       CSSPropertyValue.c \
                       CSSPropertyValue_azimuth.c \
                       CSSPropertyValue_background.c \

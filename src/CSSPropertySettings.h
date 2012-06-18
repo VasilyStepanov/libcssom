@@ -32,8 +32,6 @@ struct _CSSOM_CSSPropertyValue_settings {
 
 
 
-extern const char *CSSOM_CSSProperties[];
-
 extern const struct _CSSOM_CSSPropertyValue_settings CSSOM_propertySettings[];
 
 
