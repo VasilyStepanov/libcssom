@@ -908,6 +908,17 @@ void background() {
 
 
   /**
+   * imposible shorthand
+   */
+
+  style.setBackground(NULL);
+  style.setBackground("inherit");
+  style.setBackgroundImage(NULL);
+  assertEquals(std::string(""), style.background());
+
+
+
+  /**
    * error
    */
 
