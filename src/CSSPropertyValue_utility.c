@@ -167,7 +167,7 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
     if (marker[i]) continue;
 
     tail = CSSOM_propertySettings[initial[i].type].handler(begin, end,
-      &values[i]);
+      values != NULL ? &values[i] : NULL);
     if (tail == begin) continue;
 
     marker[i] = 1;
@@ -201,11 +201,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
     tail = LexicalUnitRange_walk(initial, values, marker, size, begin, end);
     if (tail != end) return begin;
+  
+    if (values != NULL) {
+      for (i = 0; i < size; ++i) {
+        if (values[i].begin != NULL) continue;
 
-    for (i = 0; i < size; ++i) {
-      if (values[i].begin != NULL) continue;
-
-      values[i] = initial[i];
+        values[i] = initial[i];
+      }
     }
 
   }
@@ -276,6 +278,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
       _CSSOM_SET_RANGE(values, 3, types[3], &begin[3], &begin[4]);
 
       break;
+    default:
+      return begin;
   }
 
   return end;

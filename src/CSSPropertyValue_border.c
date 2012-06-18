@@ -137,7 +137,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
 {
   if (CSSOM_LexicalUnitRange_boxShorthand(
     CSSOM_CSSPropertyValue_borderColorSubtypes, borderColorToken, begin, end,
-    &values[1]) != end)
+    values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -209,7 +209,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
 {
   if (CSSOM_LexicalUnitRange_boxShorthand(
     CSSOM_CSSPropertyValue_borderStyleSubtypes, borderStyleToken, begin, end,
-    &values[1]) != end)
+    values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -496,7 +496,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
 {
   if (CSSOM_LexicalUnitRange_boxShorthand(
     CSSOM_CSSPropertyValue_borderWidthSubtypes, borderWidthToken, begin, end,
-    &values[1]) != end)
+    values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }

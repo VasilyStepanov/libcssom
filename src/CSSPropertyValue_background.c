@@ -85,7 +85,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
     0, 0, 0, 0, 0
   };
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(initial, &values[1], marker,
+  if (CSSOM_LexicalUnitRange_genericShorthand(initial,
+    values != NULL ? &values[1] : NULL, marker,
     _CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes), begin, end) != end)
   {
     return begin;

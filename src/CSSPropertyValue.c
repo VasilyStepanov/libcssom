@@ -153,13 +153,6 @@ static int LexicalUnit_eq(const SAC_LexicalUnit *lhs,
 
 
 
-static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
-  if (property->end - property->begin != 1) return 0;
-  return CSSOM_LexicalUnit_isInherit(property->begin[0]);
-}
-
-
-
 static int CSSPropertyValue_eq(const CSSOM_CSSPropertyValue *lhs,
   const CSSOM_CSSPropertyValue *rhs)
 {
@@ -196,52 +189,91 @@ int CSSOM_CSSPropertyValue__genericEmit(const CSSOM_CSSPropertyValue *property,
 
 
 
-static int isInheritShorthand(const CSSOM_CSSPropertyValue *shorthand) {
+static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
+  if (property->end - property->begin != 1) return 0;
+  return CSSOM_LexicalUnit_isInherit(property->begin[0]);
+}
+
+
+
+static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
+  int *isInherit)
+{
+  size_t _size;
+  int _isInherit;
   size_t i;
   CSSOM_CSSPropertyValue *property;
 
+  _size = 0;
+  _isInherit = 1;
   for (i = 0; i < CSSOM_propertySettings[shorthand->type].nsubtypes; ++i) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
       shorthand->parentValues,
       CSSOM_propertySettings[shorthand->type].subtypes[i]);
 
     if (property == NULL) return 0;
-    if (property->end - property->begin != 1) return 0;
-    if (CSSOM_LexicalUnit_isInherit(property->begin[0]) == 0) return 0;
+
+    _size += property->end - property->begin;
+    if (_isInherit && !CSSPropertyValue_isInherit(property)) _isInherit = 0;
   }
+
+  if (isInherit != NULL) *isInherit = _isInherit;
+  if (size != NULL) *size = _size;
   return 1;
 }
 
 
 
 int CSSOM_CSSPropertyValue__genericShorthandEmit(
-  const CSSOM_CSSPropertyValue *property, FILE *out)
+  const CSSOM_CSSPropertyValue *shorthand, FILE *out)
 {
   size_t i;
-  int emited;
+  size_t size;
+  const CSSOM_CSSPropertyValue *property;
+  const SAC_LexicalUnit **rit;
+  const SAC_LexicalUnit **wit;
+  const SAC_LexicalUnit **holder;
+  int rval;
   const char *cssText;
+  const struct _CSSOM_CSSPropertyValue_settings *settings;
+  int isInherit;
 
-  if (isInheritShorthand(property)) {
+  settings = &CSSOM_propertySettings[shorthand->type];
+
+  if (!testShorthand(shorthand, &size, &isInherit)) return 0;
+  if (isInherit) {
     cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      property->parentValues,
-      CSSOM_propertySettings[property->type].subtypes[0]);
+      shorthand->parentValues, settings->subtypes[0]);
     if (fprintf(out, "%s", cssText) < 0) return 1;
     return 0;
   }
 
-  emited = 0;
-  for (i = 0; i < CSSOM_propertySettings[property->type].nsubtypes; ++i) {
+  holder = (const SAC_LexicalUnit **)CSSOM_malloc(
+    sizeof(const SAC_LexicalUnit*) * size);
+  if (holder == NULL) return 1;
+  wit = holder;
+  for (i = 0; i < settings->nsubtypes; ++i) {
+    property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+      shorthand->parentValues, settings->subtypes[i]);
+
+    for (rit = property->begin; rit != property->end; ++rit, ++wit) *wit = *rit;
+  }
+  rval = settings->handler(holder, wit, NULL) == wit;
+  CSSOM_free(holder);
+  if (!rval) return 0;
+
+  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
+    shorthand->parentValues, settings->subtypes[0]);
+  if (cssText == NULL) return 1;
+
+  if (fprintf(out, "%s", cssText) < 0) return 1;
+
+  for (i = 1; i < settings->nsubtypes; ++i) {
     cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      property->parentValues,
-      CSSOM_propertySettings[property->type].subtypes[i]);
-    if (cssText != NULL) {
-      if (emited) {
-        if (fprintf(out, " ") < 0) return 1;
-      } else {
-        emited = 1;
-      }
-      if (fprintf(out, "%s", cssText) < 0) return 1;
-    }
+      shorthand->parentValues, settings->subtypes[i]);
+    if (cssText == NULL) return 1;
+
+    if (fprintf(out, " %s", cssText) < 0) return 1;
   }
 
   return 0;
@@ -258,6 +290,11 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
   CSSOM_CSSPropertyValue *left;
   CSSOM_CSSPropertyValue *print[4] = { NULL, NULL, NULL, NULL };
   size_t i;
+  size_t size;
+  const SAC_LexicalUnit **rit;
+  const SAC_LexicalUnit **wit;
+  const SAC_LexicalUnit **holder;
+  int rval;
   const char *cssText;
   int topbottom;
   int rightleft;
@@ -290,14 +327,29 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
    * Imposible shorthand
    */
 
-  if (!(rightleft && topbottom && topright)) {
-    if (CSSPropertyValue_isInherit(top) ||
-      CSSPropertyValue_isInherit(right) ||
-      CSSPropertyValue_isInherit(bottom) ||
-      CSSPropertyValue_isInherit(left))
-    {
-      return 0;
-    }
+  if (!(rightleft && topbottom && topright &&
+    CSSPropertyValue_isInherit(top) &&
+    CSSPropertyValue_isInherit(right) &&
+    CSSPropertyValue_isInherit(bottom) &&
+    CSSPropertyValue_isInherit(left)))
+  {
+    size = 0;
+    size += top->end - top->begin;
+    size += right->end - right->begin;
+    size += bottom->end - bottom->begin;
+    size += left->end - left->begin;
+    holder = (const SAC_LexicalUnit **)CSSOM_malloc(
+      sizeof(const SAC_LexicalUnit*) * size);
+    if (holder == NULL) return 1;
+    wit = holder;
+    for (rit = top->begin; rit != top->end; ++rit, ++wit) *wit = *rit;
+    for (rit = right->begin; rit != right->end; ++rit, ++wit) *wit = *rit;
+    for (rit = bottom->begin; rit != bottom->end; ++rit, ++wit) *wit = *rit;
+    for (rit = left->begin; rit != left->end; ++rit, ++wit) *wit = *rit;
+    rval = CSSOM_propertySettings[property->type].handler(holder, wit,
+      NULL) == wit;
+    CSSOM_free(holder);
+    if (!rval) return 0;
   }
 
   if (rightleft) {
