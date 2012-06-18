@@ -2,7 +2,6 @@
 
 #include "CSSEmitter.h"
 #include "CSSOM.h"
-#include "CSSProperties.h"
 #include "CSSStyleSheet.h"
 #include "CSSStyleDeclarationValue.h"
 #include "memory.h"

@@ -1,11 +1,13 @@
 #ifndef _CSSOM_CSS_PROPERTY_VALUE_H
 #define _CSSOM_CSS_PROPERTY_VALUE_H
 
-#include "CSSProperties.h"
+#include "CSSPropertyType.h"
 
 #include <cssom/CSSPropertyValue.h>
 
 #include <sacc.h>
+
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +29,15 @@ int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property);
 
 void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
   SAC_Parser parser);
+
+int CSSOM_CSSPropertyValue__genericEmit(const CSSOM_CSSPropertyValue *property,
+  FILE *out);
+
+int CSSOM_CSSPropertyValue__genericShorthandEmit(
+  const CSSOM_CSSPropertyValue *property, FILE *out);
+
+int CSSOM_CSSPropertyValue__boxShorthandEmit(
+  const CSSOM_CSSPropertyValue *property, FILE *out);
 
 
 

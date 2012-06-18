@@ -13,6 +13,8 @@ extern "C" {
 
 extern const CSSOM_CSSPropertyType CSSOM_CSSPropertyValue_backgroundSubtypes[5];
 
+void CSSOM_CSSPropertyValue__initBackgroundGlobals(void);
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundAttachment(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values);
@@ -31,6 +33,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundRepeat(
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundPosition(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values);
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end, 
   struct _CSSOM_LexicalUnitRange *values);
 
 

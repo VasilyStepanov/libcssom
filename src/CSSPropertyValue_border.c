@@ -114,6 +114,41 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
 
 
 /**
+ * border-color
+ */
+
+static const SAC_LexicalUnit** borderColorToken(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderColor(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSOM_LexicalUnitRange_boxShorthand(
+    CSSOM_CSSPropertyValue_borderColorSubtypes, borderColorToken, begin, end,
+    &values[1]) != end)
+  {
+    return begin;
+  }
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
+  return end;
+}
+
+
+
+/**
  * border-spacing
  */
 
@@ -146,6 +181,41 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderSpacing(
 
   _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
   return tail;
+}
+
+
+
+/**
+ * border-style
+ */
+
+static const SAC_LexicalUnit** borderStyleToken(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderStyle(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSOM_LexicalUnitRange_boxShorthand(
+    CSSOM_CSSPropertyValue_borderStyleSubtypes, borderStyleToken, begin, end,
+    &values[1]) != end)
+  {
+    return begin;
+  }
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
+  return end;
 }
 
 
@@ -398,4 +468,39 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeftWidth(
 {
   return borderDirectionWidth(CSSOM_BORDER_LEFT_WIDTH_PROPERTY, begin, end,
     values);
+}
+
+
+
+/**
+ * border-width
+ */
+
+static const SAC_LexicalUnit** borderWidthToken(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderWidth(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  if (CSSOM_LexicalUnitRange_boxShorthand(
+    CSSOM_CSSPropertyValue_borderWidthSubtypes, borderWidthToken, begin, end,
+    &values[1]) != end)
+  {
+    return begin;
+  }
+
+  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
+  return end;
 }

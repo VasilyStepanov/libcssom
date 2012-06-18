@@ -3,7 +3,7 @@
 #include "MediaList.h"
 #include "CSSMediaRule.h"
 #include "CSSPageRule.h"
-#include "CSSProperties.h"
+#include "CSSPropertySettings.h"
 #include "CSSPropertyValue.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"

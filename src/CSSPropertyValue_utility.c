@@ -150,3 +150,143 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_PERCENTAGE) return 1;
   return 0;
 }
+
+
+
+static const SAC_LexicalUnit** LexicalUnitRange_walk(
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+{
+  size_t i;
+  const SAC_LexicalUnit **tail;
+
+  if (begin == end) return end;
+
+  for (i = 0; i < size; ++i) {
+    if (values[i].begin != NULL) continue;
+
+    tail = CSSOM_propertySettings[initial[i].type].handler(begin, end,
+      &values[i]);
+    if (tail == begin) continue;
+
+    if (LexicalUnitRange_walk(initial, values, size, tail, end) == end)
+      return end;
+
+    values[i].type = 0;
+    values[i].begin = NULL;
+    values[i].end = NULL;
+  }
+
+  return begin;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
+{
+  size_t i;
+  const SAC_LexicalUnit **tail;
+
+  if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
+
+    for (i = 0; i < size; ++i)
+      _CSSOM_SET_RANGE(values[i], initial[i].type, begin, end);
+
+  } else {
+
+    tail = LexicalUnitRange_walk(initial, values, size, begin, end);
+    if (tail != end) return begin;
+
+    for (i = 0; i < size; ++i) {
+      if (values[i].begin != NULL) continue;
+
+      values[i] = initial[i];
+    }
+
+  }
+
+  return end;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
+  const CSSOM_CSSPropertyType *types, _CSSOM_PropertyHandler handler,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  struct _CSSOM_LexicalUnitRange value;
+  switch (end - begin) {
+    case 1:
+      if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(begin, end,
+        &value) != end)
+      {
+        return begin;
+      }
+
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[0], &begin[1]);
+
+      break;
+    case 2:
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2])
+      {
+        return begin;
+      }
+
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
+
+      break;
+    case 3:
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2] ||
+        handler(&begin[2], &begin[3], &value) != &begin[3])
+      {
+        return begin;
+      }
+
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[1], &begin[2]);
+
+      break;
+    case 4:
+      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
+        handler(&begin[1], &begin[2], &value) != &begin[2] ||
+        handler(&begin[2], &begin[3], &value) != &begin[3] ||
+        handler(&begin[3], &begin[4], &value) != &begin[4])
+      {
+        return begin;
+      }
+
+      _CSSOM_SET_RANGE(values[0], types[0], &begin[0], &begin[1]);
+      _CSSOM_SET_RANGE(values[1], types[1], &begin[1], &begin[2]);
+      _CSSOM_SET_RANGE(values[2], types[2], &begin[2], &begin[3]);
+      _CSSOM_SET_RANGE(values[3], types[3], &begin[3], &begin[4]);
+
+      break;
+  }
+
+  return end;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *values)
+{
+  _CSSOM_SET_RANGE(values[0], 0, begin, end);
+  return end;
+}
