@@ -43,6 +43,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       CSSPropertyValue.c \
                       CSSPropertyValue_azimuth.c \
                       CSSPropertyValue_background.c \
+                      CSSPropertyValue_border.c \
                       CSSPropertyValue_utility.c \
                       CSSRule.c \
                       CSSRuleList.c \

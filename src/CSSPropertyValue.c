@@ -8,6 +8,7 @@
 #include "CSSStyleSheet.h"
 #include "CSSPropertyValue_azimuth.h"
 #include "CSSPropertyValue_background.h"
+#include "CSSPropertyValue_border.h"
 #include "CSSPropertyValue_utility.h"
 #include "gcc.h"
 #include "memory.h"
@@ -26,32 +27,6 @@ static SAC_LexicalUnit unit_none;
 static SAC_LexicalUnit unit_repeat;
 static SAC_LexicalUnit unit_scroll;
 static SAC_LexicalUnit unit_0pct;
-
-static const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderColorSubtypes[] = {
-  CSSOM_BORDER_TOP_COLOR_PROPERTY,
-  CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
-  CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
-  CSSOM_BORDER_LEFT_COLOR_PROPERTY
-};
-
-static const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderStyleSubtypes[] = {
-  CSSOM_BORDER_TOP_STYLE_PROPERTY,
-  CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
-  CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
-  CSSOM_BORDER_LEFT_STYLE_PROPERTY
-};
-
-static const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderWidthSubtypes[] = {
-  CSSOM_BORDER_TOP_WIDTH_PROPERTY,
-  CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
-  CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
-  CSSOM_BORDER_LEFT_WIDTH_PROPERTY
-};
-
-
 
 void CSSOM_CSSPropertyValue__initGlobals(void) {
   unit_transparent.lexicalUnitType = SAC_IDENT;
@@ -73,63 +48,36 @@ void CSSOM_CSSPropertyValue__initGlobals(void) {
 
 
 
-static int isBorderStyle(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("none", value->desc.ident) == 0) return 1;
-    if (strcmp("hidden", value->desc.ident) == 0) return 1;
-    if (strcmp("dotted", value->desc.ident) == 0) return 1;
-    if (strcmp("dashed", value->desc.ident) == 0) return 1;
-    if (strcmp("solid", value->desc.ident) == 0) return 1;
-    if (strcmp("double", value->desc.ident) == 0) return 1;
-    if (strcmp("groove", value->desc.ident) == 0) return 1;
-    if (strcmp("ridge", value->desc.ident) == 0) return 1;
-    if (strcmp("inset", value->desc.ident) == 0) return 1;
-    if (strcmp("outset", value->desc.ident) == 0) return 1;
-  }
-  return 0;
-}
-
-
-
-static int isBorderWidth(const SAC_LexicalUnit *value) {
-  if (value->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("thin", value->desc.ident) == 0) return 1;
-    if (strcmp("medium", value->desc.ident) == 0) return 1;
-    if (strcmp("thick", value->desc.ident) == 0) return 1;
-  } else if (CSSOM_LexicalUnit_isNonNegativeLength(value)) {
-    return 1;
-  }
-  return 0;
-}
-
-
-
-static const SAC_LexicalUnit** isBorderColor(
+static const SAC_LexicalUnit** isBorderStyle(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (CSSOM_LexicalUnit_isColor(begin[0])) {
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("none", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("hidden", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("dotted", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("dashed", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("solid", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("double", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("groove", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("ridge", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("inset", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("outset", begin[0]->desc.ident) == 0) return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
+static const SAC_LexicalUnit** isBorderWidth(
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("thin", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("medium", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("thick", begin[0]->desc.ident) == 0) return &begin[1];
+  } else if (CSSOM_LexicalUnit_isNonNegativeLength(begin[0])) {
     return &begin[1];
-  } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
   }
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** borderStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
-{
-  if (isBorderStyle(begin[0])) return &begin[1];
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** isBorderWidthToken(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
-{
-  if (isBorderWidth(begin[0])) return &begin[1];
   return &begin[0];
 }
 
@@ -481,41 +429,21 @@ static const SAC_LexicalUnit** CSSPropertyValue_background(
 
 
 /**
- * border-collapse
+ * border-color
  */
 
-static const SAC_LexicalUnit** CSSPropertyValue_readBorderCollapse(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
+const SAC_LexicalUnit** isBorderColor(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("collapse", begin[0]->desc.ident) == 0) return &begin[1];
-    if (strcmp("separate", begin[0]->desc.ident) == 0) return &begin[1];
-  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
+  if (CSSOM_LexicalUnit_isColor(begin[0])) {
     return &begin[1];
+  } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("transparent", begin[0]->desc.ident) == 0) return &begin[1];
   }
   return &begin[0];
 }
 
 
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderCollapse(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderCollapse(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-color
- */
 
 static const SAC_LexicalUnit** CSSPropertyValue_borderColorToken(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
@@ -549,43 +477,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderColor(
 
 
 /**
- * border-spacing
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_readBorderSpacing(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end CSSOM_UNUSED)
-{
-  if (CSSOM_LexicalUnit_isLength(begin[0])) {
-    if (&begin[1] != end &&
-      CSSOM_LexicalUnit_isLength(begin[1]))
-    {
-      return &begin[2];
-    }
-    return &begin[1];
-  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
-    return &begin[1];
-  }
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderSpacing(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderSpacing(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
  * border-style
  */
 
@@ -595,7 +486,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyleToken(
 {
   const SAC_LexicalUnit **tail;
 
-  tail = borderStyle(begin, end);
+  tail = isBorderStyle(begin, end);
   if (tail == begin) return begin;
 
   _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
@@ -621,273 +512,6 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderStyle(
 
 
 /**
- * border-top-color
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_readBorderColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
-{
-  if (isBorderColor(begin, end) == &begin[1]) {
-    return &begin[1];
-  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
-    return &begin[1];
-  }
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderTopColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderColor(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-right-color
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderRightColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderColor(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_COLOR_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-bottom-color
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderBottomColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderColor(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-left-color
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderLeftColor(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderColor(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_COLOR_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-top-style
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_readBorderStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
-{
-  if (borderStyle(begin, end) == &begin[1]) {
-    return &begin[1];
-  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
-    return &begin[1];
-  }
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderTopStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderStyle(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-right-style
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderRightStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderStyle(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_STYLE_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-bottom-style
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderBottomStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderStyle(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-left-style
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderLeftStyle(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderStyle(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_STYLE_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-top-width
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_readBorderWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
-{
-  if (isBorderWidthToken(begin, end) == &begin[1]) {
-    return &begin[1];
-  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
-    return &begin[1];
-  }
-  return &begin[0];
-}
-
-
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderTopWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderWidth(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-right-width
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderRightWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderWidth(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-bottom-width
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderBottomWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderWidth(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
- * border-left-width
- */
-
-static const SAC_LexicalUnit** CSSPropertyValue_borderLeftWidth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = CSSPropertyValue_readBorderWidth(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_WIDTH_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
-/**
  * border-width
  */
 
@@ -897,7 +521,7 @@ static const SAC_LexicalUnit** CSSPropertyValue_borderWidthToken(
 {
   const SAC_LexicalUnit **tail;
 
-  tail = isBorderWidthToken(begin, end);
+  tail = isBorderWidth(begin, end);
   if (tail == begin) return begin;
 
   _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
@@ -996,7 +620,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderCollapse },
+    CSSOM_LexicalUnitRange_borderCollapse },
   /* CSSOM_BORDER_COLOR_PROPERTY */
   { "border-color",
     &BoxShorthandCSSPropertyValue_emit,
@@ -1008,7 +632,7 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderSpacing },
+    CSSOM_LexicalUnitRange_borderSpacing },
   /* CSSOM_BORDER_STYLE_PROPERTY */
   { "border-style",
     &BoxShorthandCSSPropertyValue_emit,
@@ -1044,73 +668,73 @@ static const struct _CSSOM_CSSPropertyValue_settings settings[] = {
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderTopColor },
+    CSSOM_LexicalUnitRange_borderTopColor },
   /* CSSOM_BORDER_RIGHT_COLOR_PROPERTY */
   { "border-right-color",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderRightColor },
+    CSSOM_LexicalUnitRange_borderRightColor },
   /* CSSOM_BORDER_BOTTOM_COLOR_PROPERTY */
   { "border-bottom-color",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderBottomColor },
+    CSSOM_LexicalUnitRange_borderBottomColor },
   /* CSSOM_BORDER_LEFT_COLOR_PROPERTY */
   { "border-left-color",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderLeftColor },
+    CSSOM_LexicalUnitRange_borderLeftColor },
   /* CSSOM_BORDER_TOP_STYLE_PROPERTY */
   { "border-top-style",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderTopStyle },
+    CSSOM_LexicalUnitRange_borderTopStyle },
   /* CSSOM_BORDER_RIGHT_STYLE_PROPERTY */
   { "border-right-style",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderRightStyle },
+    CSSOM_LexicalUnitRange_borderRightStyle },
   /* CSSOM_BORDER_BOTTOM_STYLE_PROPERTY */
   { "border-bottom-style",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderBottomStyle },
+    CSSOM_LexicalUnitRange_borderBottomStyle },
   /* CSSOM_BORDER_LEFT_STYLE_PROPERTY */
   { "border-left-style",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderLeftStyle },
+    CSSOM_LexicalUnitRange_borderLeftStyle },
   /* CSSOM_BORDER_TOP_WIDTH_PROPERTY */
   { "border-top-width",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderTopWidth },
+    CSSOM_LexicalUnitRange_borderTopWidth },
   /* CSSOM_BORDER_RIGHT_WIDTH_PROPERTY */
   { "border-right-width",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderRightWidth },
+    CSSOM_LexicalUnitRange_borderRightWidth },
   /* CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY */
   { "border-bottom-width",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderBottomWidth },
+    CSSOM_LexicalUnitRange_borderBottomWidth },
   /* CSSOM_BORDER_LEFT_WIDTH_PROPERTY */
   { "border-left-width",
     &GenericCSSPropertyValue_emit,
     NULL,
     0,
-    CSSPropertyValue_borderLeftWidth },
+    CSSOM_LexicalUnitRange_borderLeftWidth },
   /* CSSOM_BORDER_WIDTH_PROPERTY */
   { "border-width",
     &BoxShorthandCSSPropertyValue_emit,
