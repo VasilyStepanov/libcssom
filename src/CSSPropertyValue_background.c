@@ -87,7 +87,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
     return begin;
   }
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_PROPERTY, begin, end);
   return end;
 }
 
@@ -120,7 +120,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundAttachment(
   tail = backgroundAttachment(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
     begin, tail);
   return tail;
 }
@@ -155,7 +155,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundColor(
   tail = backgroundColor(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -189,7 +189,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundImage(
   tail = backgroundImage(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -224,7 +224,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundRepeat(
   tail = backgroundRepeat(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -318,6 +318,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundPosition(
   tail = backgroundPosition(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BACKGROUND_POSITION_PROPERTY, begin, tail);
   return tail;
 }

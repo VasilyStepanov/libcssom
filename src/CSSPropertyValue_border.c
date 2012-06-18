@@ -107,7 +107,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
   tail = borderCollapse(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -125,7 +125,7 @@ static const SAC_LexicalUnit** borderColorToken(const SAC_LexicalUnit **begin,
   tail = isBorderColor(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -142,7 +142,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
     return begin;
   }
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_COLOR_PROPERTY, begin, end);
   return end;
 }
 
@@ -179,7 +179,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderSpacing(
   tail = borderSpacing(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -197,7 +197,7 @@ static const SAC_LexicalUnit** borderStyleToken(const SAC_LexicalUnit **begin,
   tail = isBorderStyle(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_STYLE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -214,7 +214,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
     return begin;
   }
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_STYLE_PROPERTY, begin, end);
   return end;
 }
 
@@ -246,7 +246,7 @@ static const SAC_LexicalUnit** borderDirectionColor(CSSOM_CSSPropertyType type,
   tail = borderColor(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, type, begin, tail);
   return tail;
 }
 
@@ -330,7 +330,7 @@ static const SAC_LexicalUnit** borderDirectionStyle(CSSOM_CSSPropertyType type,
   tail = borderStyle(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, type, begin, tail);
   return tail;
 }
 
@@ -414,7 +414,7 @@ static const SAC_LexicalUnit** borderDirectionWidth(CSSOM_CSSPropertyType type,
   tail = borderWidth(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, type, begin, tail);
   return tail;
 }
 
@@ -484,7 +484,7 @@ static const SAC_LexicalUnit** borderWidthToken(const SAC_LexicalUnit **begin,
   tail = isBorderWidth(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -501,6 +501,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
     return begin;
   }
 
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
   return end;
 }
