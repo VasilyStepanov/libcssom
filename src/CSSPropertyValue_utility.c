@@ -155,7 +155,7 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
 
 static const SAC_LexicalUnit** LexicalUnitRange_walk(
   const struct _CSSOM_LexicalUnitRange *initial,
-  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   size_t i;
@@ -164,18 +164,19 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
   if (begin == end) return end;
 
   for (i = 0; i < size; ++i) {
-    if (values[i].begin != NULL) continue;
+    if (marker[i]) continue;
 
     tail = CSSOM_propertySettings[initial[i].type].handler(begin, end,
       &values[i]);
     if (tail == begin) continue;
 
-    if (LexicalUnitRange_walk(initial, values, size, tail, end) == end)
+    marker[i] = 1;
+
+    if (LexicalUnitRange_walk(initial, values, marker, size, tail, end) == end)
       return end;
 
-    values[i].type = 0;
-    values[i].begin = NULL;
-    values[i].end = NULL;
+    marker[i] = 0;
+    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
   }
 
   return begin;
@@ -185,7 +186,7 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const struct _CSSOM_LexicalUnitRange *initial,
-  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   size_t i;
@@ -198,7 +199,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
   } else {
 
-    tail = LexicalUnitRange_walk(initial, values, size, begin, end);
+    tail = LexicalUnitRange_walk(initial, values, marker, size, begin, end);
     if (tail != end) return begin;
 
     for (i = 0; i < size; ++i) {
@@ -219,11 +220,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values)
 {
-  struct _CSSOM_LexicalUnitRange value;
   switch (end - begin) {
     case 1:
       if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(begin, end,
-        &value) != end)
+        NULL) != end)
       {
         return begin;
       }
@@ -235,8 +235,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 2:
-      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
-        handler(&begin[1], &begin[2], &value) != &begin[2])
+      if (handler(&begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(&begin[1], &begin[2], NULL) != &begin[2])
       {
         return begin;
       }
@@ -248,9 +248,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 3:
-      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
-        handler(&begin[1], &begin[2], &value) != &begin[2] ||
-        handler(&begin[2], &begin[3], &value) != &begin[3])
+      if (handler(&begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(&begin[1], &begin[2], NULL) != &begin[2] ||
+        handler(&begin[2], &begin[3], NULL) != &begin[3])
       {
         return begin;
       }
@@ -262,10 +262,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 4:
-      if (handler(&begin[0], &begin[1], &value) != &begin[1] ||
-        handler(&begin[1], &begin[2], &value) != &begin[2] ||
-        handler(&begin[2], &begin[3], &value) != &begin[3] ||
-        handler(&begin[3], &begin[4], &value) != &begin[4])
+      if (handler(&begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(&begin[1], &begin[2], NULL) != &begin[2] ||
+        handler(&begin[2], &begin[3], NULL) != &begin[3] ||
+        handler(&begin[3], &begin[4], NULL) != &begin[4])
       {
         return begin;
       }

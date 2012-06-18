@@ -81,7 +81,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
     { CSSOM_BACKGROUND_POSITION_PROPERTY, _CSSOM_INITIAL(position) }
   };
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(initial, &values[1],
+  int marker[_CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes)] = {
+    0, 0, 0, 0, 0
+  };
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(initial, &values[1], marker,
     _CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes), begin, end) != end)
   {
     return begin;

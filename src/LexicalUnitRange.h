@@ -21,9 +21,11 @@ struct _CSSOM_LexicalUnitRange {
 
 #define _CSSOM_SET_RANGE(range, index, type_val, begin_val, end_val) \
   do { \
-    (range)[(index)].type = (type_val); \
-    (range)[(index)].begin = (begin_val); \
-    (range)[(index)].end = (end_val); \
+    if (range != NULL) { \
+      (range)[(index)].type = (type_val); \
+      (range)[(index)].begin = (begin_val); \
+      (range)[(index)].end = (end_val); \
+    } \
   } while (0)
 
 

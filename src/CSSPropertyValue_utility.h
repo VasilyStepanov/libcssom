@@ -36,7 +36,7 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const struct _CSSOM_LexicalUnitRange *initial,
-  struct _CSSOM_LexicalUnitRange *values, size_t size,
+  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
