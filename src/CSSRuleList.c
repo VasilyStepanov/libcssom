@@ -233,4 +233,17 @@ int CSSOM_CSSRuleList__testHierarchy(const CSSOM_CSSRuleList *cssRules,
 
 
 
+void CSSOM_CSSRuleList__setParentRule(CSSOM_CSSRuleList *cssRules,
+  CSSOM_CSSRule *parentRule)
+{
+  size_t size;
+  size_t i;
 
+  size = CSSOM_CSSRuleList_length(cssRules);
+  for (i = 0; i < size; ++i) {
+    CSSOM_CSSRule *cssRule;
+
+    cssRule = CSSOM_CSSRuleList_at(cssRules, i);
+    CSSOM_CSSRule__setParentRule(cssRule, parentRule);
+  }
+}

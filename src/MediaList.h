@@ -22,6 +22,9 @@ CSSOM_MediaQuery* CSSOM_MediaList__at(const CSSOM_MediaList *media,
 void CSSOM_MediaList__keepParser(CSSOM_MediaList *media,
   SAC_Parser parser);
 
+void CSSOM_MediaList__setParentRule(CSSOM_MediaList *media,
+  CSSOM_CSSRule *parentRule);
+
 
 
 #ifdef __cplusplus

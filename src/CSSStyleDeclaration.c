@@ -28,10 +28,12 @@ struct _CSSOM_CSSStyleDeclaration {
 static void CSSStyleDeclaration_swap(
   CSSOM_CSSStyleDeclaration *lhs, CSSOM_CSSStyleDeclaration *rhs)
 {
-  SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->parentRule, rhs->parentRule);
-  SWAP(lhs->values, rhs->values);
-  SWAP(lhs->cssText, rhs->cssText);
+  assert(lhs->parentRule == rhs->parentRule);
+  SWAPP(lhs->parser, rhs->parser);
+  SWAPP(lhs->values, rhs->values);
+  CSSOM_CSSStyleDeclarationValue__setParentStyle(lhs->values, lhs);
+  CSSOM_CSSStyleDeclarationValue__setParentStyle(rhs->values, rhs);
+  SWAPP(lhs->cssText, rhs->cssText);
 }
 
 
@@ -87,6 +89,21 @@ void CSSOM_CSSStyleDeclaration_release(CSSOM_CSSStyleDeclaration *style) {
   CSSOM_CSSStyleDeclarationValue_release(style->values);
   SAC_DisposeParser(style->parser);
   CSSOM_free(style);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration__setParentRule(CSSOM_CSSStyleDeclaration *style,
+  CSSOM_CSSRule *parentRule)
+{
+  size_t i;
+
+  for (i = 0; i < style->handles - 1; ++i) {
+    CSSOM_CSSRule_release(style->parentRule);
+    CSSOM_CSSRule_acquire(parentRule);
+  }
+
+  style->parentRule = parentRule;
 }
 
 

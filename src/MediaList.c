@@ -42,12 +42,30 @@ static void MediaDeque_free(CSSOM_Deque_MediaQuery *deque) {
 
 
 
+static void MediaDeque__setParentMedia(CSSOM_Deque_MediaQuery *deque,
+  CSSOM_MediaList *parentMedia)
+{
+  CSSOM_DequeIter_MediaQuery it;
+
+  for (
+    it = CSSOM_Deque_MediaQuery_begin(deque);
+    it != CSSOM_Deque_MediaQuery_end(deque);
+    it = CSSOM_DequeIter_MediaQuery_next(it))
+  {
+    CSSOM_MediaQuery__setParentMedia(*it, parentMedia);
+  }
+}
+
+
+
 static void MediaList_swap(CSSOM_MediaList *lhs, CSSOM_MediaList *rhs) {
-  SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->parentRule, rhs->parentRule);
-  SWAP(lhs->mediaText, rhs->mediaText);
-  SWAP(lhs->query, rhs->query);
-  SWAP(lhs->data, rhs->data);
+  assert(lhs->parentRule == rhs->parentRule);
+  SWAPP(lhs->parser, rhs->parser);
+  SWAPP(lhs->mediaText, rhs->mediaText);
+  SWAPP(lhs->query, rhs->query);
+  SWAPP(lhs->data, rhs->data);
+  MediaDeque__setParentMedia(lhs->data, lhs);
+  MediaDeque__setParentMedia(rhs->data, rhs);
 }
 
 
@@ -157,6 +175,21 @@ void CSSOM_MediaList_release(CSSOM_MediaList *media) {
   CSSOM_native_free(media->mediaText);
   SAC_DisposeParser(media->parser);
   CSSOM_free(media);
+}
+
+
+
+void CSSOM_MediaList__setParentRule(CSSOM_MediaList *media,
+  CSSOM_CSSRule *parentRule)
+{
+  size_t i;
+
+  for (i = 0; i < media->handles - 1; ++i) {
+    CSSOM_CSSRule_release(media->parentRule);
+    CSSOM_CSSRule_acquire(parentRule);
+  }
+
+  media->parentRule = parentRule;
 }
 
 

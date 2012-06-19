@@ -65,6 +65,21 @@ void CSSOM_MediaQuery_release(CSSOM_MediaQuery *query) {
 
 
 
+void CSSOM_MediaQuery__setParentMedia(CSSOM_MediaQuery *query,
+  CSSOM_MediaList *parentMedia)
+{
+  size_t i;
+
+  for (i = 0; i < query->handles - 1; ++i) {
+    CSSOM_MediaList_release(query->parentMedia);
+    CSSOM_MediaList_acquire(parentMedia);
+  }
+
+  query->parentMedia = parentMedia;
+}
+
+
+
 const char* CSSOM_MediaQuery_mediaText(const CSSOM_MediaQuery *query) {
   FILE *out;
   char *buf;

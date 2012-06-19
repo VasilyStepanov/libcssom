@@ -36,10 +36,10 @@ struct _CSSOM_Selector {
 
 
 static void Selector_swap(CSSOM_Selector *lhs, CSSOM_Selector *rhs) {
-  SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->parentRule, rhs->parentRule);
-  SWAP(lhs->selectorText, rhs->selectorText);
-  SWAP(lhs->selectors, rhs->selectors);
+  assert(lhs->parentRule == rhs->parentRule);
+  SWAPP(lhs->parser, rhs->parser);
+  SWAPP(lhs->selectorText, rhs->selectorText);
+  SWAPP(lhs->selectors, rhs->selectors);
 }
 
 
@@ -222,6 +222,21 @@ void CSSOM_Selector_release(CSSOM_Selector *selector) {
   CSSOM_native_free(selector->selectorText);
   SAC_DisposeParser(selector->parser);
   CSSOM_free(selector);
+}
+
+
+
+void CSSOM_Selector__setParentRule(CSSOM_Selector *selector,
+  CSSOM_CSSRule *parentRule)
+{
+  size_t i;
+
+  for (i = 0; i < selector->handles - 1; ++i) {
+    CSSOM_CSSRule_release(selector->parentRule);
+    CSSOM_CSSRule_acquire(parentRule);
+  }
+
+  selector->parentRule = parentRule;
 }
 
 

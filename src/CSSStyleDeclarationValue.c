@@ -123,6 +123,22 @@ void CSSOM_CSSStyleDeclarationValue_release(
 
 
 
+void CSSOM_CSSStyleDeclarationValue__setParentStyle(
+  CSSOM_CSSStyleDeclarationValue *values,
+  CSSOM_CSSStyleDeclaration *parentStyle)
+{
+  size_t i;
+
+  for (i = 0; i < values->handles - 1; ++i) {
+    CSSOM_CSSStyleDeclaration_release(values->parentStyle);
+    CSSOM_CSSStyleDeclaration_acquire(parentStyle);
+  }
+
+  values->parentStyle = parentStyle;
+}
+
+
+
 CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclarationValue__parentStyle(
   const CSSOM_CSSStyleDeclarationValue *values)
 {

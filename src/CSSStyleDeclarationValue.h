@@ -45,6 +45,10 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
 const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
   const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property);
 
+void CSSOM_CSSStyleDeclarationValue__setParentStyle(
+  CSSOM_CSSStyleDeclarationValue *values,
+  CSSOM_CSSStyleDeclaration *parentStyle);
+
 
 
 CSSOM_CSSStyleDeclarationValueIter CSSOM_CSSStyleDeclarationValue__begin(

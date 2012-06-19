@@ -22,6 +22,9 @@ const SAC_Selector** CSSOM_Selector__selectors(const CSSOM_Selector *selector);
 void CSSOM_Selector__keepParser(CSSOM_Selector *selector,
   SAC_Parser parser);
 
+void CSSOM_Selector__setParentRule(CSSOM_Selector *selector,
+  CSSOM_CSSRule *parentRule);
+
 
 
 #ifdef __cplusplus

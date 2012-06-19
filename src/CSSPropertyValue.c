@@ -597,16 +597,16 @@ const char* CSSOM_CSSPropertyValue_cssText(
 static void CSSPropertyValue_swap(
   CSSOM_CSSPropertyValue *lhs, CSSOM_CSSPropertyValue *rhs)
 {
-  SWAP(lhs->parentValues, rhs->parentValues);
-  SWAP(lhs->shorthand, rhs->shorthand);
-  SWAP(lhs->parser, rhs->parser);
+  assert(lhs->parentValues == rhs->parentValues);
+  SWAPP(lhs->shorthand, rhs->shorthand);
+  SWAPP(lhs->parser, rhs->parser);
   SWAPS(lhs->type, rhs->type);
-  SWAP(lhs->name, rhs->name);
-  SWAP(lhs->holder, rhs->holder);
-  SWAP(lhs->begin, rhs->begin);
-  SWAP(lhs->end, rhs->end);
+  SWAPP(lhs->name, rhs->name);
+  SWAPP(lhs->holder, rhs->holder);
+  SWAPP(lhs->begin, rhs->begin);
+  SWAPP(lhs->end, rhs->end);
   SWAPS(lhs->important, rhs->important);
-  SWAP(lhs->cssText, rhs->cssText);
+  SWAPP(lhs->cssText, rhs->cssText);
 }
 
 

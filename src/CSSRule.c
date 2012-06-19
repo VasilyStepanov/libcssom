@@ -114,6 +114,21 @@ void CSSOM_CSSRule_release(CSSOM_CSSRule *cssRule) {
 
 
 
+void CSSOM_CSSRule__setParentRule(CSSOM_CSSRule *cssRule,
+  CSSOM_CSSRule *parentRule)
+{
+  size_t i;
+
+  for (i = 0; i < cssRule->handles - 1; ++i) {
+    CSSOM_CSSRule_release(cssRule->parentRule);
+    CSSOM_CSSRule_acquire(parentRule);
+  }
+
+  cssRule->parentRule = parentRule;
+}
+
+
+
 const char* CSSOM_CSSRule_cssText(const CSSOM_CSSRule *cssRule) {
   FILE *out;
   char *buf;
@@ -170,8 +185,8 @@ static void CSSRule_swap(CSSOM_CSSRule *lhs, CSSOM_CSSRule *rhs) {
 
 
 static void CSSRule_swap_impl(CSSOM_CSSRule *lhs, CSSOM_CSSRule *rhs) {
-  SWAP(lhs->parser, rhs->parser);
-  SWAP(lhs->cssText, rhs->cssText);
+  SWAPP(lhs->parser, rhs->parser);
+  SWAPP(lhs->cssText, rhs->cssText);
 }
 
 
@@ -228,7 +243,9 @@ static void CSSFontFaceRule_swap(
   CSSOM_CSSFontFaceRule *lhs, CSSOM_CSSFontFaceRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->style, rhs->style);
+  SWAPP(lhs->style, rhs->style);
+  CSSOM_CSSStyleDeclaration__setParentRule(lhs->style, (CSSOM_CSSRule*)lhs);
+  CSSOM_CSSStyleDeclaration__setParentRule(rhs->style, (CSSOM_CSSRule*)rhs);
 }
 
 
@@ -298,8 +315,10 @@ static void CSSImportRule_swap(
   CSSOM_CSSImportRule *lhs, CSSOM_CSSImportRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->href, rhs->href);
-  SWAP(lhs->media, rhs->media);
+  SWAPP(lhs->href, rhs->href);
+  SWAPP(lhs->media, rhs->media);
+  CSSOM_MediaList__setParentRule(lhs->media, (CSSOM_CSSRule*)lhs);
+  CSSOM_MediaList__setParentRule(rhs->media, (CSSOM_CSSRule*)rhs);
 }
 
 
@@ -392,8 +411,12 @@ static void CSSStyleRule_swap(
   CSSOM_CSSStyleRule *lhs, CSSOM_CSSStyleRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->selector, rhs->selector);
-  SWAP(lhs->style, rhs->style);
+  SWAPP(lhs->selector, rhs->selector);
+  CSSOM_Selector__setParentRule(lhs->selector, (CSSOM_CSSRule*)lhs);
+  CSSOM_Selector__setParentRule(rhs->selector, (CSSOM_CSSRule*)rhs);
+  SWAPP(lhs->style, rhs->style);
+  CSSOM_CSSStyleDeclaration__setParentRule(lhs->style, (CSSOM_CSSRule*)lhs);
+  CSSOM_CSSStyleDeclaration__setParentRule(rhs->style, (CSSOM_CSSRule*)rhs);
 }
 
 
@@ -497,8 +520,12 @@ static void CSSMediaRule_swap(
   CSSOM_CSSMediaRule *lhs, CSSOM_CSSMediaRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->media, rhs->media);
-  SWAP(lhs->cssRules, rhs->cssRules);
+  SWAPP(lhs->media, rhs->media);
+  CSSOM_MediaList__setParentRule(lhs->media, (CSSOM_CSSRule*)lhs);
+  CSSOM_MediaList__setParentRule(rhs->media, (CSSOM_CSSRule*)rhs);
+  SWAPP(lhs->cssRules, rhs->cssRules);
+  CSSOM_CSSRuleList__setParentRule(lhs->cssRules, (CSSOM_CSSRule*)lhs);
+  CSSOM_CSSRuleList__setParentRule(rhs->cssRules, (CSSOM_CSSRule*)rhs);
 }
 
 
@@ -659,8 +686,8 @@ static void CSSNamespaceRule_swap(
   CSSOM_CSSNamespaceRule *lhs, CSSOM_CSSNamespaceRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->prefix, rhs->prefix);
-  SWAP(lhs->uri, rhs->uri);
+  SWAPP(lhs->prefix, rhs->prefix);
+  SWAPP(lhs->uri, rhs->uri);
 }
 
 
@@ -733,8 +760,12 @@ static void CSSPageRule_swap(
   CSSOM_CSSPageRule *lhs, CSSOM_CSSPageRule *rhs)
 {
   CSSRule_swap_impl((CSSOM_CSSRule*)lhs, (CSSOM_CSSRule*)rhs);
-  SWAP(lhs->selector, rhs->selector);
-  SWAP(lhs->style, rhs->style);
+  SWAPP(lhs->selector, rhs->selector);
+  CSSOM_Selector__setParentRule(lhs->selector, (CSSOM_CSSRule*)lhs);
+  CSSOM_Selector__setParentRule(rhs->selector, (CSSOM_CSSRule*)rhs);
+  SWAPP(lhs->style, rhs->style);
+  CSSOM_CSSStyleDeclaration__setParentRule(lhs->style, (CSSOM_CSSRule*)lhs);
+  CSSOM_CSSStyleDeclaration__setParentRule(rhs->style, (CSSOM_CSSRule*)rhs);
 }
 
 

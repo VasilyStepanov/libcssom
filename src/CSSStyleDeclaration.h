@@ -19,6 +19,9 @@ CSSOM_CSSStyleDeclaration* CSSOM_CSSStyleDeclaration__alloc(
 void CSSOM_CSSStyleDeclaration__keepParser(CSSOM_CSSStyleDeclaration *style,
   SAC_Parser parser);
 
+void CSSOM_CSSStyleDeclaration__setParentRule(CSSOM_CSSStyleDeclaration *style,
+  CSSOM_CSSRule *parentRule);
+
 
 
 #ifdef __cplusplus

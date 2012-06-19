@@ -3,12 +3,16 @@
 
 
 
-#define SWAP(lhs, rhs) \
+#define SWAPP(lhs, rhs) \
   do { \
     void *t = (void*)lhs; \
     lhs = rhs; \
     rhs = t; \
   } while (0)
+
+/*
+#define SWAP SWAPP
+*/
 
 
 

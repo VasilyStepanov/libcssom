@@ -10,6 +10,8 @@ extern "C" {
 #endif
 
 
+void CSSOM_CSSRule__setParentRule(CSSOM_CSSRule *cssRule,
+  CSSOM_CSSRule *parentRule);
 
 void CSSOM_CSSRule__keepParser(CSSOM_CSSRule *cssRule, SAC_Parser parser);
 
