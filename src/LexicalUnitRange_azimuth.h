@@ -1,7 +1,7 @@
-#ifndef _CSSOM_CSS_PROPERTY_VALUE_AZIMUTH_H
-#define _CSSOM_CSS_PROPERTY_VALUE_AZIMUTH_H
+#ifndef _CSSOM_LEXICAL_UNIT_RANGE_AZIMUTH_H
+#define _CSSOM_LEXICAL_UNIT_RANGE_AZIMUTH_H
 
-#include "CSSPropertyValue_utility.h"
+#include "LexicalUnitRange_utility.h"
 
 #include <sacc.h>
 

@@ -6,7 +6,7 @@
 #include "CSSStyleDeclaration.h"
 #include "CSSStyleDeclarationValue.h"
 #include "CSSStyleSheet.h"
-#include "CSSPropertyValue_background.h"
+#include "LexicalUnitRange_background.h"
 #include "gcc.h"
 #include "memory.h"
 #include "utility.h"

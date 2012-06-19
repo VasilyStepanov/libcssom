@@ -41,10 +41,6 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       CSSOM.c \
                       CSSPropertyType.c \
                       CSSPropertyValue.c \
-                      CSSPropertyValue_azimuth.c \
-                      CSSPropertyValue_background.c \
-                      CSSPropertyValue_border.c \
-                      CSSPropertyValue_utility.c \
                       CSSRule.c \
                       CSSRuleList.c \
                       CSSStyleDeclaration.c \
@@ -54,6 +50,10 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       Deque_MediaQuery.c \
                       Deque_void.c \
                       FSM_CSSPropertyValue.c \
+                      LexicalUnitRange_azimuth.c \
+                      LexicalUnitRange_background.c \
+                      LexicalUnitRange_border.c \
+                      LexicalUnitRange_utility.c \
                       MediaList.c \
                       MediaQuery.c \
                       Parser.c \

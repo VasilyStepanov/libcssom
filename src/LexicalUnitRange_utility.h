@@ -1,5 +1,5 @@
-#ifndef _CSSOM_CSS_PROPERTY_VALUE_UTILITY_H
-#define _CSSOM_CSS_PROPERTY_VALUE_UTILITY_H
+#ifndef _CSSOM_LEXICAL_UNIT_RANGE_UTILITY_H
+#define _CSSOM_LEXICAL_UNIT_RANGE_UTILITY_H
 
 #include "CSSPropertySetting.h"
 #include "LexicalUnitRange.h"
