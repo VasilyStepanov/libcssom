@@ -16,7 +16,7 @@ extern "C" {
 
 
 
-typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(
+typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(const CSSOM *cssom,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values);
 
@@ -29,10 +29,6 @@ struct _CSSOM_CSSPropertySetting {
   size_t nsubtypes;
   _CSSOM_PropertyHandler handler;
 };
-
-
-
-extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
 
 
 

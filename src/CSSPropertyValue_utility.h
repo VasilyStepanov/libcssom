@@ -1,7 +1,7 @@
 #ifndef _CSSOM_CSS_PROPERTY_VALUE_UTILITY_H
 #define _CSSOM_CSS_PROPERTY_VALUE_UTILITY_H
 
-#include "CSSPropertySettings.h"
+#include "CSSPropertySetting.h"
 #include "LexicalUnitRange.h"
 
 #include <sacc.h>
@@ -35,18 +35,18 @@ int CSSOM_LexicalUnit_isUrl(const SAC_LexicalUnit *value);
 int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
-  const struct _CSSOM_LexicalUnitRange *initial,
+  const CSSOM *cssom, const struct _CSSOM_LexicalUnitRange *initial,
   struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
-  const CSSOM_CSSPropertyType *types, _CSSOM_PropertyHandler handler,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values);
+  const CSSOM *cssom, const CSSOM_CSSPropertyType *types,
+  _CSSOM_PropertyHandler handler, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values);
+  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 
 
 

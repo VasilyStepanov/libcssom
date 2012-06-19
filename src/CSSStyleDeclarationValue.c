@@ -1,6 +1,7 @@
 #include "CSSStyleDeclarationValue.h"
 
 #include "CSSOM.h"
+#include "CSSPropertySetting.h"
 #include "CSSStyleSheet.h"
 #include "FSM_CSSPropertyValue.h"
 #include "gcc.h"
@@ -335,7 +336,7 @@ void CSSOM_CSSStyleDeclarationValue__fsetProperty(
     CSSOM_CSSRule_parentStyleSheet(
       CSSOM_CSSStyleDeclaration_parentRule(values->parentStyle)));
 
-  sproperty = CSSOM__properties(cssom)[property];
+  sproperty = CSSOM__propertySetting(cssom, property)->name;
 
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, sproperty, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;

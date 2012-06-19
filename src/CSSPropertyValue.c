@@ -27,6 +27,7 @@ void CSSOM_CSSPropertyValue__initGlobals(void) {
 
 struct _CSSOM_CSSPropertyValue {
   size_t handles;
+  const CSSOM *cssom;
   CSSOM_CSSStyleDeclarationValue *parentValues;
   CSSOM_CSSPropertyValue *shorthand;
   SAC_Parser parser;
@@ -199,17 +200,18 @@ static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
 static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
   int *isInherit)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
   size_t _size;
   int _isInherit;
   size_t i;
   CSSOM_CSSPropertyValue *property;
 
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
   _size = 0;
   _isInherit = 1;
-  for (i = 0; i < CSSOM_propertySettings[shorthand->type].nsubtypes; ++i) {
+  for (i = 0; i < setting->nsubtypes; ++i) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues,
-      CSSOM_propertySettings[shorthand->type].subtypes[i]);
+      shorthand->parentValues, setting->subtypes[i]);
 
     if (property == NULL) return 0;
 
@@ -227,6 +229,7 @@ static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
 int CSSOM_CSSPropertyValue__genericShorthandEmit(
   const CSSOM_CSSPropertyValue *shorthand, FILE *out)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
   size_t i;
   size_t size;
   const CSSOM_CSSPropertyValue *property;
@@ -235,15 +238,14 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
   const SAC_LexicalUnit **holder;
   int rval;
   const char *cssText;
-  const struct _CSSOM_CSSPropertySetting *settings;
   int isInherit;
 
-  settings = &CSSOM_propertySettings[shorthand->type];
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
 
   if (!testShorthand(shorthand, &size, &isInherit)) return 0;
   if (isInherit) {
     cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      shorthand->parentValues, settings->subtypes[0]);
+      shorthand->parentValues, setting->subtypes[0]);
     if (fprintf(out, "%s", cssText) < 0) return 1;
     return 0;
   }
@@ -252,25 +254,25 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
     sizeof(const SAC_LexicalUnit*) * size);
   if (holder == NULL) return 1;
   wit = holder;
-  for (i = 0; i < settings->nsubtypes; ++i) {
+  for (i = 0; i < setting->nsubtypes; ++i) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues, settings->subtypes[i]);
+      shorthand->parentValues, setting->subtypes[i]);
 
     for (rit = property->begin; rit != property->end; ++rit, ++wit) *wit = *rit;
   }
-  rval = settings->handler(holder, wit, NULL) == wit;
+  rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
   CSSOM_free(holder);
   if (!rval) return 0;
 
   cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    shorthand->parentValues, settings->subtypes[0]);
+    shorthand->parentValues, setting->subtypes[0]);
   if (cssText == NULL) return 1;
 
   if (fprintf(out, "%s", cssText) < 0) return 1;
 
-  for (i = 1; i < settings->nsubtypes; ++i) {
+  for (i = 1; i < setting->nsubtypes; ++i) {
     cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      shorthand->parentValues, settings->subtypes[i]);
+      shorthand->parentValues, setting->subtypes[i]);
     if (cssText == NULL) return 1;
 
     if (fprintf(out, " %s", cssText) < 0) return 1;
@@ -282,8 +284,9 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
 
 
 int CSSOM_CSSPropertyValue__boxShorthandEmit(
-  const CSSOM_CSSPropertyValue *property, FILE *out)
+  const CSSOM_CSSPropertyValue *shorthand, FILE *out)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
   CSSOM_CSSPropertyValue *top;
   CSSOM_CSSPropertyValue *right;
   CSSOM_CSSPropertyValue *bottom;
@@ -300,14 +303,16 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
   int rightleft;
   int topright;
 
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+
   top = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, CSSOM_propertySettings[property->type].subtypes[0]);
+    shorthand->parentValues, setting->subtypes[0]);
   right = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, CSSOM_propertySettings[property->type].subtypes[1]);
+    shorthand->parentValues, setting->subtypes[1]);
   bottom = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, CSSOM_propertySettings[property->type].subtypes[2]);
+    shorthand->parentValues, setting->subtypes[2]);
   left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    property->parentValues, CSSOM_propertySettings[property->type].subtypes[3]);
+    shorthand->parentValues, setting->subtypes[3]);
 
 
 
@@ -346,8 +351,7 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
     for (rit = right->begin; rit != right->end; ++rit, ++wit) *wit = *rit;
     for (rit = bottom->begin; rit != bottom->end; ++rit, ++wit) *wit = *rit;
     for (rit = left->begin; rit != left->end; ++rit, ++wit) *wit = *rit;
-    rval = CSSOM_propertySettings[property->type].handler(holder, wit,
-      NULL) == wit;
+    rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
     CSSOM_free(holder);
     if (!rval) return 0;
   }
@@ -402,11 +406,12 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   if (property == NULL) return NULL;
 
   property->handles = 1;
+  property->cssom = cssom;
   property->parentValues = parentValues;
   property->shorthand = shorthand;
   property->parser = NULL;
   property->type = type;
-  property->name = CSSOM__properties(cssom)[type];
+  property->name = CSSOM__propertySetting(cssom, type)->name;
   property->holder = holder;
   property->begin = begin;
   property->end = end;
@@ -469,6 +474,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSPropertyType type, const SAC_LexicalUnit *value,
   SAC_Boolean important, int *error)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
   /**
    * The largest one.
    */
@@ -486,6 +492,8 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   const SAC_LexicalUnit **holder;
   CSSOM_CSSPropertyValue *property;
 
+  setting = CSSOM__propertySetting(cssom, type);
+
   if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
     holder = (const SAC_LexicalUnit**)CSSOM_malloc(
       sizeof(const SAC_LexicalUnit*) * 2);
@@ -501,7 +509,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
     while (*end != NULL) ++end;
   }
 
-  if (CSSOM_propertySettings[type].handler(begin, end, values) != end) {
+  if (setting->handler(cssom, begin, end, values) != end) {
     CSSOM_free(holder);
     if (error != NULL) *error = 1;
     return NULL;
@@ -513,7 +521,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   values[0].type = type;
 
   property = assignProperties(cssom, parentValues, holder, values,
-    CSSOM_propertySettings[type].nsubtypes + 1, important, error);
+    setting->nsubtypes + 1, important, error);
   if (property == NULL) {
     CSSOM_free(holder);
     if (error != NULL) *error = 1;
@@ -576,7 +584,9 @@ const char* CSSOM_CSSPropertyValue_cssText(
   out = open_memstream(&buf, &bufsize);
   if (out == NULL) return NULL;
 
-  if (CSSOM_propertySettings[property->type].emit(property, out) != 0) {
+  if (CSSOM__propertySetting(property->cssom, property->type)->emit(property,
+    out) != 0)
+  {
     fclose(out);
     CSSOM_native_free(buf);
     return NULL;
@@ -614,15 +624,10 @@ static void CSSPropertyValue_swap(
 void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
   const char * cssText)
 {
-  const CSSOM *cssom;
   CSSOM_CSSPropertyValue *newProperty;
 
-  cssom = CSSOM_CSSStyleSheet__cssom(
-    CSSOM_CSSRule_parentStyleSheet(
-      CSSOM_CSSStyleDeclaration_parentRule(
-        CSSOM_CSSStyleDeclarationValue__parentStyle(property->parentValues))));
-  newProperty = CSSOM__parsePropertyValue(cssom, property->parentValues,
-    property->type, cssText, strlen(cssText), NULL, 0);
+  newProperty = CSSOM__parsePropertyValue(property->cssom,
+    property->parentValues, property->type, cssText, strlen(cssText), NULL, 0);
   if (newProperty == NULL) return;
 
   CSSPropertyValue_swap(property, newProperty);

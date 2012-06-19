@@ -1,5 +1,7 @@
 #include "CSSPropertyValue_azimuth.h"
 
+#include "gcc.h"
+
 #include <string.h>
 
 
@@ -77,8 +79,8 @@ static const SAC_LexicalUnit** azimuth(const SAC_LexicalUnit **begin,
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_azimuth(
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   const SAC_LexicalUnit **tail;
 

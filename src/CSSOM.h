@@ -3,6 +3,7 @@
 
 #include <cssom/CSSOM.h>
 
+#include "CSSPropertySetting.h"
 #include "MediaQuery.h"
 #include "FSM_CSSPropertyValue.h"
 
@@ -51,7 +52,10 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);
 
 const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom);
 
-const char** CSSOM__properties(const CSSOM *cssom);
+const struct _CSSOM_CSSPropertySetting* CSSOM__propertySetting(
+  const CSSOM *cssom, CSSOM_CSSPropertyType type);
+
+extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
 
 
 

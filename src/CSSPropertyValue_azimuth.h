@@ -11,7 +11,7 @@ extern "C" {
 
 
 
-const SAC_LexicalUnit** CSSOM_LexicalUnitRange_azimuth(
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_azimuth(const CSSOM *cssom,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values);
 
