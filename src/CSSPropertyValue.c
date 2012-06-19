@@ -235,7 +235,7 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
   const SAC_LexicalUnit **holder;
   int rval;
   const char *cssText;
-  const struct _CSSOM_CSSPropertyValue_settings *settings;
+  const struct _CSSOM_CSSPropertySetting *settings;
   int isInherit;
 
   settings = &CSSOM_propertySettings[shorthand->type];

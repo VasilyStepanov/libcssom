@@ -22,7 +22,7 @@ typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(
 
 
 
-struct _CSSOM_CSSPropertyValue_settings {
+struct _CSSOM_CSSPropertySetting {
   const char *name;
   int (*emit)(const CSSOM_CSSPropertyValue *property, FILE *out);
   const CSSOM_CSSPropertyType *subtypes;
@@ -32,7 +32,7 @@ struct _CSSOM_CSSPropertyValue_settings {
 
 
 
-extern const struct _CSSOM_CSSPropertyValue_settings CSSOM_propertySettings[];
+extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
 
 
 

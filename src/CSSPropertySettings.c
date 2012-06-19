@@ -9,7 +9,7 @@
 
 
 
-const struct _CSSOM_CSSPropertyValue_settings CSSOM_propertySettings[] = {
+const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_AZIMUTH_PROPERTY */
   { "azimuth",
     &CSSOM_CSSPropertyValue__genericEmit,
