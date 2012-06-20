@@ -277,57 +277,6 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
 
 
 
-int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
-  FILE *out)
-{
-  const struct _CSSOM_CSSPropertySetting *setting;
-  struct _CSSOM_LexicalUnitRange *values;
-  size_t i;
-  int rval;
-
-  setting = CSSOM__propertySetting(property->cssom, property->type);
-
-  if (setting->omit == NULL)
-    return LexicalUnitRange__emit(property->begin, property->end, out);
-
-  values = (struct _CSSOM_LexicalUnitRange *)CSSOM_malloc(
-    sizeof(struct _CSSOM_LexicalUnitRange) * setting->nsubtypes);
-  if (values == NULL) return -1;
-
-  for (i = 0; i < setting->nsubtypes; ++i)
-    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
-
-  rval = setting->omit(property, values);
-  if (rval != 0) {
-    CSSOM_free(values);
-    return rval;
-  }
-
-  if (values[0].begin != NULL) {
-    rval = LexicalUnitRange__emit(values[0].begin, values[0].end, out);
-    if (rval != 0) {
-      CSSOM_free(values);
-      return rval;
-    }
-  }
-
-  for (i = 1; i < setting->nsubtypes; ++i) {
-    if (values[i].begin == NULL) break;
-
-    fprintf(out, " ");
-    rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
-    if (rval != 0) {
-      CSSOM_free(values);
-      return rval;
-    }
-  }
-
-  CSSOM_free(values);
-  return 0;
-}
-
-
-
 int CSSOM_CSSPropertyValue__omitBoxShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values)
@@ -423,6 +372,57 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
     _CSSOM_SET_RANGE(values, 3, setting->subtypes[3], left->begin, left->end);
   }
 
+  return 0;
+}
+
+
+
+static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
+  FILE *out)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+  struct _CSSOM_LexicalUnitRange *values;
+  size_t i;
+  int rval;
+
+  setting = CSSOM__propertySetting(property->cssom, property->type);
+
+  if (setting->omit == NULL)
+    return LexicalUnitRange__emit(property->begin, property->end, out);
+
+  values = (struct _CSSOM_LexicalUnitRange *)CSSOM_malloc(
+    sizeof(struct _CSSOM_LexicalUnitRange) * setting->nsubtypes);
+  if (values == NULL) return -1;
+
+  for (i = 0; i < setting->nsubtypes; ++i)
+    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
+
+  rval = setting->omit(property, values);
+  if (rval != 0) {
+    CSSOM_free(values);
+    return rval;
+  }
+
+  if (values[0].begin != NULL) {
+    rval = LexicalUnitRange__emit(values[0].begin, values[0].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
+    }
+  }
+
+  for (i = 1; i < setting->nsubtypes; ++i) {
+    if (values[i].begin == NULL) break;
+
+    fprintf(out, " ");
+    rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
+    }
+  }
+
+  CSSOM_free(values);
   return 0;
 }
 
