@@ -171,21 +171,29 @@ static int CSSPropertyValue_eq(const CSSOM_CSSPropertyValue *lhs,
 
 
 
-int CSSOM_CSSPropertyValue__genericEmit(const CSSOM_CSSPropertyValue *property,
-  FILE *out)
+static int LexicalUnitRange__emit(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, FILE *out)
 {
   const SAC_LexicalUnit **it;
 
-  it = property->begin;
-  if (it != property->end) {
+  it = begin;
+  if (it != end) {
     if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
-    while (++it != property->end) {
+    while (++it != end) {
       if (fprintf(out, " ") < 0) return 1;
       if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
     }
   }
 
   return 0;
+}
+
+
+
+int CSSOM_CSSPropertyValue__genericEmit(const CSSOM_CSSPropertyValue *property,
+  FILE *out)
+{
+  return LexicalUnitRange__emit(property->begin, property->end, out);
 }
 
 
@@ -226,8 +234,9 @@ static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
 
 
 
-int CSSOM_CSSPropertyValue__genericShorthandEmit(
-  const CSSOM_CSSPropertyValue *shorthand, FILE *out)
+int CSSOM_CSSPropertyValue__genericShorthandSimplify(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *values)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
   size_t i;
@@ -237,45 +246,38 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
   const SAC_LexicalUnit **wit;
   const SAC_LexicalUnit **holder;
   int rval;
-  const char *cssText;
   int isInherit;
 
   setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
 
   if (!testShorthand(shorthand, &size, &isInherit)) return 0;
   if (isInherit) {
-    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      shorthand->parentValues, setting->subtypes[0]);
-    if (fprintf(out, "%s", cssText) < 0) return 1;
-    return 0;
-  }
-
-  holder = (const SAC_LexicalUnit **)CSSOM_malloc(
-    sizeof(const SAC_LexicalUnit*) * size);
-  if (holder == NULL) return 1;
-  wit = holder;
-  for (i = 0; i < setting->nsubtypes; ++i) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues, setting->subtypes[i]);
+      shorthand->parentValues, setting->subtypes[0]);
+    _CSSOM_SET_RANGE(values, 0, shorthand->type, property->begin,
+      property->end);
+  } else {
+    holder = (const SAC_LexicalUnit **)CSSOM_malloc(
+      sizeof(const SAC_LexicalUnit*) * size);
+    if (holder == NULL) return -1;
+    wit = holder;
+    for (i = 0; i < setting->nsubtypes; ++i) {
+      property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+        shorthand->parentValues, setting->subtypes[i]);
 
-    for (rit = property->begin; rit != property->end; ++rit, ++wit) *wit = *rit;
-  }
-  rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
-  CSSOM_free(holder);
-  if (!rval) return 0;
+      for (rit = property->begin; rit != property->end; ++rit, ++wit)
+        *wit = *rit;
+    }
+    rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
+    CSSOM_free(holder);
+    if (!rval) return 0;
 
-  cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-    shorthand->parentValues, setting->subtypes[0]);
-  if (cssText == NULL) return 1;
-
-  if (fprintf(out, "%s", cssText) < 0) return 1;
-
-  for (i = 1; i < setting->nsubtypes; ++i) {
-    cssText = CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-      shorthand->parentValues, setting->subtypes[i]);
-    if (cssText == NULL) return 1;
-
-    if (fprintf(out, " %s", cssText) < 0) return 1;
+    for (i = 0; i < setting->nsubtypes; ++i) {
+      property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+        shorthand->parentValues, setting->subtypes[i]);
+      _CSSOM_SET_RANGE(values, i, property->type, property->begin,
+        property->end);
+    }
   }
 
   return 0;
@@ -283,22 +285,68 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
 
 
 
-int CSSOM_CSSPropertyValue__boxShorthandEmit(
+int CSSOM_CSSPropertyValue__genericShorthandEmit(
   const CSSOM_CSSPropertyValue *shorthand, FILE *out)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+  struct _CSSOM_LexicalUnitRange *values;
+  size_t i;
+  int rval;
+
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+
+  values = (struct _CSSOM_LexicalUnitRange *)CSSOM_malloc(
+    sizeof(struct _CSSOM_LexicalUnitRange) * setting->nsubtypes);
+  if (values == NULL) return -1;
+
+  for (i = 0; i < setting->nsubtypes; ++i)
+    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
+
+  rval = CSSOM_CSSPropertyValue__genericShorthandSimplify(shorthand, values);
+  if (rval != 0) {
+    CSSOM_free(values);
+    return rval;
+  }
+
+  if (values[0].begin != NULL) {
+    rval = LexicalUnitRange__emit(values[0].begin, values[0].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
+    }
+  }
+
+  for (i = 1; i < setting->nsubtypes; ++i) {
+    if (values[i].begin == NULL) break;
+
+    fprintf(out, " ");
+    rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
+    }
+  }
+
+  CSSOM_free(values);
+  return 0;
+}
+
+
+
+int CSSOM_CSSPropertyValue__boxShorthandSimplify(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *values)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
   CSSOM_CSSPropertyValue *top;
   CSSOM_CSSPropertyValue *right;
   CSSOM_CSSPropertyValue *bottom;
   CSSOM_CSSPropertyValue *left;
-  CSSOM_CSSPropertyValue *print[4] = { NULL, NULL, NULL, NULL };
-  size_t i;
   size_t size;
   const SAC_LexicalUnit **rit;
   const SAC_LexicalUnit **wit;
   const SAC_LexicalUnit **holder;
   int rval;
-  const char *cssText;
   int topbottom;
   int rightleft;
   int topright;
@@ -345,7 +393,7 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
     size += left->end - left->begin;
     holder = (const SAC_LexicalUnit **)CSSOM_malloc(
       sizeof(const SAC_LexicalUnit*) * size);
-    if (holder == NULL) return 1;
+    if (holder == NULL) return -1;
     wit = holder;
     for (rit = top->begin; rit != top->end; ++rit, ++wit) *wit = *rit;
     for (rit = right->begin; rit != right->end; ++rit, ++wit) *wit = *rit;
@@ -359,35 +407,75 @@ int CSSOM_CSSPropertyValue__boxShorthandEmit(
   if (rightleft) {
     if (topbottom) {
       if (topright) {
-        print[0] = top;
+        _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
       } else {
-        print[0] = top;
-        print[1] = right;
+        _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin,
+          right->end);
       }
     } else {
-      print[0] = top;
-      print[1] = right;
-      print[2] = bottom;
+      _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
+      _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin,
+        right->end);
+      _CSSOM_SET_RANGE(values, 2, setting->subtypes[2], bottom->begin,
+        bottom->end);
     }
   } else {
-    print[0] = top;
-    print[1] = right;
-    print[2] = bottom;
-    print[3] = left;
+    _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
+    _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin, right->end);
+    _CSSOM_SET_RANGE(values, 2, setting->subtypes[2], bottom->begin,
+      bottom->end);
+    _CSSOM_SET_RANGE(values, 3, setting->subtypes[3], left->begin, left->end);
   }
 
-  for (i = 0; i < 4; ++i) {
-    if (print[i] == NULL) break;
+  return 0;
+}
 
-    cssText = CSSOM_CSSPropertyValue_cssText(print[i]);
 
-    if (cssText == NULL) return 1;
-    if (i != 0) {
-      if (fprintf(out, " ") < 0) return 1;
+
+int CSSOM_CSSPropertyValue__boxShorthandEmit(
+  const CSSOM_CSSPropertyValue *shorthand, FILE *out)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+  struct _CSSOM_LexicalUnitRange *values;
+  size_t i;
+  int rval;
+
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+
+  values = (struct _CSSOM_LexicalUnitRange *)CSSOM_malloc(
+    sizeof(struct _CSSOM_LexicalUnitRange) * setting->nsubtypes);
+  if (values == NULL) return -1;
+
+  for (i = 0; i < setting->nsubtypes; ++i)
+    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
+
+  rval = CSSOM_CSSPropertyValue__boxShorthandSimplify(shorthand, values);
+  if (rval != 0) {
+    CSSOM_free(values);
+    return rval;
+  }
+
+  if (values[0].begin != NULL) {
+    rval = LexicalUnitRange__emit(values[0].begin, values[0].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
     }
-    if (fprintf(out, "%s", cssText) < 0) return 1;
   }
 
+  for (i = 1; i < setting->nsubtypes; ++i) {
+    if (values[i].begin == NULL) break;
+
+    fprintf(out, " ");
+    rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
+    if (rval != 0) {
+      CSSOM_free(values);
+      return rval;
+    }
+  }
+
+  CSSOM_free(values);
   return 0;
 }
 

@@ -2,6 +2,7 @@
 #define _CSSOM_CSS_PROPERTY_VALUE_H
 
 #include "CSSPropertyType.h"
+#include "LexicalUnitRange.h"
 
 #include <cssom/CSSPropertyValue.h>
 
@@ -38,6 +39,14 @@ int CSSOM_CSSPropertyValue__genericShorthandEmit(
 
 int CSSOM_CSSPropertyValue__boxShorthandEmit(
   const CSSOM_CSSPropertyValue *property, FILE *out);
+
+int CSSOM_CSSPropertyValue__genericShorthandSimplify(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *values);
+
+int CSSOM_CSSPropertyValue__boxShorthandSimplify(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *values);
 
 
 
