@@ -19,12 +19,6 @@
 
 
 
-void CSSOM_CSSPropertyValue__initGlobals(void) {
-  CSSOM_CSSPropertyValue__initBackgroundGlobals();
-}
-
-
-
 struct _CSSOM_CSSPropertyValue {
   size_t handles;
   const CSSOM *cssom;

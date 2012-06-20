@@ -1,46 +1,10 @@
 #include "LexicalUnitRange_background.h"
 
+#include "CSSOM.h"
 #include "gcc.h"
 
 #include <string.h>
-
-
-
-static SAC_LexicalUnit unit_transparent;
-static SAC_LexicalUnit unit_none;
-static SAC_LexicalUnit unit_repeat;
-static SAC_LexicalUnit unit_scroll;
-static SAC_LexicalUnit unit_0pct;
-
-
-
-const CSSOM_CSSPropertyType CSSOM_CSSPropertyValue_backgroundSubtypes[] = {
-  CSSOM_BACKGROUND_COLOR_PROPERTY,
-  CSSOM_BACKGROUND_IMAGE_PROPERTY,
-  CSSOM_BACKGROUND_REPEAT_PROPERTY,
-  CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
-  CSSOM_BACKGROUND_POSITION_PROPERTY
-};
-
-
-
-void CSSOM_CSSPropertyValue__initBackgroundGlobals(void) {
-  unit_transparent.lexicalUnitType = SAC_IDENT;
-  unit_transparent.desc.ident = "transparent";
-
-  unit_none.lexicalUnitType = SAC_IDENT;
-  unit_none.desc.ident = "none";
-
-  unit_repeat.lexicalUnitType = SAC_IDENT;
-  unit_repeat.desc.ident = "repeat";
-
-  unit_scroll.lexicalUnitType = SAC_IDENT;
-  unit_scroll.desc.ident = "scroll";
-
-  unit_0pct.lexicalUnitType = SAC_PERCENTAGE;
-  unit_0pct.desc.dimension.unit = "%";
-  unit_0pct.desc.dimension.value.sreal = 0;
-}
+#include <assert.h>
 
 
 
@@ -52,42 +16,16 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  static const SAC_LexicalUnit *color[] = {
-    &unit_transparent
-  };
+  const struct _CSSOM_CSSPropertySetting *setting;
+  int marker[5] = { 0, 0, 0, 0, 0 };
 
-  static const SAC_LexicalUnit *image[] = {
-    &unit_none
-  };
+  setting = CSSOM__propertySetting(cssom, CSSOM_BACKGROUND_PROPERTY);
 
-  static const SAC_LexicalUnit *repeat[] = {
-    &unit_repeat
-  };
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
 
-  static const SAC_LexicalUnit *attachment[] = {
-    &unit_scroll
-  };
-
-  static const SAC_LexicalUnit *position[] = {
-    &unit_0pct, &unit_0pct
-  };
-
-  static const struct _CSSOM_LexicalUnitRange
-  initial[_CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes)] = {
-    { CSSOM_BACKGROUND_COLOR_PROPERTY, _CSSOM_INITIAL(color) },
-    { CSSOM_BACKGROUND_IMAGE_PROPERTY, _CSSOM_INITIAL(image) },
-    { CSSOM_BACKGROUND_REPEAT_PROPERTY, _CSSOM_INITIAL(repeat) },
-    { CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, _CSSOM_INITIAL(attachment) },
-    { CSSOM_BACKGROUND_POSITION_PROPERTY, _CSSOM_INITIAL(position) }
-  };
-
-  int marker[_CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes)] = {
-    0, 0, 0, 0, 0
-  };
-
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, initial,
-    values != NULL ? &values[1] : NULL, marker,
-    _CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes), begin, end) != end)
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->initial,
+    values != NULL ? &values[1] : NULL, marker, setting->nsubtypes, begin,
+    end) != end)
   {
     return begin;
   }

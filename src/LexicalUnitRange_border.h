@@ -11,17 +11,6 @@ extern "C" {
 
 
 
-extern const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderColorSubtypes[4];
-
-extern const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderStyleSubtypes[4];
-
-extern const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderWidthSubtypes[4];
-
-
-
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);

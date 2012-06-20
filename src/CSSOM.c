@@ -26,21 +26,114 @@
 
 
 
+static int inited = 0;
+
+
+
+static SAC_LexicalUnit unit_transparent;
+static SAC_LexicalUnit unit_none;
+static SAC_LexicalUnit unit_repeat;
+static SAC_LexicalUnit unit_scroll;
+static SAC_LexicalUnit unit_0pct;
+
+
+
+/**
+ * background
+ */
+
+static const SAC_LexicalUnit *backgroundColor[] = {
+  &unit_transparent
+};
+
+static const SAC_LexicalUnit *backgroundImage[] = {
+  &unit_none
+};
+
+static const SAC_LexicalUnit *backgroundRepeat[] = {
+  &unit_repeat
+};
+
+static const SAC_LexicalUnit *backgroundAttachment[] = {
+  &unit_scroll
+};
+
+static const SAC_LexicalUnit *backgroundPosition[] = {
+  &unit_0pct, &unit_0pct
+};
+
+
+
+static const CSSOM_CSSPropertyType backgroundSubtypes[] = {
+  CSSOM_BACKGROUND_COLOR_PROPERTY,
+  CSSOM_BACKGROUND_IMAGE_PROPERTY,
+  CSSOM_BACKGROUND_REPEAT_PROPERTY,
+  CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+  CSSOM_BACKGROUND_POSITION_PROPERTY
+};
+
+
+
+static const struct _CSSOM_LexicalUnitRange
+backgroundInitial[_CSSOM_ASIZE(backgroundSubtypes)] = {
+  { CSSOM_BACKGROUND_COLOR_PROPERTY, _CSSOM_INITIAL(backgroundColor) },
+  { CSSOM_BACKGROUND_IMAGE_PROPERTY, _CSSOM_INITIAL(backgroundImage) },
+  { CSSOM_BACKGROUND_REPEAT_PROPERTY, _CSSOM_INITIAL(backgroundRepeat) },
+  { CSSOM_BACKGROUND_ATTACHMENT_PROPERTY,
+    _CSSOM_INITIAL(backgroundAttachment) },
+  { CSSOM_BACKGROUND_POSITION_PROPERTY, _CSSOM_INITIAL(backgroundPosition) }
+};
+
+
+
+/**
+ * border
+ */
+
+const CSSOM_CSSPropertyType
+borderColorSubtypes[] = {
+  CSSOM_BORDER_TOP_COLOR_PROPERTY,
+  CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
+  CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
+  CSSOM_BORDER_LEFT_COLOR_PROPERTY
+};
+
+const CSSOM_CSSPropertyType
+borderStyleSubtypes[] = {
+  CSSOM_BORDER_TOP_STYLE_PROPERTY,
+  CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
+  CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
+  CSSOM_BORDER_LEFT_STYLE_PROPERTY
+};
+
+const CSSOM_CSSPropertyType
+borderWidthSubtypes[] = {
+  CSSOM_BORDER_TOP_WIDTH_PROPERTY,
+  CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
+  CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
+  CSSOM_BORDER_LEFT_WIDTH_PROPERTY
+};
+
+
+
 const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_AZIMUTH_PROPERTY */
   { "azimuth",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_azimuth,
     NULL },
   /* CSSOM_BACKGROUND_PROPERTY */
   { "background",
-    CSSOM_CSSPropertyValue_backgroundSubtypes,
-    _CSSOM_ASIZE(CSSOM_CSSPropertyValue_backgroundSubtypes),
+    backgroundSubtypes,
+    backgroundInitial,
+    _CSSOM_ASIZE(backgroundSubtypes),
     CSSOM_LexicalUnitRange_background,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BACKGROUND_ATTACHMENT_PROPERTY */
   { "background-attachment",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundAttachment,
@@ -48,11 +141,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BACKGROUND_COLOR_PROPERTY */
   { "background-color",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundColor,
     NULL },
   /* CSSOM_BACKGROUND_IMAGE_PROPERTY */
   { "background-image",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundImage,
@@ -60,11 +155,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BACKGROUND_POSITION_PROPERTY */
   { "background-position",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundPosition,
     NULL },
   /* CSSOM_BACKGROUND_REPEAT_PROPERTY */
   { "background-repeat",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundRepeat,
@@ -72,35 +169,41 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_PROPERTY */
   { "border",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
   { "border-collapse",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderCollapse,
     NULL },
   /* CSSOM_BORDER_COLOR_PROPERTY */
   { "border-color",
-    CSSOM_CSSPropertyValue_borderColorSubtypes,
-    _CSSOM_ASIZE(CSSOM_CSSPropertyValue_borderColorSubtypes),
+    borderColorSubtypes,
+    NULL,
+    _CSSOM_ASIZE(borderColorSubtypes),
     CSSOM_LexicalUnitRange_borderColor,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_SPACING_PROPERTY */
   { "border-spacing",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderSpacing,
     NULL },
   /* CSSOM_BORDER_STYLE_PROPERTY */
   { "border-style",
-    CSSOM_CSSPropertyValue_borderStyleSubtypes,
-    _CSSOM_ASIZE(CSSOM_CSSPropertyValue_borderStyleSubtypes),
+    borderStyleSubtypes,
+    NULL,
+    _CSSOM_ASIZE(borderStyleSubtypes),
     CSSOM_LexicalUnitRange_borderStyle,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_TOP_PROPERTY */
   { "border-top",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -108,11 +211,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_RIGHT_PROPERTY */
   { "border-right",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_BORDER_BOTTOM_PROPERTY */
   { "border-bottom",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -120,11 +225,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_LEFT_PROPERTY */
   { "border-left",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_BORDER_TOP_COLOR_PROPERTY */
   { "border-top-color",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopColor,
@@ -132,11 +239,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_RIGHT_COLOR_PROPERTY */
   { "border-right-color",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightColor,
     NULL },
   /* CSSOM_BORDER_BOTTOM_COLOR_PROPERTY */
   { "border-bottom-color",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomColor,
@@ -144,11 +253,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_LEFT_COLOR_PROPERTY */
   { "border-left-color",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftColor,
     NULL },
   /* CSSOM_BORDER_TOP_STYLE_PROPERTY */
   { "border-top-style",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopStyle,
@@ -156,11 +267,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_RIGHT_STYLE_PROPERTY */
   { "border-right-style",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightStyle,
     NULL },
   /* CSSOM_BORDER_BOTTOM_STYLE_PROPERTY */
   { "border-bottom-style",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomStyle,
@@ -168,11 +281,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_LEFT_STYLE_PROPERTY */
   { "border-left-style",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftStyle,
     NULL },
   /* CSSOM_BORDER_TOP_WIDTH_PROPERTY */
   { "border-top-width",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopWidth,
@@ -180,11 +295,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_RIGHT_WIDTH_PROPERTY */
   { "border-right-width",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightWidth,
     NULL },
   /* CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY */
   { "border-bottom-width",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomWidth,
@@ -192,17 +309,20 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_BORDER_LEFT_WIDTH_PROPERTY */
   { "border-left-width",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftWidth,
     NULL },
   /* CSSOM_BORDER_WIDTH_PROPERTY */
   { "border-width",
-    CSSOM_CSSPropertyValue_borderWidthSubtypes,
-    _CSSOM_ASIZE(CSSOM_CSSPropertyValue_borderWidthSubtypes),
+    borderWidthSubtypes,
+    NULL,
+    _CSSOM_ASIZE(borderWidthSubtypes),
     CSSOM_LexicalUnitRange_borderWidth,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BOTTOM_PROPERTY */
   { "bottom",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -210,11 +330,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_CAPTION_SIDE_PROPERTY */
   { "caption-side",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_CLEAR_PROPERTY */
   { "clear",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -222,11 +344,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_CLIP_PROPERTY */
   { "clip",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_COLOR_PROPERTY */
   { "color",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -234,11 +358,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_CONTENT_PROPERTY */
   { "content",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_COUNTER_INCREMENT_PROPERTY */
   { "counter",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -246,11 +372,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_COUNTER_RESET_PROPERTY */
   { "counter-reset",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_CUE_PROPERTY */
   { "cue",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -258,11 +386,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_CUE_AFTER_PROPERTY */
   { "cue-after",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_CUE_BEFORE_PROPERTY */
   { "cue-before",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -270,11 +400,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_CURSOR_PROPERTY */
   { "cursor",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_DIRECTION_PROPERTY */
   { "direction",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -282,11 +414,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_DISPLAY_PROPERTY */
   { "display",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_ELEVATION_PROPERTY */
   { "elevation",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -294,11 +428,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_EMPTY_CELLS_PROPERTY */
   { "empty-cells",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_FLOAT_PROPERTY */
   { "float",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -306,11 +442,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_FONT_PROPERTY */
   { "font",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_FONT_FAMILY_PROPERTY */
   { "font-family",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -318,11 +456,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_FONT_SIZE_PROPERTY */
   { "font-size",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_FONT_SIZE_ADJUST_PROPERTY */
   { "font-size-adjust",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -330,11 +470,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_FONT_STRETCH_PROPERTY */
   { "font-stretch",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_FONT_STYLE_PROPERTY */
   { "font-style",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -342,11 +484,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_FONT_VARIANT_PROPERTY */
   { "font-variant",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_FONT_WEIGHT_PROPERTY */
   { "font-weight",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -354,11 +498,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_HEIGHT_PROPERTY */
   { "height",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_LEFT_PROPERTY */
   { "left",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -366,11 +512,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_LETTER_SPACING_PROPERTY */
   { "letter-spacing",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_LINE_HEIGHT_PROPERTY */
   { "line-height",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -378,11 +526,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_LIST_STYLE_PROPERTY */
   { "list-style",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_LIST_STYLE_IMAGE_PROPERTY */
   { "list-style-image",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -390,11 +540,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_LIST_STYLE_POSITION_PROPERTY */
   { "list-style-position",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_LIST_STYLE_TYPE_PROPERTY */
   { "list-style-type",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -402,11 +554,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MARGIN_PROPERTY */
   { "margin",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_MARGIN_TOP_PROPERTY */
   { "margin-top",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -414,11 +568,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MARGIN_RIGHT_PROPERTY */
   { "margin-right",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_MARGIN_BOTTOM_PROPERTY */
   { "margin-bottom",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -426,11 +582,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MARGIN_LEFT_PROPERTY */
   { "margin-left",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_MARKER_OFFSET_PROPERTY */
   { "marker-offset",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -438,11 +596,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MARKS_PROPERTY */
   { "marks",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_MAX_HEIGHT_PROPERTY */
   { "max-height",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -450,11 +610,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MAX_WIDTH_PROPERTY */
   { "max-width",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_MIN_HEIGHT_PROPERTY */
   { "min-height",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -462,11 +624,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_MIN_WIDTH_PROPERTY */
   { "min-width",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_ORPHANS_PROPERTY */
   { "orphans",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -474,11 +638,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_OUTLINE_PROPERTY */
   { "outline",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_OUTLINE_COLOR_PROPERTY */
   { "outline-color",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -486,11 +652,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_OUTLINE_STYLE_PROPERTY */
   { "outline-style",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_OUTLINE_WIDTH_PROPERTY */
   { "outline-width",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -498,11 +666,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_OVERFLOW_PROPERTY */
   { "overflow",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PADDING_PROPERTY */
   { "padding",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -510,11 +680,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PADDING_TOP_PROPERTY */
   { "padding-top",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PADDING_RIGHT_PROPERTY */
   { "padding-right",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -522,11 +694,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PADDING_BOTTOM_PROPERTY */
   { "padding-bottom",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PADDING_LEFT_PROPERTY */
   { "padding-left",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -534,11 +708,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PAGE_PROPERTY */
   { "page",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PAGE_BREAK_AFTER_PROPERTY */
   { "page-break-after",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -546,11 +722,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PAGE_BREAK_BEFORE_PROPERTY */
   { "page-break-before",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PAGE_BREAK_INSIDE_PROPERTY */
   { "page-break-inside",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -558,11 +736,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PAUSE_PROPERTY */
   { "pause",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PAUSE_AFTER_PROPERTY */
   { "pause-after",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -570,11 +750,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PAUSE_BEFORE_PROPERTY */
   { "pause-before",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PITCH_PROPERTY */
   { "pitch",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -582,11 +764,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_PITCH_RANGE_PROPERTY */
   { "pitch-range",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_PLAY_DURING_PROPERTY */
   { "play-during",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -594,11 +778,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_POSITION_PROPERTY */
   { "position",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_QUOTES_PROPERTY */
   { "quotes",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -606,11 +792,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_RICHNESS_PROPERTY */
   { "richness",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_RIGHT_PROPERTY */
   { "right",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -618,11 +806,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_SIZE_PROPERTY */
   { "size",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_SPEAK_PROPERTY */
   { "speak",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -630,11 +820,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_SPEAK_HEADER_PROPERTY */
   { "speak-header",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_SPEAK_NUMERAL_PROPERTY */
   { "speak-numeral",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -642,11 +834,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_SPEAK_PUNCTUATION_PROPERTY */
   { "speak-punctuation",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_SPEECH_RATE_PROPERTY */
   { "speech-rate",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -654,11 +848,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_SRC_PROPERTY */
   { "src",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_STRESS_PROPERTY */
   { "stress",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -666,11 +862,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_TABLE_LAYOUT_PROPERTY */
   { "table-layout",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_TEXT_ALIGN_PROPERTY */
   { "text-align",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -678,11 +876,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_TEXT_DECORATION_PROPERTY */
   { "text-decoration",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_TEXT_INDENT_PROPERTY */
   { "text-indent",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -690,11 +890,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_TEXT_SHADOW_PROPERTY */
   { "text-shadow",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_TEXT_TRANSFORM_PROPERTY */
   { "text-transform",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -702,11 +904,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_TOP_PROPERTY */
   { "top",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_UNICODE_BIDI_PROPERTY */
   { "unicode-bidi",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -714,11 +918,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_VERTICAL_ALIGN_PROPERTY */
   { "vertical-align",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_VISIBILITY_PROPERTY */
   { "visibility",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -726,11 +932,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_VOICE_FAMILY_PROPERTY */
   { "voice-family",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_VOLUME_PROPERTY */
   { "volume",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -738,11 +946,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_WHITE_SPACE_PROPERTY */
   { "white-space",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_WIDOWS_PROPERTY */
   { "widows",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -750,11 +960,13 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_WIDTH_PROPERTY */
   { "width",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL },
   /* CSSOM_WORD_SPACING_PROPERTY */
   { "word-spacing",
+    NULL,
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
@@ -762,10 +974,31 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
   /* CSSOM_Z_INDEX_PROPERTY */
   { "z-index",
     NULL,
+    NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
     NULL }
 };
+
+
+
+static void initGlobals(void) {
+  unit_transparent.lexicalUnitType = SAC_IDENT;
+  unit_transparent.desc.ident = "transparent";
+
+  unit_none.lexicalUnitType = SAC_IDENT;
+  unit_none.desc.ident = "none";
+
+  unit_repeat.lexicalUnitType = SAC_IDENT;
+  unit_repeat.desc.ident = "repeat";
+
+  unit_scroll.lexicalUnitType = SAC_IDENT;
+  unit_scroll.desc.ident = "scroll";
+
+  unit_0pct.lexicalUnitType = SAC_PERCENTAGE;
+  unit_0pct.desc.dimension.unit = "%";
+  unit_0pct.desc.dimension.value.sreal = 0;
+}
 
 
 
@@ -815,7 +1048,10 @@ CSSOM* CSSOM_create(void) {
   cssom->errorHandler = NULL;
   cssom->userData = NULL;
 
-  CSSOM_CSSPropertyValue__initGlobals();
+  if (!inited) {
+    initGlobals();
+    inited = 1;
+  }
 
   return cssom;
 }

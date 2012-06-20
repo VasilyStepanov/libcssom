@@ -1,34 +1,9 @@
 #include "LexicalUnitRange_border.h"
 
+#include "CSSOM.h"
 #include "gcc.h"
 
 #include <string.h>
-
-
-
-const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderColorSubtypes[] = {
-  CSSOM_BORDER_TOP_COLOR_PROPERTY,
-  CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
-  CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
-  CSSOM_BORDER_LEFT_COLOR_PROPERTY
-};
-
-const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderStyleSubtypes[] = {
-  CSSOM_BORDER_TOP_STYLE_PROPERTY,
-  CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
-  CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
-  CSSOM_BORDER_LEFT_STYLE_PROPERTY
-};
-
-const CSSOM_CSSPropertyType
-CSSOM_CSSPropertyValue_borderWidthSubtypes[] = {
-  CSSOM_BORDER_TOP_WIDTH_PROPERTY,
-  CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
-  CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
-  CSSOM_BORDER_LEFT_WIDTH_PROPERTY
-};
 
 
 
@@ -136,9 +111,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom,
-    CSSOM_CSSPropertyValue_borderColorSubtypes, borderColorToken, begin, end,
-    values != NULL ? &values[1] : NULL) != end)
+  const struct _CSSOM_CSSPropertySetting *setting;
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_COLOR_PROPERTY);
+
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderColorToken, begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -209,9 +187,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom,
-    CSSOM_CSSPropertyValue_borderStyleSubtypes, borderStyleToken, begin, end,
-    values != NULL ? &values[1] : NULL) != end)
+  const struct _CSSOM_CSSPropertySetting *setting;
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_STYLE_PROPERTY);
+
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderStyleToken, begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -497,9 +478,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom,
-    CSSOM_CSSPropertyValue_borderWidthSubtypes, borderWidthToken, begin, end,
-    values != NULL ? &values[1] : NULL) != end)
+  const struct _CSSOM_CSSPropertySetting *setting;
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_WIDTH_PROPERTY);
+
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderWidthToken, begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
