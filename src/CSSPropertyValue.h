@@ -31,20 +31,11 @@ int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property);
 void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
   SAC_Parser parser);
 
-int CSSOM_CSSPropertyValue__genericEmit(const CSSOM_CSSPropertyValue *property,
-  FILE *out);
-
-int CSSOM_CSSPropertyValue__genericShorthandEmit(
-  const CSSOM_CSSPropertyValue *property, FILE *out);
-
-int CSSOM_CSSPropertyValue__boxShorthandEmit(
-  const CSSOM_CSSPropertyValue *property, FILE *out);
-
-int CSSOM_CSSPropertyValue__genericShorthandSimplify(
+int CSSOM_CSSPropertyValue__omitGenericShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values);
 
-int CSSOM_CSSPropertyValue__boxShorthandSimplify(
+int CSSOM_CSSPropertyValue__omitBoxShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values);
 

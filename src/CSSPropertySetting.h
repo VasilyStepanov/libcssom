@@ -24,10 +24,11 @@ typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(const CSSOM *cssom,
 
 struct _CSSOM_CSSPropertySetting {
   const char *name;
-  int (*emit)(const CSSOM_CSSPropertyValue *property, FILE *out);
   const CSSOM_CSSPropertyType *subtypes;
   size_t nsubtypes;
   _CSSOM_PropertyHandler handler;
+  int (*omit)(const CSSOM_CSSPropertyValue *property,
+    struct _CSSOM_LexicalUnitRange *values);
 };
 
 
