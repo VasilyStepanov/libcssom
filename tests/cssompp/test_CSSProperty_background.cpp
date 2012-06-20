@@ -782,8 +782,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("#808080");
-  assertEquals(std::string("rgb(128, 128, 128) none repeat scroll 0% 0%"),
-    style.background());
+  assertEquals(std::string("rgb(128, 128, 128)"), style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
@@ -798,10 +797,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("url(\"http://example.com/\")");
-  assertEquals(
-    std::string("transparent url(\"http://example.com/\") repeat scroll "
-      "0% 0%"),
-    style.background());
+  assertEquals(std::string("url(\"http://example.com/\")"), style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("url(\"http://example.com/\")"),
@@ -816,14 +812,13 @@ void background() {
    */
 
   style.setBackground(NULL);
-  style.setBackground("repeat");
-  assertEquals(std::string("transparent none repeat scroll 0% 0%"),
-    style.background());
+  style.setBackground("repeat-x");
+  assertEquals(std::string("repeat-x"), style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
   assertEquals(std::string("0% 0%"), style.backgroundPosition());
-  assertEquals(std::string("repeat"), style.backgroundRepeat());
+  assertEquals(std::string("repeat-x"), style.backgroundRepeat());
 
 
 
@@ -832,10 +827,9 @@ void background() {
    */
 
   style.setBackground(NULL);
-  style.setBackground("scroll");
-  assertEquals(std::string("transparent none repeat scroll 0% 0%"),
-    style.background());
-  assertEquals(std::string("scroll"), style.backgroundAttachment());
+  style.setBackground("fixed");
+  assertEquals(std::string("fixed"), style.background());
+  assertEquals(std::string("fixed"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
   assertEquals(std::string("0% 0%"), style.backgroundPosition());
@@ -849,9 +843,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("center center");
-  assertEquals(
-    std::string("transparent none repeat scroll center center"),
-    style.background());
+  assertEquals(std::string("center center"), style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
@@ -866,8 +858,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("fixed no-repeat");
-  assertEquals(std::string("transparent none no-repeat fixed 0% 0%"),
-    style.background());
+  assertEquals(std::string("no-repeat fixed"), style.background());
   assertEquals(std::string("fixed"), style.backgroundAttachment());
   assertEquals(std::string("transparent"), style.backgroundColor());
   assertEquals(std::string("none"), style.backgroundImage());
@@ -882,8 +873,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("inherit #808080");
-  assertEquals(std::string("rgb(128, 128, 128) inherit repeat scroll 0% 0%"),
-    style.background());
+  assertEquals(std::string("rgb(128, 128, 128) inherit"), style.background());
   assertEquals(std::string("scroll"), style.backgroundAttachment());
   assertEquals(std::string("rgb(128, 128, 128)"), style.backgroundColor());
   assertEquals(std::string("inherit"), style.backgroundImage());
@@ -906,6 +896,33 @@ void background() {
   assertEquals(std::string("inherit"), style.backgroundRepeat());
 
 
+
+  /**
+   * omit initial
+   */
+
+  style.setBackground(NULL);
+
+  /**
+   * TODO: Drop next five lines.
+   */
+  style.setBackground("inherit");
+  style.setBackgroundAttachment(NULL);
+  style.setBackgroundColor(NULL);
+  style.setBackgroundImage(NULL);
+  style.setBackgroundPosition(NULL);
+  style.setBackgroundRepeat(NULL);
+
+  style.setBackgroundAttachment("fixed");
+  assertEquals(std::string(""), style.background());
+  style.setBackgroundColor("transparent");
+  style.setBackgroundImage("none");
+  style.setBackgroundPosition("0% 0%");
+  style.setBackgroundRepeat("repeat");
+  assertEquals(std::string("fixed"), style.background());
+
+  style.setBackgroundAttachment("scroll");
+  assertEquals(std::string("transparent"), style.background());
 
   /**
    * imposible shorthand

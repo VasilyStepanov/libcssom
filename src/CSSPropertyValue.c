@@ -165,6 +165,28 @@ static int CSSPropertyValue_eq(const CSSOM_CSSPropertyValue *lhs,
 
 
 
+int LexicalUnitRange_eq(const SAC_LexicalUnit **lhsbegin,
+  const SAC_LexicalUnit **lhsend, const SAC_LexicalUnit **rhsbegin,
+  const SAC_LexicalUnit **rhsend)
+{
+  const SAC_LexicalUnit **lit;
+  const SAC_LexicalUnit **rit;
+
+  if (lhsend - lhsbegin != rhsend - rhsbegin) return 0;
+
+  for (
+    lit = lhsbegin, rit = rhsbegin;
+    lit != lhsend;
+    ++lit, ++rit)
+  {
+    if (!LexicalUnit_eq(*lit, *rit)) return 0;
+  }
+
+  return 1;
+}
+
+
+
 static int LexicalUnitRange__emit(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, FILE *out)
 {
@@ -258,12 +280,30 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
     CSSOM_free(holder);
     if (!rval) return 0;
 
+    rval = 0;
     for (i = 0; i < setting->nsubtypes; ++i) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
         shorthand->parentValues, setting->subtypes[i]);
+
+      if (LexicalUnitRange_eq(property->begin, property->end,
+        setting->initial[i].begin, setting->initial[i].end))
+      {
+        continue;
+      }
+
       _CSSOM_SET_RANGE(values, i, property->type, property->begin,
         property->end);
+      rval = 1;
     }
+
+    if (rval == 0) {
+      property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+        shorthand->parentValues, setting->subtypes[0]);
+
+      _CSSOM_SET_RANGE(values, 0, property->type, property->begin,
+        property->end);
+    }
+
   }
 
   return 0;
@@ -378,6 +418,7 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   struct _CSSOM_LexicalUnitRange *values;
   size_t i;
   int rval;
+  int emitted;
 
   setting = CSSOM__propertySetting(property->cssom, property->type);
 
@@ -397,23 +438,23 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
     return rval;
   }
 
-  if (values[0].begin != NULL) {
-    rval = LexicalUnitRange__emit(values[0].begin, values[0].end, out);
-    if (rval != 0) {
-      CSSOM_free(values);
-      return rval;
+  emitted = 0;
+  for (i = 0; i < setting->nsubtypes; ++i) {
+    if (values[i].begin == NULL) continue;
+
+    if (emitted) {
+      if (fprintf(out, " ") < 0) {
+        CSSOM_free(values);
+        return -1;
+      }
     }
-  }
 
-  for (i = 1; i < setting->nsubtypes; ++i) {
-    if (values[i].begin == NULL) break;
-
-    fprintf(out, " ");
     rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
     if (rval != 0) {
       CSSOM_free(values);
       return rval;
     }
+    emitted = 1;
   }
 
   CSSOM_free(values);
