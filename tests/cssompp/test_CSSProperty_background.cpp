@@ -4,7 +4,9 @@
 #include "utility.hpp"
 
 #include <cssompp/CSSOM.hpp>
+#include <cssompp/CSSPropertyValue.hpp>
 #include <cssompp/CSSStyleDeclaration.hpp>
+#include <cssompp/CSSStyleDeclarationValue.hpp>
 #include <cssompp/CSSStyleRule.hpp>
 #include <cssompp/CSSStyleSheet.hpp>
 
@@ -938,16 +940,33 @@ void background() {
 
 
   /**
-   * shorthand behaviour
+   * error
    */
 
-  // std::cout << style.cssText() << std::endl;
   style.setBackground(NULL);
-  // std::cout << style.cssText() << std::endl;
-  // assertEquals(std::string(""), style.background());
-  // std::cout << style.length() << std::endl;
-  // std::cout << style.cssText() << std::endl;
-  assert(style.length() == 4);
+  style.setBackground("invalid");
+  assert(style.background() == NULL);
+
+}
+
+
+
+void shorthand() {
+  cssom::CSSOM cssom;
+  cssom::CSSPropertyValue background;
+  cssom::CSSPropertyValue backgroundColor;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.background() == NULL);
+
+
+
+  /**
+   * remove shorthand
+   */
+
+  style.setBackground(NULL);
+  assert(style.length() == 0);
   style.setBackground("red");
   assert(style.length() == 6);
   assertEquals(std::string(
@@ -958,16 +977,8 @@ void background() {
 "background-attachment : scroll; "
 "background-position : 0% 0%;"),
     style.cssText());
-
-
-
-  /**
-   * error
-   */
-
   style.setBackground(NULL);
-  style.setBackground("invalid");
-  assert(style.background() == NULL);
+  assert(style.length() == 0);
 
 }
 
@@ -986,6 +997,7 @@ void cssPropertyBackground() {
   backgroundPosition();
   backgroundRepeat();
   background();
+  shorthand();
 }
 
 
