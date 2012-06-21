@@ -924,6 +924,8 @@ void background() {
   style.setBackgroundAttachment("scroll");
   assertEquals(std::string("transparent"), style.background());
 
+
+
   /**
    * imposible shorthand
    */
@@ -932,6 +934,30 @@ void background() {
   style.setBackground("inherit");
   style.setBackgroundImage(NULL);
   assertEquals(std::string(""), style.background());
+
+
+
+  /**
+   * shorthand behaviour
+   */
+
+  // std::cout << style.cssText() << std::endl;
+  style.setBackground(NULL);
+  // std::cout << style.cssText() << std::endl;
+  // assertEquals(std::string(""), style.background());
+  // std::cout << style.length() << std::endl;
+  // std::cout << style.cssText() << std::endl;
+  assert(style.length() == 4);
+  style.setBackground("red");
+  assert(style.length() == 6);
+  assertEquals(std::string(
+"background : red; "
+"background-color : red; "
+"background-image : none; "
+"background-repeat : repeat; "
+"background-attachment : scroll; "
+"background-position : 0% 0%;"),
+    style.cssText());
 
 
 
