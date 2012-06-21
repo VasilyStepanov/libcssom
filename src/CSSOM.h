@@ -53,7 +53,7 @@ int CSSOM__error(const CSSOM *cssom, const SAC_Error *error);
 const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom);
 
 const struct _CSSOM_CSSPropertySetting* CSSOM__propertySetting(
-  const CSSOM *cssom, CSSOM_CSSPropertyType type);
+  const CSSOM *cssom, int hash);
 
 extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
 
