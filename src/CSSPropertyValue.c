@@ -675,6 +675,7 @@ const char* CSSOM_CSSPropertyValue_cssText(
 static void CSSPropertyValue_swap(
   CSSOM_CSSPropertyValue *lhs, CSSOM_CSSPropertyValue *rhs)
 {
+  assert(lhs->cssom == rhs->cssom);
   assert(lhs->parentValues == rhs->parentValues);
   SWAPP(lhs->shorthand, rhs->shorthand);
   SWAPP(lhs->parser, rhs->parser);
