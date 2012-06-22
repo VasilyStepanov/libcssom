@@ -3,6 +3,7 @@
 #include "MediaList.h"
 #include "CSSMediaRule.h"
 #include "CSSPageRule.h"
+#include "CSSPropertyData.h"
 #include "CSSPropertySetting.h"
 #include "CSSPropertyValue.h"
 #include "LexicalUnitRange_azimuth.h"
@@ -1502,6 +1503,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
   CSSOM_ParserStack *stack;
   const SAC_LexicalUnit *lu;
   SAC_Boolean important;
+  CSSOM_CSSPropertyData *propertyData;
   CSSOM_CSSPropertyValue *propertyValue;
 
   parser = SAC_CreateParser();
@@ -1535,9 +1537,17 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     important = rval == 1 ? SAC_TRUE : SAC_FALSE;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, type, lu,
-    important, NULL);
+  propertyData = CSSOM_CSSPropertyData__alloc(lu);
+  if (propertyData == NULL) {
+    CSSOM_ParserStack_free(stack);
+    SAC_DisposeParser(parser);
+    return NULL;
+  }
+
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, type,
+    propertyData, important, NULL);
   if (propertyValue == NULL) {
+    CSSOM_CSSPropertyData_release(propertyData);
     CSSOM_ParserStack_free(stack);
     SAC_DisposeParser(parser);
     return NULL;
@@ -1545,7 +1555,8 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
 
   CSSOM_ParserStack_free(stack);
 
-  CSSOM_CSSPropertyValue__keepParser(propertyValue, parser);
+  CSSOM_CSSPropertyData__keepParser(propertyData, parser);
+  CSSOM_CSSPropertyData_release(propertyData);
 
   return propertyValue;
 }

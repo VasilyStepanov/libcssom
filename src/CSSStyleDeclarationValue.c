@@ -215,6 +215,7 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
 {
   const CSSOM *cssom;
   CSSOM_FSMIter_CSSPropertyValue it;
+  CSSOM_CSSPropertyData *propertyData;
   CSSOM_CSSPropertyValue *propertyValue;
   int error;
 
@@ -225,9 +226,16 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, property, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return 1;
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, it->hash, value,
-    priority, &error);
+  propertyData = CSSOM_CSSPropertyData__alloc(value);
+  if (propertyData == NULL) {
+    if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
+    return -1;
+  }
+
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, it->hash,
+    propertyData, priority, &error);
   if (propertyValue == NULL) {
+    CSSOM_CSSPropertyData_release(propertyData);
     if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
     return error;
   }
@@ -235,12 +243,16 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   if (it->value != NULL) {
     it = CSSOM_FSM_CSSPropertyValue_update(values->fsm, it);
     if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
+      CSSOM_CSSPropertyData_release(propertyData);
+      if (it->value == NULL) CSSOM_FSM_CSSPropertyValue_erase(values->fsm, it);
       CSSOM_CSSPropertyValue_release(propertyValue);
       return -1;
     }
     CSSOM_CSSPropertyValue_release(it->value);
   }
   it->value = propertyValue;
+
+  CSSOM_CSSPropertyData_release(propertyData);
 
   return 0;
 }

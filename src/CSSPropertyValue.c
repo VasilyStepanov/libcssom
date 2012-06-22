@@ -24,10 +24,9 @@ struct _CSSOM_CSSPropertyValue {
   const CSSOM *cssom;
   CSSOM_CSSStyleDeclarationValue *parentValues;
   CSSOM_CSSPropertyValue *shorthand;
-  SAC_Parser parser;
   CSSOM_CSSPropertyType type;
   const char *name;
-  const SAC_LexicalUnit **holder;
+  CSSOM_CSSPropertyData *data;
   const SAC_LexicalUnit **begin;
   const SAC_LexicalUnit **end;
   SAC_Boolean important;
@@ -466,7 +465,7 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues,
   CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  const SAC_LexicalUnit **holder, const SAC_LexicalUnit **begin,
+  CSSOM_CSSPropertyData *data, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
@@ -479,14 +478,15 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   property->cssom = cssom;
   property->parentValues = parentValues;
   property->shorthand = shorthand;
-  property->parser = NULL;
   property->type = type;
   property->name = CSSOM__propertySetting(cssom, type)->name;
-  property->holder = holder;
+  property->data = data;
   property->begin = begin;
   property->end = end;
   property->important = important;
   property->cssText = NULL;
+
+  CSSOM_CSSPropertyData_acquire(property->data);
 
   return property;
 }
@@ -494,7 +494,7 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
 
 
 static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues, const SAC_LexicalUnit **holder,
+  CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyData *data,
   struct _CSSOM_LexicalUnitRange *values, size_t size, SAC_Boolean important,
   int *error)
 {
@@ -509,7 +509,7 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
   }
 
   shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL,
-      values[0].type, holder, values[0].begin, values[0].end, important);
+      values[0].type, data, values[0].begin, values[0].end, important);
   if (shorthand == NULL) {
     if (error != NULL) *error = -1;
     return NULL;
@@ -519,7 +519,7 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
     if (values[i].begin == NULL) continue;
 
     property = CSSPropertyValue_alloc(cssom, parentValues, shorthand,
-      values[i].type, NULL, values[i].begin, values[i].end, important);
+      values[i].type, data, values[i].begin, values[i].end, important);
     if (property == NULL) {
       if (error != NULL) *error = -1;
       return NULL;
@@ -540,9 +540,8 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyType type, const SAC_LexicalUnit *value,
-  SAC_Boolean important, int *error)
+  CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
+  CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
   /**
@@ -557,30 +556,13 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
     { 0, NULL, NULL }
   };
 
-  const SAC_LexicalUnit **begin;
-  const SAC_LexicalUnit **end;
-  const SAC_LexicalUnit **holder;
   CSSOM_CSSPropertyValue *property;
 
   setting = CSSOM__propertySetting(cssom, type);
 
-  if (value->lexicalUnitType != SAC_SUB_EXPRESSION) {
-    holder = (const SAC_LexicalUnit**)CSSOM_malloc(
-      sizeof(const SAC_LexicalUnit*) * 2);
-    if (holder == NULL) return NULL;
-    holder[0] = value;
-    holder[1] = NULL;
-    begin = &holder[0];
-    end = &holder[1];
-  } else {
-    holder = NULL;
-    begin = (const SAC_LexicalUnit**)value->desc.subValues;
-    end = begin;
-    while (*end != NULL) ++end;
-  }
-
-  if (setting->handler(cssom, begin, end, values) != end) {
-    CSSOM_free(holder);
+  if (setting->handler(cssom, CSSOM_CSSPropertyData_begin(data),
+    CSSOM_CSSPropertyData_end(data), values) != CSSOM_CSSPropertyData_end(data))
+  {
     if (error != NULL) *error = 1;
     return NULL;
   }
@@ -590,10 +572,9 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
    */
   values[0].type = type;
 
-  property = assignProperties(cssom, parentValues, holder, values,
+  property = assignProperties(cssom, parentValues, data, values,
     setting->nsubtypes + 1, important, error);
   if (property == NULL) {
-    CSSOM_free(holder);
     if (error != NULL) *error = 1;
     return NULL;
   }
@@ -626,8 +607,7 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
   }
 
   CSSOM_native_free(property->cssText);
-  CSSOM_free(property->holder);
-  SAC_DisposeParser(property->parser);
+  CSSOM_CSSPropertyData_release(property->data);
   CSSOM_free(property);
 }
 
@@ -678,10 +658,9 @@ static void CSSPropertyValue_swap(
   assert(lhs->cssom == rhs->cssom);
   assert(lhs->parentValues == rhs->parentValues);
   SWAPP(lhs->shorthand, rhs->shorthand);
-  SWAPP(lhs->parser, rhs->parser);
   SWAPS(lhs->type, rhs->type);
   SWAPP(lhs->name, rhs->name);
-  SWAPP(lhs->holder, rhs->holder);
+  SWAPP(lhs->data, rhs->data);
   SWAPP(lhs->begin, rhs->begin);
   SWAPP(lhs->end, rhs->end);
   SWAPS(lhs->important, rhs->important);
@@ -708,14 +687,4 @@ void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
 
 int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property) {
   return property->important == SAC_TRUE ? 1 : 0;
-}
-
-
-
-
-void CSSOM_CSSPropertyValue__keepParser(CSSOM_CSSPropertyValue *property,
-  SAC_Parser parser)
-{
-  assert(property->parser == NULL);
-  property->parser = parser;
 }

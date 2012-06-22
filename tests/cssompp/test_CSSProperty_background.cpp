@@ -968,6 +968,7 @@ void shorthand() {
   style.setBackground(NULL);
   assert(style.length() == 0);
   style.setBackground("red");
+  backgroundColor = style.values().getProperty("background-color");
   assert(style.length() == 6);
   assertEquals(std::string(
 "background : red; "
@@ -978,6 +979,7 @@ void shorthand() {
 "background-position : 0% 0%;"),
     style.cssText());
   style.setBackground(NULL);
+  std::cout << backgroundColor.cssText() << std::endl;
   assert(style.length() == 0);
 
 }
