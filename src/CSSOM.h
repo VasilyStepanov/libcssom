@@ -13,6 +13,8 @@ extern "C" {
 
 
 
+extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
+
 void CSSOM_acquire(CSSOM *cssom);
 
 void CSSOM_release(CSSOM *cssom);
@@ -55,7 +57,7 @@ const CSSOM_FSMTable_CSSPropertyValue* CSSOM__table(const CSSOM *cssom);
 const struct _CSSOM_CSSPropertySetting* CSSOM__propertySetting(
   const CSSOM *cssom, int hash);
 
-extern const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[];
+size_t CSSOM__nproperties(const CSSOM *cssom);
 
 
 

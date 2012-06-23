@@ -1007,6 +1007,7 @@ struct _CSSOM {
   size_t handles;
   const char **properties;
   const struct _CSSOM_CSSPropertySetting *settings;
+  size_t nproperties;
   CSSOM_FSMTable_CSSPropertyValue * table;
   CSSOM_ErrorHandler errorHandler;
   void * userData;
@@ -1045,6 +1046,7 @@ CSSOM* CSSOM_create(void) {
   cssom->handles = 1;
   cssom->properties = properties;
   cssom->settings = CSSOM_propertySettings;
+  cssom->nproperties = CSSOM_nproperties;
   cssom->table = table;
   cssom->errorHandler = NULL;
   cssom->userData = NULL;
@@ -1573,4 +1575,10 @@ const struct _CSSOM_CSSPropertySetting* CSSOM__propertySetting(
   const CSSOM *cssom, int hash)
 {
   return &cssom->settings[hash];
+}
+
+
+
+size_t CSSOM__nproperties(const CSSOM *cssom) {
+  return cssom->nproperties;
 }
