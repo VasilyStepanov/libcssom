@@ -59,6 +59,8 @@ const struct _CSSOM_CSSPropertySetting* CSSOM__propertySetting(
 
 size_t CSSOM__nproperties(const CSSOM *cssom);
 
+size_t CSSOM__nshorthands(const CSSOM *cssom);
+
 
 
 #ifdef __cplusplus

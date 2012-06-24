@@ -774,7 +774,8 @@ void background() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(style.background() == NULL);
+  assert(style.background() != NULL);
+  assertEquals(std::string(""), style.background());
 
 
 
@@ -945,7 +946,7 @@ void background() {
 
   style.setBackground(NULL);
   style.setBackground("invalid");
-  assert(style.background() == NULL);
+  assertEquals(std::string(""), style.background());
 
 }
 
@@ -955,7 +956,8 @@ void shorthand() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(style.background() == NULL);
+  assert(style.background() != NULL);
+  assertEquals(std::string(""), style.background());
 
 
 
@@ -966,9 +968,8 @@ void shorthand() {
   style.setBackground(NULL);
   assert(style.length() == 0);
   style.setBackground("red");
-  assert(style.length() == 6);
+  assert(style.length() == 5);
   assertEquals(std::string(
-"background : red; "
 "background-color : red; "
 "background-image : none; "
 "background-repeat : repeat; "

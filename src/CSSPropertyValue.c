@@ -585,6 +585,18 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
 
 
 
+CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__allocShorthand(
+  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
+  CSSOM_CSSPropertyType type)
+{
+  assert(CSSOM__propertySetting(cssom, type)->nsubtypes != 0);
+
+  return CSSPropertyValue_alloc(cssom, parentValues, NULL, type, NULL, NULL,
+    NULL, SAC_FALSE);
+}
+
+
+
 void CSSOM_CSSPropertyValue_acquire(CSSOM_CSSPropertyValue *property) {
   if (property == NULL) return;
 

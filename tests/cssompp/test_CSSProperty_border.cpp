@@ -468,7 +468,8 @@ void borderColor() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(style.borderColor() == NULL);
+  assert(style.borderColor() != NULL);
+  assertEquals(std::string(""), style.borderColor());
 
 
 
@@ -559,11 +560,13 @@ void borderColor() {
 
   style.setBorderColor(NULL);
   style.setBorderColor("invalid");
-  assert(style.borderColor() == NULL);
+  assert(style.borderColor() != NULL);
+  assertEquals(std::string(""), style.borderColor());
 
   style.setBorderColor(NULL);
   style.setBorderColor("inherit inherit inherit inherit");
-  assert(style.borderColor() == NULL);
+  assert(style.borderColor() != NULL);
+  assertEquals(std::string(""), style.borderColor());
 }
 
 
@@ -929,7 +932,8 @@ void borderStyle() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(style.borderStyle() == NULL);
+  assert(style.borderStyle() != NULL);
+  assertEquals(std::string(""), style.borderStyle());
 
 
 
@@ -1020,11 +1024,13 @@ void borderStyle() {
 
   style.setBorderStyle(NULL);
   style.setBorderStyle("invalid");
-  assert(style.borderStyle() == NULL);
+  assert(style.borderStyle() != NULL);
+  assertEquals(std::string(""), style.borderStyle());
 
   style.setBorderStyle(NULL);
   style.setBorderStyle("inherit inherit inherit inherit");
-  assert(style.borderStyle() == NULL);
+  assert(style.borderStyle() != NULL);
+  assertEquals(std::string(""), style.borderStyle());
 }
 
 
@@ -1342,7 +1348,8 @@ void borderWidth() {
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 
-  assert(style.borderWidth() == NULL);
+  assert(style.borderWidth() != NULL);
+  assertEquals(std::string(""), style.borderWidth());
 
 
 
@@ -1433,11 +1440,13 @@ void borderWidth() {
 
   style.setBorderWidth(NULL);
   style.setBorderWidth("invalid");
-  assert(style.borderWidth() == NULL);
+  assert(style.borderWidth() != NULL);
+  assertEquals(std::string(""), style.borderWidth());
 
   style.setBorderWidth(NULL);
   style.setBorderWidth("inherit inherit inherit inherit");
-  assert(style.borderWidth() == NULL);
+  assert(style.borderWidth() != NULL);
+  assertEquals(std::string(""), style.borderWidth());
 }
 
 
