@@ -96,15 +96,15 @@ backgroundInitial[_CSSOM_ASIZE(backgroundSubtypes)] = {
  * border
  */
 
-static const SAC_LexicalUnit *borderTopColor[] = {
+static const SAC_LexicalUnit *borderColor[] = {
   &unit_rgb000
 };
 
-static const SAC_LexicalUnit *borderTopStyle[] = {
+static const SAC_LexicalUnit *borderStyle[] = {
   &unit_none
 };
 
-static const SAC_LexicalUnit *borderTopWidth[] = {
+static const SAC_LexicalUnit *borderWidth[] = {
   &unit_medium
 };
 
@@ -143,9 +143,51 @@ borderTopSubtypes[] = {
 
 static const struct _CSSOM_LexicalUnitRange
 borderTopInitial[_CSSOM_ASIZE(borderTopSubtypes)] = {
-  { CSSOM_BORDER_TOP_WIDTH_PROPERTY, _CSSOM_INITIAL(borderTopWidth) },
-  { CSSOM_BORDER_TOP_STYLE_PROPERTY, _CSSOM_INITIAL(borderTopStyle) },
-  { CSSOM_BORDER_TOP_COLOR_PROPERTY, _CSSOM_INITIAL(borderTopColor) }
+  { CSSOM_BORDER_TOP_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
+  { CSSOM_BORDER_TOP_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
+  { CSSOM_BORDER_TOP_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
+};
+
+const CSSOM_CSSPropertyType
+borderRightSubtypes[] = {
+  CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
+  CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
+  CSSOM_BORDER_RIGHT_COLOR_PROPERTY
+};
+
+static const struct _CSSOM_LexicalUnitRange
+borderRightInitial[_CSSOM_ASIZE(borderRightSubtypes)] = {
+  { CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
+  { CSSOM_BORDER_RIGHT_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
+  { CSSOM_BORDER_RIGHT_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
+};
+
+const CSSOM_CSSPropertyType
+borderBottomSubtypes[] = {
+  CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
+  CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
+  CSSOM_BORDER_BOTTOM_COLOR_PROPERTY
+};
+
+static const struct _CSSOM_LexicalUnitRange
+borderBottomInitial[_CSSOM_ASIZE(borderBottomSubtypes)] = {
+  { CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
+  { CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
+  { CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
+};
+
+const CSSOM_CSSPropertyType
+borderLeftSubtypes[] = {
+  CSSOM_BORDER_LEFT_WIDTH_PROPERTY,
+  CSSOM_BORDER_LEFT_STYLE_PROPERTY,
+  CSSOM_BORDER_LEFT_COLOR_PROPERTY
+};
+
+static const struct _CSSOM_LexicalUnitRange
+borderLeftInitial[_CSSOM_ASIZE(borderLeftSubtypes)] = {
+  { CSSOM_BORDER_LEFT_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
+  { CSSOM_BORDER_LEFT_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
+  { CSSOM_BORDER_LEFT_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
 };
 
 
@@ -246,25 +288,25 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_RIGHT_PROPERTY */
   { "border-right",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    NULL },
+    borderRightSubtypes,
+    borderRightInitial,
+    _CSSOM_ASIZE(borderRightSubtypes),
+    CSSOM_LexicalUnitRange_borderRight,
+    &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_BOTTOM_PROPERTY */
   { "border-bottom",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    NULL },
+    borderBottomSubtypes,
+    borderBottomInitial,
+    _CSSOM_ASIZE(borderBottomSubtypes),
+    CSSOM_LexicalUnitRange_borderBottom,
+    &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_LEFT_PROPERTY */
   { "border-left",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    NULL },
+    borderLeftSubtypes,
+    borderLeftInitial,
+    _CSSOM_ASIZE(borderLeftSubtypes),
+    CSSOM_LexicalUnitRange_borderLeft,
+    &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_TOP_COLOR_PROPERTY */
   { "border-top-color",
     NULL,

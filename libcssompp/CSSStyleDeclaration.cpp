@@ -293,6 +293,42 @@ void CSSStyleDeclaration::setBorderTop(const char * borderTop) {
 
 
 
+const char * CSSStyleDeclaration::borderRight() const {
+  return CSSOM_CSSStyleDeclaration_borderRight(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderRight(const char * borderRight) {
+  CSSOM_CSSStyleDeclaration_setBorderRight(_impl, borderRight);
+}
+
+
+
+const char * CSSStyleDeclaration::borderBottom() const {
+  return CSSOM_CSSStyleDeclaration_borderBottom(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderBottom(const char * borderBottom) {
+  CSSOM_CSSStyleDeclaration_setBorderBottom(_impl, borderBottom);
+}
+
+
+
+const char * CSSStyleDeclaration::borderLeft() const {
+  return CSSOM_CSSStyleDeclaration_borderLeft(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderLeft(const char * borderLeft) {
+  CSSOM_CSSStyleDeclaration_setBorderLeft(_impl, borderLeft);
+}
+
+
+
 const char * CSSStyleDeclaration::borderTopColor() const {
   return CSSOM_CSSStyleDeclaration_borderTopColor(_impl);
 }

@@ -169,6 +169,30 @@ void CSSOM_CSSStyleDeclaration_setBorderTop(CSSOM_CSSStyleDeclaration * cssStyle
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderRight(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRight(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderRight);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderBottom(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottom(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderBottom);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_borderLeft(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeft(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderLeft);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_borderTopColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

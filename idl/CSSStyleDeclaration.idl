@@ -30,11 +30,9 @@ interface CSSStyleDeclaration {
            attribute DOMString? borderSpacing;
            attribute DOMString? borderStyle;
            attribute DOMString? borderTop;
-  /*
            attribute DOMString? borderRight;
            attribute DOMString? borderBottom;
            attribute DOMString? borderLeft;
-  */
            attribute DOMString? borderTopColor;
            attribute DOMString? borderRightColor;
            attribute DOMString? borderBottomColor;

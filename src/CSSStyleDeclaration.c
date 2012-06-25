@@ -476,6 +476,60 @@ void CSSOM_CSSStyleDeclaration_setBorderTop(
 
 
 
+const char* CSSOM_CSSStyleDeclaration_borderRight(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_RIGHT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderRight(
+  CSSOM_CSSStyleDeclaration *style, const char *borderRight)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_RIGHT_PROPERTY, borderRight);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderBottom(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_BOTTOM_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderBottom(
+  CSSOM_CSSStyleDeclaration *style, const char *borderBottom)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_BOTTOM_PROPERTY, borderBottom);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_borderLeft(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_LEFT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderLeft(
+  CSSOM_CSSStyleDeclaration *style, const char *borderLeft)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_LEFT_PROPERTY, borderLeft);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_borderTopColor(
   const CSSOM_CSSStyleDeclaration *style)
 {
