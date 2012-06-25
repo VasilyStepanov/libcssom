@@ -320,6 +320,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
+
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderTopWidthToken,
     borderTopStyleToken,
@@ -328,11 +330,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
 
   int marker[3] = { 0, 0, 0 };
 
-  assert(CSSOM__propertySetting(cssom,
-    CSSOM_BORDER_TOP_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_TOP_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, CSSOM_BORDER_TOP_PROPERTY,
-    handlers, values != NULL ? &values[1] : NULL, marker, begin, end) != end)
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }
@@ -351,6 +355,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
+
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderRightWidthToken,
     borderRightStyleToken,
@@ -359,12 +365,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
 
   int marker[3] = { 0, 0, 0 };
 
-  assert(CSSOM__propertySetting(cssom,
-    CSSOM_BORDER_RIGHT_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_RIGHT_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom,
-    CSSOM_BORDER_RIGHT_PROPERTY, handlers, values != NULL ? &values[1] : NULL,
-    marker, begin, end) != end)
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }
@@ -383,6 +390,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
+
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderBottomWidthToken,
     borderBottomStyleToken,
@@ -391,12 +400,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
 
   int marker[3] = { 0, 0, 0 };
 
-  assert(CSSOM__propertySetting(cssom,
-    CSSOM_BORDER_BOTTOM_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_BOTTOM_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom,
-    CSSOM_BORDER_BOTTOM_PROPERTY, handlers, values != NULL ? &values[1] : NULL,
-    marker, begin, end) != end)
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }
@@ -415,6 +425,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
+  const struct _CSSOM_CSSPropertySetting *setting;
+
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderLeftWidthToken,
     borderLeftStyleToken,
@@ -423,12 +435,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
 
   int marker[3] = { 0, 0, 0 };
 
-  assert(CSSOM__propertySetting(cssom,
-    CSSOM_BORDER_LEFT_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_LEFT_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom,
-    CSSOM_BORDER_LEFT_PROPERTY, handlers, values != NULL ? &values[1] : NULL,
-    marker, begin, end) != end)
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }

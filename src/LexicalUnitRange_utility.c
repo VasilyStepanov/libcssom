@@ -191,39 +191,39 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
-  const CSSOM *cssom, CSSOM_CSSPropertyType type,
+  const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   const _CSSOM_PropertyHandler *handlers,
-  struct _CSSOM_LexicalUnitRange *values, int *marker,
+  const struct _CSSOM_LexicalUnitRange *initial,
+  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
-  const struct _CSSOM_CSSPropertySetting *setting;
   size_t i;
   const SAC_LexicalUnit **tail;
 
-  setting = CSSOM__propertySetting(cssom, type);
-
   if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
 
-    for (i = 0; i < setting->nsubtypes; ++i)
-      _CSSOM_SET_RANGE(values, i, setting->subtypes[i], begin, end);
+    for (i = 0; i < size; ++i)
+      _CSSOM_SET_RANGE(values, i, subtypes[i], begin, end);
+
+    tail = end;
 
   } else {
 
-    tail = LexicalUnitRange_walk(cssom, setting->subtypes, handlers, values,
-      marker, setting->nsubtypes, begin, end);
-    if (tail != end) return begin;
+    tail = LexicalUnitRange_walk(cssom, subtypes, handlers, values,
+      marker, size, begin, end);
+    if (tail == begin) return begin;
   
     if (values != NULL) {
-      for (i = 0; i < setting->nsubtypes; ++i) {
+      for (i = 0; i < size; ++i) {
         if (values[i].begin != NULL) continue;
 
-        values[i] = setting->initial[i];
+        values[i] = initial[i];
       }
     }
 
   }
 
-  return end;
+  return tail;
 }
 
 
