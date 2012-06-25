@@ -36,6 +36,11 @@ static SAC_LexicalUnit unit_none;
 static SAC_LexicalUnit unit_repeat;
 static SAC_LexicalUnit unit_scroll;
 static SAC_LexicalUnit unit_0pct;
+static SAC_LexicalUnit unit_rgb000;
+static SAC_LexicalUnit unit_comma;
+static SAC_LexicalUnit unit_0;
+static SAC_LexicalUnit *unit_rgb000_paramteters[6];
+static SAC_LexicalUnit unit_medium;
 
 
 
@@ -91,6 +96,20 @@ backgroundInitial[_CSSOM_ASIZE(backgroundSubtypes)] = {
  * border
  */
 
+static const SAC_LexicalUnit *borderTopColor[] = {
+  &unit_rgb000
+};
+
+static const SAC_LexicalUnit *borderTopStyle[] = {
+  &unit_none
+};
+
+static const SAC_LexicalUnit *borderTopWidth[] = {
+  &unit_medium
+};
+
+
+
 const CSSOM_CSSPropertyType
 borderColorSubtypes[] = {
   CSSOM_BORDER_TOP_COLOR_PROPERTY,
@@ -114,6 +133,22 @@ borderWidthSubtypes[] = {
   CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
   CSSOM_BORDER_LEFT_WIDTH_PROPERTY
 };
+
+const CSSOM_CSSPropertyType
+borderTopSubtypes[] = {
+  CSSOM_BORDER_TOP_WIDTH_PROPERTY,
+  CSSOM_BORDER_TOP_STYLE_PROPERTY,
+  CSSOM_BORDER_TOP_COLOR_PROPERTY
+};
+
+static const struct _CSSOM_LexicalUnitRange
+borderTopInitial[_CSSOM_ASIZE(borderTopSubtypes)] = {
+  { CSSOM_BORDER_TOP_WIDTH_PROPERTY, _CSSOM_INITIAL(borderTopWidth) },
+  { CSSOM_BORDER_TOP_STYLE_PROPERTY, _CSSOM_INITIAL(borderTopStyle) },
+  { CSSOM_BORDER_TOP_COLOR_PROPERTY, _CSSOM_INITIAL(borderTopColor) }
+};
+
+
 
 
 
@@ -204,11 +239,11 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_TOP_PROPERTY */
   { "border-top",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    NULL },
+    borderTopSubtypes,
+    borderTopInitial,
+    _CSSOM_ASIZE(borderTopSubtypes),
+    CSSOM_LexicalUnitRange_borderTop,
+    &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_RIGHT_PROPERTY */
   { "border-right",
     NULL,
@@ -999,6 +1034,25 @@ static void initGlobals(void) {
   unit_0pct.lexicalUnitType = SAC_PERCENTAGE;
   unit_0pct.desc.dimension.unit = "%";
   unit_0pct.desc.dimension.value.sreal = 0;
+
+  unit_comma.lexicalUnitType = SAC_OPERATOR_COMMA;
+
+  unit_0.lexicalUnitType = SAC_INTEGER;
+  unit_0.desc.integer = 0;
+
+  unit_rgb000_paramteters[0] = &unit_0;
+  unit_rgb000_paramteters[1] = &unit_comma;
+  unit_rgb000_paramteters[2] = &unit_0;
+  unit_rgb000_paramteters[3] = &unit_comma;
+  unit_rgb000_paramteters[4] = &unit_0;
+  unit_rgb000_paramteters[5] = NULL;
+
+  unit_rgb000.lexicalUnitType = SAC_RGBCOLOR;
+  unit_rgb000.desc.function.name = "rgb";
+  unit_rgb000.desc.function.parameters = unit_rgb000_paramteters;
+
+  unit_medium.lexicalUnitType = SAC_IDENT;
+  unit_medium.desc.ident = "medium";
 }
 
 

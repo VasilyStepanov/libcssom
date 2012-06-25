@@ -161,6 +161,14 @@ void CSSOM_CSSStyleDeclaration_setBorderStyle(CSSOM_CSSStyleDeclaration * cssSty
 
 
 
+const char * CSSOM_CSSStyleDeclaration_borderTop(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTop(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * borderTop);
+
+
+
 const char * CSSOM_CSSStyleDeclaration_borderTopColor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
 
 

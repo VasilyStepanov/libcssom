@@ -1451,6 +1451,118 @@ void borderWidth() {
 
 
 
+void borderTop() {
+
+  /**
+   * [ <border-width> || <border-style> || 'border-top-color' ] | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.borderTop() != NULL);
+  assertEquals(std::string(""), style.borderTop());
+
+
+
+  /**
+   * <border-width>
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("thin");
+  assertEquals(std::string("thin"), style.borderTop());
+  assertEquals(std::string("rgb(0, 0, 0)"), style.borderTopColor());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("thin"), style.borderTopWidth());
+
+
+
+  /**
+   * <border-style>
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("dotted");
+  assertEquals(std::string("dotted"), style.borderTop());
+  assertEquals(std::string("rgb(0, 0, 0)"), style.borderTopColor());
+  assertEquals(std::string("dotted"), style.borderTopStyle());
+  assertEquals(std::string("medium"), style.borderTopWidth());
+
+
+
+  /**
+   * 'border-top-color'
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("red");
+  assertEquals(std::string("red"), style.borderTop());
+  assertEquals(std::string("red"), style.borderTopColor());
+  assertEquals(std::string("none"), style.borderTopStyle());
+  assertEquals(std::string("medium"), style.borderTopWidth());
+
+
+
+  /**
+   * <border-width> <border-style> 'border-top-color'
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("inherit dotted thin");
+  assertEquals(std::string("thin dotted inherit"), style.borderTop());
+  assertEquals(std::string("inherit"), style.borderTopColor());
+  assertEquals(std::string("dotted"), style.borderTopStyle());
+  assertEquals(std::string("thin"), style.borderTopWidth());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("inherit");
+  assertEquals(std::string("inherit"), style.borderTop());
+  assertEquals(std::string("inherit"), style.borderTopColor());
+  assertEquals(std::string("inherit"), style.borderTopStyle());
+  assertEquals(std::string("inherit"), style.borderTopWidth());
+
+
+
+  /**
+   * imposible shorthand
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("red");
+  style.setBorderTopWidth("inherit");
+  // assertEquals(std::string(""), style.borderTop());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("invalid");
+  assert(style.borderTop() != NULL);
+  assertEquals(std::string(""), style.borderTop());
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("inherit inherit inherit");
+  assert(style.borderTop() != NULL);
+  // assertEquals(std::string(""), style.borderTop());
+
+  style.setBorderTop(NULL);
+  style.setBorderTop("inherit dotted red");
+  assert(style.borderTop() != NULL);
+  // assertEquals(std::string(""), style.borderTop());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -1475,6 +1587,7 @@ void cssPropertyBorder() {
   borderBottomWidth();
   borderLeftWidth();
   borderWidth();
+  borderTop();
 }
 
 

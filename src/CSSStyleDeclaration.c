@@ -458,6 +458,24 @@ void CSSOM_CSSStyleDeclaration_setBorderStyle(
 
 
 
+const char* CSSOM_CSSStyleDeclaration_borderTop(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BORDER_TOP_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBorderTop(
+  CSSOM_CSSStyleDeclaration *style, const char *borderTop)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BORDER_TOP_PROPERTY, borderTop);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_borderTopColor(
   const CSSOM_CSSStyleDeclaration *style)
 {

@@ -27,6 +27,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
+  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTopColor(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);

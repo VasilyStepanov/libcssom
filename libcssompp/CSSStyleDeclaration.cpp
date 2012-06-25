@@ -281,6 +281,18 @@ void CSSStyleDeclaration::setBorderStyle(const char * borderStyle) {
 
 
 
+const char * CSSStyleDeclaration::borderTop() const {
+  return CSSOM_CSSStyleDeclaration_borderTop(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorderTop(const char * borderTop) {
+  CSSOM_CSSStyleDeclaration_setBorderTop(_impl, borderTop);
+}
+
+
+
 const char * CSSStyleDeclaration::borderTopColor() const {
   return CSSOM_CSSStyleDeclaration_borderTopColor(_impl);
 }

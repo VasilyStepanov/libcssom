@@ -1,9 +1,12 @@
 #include "LexicalUnitRange_border.h"
 
 #include "CSSOM.h"
+#include "CSSEmitter.h"
 #include "gcc.h"
 
 #include <string.h>
+#include <assert.h>
+#include <stdio.h>
 
 
 
@@ -198,6 +201,34 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
   }
 
   _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_STYLE_PROPERTY, begin, end);
+  return end;
+}
+
+
+
+/**
+ * border-top
+ */
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
+  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+  int marker[3] = { 0, 0, 0 };
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_TOP_PROPERTY);
+
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->initial,
+    values != NULL ? &values[1] : NULL, marker, setting->nsubtypes, begin,
+    end) != end)
+  {
+    return begin;
+  }
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_PROPERTY, begin, end);
   return end;
 }
 

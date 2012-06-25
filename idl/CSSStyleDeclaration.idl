@@ -29,8 +29,8 @@ interface CSSStyleDeclaration {
            attribute DOMString? borderColor;
            attribute DOMString? borderSpacing;
            attribute DOMString? borderStyle;
-  /*
            attribute DOMString? borderTop;
+  /*
            attribute DOMString? borderRight;
            attribute DOMString? borderBottom;
            attribute DOMString? borderLeft;
