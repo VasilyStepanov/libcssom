@@ -191,7 +191,8 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
-  const CSSOM *cssom, const struct _CSSOM_LexicalUnitRange *initial,
+  const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
+  const struct _CSSOM_LexicalUnitRange *initial,
   struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
@@ -201,7 +202,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
 
     for (i = 0; i < size; ++i)
-      _CSSOM_SET_RANGE(values, i, initial[i].type, begin, end);
+      _CSSOM_SET_RANGE(values, i, subtypes[i], begin, end);
 
   } else {
 

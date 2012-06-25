@@ -23,9 +23,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
 
   assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->initial,
-    values != NULL ? &values[1] : NULL, marker, setting->nsubtypes, begin,
-    end) != end)
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }
