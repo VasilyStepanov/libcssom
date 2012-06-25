@@ -58,9 +58,9 @@ static const SAC_LexicalUnit** isBorderWidth(const SAC_LexicalUnit **begin,
 
 
 
-static const SAC_LexicalUnit** borderStyleToken(const CSSOM *cssom CSSOM_UNUSED,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
+static const SAC_LexicalUnit** borderTopStyleToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   const SAC_LexicalUnit **tail;
 
@@ -73,9 +73,54 @@ static const SAC_LexicalUnit** borderStyleToken(const CSSOM *cssom CSSOM_UNUSED,
 
 
 
-static const SAC_LexicalUnit** borderWidthToken(const CSSOM *cssom CSSOM_UNUSED,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
+static const SAC_LexicalUnit** borderRightStyleToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderStyle(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_RIGHT_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderBottomStyleToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderStyle(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderLeftStyleToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderStyle(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_LEFT_STYLE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderTopWidthToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   const SAC_LexicalUnit **tail;
 
@@ -83,6 +128,51 @@ static const SAC_LexicalUnit** borderWidthToken(const CSSOM *cssom CSSOM_UNUSED,
   if (tail == begin) return begin;
 
   _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderRightWidthToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderWidth(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderBottomWidthToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderWidth(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+static const SAC_LexicalUnit** borderLeftWidthToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderWidth(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_LEFT_WIDTH_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -125,21 +215,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
  * border-color
  */
 
-static const SAC_LexicalUnit** borderColorToken(const CSSOM *cssom CSSOM_UNUSED,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
-{
-  const SAC_LexicalUnit **tail;
-
-  tail = isBorderColor(begin, end);
-  if (tail == begin) return begin;
-
-  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
-  return tail;
-}
-
-
-
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
@@ -148,8 +223,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_COLOR_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
-    borderColorToken, begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderColor,
+    begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -209,8 +284,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_STYLE_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
-    borderStyleToken, begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderStyle,
+    begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -230,8 +305,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   static const _CSSOM_PropertyHandler handlers[3] = {
-    borderWidthToken,
-    borderStyleToken,
+    borderTopWidthToken,
+    borderTopStyleToken,
     CSSOM_LexicalUnitRange_borderTopColor,
   };
 
@@ -261,8 +336,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   static const _CSSOM_PropertyHandler handlers[3] = {
-    borderWidthToken,
-    borderStyleToken,
+    borderRightWidthToken,
+    borderRightStyleToken,
     CSSOM_LexicalUnitRange_borderRightColor,
   };
 
@@ -276,11 +351,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
     marker, begin, end) != end)
   {
     return begin;
-  }
-
-  if (values != NULL) {
-    values[1].type = CSSOM_BORDER_RIGHT_WIDTH_PROPERTY;
-    values[2].type = CSSOM_BORDER_RIGHT_STYLE_PROPERTY;
   }
 
   _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_RIGHT_PROPERTY, begin, end);
@@ -298,8 +368,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   static const _CSSOM_PropertyHandler handlers[3] = {
-    borderWidthToken,
-    borderStyleToken,
+    borderBottomWidthToken,
+    borderBottomStyleToken,
     CSSOM_LexicalUnitRange_borderBottomColor,
   };
 
@@ -313,11 +383,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
     marker, begin, end) != end)
   {
     return begin;
-  }
-
-  if (values != NULL) {
-    values[1].type = CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY;
-    values[2].type = CSSOM_BORDER_BOTTOM_STYLE_PROPERTY;
   }
 
   _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_BOTTOM_PROPERTY, begin, end);
@@ -335,8 +400,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
   static const _CSSOM_PropertyHandler handlers[3] = {
-    borderWidthToken,
-    borderStyleToken,
+    borderLeftWidthToken,
+    borderLeftStyleToken,
     CSSOM_LexicalUnitRange_borderLeftColor,
   };
 
@@ -350,11 +415,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
     marker, begin, end) != end)
   {
     return begin;
-  }
-
-  if (values != NULL) {
-    values[1].type = CSSOM_BORDER_LEFT_WIDTH_PROPERTY;
-    values[2].type = CSSOM_BORDER_LEFT_STYLE_PROPERTY;
   }
 
   _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_LEFT_PROPERTY, begin, end);
@@ -627,8 +687,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_WIDTH_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
-    borderWidthToken, begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderWidth,
+    begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
