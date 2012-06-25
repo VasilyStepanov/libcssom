@@ -35,13 +35,12 @@ int CSSOM_LexicalUnit_isUrl(const SAC_LexicalUnit *value);
 int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
-  const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
-  const struct _CSSOM_LexicalUnitRange *initial,
-  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
+  const CSSOM *cssom, CSSOM_CSSPropertyType type,
+  struct _CSSOM_LexicalUnitRange *values, int *marker,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
-  const CSSOM *cssom, const CSSOM_CSSPropertyType *types,
+  const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   _CSSOM_PropertyHandler handler, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
 

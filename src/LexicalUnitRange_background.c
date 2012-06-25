@@ -16,16 +16,13 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  const struct _CSSOM_CSSPropertySetting *setting;
   int marker[5] = { 0, 0, 0, 0, 0 };
 
-  setting = CSSOM__propertySetting(cssom, CSSOM_BACKGROUND_PROPERTY);
+  assert(CSSOM__propertySetting(cssom,
+    CSSOM_BACKGROUND_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
-
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
-    setting->initial, values != NULL ? &values[1] : NULL, marker,
-    setting->nsubtypes, begin, end) != end)
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, CSSOM_BACKGROUND_PROPERTY,
+    values != NULL ? &values[1] : NULL, marker, begin, end) != end)
   {
     return begin;
   }
