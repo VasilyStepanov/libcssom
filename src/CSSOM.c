@@ -135,6 +135,20 @@ borderWidthSubtypes[] = {
 };
 
 const CSSOM_CSSPropertyType
+borderSubtypes[] = {
+  CSSOM_BORDER_WIDTH_PROPERTY,
+  CSSOM_BORDER_STYLE_PROPERTY,
+  CSSOM_BORDER_COLOR_PROPERTY
+};
+
+static const struct _CSSOM_LexicalUnitRange
+borderInitial[_CSSOM_ASIZE(borderSubtypes)] = {
+  { CSSOM_BORDER_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
+  { CSSOM_BORDER_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
+  { CSSOM_BORDER_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
+};
+
+const CSSOM_CSSPropertyType
 borderTopSubtypes[] = {
   CSSOM_BORDER_TOP_WIDTH_PROPERTY,
   CSSOM_BORDER_TOP_STYLE_PROPERTY,
@@ -246,11 +260,11 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BORDER_PROPERTY */
   { "border",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    NULL },
+    borderSubtypes,
+    borderInitial,
+    _CSSOM_ASIZE(borderSubtypes),
+    CSSOM_LexicalUnitRange_border,
+    &CSSOM_CSSPropertyValue__omitBorder },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
   { "border-collapse",
     NULL,

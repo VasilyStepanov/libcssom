@@ -11,6 +11,10 @@ extern "C" {
 
 
 
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(
+  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values);

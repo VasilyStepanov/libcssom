@@ -194,6 +194,68 @@ static const SAC_LexicalUnit** borderLeftWidthToken(
 
 
 /**
+ * border
+ */
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(
+  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+
+  static const _CSSOM_PropertyHandler handlers[3] = {
+    borderTopWidthToken,
+    borderTopStyleToken,
+    CSSOM_LexicalUnitRange_borderTopColor,
+  };
+
+  int marker[3] = { 0, 0, 0 };
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_PROPERTY);
+
+  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    setting->nsubtypes, begin, end) != end)
+  {
+    return begin;
+  }
+
+  if (values != NULL) {
+    _CSSOM_SET_RANGE(values, 1, CSSOM_BORDER_TOP_WIDTH_PROPERTY,
+      values[1].begin, values[1].end);
+    _CSSOM_SET_RANGE(values, 2, CSSOM_BORDER_TOP_STYLE_PROPERTY,
+      values[2].begin, values[2].end);
+    _CSSOM_SET_RANGE(values, 3, CSSOM_BORDER_TOP_COLOR_PROPERTY,
+      values[3].begin, values[3].end);
+    _CSSOM_SET_RANGE(values, 4, CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
+      values[1].begin, values[1].end);
+    _CSSOM_SET_RANGE(values, 5, CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
+      values[2].begin, values[2].end);
+    _CSSOM_SET_RANGE(values, 6, CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
+      values[3].begin, values[3].end);
+    _CSSOM_SET_RANGE(values, 7, CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
+      values[1].begin, values[1].end);
+    _CSSOM_SET_RANGE(values, 8, CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
+      values[2].begin, values[2].end);
+    _CSSOM_SET_RANGE(values, 9, CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
+      values[3].begin, values[3].end);
+    _CSSOM_SET_RANGE(values, 10, CSSOM_BORDER_LEFT_WIDTH_PROPERTY,
+      values[1].begin, values[1].end);
+    _CSSOM_SET_RANGE(values, 11, CSSOM_BORDER_LEFT_STYLE_PROPERTY,
+      values[2].begin, values[2].end);
+    _CSSOM_SET_RANGE(values, 12, CSSOM_BORDER_LEFT_COLOR_PROPERTY,
+      values[3].begin, values[3].end);
+  }
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_PROPERTY, begin, end);
+  return end;
+}
+
+
+
+/**
  * border-collapse
  */
 

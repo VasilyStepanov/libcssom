@@ -22,9 +22,7 @@ interface CSSStyleDeclaration {
            attribute DOMString? backgroundImage;
            attribute DOMString? backgroundPosition;
            attribute DOMString? backgroundRepeat;
-  /*
            attribute DOMString? border;
-  */
            attribute DOMString? borderCollapse;
            attribute DOMString? borderColor;
            attribute DOMString? borderSpacing;

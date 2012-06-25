@@ -90,6 +90,9 @@ class CSSStyleDeclaration {
     const char * backgroundRepeat() const;
     void setBackgroundRepeat(const char * backgroundRepeat);
 
+    const char * border() const;
+    void setBorder(const char * border);
+
     const char * borderCollapse() const;
     void setBorderCollapse(const char * borderCollapse);
 

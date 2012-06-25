@@ -233,6 +233,18 @@ void CSSStyleDeclaration::setBackgroundRepeat(const char * backgroundRepeat) {
 
 
 
+const char * CSSStyleDeclaration::border() const {
+  return CSSOM_CSSStyleDeclaration_border(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBorder(const char * border) {
+  CSSOM_CSSStyleDeclaration_setBorder(_impl, border);
+}
+
+
+
 const char * CSSStyleDeclaration::borderCollapse() const {
   return CSSOM_CSSStyleDeclaration_borderCollapse(_impl);
 }
