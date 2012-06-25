@@ -779,3 +779,21 @@ void CSSOM_CSSStyleDeclaration_setBorderWidth(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BORDER_WIDTH_PROPERTY, borderWidth);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_bottom(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_BOTTOM_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setBottom(
+  CSSOM_CSSStyleDeclaration *style, const char *bottom)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_BOTTOM_PROPERTY, bottom);
+}

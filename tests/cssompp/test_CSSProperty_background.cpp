@@ -771,6 +771,12 @@ void backgroundRepeat() {
 
 
 void background() {
+  
+  /**
+   * ['background-color' || 'background-image' || 'background-repeat' ||
+   *  'background-attachment' || 'background-position'] | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 

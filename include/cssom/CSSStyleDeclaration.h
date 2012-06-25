@@ -305,6 +305,14 @@ void CSSOM_CSSStyleDeclaration_setBorderWidth(CSSOM_CSSStyleDeclaration * cssSty
 
 
 
+const char * CSSOM_CSSStyleDeclaration_bottom(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setBottom(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * bottom);
+
+
+
 #ifdef __cplusplus
 }
 #endif

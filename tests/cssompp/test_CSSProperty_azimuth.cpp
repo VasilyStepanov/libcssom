@@ -24,6 +24,13 @@ cssom::CSSStyleDeclaration getStyleDeclaration(const cssom::CSSOM &cssom) {
 
 
 void azimuth() {
+
+  /**
+   * <angle> | [[ left-side | far-left | left | center-left | center |
+   *  center-right | right | far-right | right-side ] || behind ] | leftwards |
+   *  rightwards | inherit
+   */
+
   cssom::CSSOM cssom;
   cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
 

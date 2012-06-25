@@ -9,6 +9,7 @@
 #include "LexicalUnitRange_azimuth.h"
 #include "LexicalUnitRange_background.h"
 #include "LexicalUnitRange_border.h"
+#include "LexicalUnitRange_bottom.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -417,7 +418,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_bottom,
     NULL },
   /* CSSOM_CAPTION_SIDE_PROPERTY */
   { "caption-side",

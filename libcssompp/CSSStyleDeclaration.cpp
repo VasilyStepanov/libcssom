@@ -497,4 +497,16 @@ void CSSStyleDeclaration::setBorderWidth(const char * borderWidth) {
 
 
 
+const char * CSSStyleDeclaration::bottom() const {
+  return CSSOM_CSSStyleDeclaration_bottom(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setBottom(const char * bottom) {
+  CSSOM_CSSStyleDeclaration_setBottom(_impl, bottom);
+}
+
+
+
 } // cssom
