@@ -2011,6 +2011,21 @@ void border() {
 
 
 
+void shorthand() {
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  style.setBorder(NULL);
+  style.setBorder("red");
+  style.setBorderTopWidth("thin");
+  assert(style.border() != NULL);
+  assertEquals(std::string(""), style.border());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -2040,6 +2055,7 @@ void cssPropertyBorder() {
   borderBottom();
   borderLeft();
   border();
+  shorthand();
 }
 
 

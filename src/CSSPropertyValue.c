@@ -492,12 +492,13 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
   size_t i;
   size_t j;
   size_t size;
+  size_t valuesSize;
   int rval;
-  int set;
   int isInherit;
 
   setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
 
+  valuesSize = 0;
   it = tvalues;
   for (i = 0; i < setting->nsubtypes; ++i) {
     ssetting = CSSOM__propertySetting(shorthand->cssom, setting->subtypes[i]);
@@ -511,7 +512,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     rval = ssetting->omit(property, svalues);
     if (rval != 0) return rval;
 
-    for (j = 0, set = 0; j < ssetting->nsubtypes; ++j) {
+    for (j = 0; j < ssetting->nsubtypes; ++j) {
       if (svalues[j].begin == NULL) continue;
 
       if (LexicalUnitRange_eq(svalues[j].begin, svalues[j].end,
@@ -520,15 +521,14 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
         continue;
       }
 
-      assert(set == 0);
-
       *it = svalues[j];
+      ++valuesSize;
       ++it;
-      set = 1;
+      assert(valuesSize < VALUES_SIZE);
     }
   }
 
-  testBorderShorthand(tvalues, setting->nsubtypes, &isInherit, &size);
+  testBorderShorthand(tvalues, valuesSize, &isInherit, &size);
 
   if (isInherit) {
     _CSSOM_SET_RANGE(values, 0, tvalues[0].type, tvalues[0].begin,
@@ -538,7 +538,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
       sizeof(const SAC_LexicalUnit*) * size);
     if (holder == NULL) return -1;
     wit = holder;
-    for (i = 0; i < setting->nsubtypes; ++i) {
+    for (i = 0; i < valuesSize; ++i) {
       if (tvalues[i].begin == NULL) continue;
 
       for (rit = tvalues[i].begin; rit != tvalues[i].end; ++rit, ++wit)
@@ -549,7 +549,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     if (!rval) return 0;
 
     rval = 0;
-    for (i = 0; i < setting->nsubtypes; ++i) {
+    for (i = 0; i < valuesSize; ++i) {
       if (tvalues[i].begin == NULL) {
         rval = 1;
         continue;
