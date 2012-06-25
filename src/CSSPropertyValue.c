@@ -19,6 +19,13 @@
 
 
 
+/**
+ * The largest one.
+ */
+#define VALUES_SIZE 13
+
+
+
 struct _CSSOM_CSSPropertyValue {
   size_t handles;
   const CSSOM *cssom;
@@ -413,8 +420,23 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
 static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   FILE *out)
 {
+  struct _CSSOM_LexicalUnitRange values[VALUES_SIZE] = {
+    { 0, NULL, NULL }, /*  0 */
+    { 0, NULL, NULL }, /*  1 */
+    { 0, NULL, NULL }, /*  2 */
+    { 0, NULL, NULL }, /*  3 */
+    { 0, NULL, NULL }, /*  4 */
+    { 0, NULL, NULL }, /*  5 */
+    { 0, NULL, NULL }, /*  6 */
+    { 0, NULL, NULL }, /*  7 */
+    { 0, NULL, NULL }, /*  8 */
+    { 0, NULL, NULL }, /*  9 */
+    { 0, NULL, NULL }, /* 10 */
+    { 0, NULL, NULL }, /* 11 */
+    { 0, NULL, NULL }  /* 12 */
+  };
+
   const struct _CSSOM_CSSPropertySetting *setting;
-  struct _CSSOM_LexicalUnitRange *values;
   size_t i;
   int rval;
   int emitted;
@@ -424,39 +446,23 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   if (setting->omit == NULL)
     return LexicalUnitRange__emit(property->begin, property->end, out);
 
-  values = (struct _CSSOM_LexicalUnitRange *)CSSOM_malloc(
-    sizeof(struct _CSSOM_LexicalUnitRange) * setting->nsubtypes);
-  if (values == NULL) return -1;
-
-  for (i = 0; i < setting->nsubtypes; ++i)
-    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
-
   rval = setting->omit(property, values);
-  if (rval != 0) {
-    CSSOM_free(values);
-    return rval;
-  }
+  if (rval != 0) return rval;
 
   emitted = 0;
   for (i = 0; i < setting->nsubtypes; ++i) {
     if (values[i].begin == NULL) continue;
 
     if (emitted) {
-      if (fprintf(out, " ") < 0) {
-        CSSOM_free(values);
-        return -1;
-      }
+      if (fprintf(out, " ") < 0) return -1;
     }
 
     rval = LexicalUnitRange__emit(values[i].begin, values[i].end, out);
-    if (rval != 0) {
-      CSSOM_free(values);
-      return rval;
-    }
+    if (rval != 0) return rval;
+
     emitted = 1;
   }
 
-  CSSOM_free(values);
   return 0;
 }
 
@@ -543,18 +549,23 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
   CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error)
 {
-  const struct _CSSOM_CSSPropertySetting *setting;
-  /**
-   * The largest one.
-   */
-  struct _CSSOM_LexicalUnitRange values[] = {
-    { 0, NULL, NULL },
-    { 0, NULL, NULL },
-    { 0, NULL, NULL },
-    { 0, NULL, NULL },
-    { 0, NULL, NULL },
-    { 0, NULL, NULL }
+  struct _CSSOM_LexicalUnitRange values[VALUES_SIZE] = {
+    { 0, NULL, NULL }, /*  0 */
+    { 0, NULL, NULL }, /*  1 */
+    { 0, NULL, NULL }, /*  2 */
+    { 0, NULL, NULL }, /*  3 */
+    { 0, NULL, NULL }, /*  4 */
+    { 0, NULL, NULL }, /*  5 */
+    { 0, NULL, NULL }, /*  6 */
+    { 0, NULL, NULL }, /*  7 */
+    { 0, NULL, NULL }, /*  8 */
+    { 0, NULL, NULL }, /*  9 */
+    { 0, NULL, NULL }, /* 10 */
+    { 0, NULL, NULL }, /* 11 */
+    { 0, NULL, NULL }  /* 12 */
   };
+
+  const struct _CSSOM_CSSPropertySetting *setting;
 
   CSSOM_CSSPropertyValue *property;
 
