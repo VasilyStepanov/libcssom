@@ -58,6 +58,21 @@ static const SAC_LexicalUnit** isBorderWidth(const SAC_LexicalUnit **begin,
 
 
 
+static const SAC_LexicalUnit** borderTopColorToken(
+  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = isBorderColor(begin, end);
+  if (tail == begin) return begin;
+
+  _CSSOM_SET_RANGE(values, 0, CSSOM_BORDER_TOP_COLOR_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
 static const SAC_LexicalUnit** borderTopStyleToken(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
@@ -223,8 +238,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_COLOR_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderColor,
-    begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderTopColorToken, begin, end,
+    values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -284,8 +300,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_STYLE_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderStyle,
-    begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderTopStyleToken, begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }
@@ -687,8 +703,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_WIDTH_PROPERTY);
 
-  if (CSSOM_LexicalUnitRange_boxShorthand(setting->subtypes, isBorderWidth,
-    begin, end, values != NULL ? &values[1] : NULL) != end)
+  if (CSSOM_LexicalUnitRange_boxShorthand(cssom, setting->subtypes,
+    borderTopWidthToken, begin, end, values != NULL ? &values[1] : NULL) != end)
   {
     return begin;
   }

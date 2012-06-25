@@ -228,17 +228,18 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
 
 
-const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
-  const CSSOM_CSSPropertyType *subtypes,
-  const SAC_LexicalUnit** (*handler)(const SAC_LexicalUnit **,
-    const SAC_LexicalUnit **),
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
+  const CSSOM_CSSPropertyType *subtypes, _CSSOM_PropertyHandler handler,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *values)
 {
   switch (end - begin) {
     case 1:
-      if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(begin, end) != end)
+      if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(cssom, begin, end,
+        NULL) != end)
+      {
         return begin;
+      }
 
       _CSSOM_SET_RANGE(values, 0, subtypes[0], &begin[0], &begin[1]);
       _CSSOM_SET_RANGE(values, 1, subtypes[1], &begin[0], &begin[1]);
@@ -247,8 +248,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 2:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2])
+      if (handler(cssom, &begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(cssom ,&begin[1], &begin[2], NULL) != &begin[2])
       {
         return begin;
       }
@@ -260,9 +261,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 3:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2] ||
-        handler(&begin[2], &begin[3]) != &begin[3])
+      if (handler(cssom, &begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(cssom, &begin[1], &begin[2], NULL) != &begin[2] ||
+        handler(cssom, &begin[2], &begin[3], NULL) != &begin[3])
       {
         return begin;
       }
@@ -274,10 +275,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(
 
       break;
     case 4:
-      if (handler(&begin[0], &begin[1]) != &begin[1] ||
-        handler(&begin[1], &begin[2]) != &begin[2] ||
-        handler(&begin[2], &begin[3]) != &begin[3] ||
-        handler(&begin[3], &begin[4]) != &begin[4])
+      if (handler(cssom, &begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(cssom, &begin[1], &begin[2], NULL) != &begin[2] ||
+        handler(cssom, &begin[2], &begin[3], NULL) != &begin[3] ||
+        handler(cssom, &begin[3], &begin[4], NULL) != &begin[4])
       {
         return begin;
       }
