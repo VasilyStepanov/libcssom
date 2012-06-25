@@ -16,13 +16,24 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
+  static const _CSSOM_PropertyHandler handlers[5] = {
+    CSSOM_LexicalUnitRange_backgroundColor,
+    CSSOM_LexicalUnitRange_backgroundImage,
+    CSSOM_LexicalUnitRange_backgroundRepeat,
+    CSSOM_LexicalUnitRange_backgroundAttachment,
+    CSSOM_LexicalUnitRange_backgroundPosition
+  };
+
   int marker[5] = { 0, 0, 0, 0, 0 };
 
   assert(CSSOM__propertySetting(cssom,
     CSSOM_BACKGROUND_PROPERTY)->nsubtypes == _CSSOM_ASIZE(marker));
 
+  assert(CSSOM__propertySetting(cssom,
+    CSSOM_BACKGROUND_PROPERTY)->nsubtypes == _CSSOM_ASIZE(handlers));
+
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, CSSOM_BACKGROUND_PROPERTY,
-    values != NULL ? &values[1] : NULL, marker, begin, end) != end)
+    handlers, values != NULL ? &values[1] : NULL, marker, begin, end) != end)
   {
     return begin;
   }

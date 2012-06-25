@@ -158,6 +158,7 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
 
 static const SAC_LexicalUnit** LexicalUnitRange_walk(
   const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
+  const _CSSOM_PropertyHandler *handlers,
   struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
@@ -169,14 +170,13 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
   for (i = 0; i < size; ++i) {
     if (marker[i]) continue;
 
-    tail = CSSOM__propertySetting(cssom, subtypes[i])->handler(cssom, begin,
-      end, values != NULL ? &values[i] : NULL);
+    tail = handlers[i](cssom, begin, end, values != NULL ? &values[i] : NULL);
     if (tail == begin) continue;
 
     marker[i] = 1;
 
-    if (LexicalUnitRange_walk(cssom, subtypes, values, marker, size, tail,
-      end) == end)
+    if (LexicalUnitRange_walk(cssom, subtypes, handlers, values, marker, size,
+      tail, end) == end)
     {
       return end;
     }
@@ -192,6 +192,7 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyType type,
+  const _CSSOM_PropertyHandler *handlers,
   struct _CSSOM_LexicalUnitRange *values, int *marker,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
@@ -208,8 +209,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
   } else {
 
-    tail = LexicalUnitRange_walk(cssom, setting->subtypes, values, marker,
-      setting->nsubtypes, begin, end);
+    tail = LexicalUnitRange_walk(cssom, setting->subtypes, handlers, values,
+      marker, setting->nsubtypes, begin, end);
     if (tail != end) return begin;
   
     if (values != NULL) {

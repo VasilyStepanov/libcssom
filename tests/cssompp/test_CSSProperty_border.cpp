@@ -1537,7 +1537,7 @@ void borderTop() {
   style.setBorderTop(NULL);
   style.setBorderTop("red");
   style.setBorderTopWidth("inherit");
-  // assertEquals(std::string(""), style.borderTop());
+  assertEquals(std::string(""), style.borderTop());
 
 
 
@@ -1553,12 +1553,12 @@ void borderTop() {
   style.setBorderTop(NULL);
   style.setBorderTop("inherit inherit inherit");
   assert(style.borderTop() != NULL);
-  // assertEquals(std::string(""), style.borderTop());
+  assertEquals(std::string(""), style.borderTop());
 
   style.setBorderTop(NULL);
   style.setBorderTop("inherit dotted red");
   assert(style.borderTop() != NULL);
-  // assertEquals(std::string(""), style.borderTop());
+  assertEquals(std::string(""), style.borderTop());
 }
 
 

@@ -36,6 +36,7 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const CSSOM *cssom, CSSOM_CSSPropertyType type,
+  const _CSSOM_PropertyHandler *handlers,
   struct _CSSOM_LexicalUnitRange *values, int *marker,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
