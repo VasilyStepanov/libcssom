@@ -261,6 +261,7 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
   const SAC_LexicalUnit **holder;
   int rval;
   int isInherit;
+  struct _CSSOM_LexicalUnitRange *it;
 
   setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
 
@@ -286,7 +287,7 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
     CSSOM_free(holder);
     if (!rval) return 0;
 
-    rval = 0;
+    it = values;
     for (i = 0; i < setting->nsubtypes; ++i) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
         shorthand->parentValues, setting->subtypes[i]);
@@ -297,12 +298,11 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
         continue;
       }
 
-      _CSSOM_SET_RANGE(values[i], property->type, property->begin,
-        property->end);
-      rval = 1;
+      _CSSOM_SET_RANGE(*it, property->type, property->begin, property->end);
+      ++it;
     }
 
-    if (rval == 0) {
+    if (it == values) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
         shorthand->parentValues, setting->subtypes[0]);
 
@@ -539,7 +539,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     if (holder == NULL) return -1;
     wit = holder;
     for (i = 0; i < valuesSize; ++i) {
-      if (tvalues[i].begin == NULL) continue;
+      if (tvalues[i].begin == NULL) break;
 
       for (rit = tvalues[i].begin; rit != tvalues[i].end; ++rit, ++wit)
         *wit = *rit;
@@ -549,10 +549,11 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     if (!rval) return 0;
 
     rval = 0;
+    it = values;
     for (i = 0; i < valuesSize; ++i) {
       if (tvalues[i].begin == NULL) {
         rval = 1;
-        continue;
+        break;
       }
 
       if (LexicalUnitRange_eq(tvalues[i].begin, tvalues[i].end,
@@ -561,8 +562,9 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
         continue;
       }
 
-      _CSSOM_SET_RANGE(values[i], tvalues[i].type, tvalues[i].begin,
+      _CSSOM_SET_RANGE(*it, tvalues[i].type, tvalues[i].begin,
         tvalues[i].end);
+      ++it;
       rval = 1;
     }
 
@@ -611,7 +613,7 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
   emitted = 0;
   for (i = 0; i < setting->nsubtypes; ++i) {
-    if (values[i].begin == NULL) continue;
+    if (values[i].begin == NULL) break;
 
     if (emitted) {
       if (fprintf(out, " ") < 0) return -1;
