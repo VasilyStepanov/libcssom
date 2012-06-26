@@ -213,7 +213,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
@@ -394,7 +394,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_TOP_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
@@ -429,7 +429,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_RIGHT_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
@@ -464,7 +464,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_BOTTOM_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
@@ -499,7 +499,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BORDER_LEFT_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,

@@ -22,7 +22,7 @@
 /**
  * The largest one.
  */
-#define VALUES_SIZE 13
+#define _CSSOM_VALUES_CAPACITY 13
 
 
 
@@ -450,7 +450,7 @@ static void testBorderShorthand(const struct _CSSOM_LexicalUnitRange *values,
 int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values)
 {
-  struct _CSSOM_LexicalUnitRange tvalues[VALUES_SIZE] = {
+  struct _CSSOM_LexicalUnitRange tvalues[_CSSOM_VALUES_CAPACITY] = {
     { 0, NULL, NULL }, /*  0 */
     { 0, NULL, NULL }, /*  1 */
     { 0, NULL, NULL }, /*  2 */
@@ -466,7 +466,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     { 0, NULL, NULL }  /* 12 */
   };
 
-  struct _CSSOM_LexicalUnitRange svalues[VALUES_SIZE] = {
+  struct _CSSOM_LexicalUnitRange svalues[_CSSOM_VALUES_CAPACITY] = {
     { 0, NULL, NULL }, /*  0 */
     { 0, NULL, NULL }, /*  1 */
     { 0, NULL, NULL }, /*  2 */
@@ -524,7 +524,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
       *it = svalues[j];
       ++valuesSize;
       ++it;
-      assert(valuesSize < VALUES_SIZE);
+      assert(valuesSize < _CSSOM_VALUES_CAPACITY);
     }
   }
 
@@ -580,7 +580,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
 static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   FILE *out)
 {
-  struct _CSSOM_LexicalUnitRange values[VALUES_SIZE] = {
+  struct _CSSOM_LexicalUnitRange values[_CSSOM_VALUES_CAPACITY] = {
     { 0, NULL, NULL }, /*  0 */
     { 0, NULL, NULL }, /*  1 */
     { 0, NULL, NULL }, /*  2 */
@@ -709,7 +709,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
   CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error)
 {
-  struct _CSSOM_LexicalUnitRange values[VALUES_SIZE] = {
+  struct _CSSOM_LexicalUnitRange values[_CSSOM_VALUES_CAPACITY] = {
     { 0, NULL, NULL }, /*  0 */
     { 0, NULL, NULL }, /*  1 */
     { 0, NULL, NULL }, /*  2 */
@@ -744,7 +744,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   values[0].type = type;
 
   property = assignProperties(cssom, parentValues, data, values,
-    _CSSOM_ASIZE(values), important, error);
+    _CSSOM_ARSIZE(values), important, error);
   if (property == NULL) {
     if (error != NULL) *error = 1;
     return NULL;

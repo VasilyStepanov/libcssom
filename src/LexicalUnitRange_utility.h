@@ -12,11 +12,8 @@ extern "C" {
 
 
 
-#define _CSSOM_ASIZE(array) \
+#define _CSSOM_ARSIZE(array) \
   (sizeof(array) / sizeof(array[0]))
-
-#define _CSSOM_INITIAL(initial) \
-  (initial), &(initial)[_CSSOM_ASIZE(initial)]
 
 
 

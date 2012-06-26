@@ -30,8 +30,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BACKGROUND_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ASIZE(marker));
-  assert(setting->nsubtypes == _CSSOM_ASIZE(handlers));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
+  assert(setting->nsubtypes == _CSSOM_ARSIZE(handlers));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
     handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,

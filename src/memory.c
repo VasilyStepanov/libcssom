@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* #define DETAILED */
+/* #define _CSSOM_DETAILED */
 
 
 static void dumpMalloc(const char * file, int line CSSOM_UNUSED,
@@ -13,7 +13,7 @@ static void dumpMalloc(const char * file, int line CSSOM_UNUSED,
 {
   FILE * f;
   f = fopen("malloc", "a");
-#ifndef DETAILED
+#ifndef _CSSOM_DETAILED
   fprintf(f, "%x %s\n", (int)ptr, file);
 #else
   fprintf(f, "%x %s %d\n", (int)ptr, file, line);
@@ -30,7 +30,7 @@ static void dumpFree(const char * file, int line CSSOM_UNUSED,
 
   if (ptr != NULL) {
     f = fopen("free", "a");
-#ifndef DETAILED
+#ifndef _CSSOM_DETAILED
     fprintf(f, "%x %s\n", (int)ptr, file);
 #else
     fprintf(f, "%x %s %d\n", (int)ptr, file, line);
