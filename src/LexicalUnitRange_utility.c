@@ -182,7 +182,8 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
     }
 
     marker[i] = 0;
-    _CSSOM_SET_RANGE(values, i, 0, NULL, NULL);
+    if (values != NULL)
+      _CSSOM_SET_RANGE(values[i], 0, NULL, NULL);
   }
 
   return begin;
@@ -202,8 +203,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
   if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
 
-    for (i = 0; i < size; ++i)
-      _CSSOM_SET_RANGE(values, i, subtypes[i], begin, end);
+    if (values != NULL) {
+      for (i = 0; i < size; ++i) {
+        _CSSOM_SET_RANGE(values[i], subtypes[i], begin, end);
+      }
+    }
 
     tail = end;
 
@@ -241,10 +245,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      _CSSOM_SET_RANGE(values, 0, subtypes[0], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 1, subtypes[1], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 2, subtypes[2], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 3, subtypes[3], &begin[0], &begin[1]);
+      if (values != NULL) {
+        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[0], &begin[1]);
+      }
 
       break;
     case 2:
@@ -254,10 +260,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      _CSSOM_SET_RANGE(values, 0, subtypes[0], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 1, subtypes[1], &begin[1], &begin[2]);
-      _CSSOM_SET_RANGE(values, 2, subtypes[2], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 3, subtypes[3], &begin[1], &begin[2]);
+      if (values != NULL) {
+        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[1], &begin[2]);
+      }
 
       break;
     case 3:
@@ -268,10 +276,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      _CSSOM_SET_RANGE(values, 0, subtypes[0], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 1, subtypes[1], &begin[1], &begin[2]);
-      _CSSOM_SET_RANGE(values, 2, subtypes[2], &begin[2], &begin[3]);
-      _CSSOM_SET_RANGE(values, 3, subtypes[3], &begin[1], &begin[2]);
+      if (values != NULL) {
+        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[2], &begin[3]);
+        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[1], &begin[2]);
+      }
 
       break;
     case 4:
@@ -283,10 +293,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      _CSSOM_SET_RANGE(values, 0, subtypes[0], &begin[0], &begin[1]);
-      _CSSOM_SET_RANGE(values, 1, subtypes[1], &begin[1], &begin[2]);
-      _CSSOM_SET_RANGE(values, 2, subtypes[2], &begin[2], &begin[3]);
-      _CSSOM_SET_RANGE(values, 3, subtypes[3], &begin[3], &begin[4]);
+      if (values != NULL) {
+        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[2], &begin[3]);
+        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[3], &begin[4]);
+      }
 
       break;
     default:
@@ -302,6 +314,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
 {
-  _CSSOM_SET_RANGE(values, 0, 0, begin, end);
+  if (values != NULL)
+    _CSSOM_SET_RANGE(values[0], 0, begin, end);
   return end;
 }

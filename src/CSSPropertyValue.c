@@ -268,7 +268,7 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
   if (isInherit) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
       shorthand->parentValues, setting->subtypes[0]);
-    _CSSOM_SET_RANGE(values, 0, shorthand->type, property->begin,
+    _CSSOM_SET_RANGE(values[0], shorthand->type, property->begin,
       property->end);
   } else {
     holder = (const SAC_LexicalUnit **)CSSOM_malloc(
@@ -297,7 +297,7 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
         continue;
       }
 
-      _CSSOM_SET_RANGE(values, i, property->type, property->begin,
+      _CSSOM_SET_RANGE(values[i], property->type, property->begin,
         property->end);
       rval = 1;
     }
@@ -306,7 +306,7 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
         shorthand->parentValues, setting->subtypes[0]);
 
-      _CSSOM_SET_RANGE(values, 0, property->type, property->begin,
+      _CSSOM_SET_RANGE(values[0], property->type, property->begin,
         property->end);
     }
 
@@ -391,25 +391,25 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   if (rightleft) {
     if (topbottom) {
       if (topright) {
-        _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(values[0], setting->subtypes[0], top->begin, top->end);
       } else {
-        _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
-        _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin,
+        _CSSOM_SET_RANGE(values[0], setting->subtypes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(values[1], setting->subtypes[1], right->begin,
           right->end);
       }
     } else {
-      _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
-      _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin,
+      _CSSOM_SET_RANGE(values[0], setting->subtypes[0], top->begin, top->end);
+      _CSSOM_SET_RANGE(values[1], setting->subtypes[1], right->begin,
         right->end);
-      _CSSOM_SET_RANGE(values, 2, setting->subtypes[2], bottom->begin,
+      _CSSOM_SET_RANGE(values[2], setting->subtypes[2], bottom->begin,
         bottom->end);
     }
   } else {
-    _CSSOM_SET_RANGE(values, 0, setting->subtypes[0], top->begin, top->end);
-    _CSSOM_SET_RANGE(values, 1, setting->subtypes[1], right->begin, right->end);
-    _CSSOM_SET_RANGE(values, 2, setting->subtypes[2], bottom->begin,
+    _CSSOM_SET_RANGE(values[0], setting->subtypes[0], top->begin, top->end);
+    _CSSOM_SET_RANGE(values[1], setting->subtypes[1], right->begin, right->end);
+    _CSSOM_SET_RANGE(values[2], setting->subtypes[2], bottom->begin,
       bottom->end);
-    _CSSOM_SET_RANGE(values, 3, setting->subtypes[3], left->begin, left->end);
+    _CSSOM_SET_RANGE(values[3], setting->subtypes[3], left->begin, left->end);
   }
 
   return 0;
@@ -531,7 +531,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
   testBorderShorthand(tvalues, valuesSize, &isInherit, &size);
 
   if (isInherit) {
-    _CSSOM_SET_RANGE(values, 0, tvalues[0].type, tvalues[0].begin,
+    _CSSOM_SET_RANGE(values[0], tvalues[0].type, tvalues[0].begin,
       tvalues[0].end);
   } else {
     holder = (const SAC_LexicalUnit **)CSSOM_malloc(
@@ -561,13 +561,13 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
         continue;
       }
 
-      _CSSOM_SET_RANGE(values, i, tvalues[i].type, tvalues[i].begin,
+      _CSSOM_SET_RANGE(values[i], tvalues[i].type, tvalues[i].begin,
         tvalues[i].end);
       rval = 1;
     }
 
     if (rval == 0)
-      _CSSOM_SET_RANGE(values, 0, setting->initial[0].type,
+      _CSSOM_SET_RANGE(values[0], setting->initial[0].type,
         setting->initial[0].begin, setting->initial[0].end);
 
   }

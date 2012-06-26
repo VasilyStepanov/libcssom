@@ -19,13 +19,11 @@ struct _CSSOM_LexicalUnitRange {
 
 
 
-#define _CSSOM_SET_RANGE(range, index, type_val, begin_val, end_val) \
+#define _CSSOM_SET_RANGE(range, type_val, begin_val, end_val) \
   do { \
-    if (range != NULL) { \
-      (range)[(index)].type = (type_val); \
-      (range)[(index)].begin = (begin_val); \
-      (range)[(index)].end = (end_val); \
-    } \
+    (range).type = (type_val); \
+    (range).begin = (begin_val); \
+    (range).end = (end_val); \
   } while (0)
 
 

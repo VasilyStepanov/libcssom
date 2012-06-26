@@ -34,6 +34,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_bottom(
   tail = bottom(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values, 0, CSSOM_BOTTOM_PROPERTY, begin, tail);
+  if (values != NULL)
+    _CSSOM_SET_RANGE(values[0], CSSOM_BOTTOM_PROPERTY, begin, tail);
   return tail;
 }

@@ -87,6 +87,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_azimuth(
   tail = azimuth(begin, end);
   if (tail == begin) return begin;
 
-  _CSSOM_SET_RANGE(values, 0, CSSOM_AZIMUTH_PROPERTY, begin, tail);
+  if (values != NULL)
+    _CSSOM_SET_RANGE(values[0], CSSOM_AZIMUTH_PROPERTY, begin, tail);
   return tail;
 }
