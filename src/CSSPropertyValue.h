@@ -38,7 +38,8 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values);
 
-int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
+int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
+  const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values);
 
 

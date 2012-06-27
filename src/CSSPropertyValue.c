@@ -417,7 +417,7 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
 
 
 
-static void testBorderShorthand(const struct _CSSOM_LexicalUnitRange *values,
+static void testRecursiveShorthand(const struct _CSSOM_LexicalUnitRange *values,
   size_t nsubtypes, int *isInherit, size_t *size)
 {
   int _allInherit;
@@ -447,7 +447,8 @@ static void testBorderShorthand(const struct _CSSOM_LexicalUnitRange *values,
 
 
 
-int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
+int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
+  const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *values)
 {
   struct _CSSOM_LexicalUnitRange tvalues[_CSSOM_VALUES_CAPACITY] = {
@@ -528,7 +529,7 @@ int CSSOM_CSSPropertyValue__omitBorder(const CSSOM_CSSPropertyValue *shorthand,
     }
   }
 
-  testBorderShorthand(tvalues, valuesSize, &isInherit, &size);
+  testRecursiveShorthand(tvalues, valuesSize, &isInherit, &size);
 
   if (isInherit) {
     _CSSOM_SET_RANGE(values[0], tvalues[0].type, tvalues[0].begin,

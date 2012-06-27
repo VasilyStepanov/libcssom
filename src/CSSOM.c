@@ -270,7 +270,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderInitial,
     _CSSOM_ARSIZE(borderSubtypes),
     CSSOM_LexicalUnitRange_border,
-    &CSSOM_CSSPropertyValue__omitBorder },
+    &CSSOM_CSSPropertyValue__omitRecursiveShorthand },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
   { "border-collapse",
     NULL,
