@@ -337,6 +337,14 @@ void CSSOM_CSSStyleDeclaration_setClip(CSSOM_CSSStyleDeclaration * cssStyleDecla
 
 
 
+const char * CSSOM_CSSStyleDeclaration_color(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setColor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * color);
+
+
+
 #ifdef __cplusplus
 }
 #endif

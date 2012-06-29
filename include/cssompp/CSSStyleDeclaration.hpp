@@ -168,6 +168,9 @@ class CSSStyleDeclaration {
     const char * clip() const;
     void setClip(const char * clip);
 
+    const char * color() const;
+    void setColor(const char * color);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

@@ -851,3 +851,21 @@ void CSSOM_CSSStyleDeclaration_setClip(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CLIP_PROPERTY, clip);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_color(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_COLOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setColor(
+  CSSOM_CSSStyleDeclaration *style, const char *color)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_COLOR_PROPERTY, color);
+}

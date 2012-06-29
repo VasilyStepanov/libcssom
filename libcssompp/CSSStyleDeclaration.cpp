@@ -545,4 +545,16 @@ void CSSStyleDeclaration::setClip(const char * clip) {
 
 
 
+const char * CSSStyleDeclaration::color() const {
+  return CSSOM_CSSStyleDeclaration_color(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setColor(const char * color) {
+  CSSOM_CSSStyleDeclaration_setColor(_impl, color);
+}
+
+
+
 } // cssom

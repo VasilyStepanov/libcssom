@@ -10,6 +10,7 @@
 #include "test_CSSProperty_captionSide.hpp"
 #include "test_CSSProperty_clear.hpp"
 #include "test_CSSProperty_clip.hpp"
+#include "test_CSSProperty_color.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -43,6 +44,7 @@ int main() {
   test::cssPropertyCaptionSide();
   test::cssPropertyClear();
   test::cssPropertyClip();
+  test::cssPropertyColor();
   test::selector();
   return 0;
 }

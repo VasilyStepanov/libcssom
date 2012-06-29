@@ -48,8 +48,8 @@ interface CSSStyleDeclaration {
            attribute DOMString? captionSide;
            attribute DOMString? clear;
            attribute DOMString? clip;
-  /*
            attribute DOMString? color;
+  /*
            attribute DOMString? content;
            attribute DOMString? counterIncrement;
            attribute DOMString? counterReset;
