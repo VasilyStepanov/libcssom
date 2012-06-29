@@ -17,8 +17,8 @@ extern "C" {
 
 
 typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(const CSSOM *cssom,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *ranges);
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
 
 
 

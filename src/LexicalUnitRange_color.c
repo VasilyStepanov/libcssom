@@ -20,8 +20,10 @@ static const SAC_LexicalUnit** color(const SAC_LexicalUnit **begin,
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_color(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 

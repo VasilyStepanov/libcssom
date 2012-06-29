@@ -12,8 +12,8 @@ extern "C" {
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_bottom(const CSSOM *cssom,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *ranges);
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
 
 
 

@@ -12,8 +12,8 @@
  * background
  */
 
-const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
-  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(const CSSOM *cssom,
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
@@ -33,7 +33,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
   assert(setting->nsubtypes == _CSSOM_ARSIZE(handlers));
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, values, setting->subtypes,
     handlers, setting->initial, ranges != NULL ? &ranges[1] : NULL, marker,
     setting->nsubtypes, begin, end) != end)
   {
@@ -66,8 +66,10 @@ static const SAC_LexicalUnit** backgroundAttachment(
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundAttachment(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
@@ -103,8 +105,10 @@ static const SAC_LexicalUnit** backgroundColor(const SAC_LexicalUnit **begin,
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundColor(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
@@ -138,8 +142,10 @@ static const SAC_LexicalUnit** backgroundImage(const SAC_LexicalUnit **begin,
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundImage(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
@@ -174,8 +180,10 @@ static const SAC_LexicalUnit** backgroundRepeat(const SAC_LexicalUnit **begin,
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundRepeat(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
@@ -269,8 +277,10 @@ static const SAC_LexicalUnit** backgroundPosition(
 
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundPosition(
-  const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 

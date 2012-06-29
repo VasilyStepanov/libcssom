@@ -34,20 +34,21 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
-  const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
-  const _CSSOM_PropertyHandler *handlers,
+  const CSSOM *cssom, const CSSOM_CSSStyleDeclarationValue *values,
+  const CSSOM_CSSPropertyType *subtypes, const _CSSOM_PropertyHandler *handlers,
   const struct _CSSOM_LexicalUnitRange *initial,
   struct _CSSOM_LexicalUnitRange *ranges, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom, 
+  const CSSOM_CSSStyleDeclarationValue *values,
   const CSSOM_CSSPropertyType *subtypes,
   _CSSOM_PropertyHandler handler,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
   struct _CSSOM_LexicalUnitRange *ranges);
 
-const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
-  const CSSOM *cssom, const SAC_LexicalUnit **begin,
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(const CSSOM *cssom,
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
 
 

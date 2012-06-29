@@ -283,7 +283,8 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
       for (rit = property->begin; rit != property->end; ++rit, ++wit)
         *wit = *rit;
     }
-    rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
+    rval = setting->handler(shorthand->cssom, shorthand->parentValues, holder,
+      wit, NULL) == wit;
     CSSOM_free(holder);
     if (!rval) return 0;
 
@@ -383,7 +384,8 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
     for (rit = right->begin; rit != right->end; ++rit, ++wit) *wit = *rit;
     for (rit = bottom->begin; rit != bottom->end; ++rit, ++wit) *wit = *rit;
     for (rit = left->begin; rit != left->end; ++rit, ++wit) *wit = *rit;
-    rval = setting->handler(shorthand->cssom, holder, wit, NULL) == wit;
+    rval = setting->handler(shorthand->cssom, shorthand->parentValues, holder,
+      wit, NULL) == wit;
     CSSOM_free(holder);
     if (!rval) return 0;
   }
@@ -497,6 +499,7 @@ static int fetchRecursiveShorthand(
 
 
 static int applyRecursiveShorthand(const CSSOM *cssom,
+  const CSSOM_CSSStyleDeclarationValue *values,
   const struct _CSSOM_CSSPropertySetting *setting,
   const struct _CSSOM_LexicalUnitRange *shorthandRanges, size_t size,
   struct _CSSOM_LexicalUnitRange *ranges)
@@ -539,7 +542,7 @@ static int applyRecursiveShorthand(const CSSOM *cssom,
         *wit = *rit;
       }
     }
-    rval = setting->handler(cssom, holder, wit, NULL) == wit;
+    rval = setting->handler(cssom, values, holder, wit, NULL) == wit;
     CSSOM_free(holder);
     if (!rval) return 0;
 
@@ -600,8 +603,8 @@ int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
 
   if (size == 0) return 0;
 
-  return applyRecursiveShorthand(shorthand->cssom, setting, _ranges, size,
-    ranges);
+  return applyRecursiveShorthand(shorthand->cssom, shorthand->parentValues,
+    setting, _ranges, size, ranges);
 }
 
 
@@ -760,7 +763,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
 
   setting = CSSOM__propertySetting(cssom, type);
 
-  if (setting->handler(cssom, CSSOM_CSSPropertyData_begin(data),
+  if (setting->handler(cssom, parentValues, CSSOM_CSSPropertyData_begin(data),
     CSSOM_CSSPropertyData_end(data), ranges) != CSSOM_CSSPropertyData_end(data))
   {
     if (error != NULL) *error = 1;
