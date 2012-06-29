@@ -14,9 +14,7 @@ static const SAC_LexicalUnit** bottom(const SAC_LexicalUnit **begin,
   } else if (CSSOM_LexicalUnit_isPercentage(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
-    if (strcmp("auto", begin[0]->desc.ident) == 0) {
-      return &begin[1];
-    }
+    if (strcmp("auto", begin[0]->desc.ident) == 0) return &begin[1];
   } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
     return &begin[1];
   }

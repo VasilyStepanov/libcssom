@@ -313,6 +313,14 @@ void CSSOM_CSSStyleDeclaration_setBottom(CSSOM_CSSStyleDeclaration * cssStyleDec
 
 
 
+const char * CSSOM_CSSStyleDeclaration_captionSide(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCaptionSide(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * captionSide);
+
+
+
 #ifdef __cplusplus
 }
 #endif

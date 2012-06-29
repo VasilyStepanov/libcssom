@@ -55,6 +55,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       LexicalUnitRange_background.c \
                       LexicalUnitRange_border.c \
                       LexicalUnitRange_bottom.c \
+                      LexicalUnitRange_captionSide.c \
                       LexicalUnitRange_utility.c \
                       MediaList.c \
                       MediaQuery.c \

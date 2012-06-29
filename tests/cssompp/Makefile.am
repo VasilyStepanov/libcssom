@@ -20,6 +20,7 @@ test_suite_SOURCES = Errors.cpp \
                      test_CSSProperty_background.cpp \
                      test_CSSProperty_border.cpp \
                      test_CSSProperty_bottom.cpp \
+                     test_CSSProperty_captionSide.cpp \
                      test_CSSPropertyValue.cpp \
                      test_CSSRule.cpp \
                      test_CSSStyleDeclaration.cpp \

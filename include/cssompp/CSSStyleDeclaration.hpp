@@ -159,6 +159,9 @@ class CSSStyleDeclaration {
     const char * bottom() const;
     void setBottom(const char * bottom);
 
+    const char * captionSide() const;
+    void setCaptionSide(const char * captionSide);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

@@ -797,3 +797,21 @@ void CSSOM_CSSStyleDeclaration_setBottom(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_BOTTOM_PROPERTY, bottom);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_captionSide(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CAPTION_SIDE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCaptionSide(
+  CSSOM_CSSStyleDeclaration *style, const char *captionSide)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CAPTION_SIDE_PROPERTY, captionSide);
+}

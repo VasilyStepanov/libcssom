@@ -509,4 +509,16 @@ void CSSStyleDeclaration::setBottom(const char * bottom) {
 
 
 
+const char * CSSStyleDeclaration::captionSide() const {
+  return CSSOM_CSSStyleDeclaration_captionSide(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCaptionSide(const char * captionSide) {
+  CSSOM_CSSStyleDeclaration_setCaptionSide(_impl, captionSide);
+}
+
+
+
 } // cssom
