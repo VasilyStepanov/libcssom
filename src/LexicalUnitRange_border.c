@@ -296,7 +296,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderCollapse(
   if (tail == begin) return begin;
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLLAPSE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -322,7 +322,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderColor(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_COLOR_PROPERTY, begin, end);
   return end;
 }
 
@@ -360,7 +360,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderSpacing(
   if (tail == begin) return begin;
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_SPACING_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -385,7 +385,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderStyle(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_STYLE_PROPERTY, begin, end);
   return end;
 }
 
@@ -421,7 +421,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_TOP_PROPERTY, begin, end);
   return end;
 }
 
@@ -457,7 +457,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_RIGHT_PROPERTY, begin, end);
   return end;
 }
 
@@ -493,7 +493,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_BOTTOM_PROPERTY, begin, end);
   return end;
 }
 
@@ -529,7 +529,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_LEFT_PROPERTY, begin, end);
   return end;
 }
 
@@ -562,7 +562,7 @@ static const SAC_LexicalUnit** borderDirectionColor(CSSOM_CSSPropertyType type,
   if (tail == begin) return begin;
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+    _CSSOM_SET_RANGE(values[0], type, begin, tail);
   return tail;
 }
 
@@ -647,7 +647,7 @@ static const SAC_LexicalUnit** borderDirectionStyle(CSSOM_CSSPropertyType type,
   if (tail == begin) return begin;
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+    _CSSOM_SET_RANGE(values[0], type, begin, tail);
   return tail;
 }
 
@@ -732,7 +732,7 @@ static const SAC_LexicalUnit** borderDirectionWidth(CSSOM_CSSPropertyType type,
   if (tail == begin) return begin;
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], type, begin, tail);
+    _CSSOM_SET_RANGE(values[0], type, begin, tail);
   return tail;
 }
 
@@ -809,6 +809,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderWidth(
   }
 
   if (values != NULL)
-  _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
+    _CSSOM_SET_RANGE(values[0], CSSOM_BORDER_WIDTH_PROPERTY, begin, end);
   return end;
 }
