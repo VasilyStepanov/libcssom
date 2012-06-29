@@ -14,7 +14,7 @@
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   const CSSOM *cssom, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
 
@@ -34,14 +34,14 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(
   assert(setting->nsubtypes == _CSSOM_ARSIZE(handlers));
 
   if (CSSOM_LexicalUnitRange_genericShorthand(cssom, setting->subtypes,
-    handlers, setting->initial, values != NULL ? &values[1] : NULL, marker,
+    handlers, setting->initial, ranges != NULL ? &ranges[1] : NULL, marker,
     setting->nsubtypes, begin, end) != end)
   {
     return begin;
   }
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_PROPERTY, begin, end);
   return end;
 }
 
@@ -67,15 +67,15 @@ static const SAC_LexicalUnit** backgroundAttachment(
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundAttachment(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = backgroundAttachment(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL) {
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, begin,
+  if (ranges != NULL) {
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_ATTACHMENT_PROPERTY, begin,
       tail);
   }
   return tail;
@@ -104,15 +104,15 @@ static const SAC_LexicalUnit** backgroundColor(const SAC_LexicalUnit **begin,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundColor(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = backgroundColor(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_COLOR_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -139,15 +139,15 @@ static const SAC_LexicalUnit** backgroundImage(const SAC_LexicalUnit **begin,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundImage(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = backgroundImage(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_IMAGE_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -175,15 +175,15 @@ static const SAC_LexicalUnit** backgroundRepeat(const SAC_LexicalUnit **begin,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundRepeat(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = backgroundRepeat(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_REPEAT_PROPERTY, begin, tail);
   return tail;
 }
 
@@ -270,15 +270,15 @@ static const SAC_LexicalUnit** backgroundPosition(
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundPosition(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = backgroundPosition(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL) {
-    _CSSOM_SET_RANGE(values[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin,
+  if (ranges != NULL) {
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_BACKGROUND_POSITION_PROPERTY, begin,
       tail);
   }
   return tail;

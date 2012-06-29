@@ -13,7 +13,7 @@ extern "C" {
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_captionSide(const CSSOM *cssom,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values);
+  struct _CSSOM_LexicalUnitRange *ranges);
 
 
 

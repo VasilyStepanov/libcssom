@@ -218,7 +218,7 @@ int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
 static const SAC_LexicalUnit** LexicalUnitRange_walk(
   const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   const _CSSOM_PropertyHandler *handlers,
-  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
+  struct _CSSOM_LexicalUnitRange *ranges, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   size_t i;
@@ -229,20 +229,20 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
   for (i = 0; i < size; ++i) {
     if (marker[i]) continue;
 
-    tail = handlers[i](cssom, begin, end, values != NULL ? &values[i] : NULL);
+    tail = handlers[i](cssom, begin, end, ranges != NULL ? &ranges[i] : NULL);
     if (tail == begin) continue;
 
     marker[i] = 1;
 
-    if (LexicalUnitRange_walk(cssom, subtypes, handlers, values, marker, size,
+    if (LexicalUnitRange_walk(cssom, subtypes, handlers, ranges, marker, size,
       tail, end) == end)
     {
       return end;
     }
 
     marker[i] = 0;
-    if (values != NULL)
-      _CSSOM_SET_RANGE(values[i], 0, NULL, NULL);
+    if (ranges != NULL)
+      _CSSOM_SET_RANGE(ranges[i], 0, NULL, NULL);
   }
 
   return begin;
@@ -254,7 +254,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   const _CSSOM_PropertyHandler *handlers,
   const struct _CSSOM_LexicalUnitRange *initial,
-  struct _CSSOM_LexicalUnitRange *values, int *marker, size_t size,
+  struct _CSSOM_LexicalUnitRange *ranges, int *marker, size_t size,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end)
 {
   size_t i;
@@ -262,9 +262,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
   if (&begin[1] == end && CSSOM_LexicalUnit_isInherit(begin[0])) {
 
-    if (values != NULL) {
+    if (ranges != NULL) {
       for (i = 0; i < size; ++i) {
-        _CSSOM_SET_RANGE(values[i], subtypes[i], begin, end);
+        _CSSOM_SET_RANGE(ranges[i], subtypes[i], begin, end);
       }
     }
 
@@ -272,15 +272,15 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 
   } else {
 
-    tail = LexicalUnitRange_walk(cssom, subtypes, handlers, values,
+    tail = LexicalUnitRange_walk(cssom, subtypes, handlers, ranges,
       marker, size, begin, end);
     if (tail == begin) return begin;
   
-    if (values != NULL) {
+    if (ranges != NULL) {
       for (i = 0; i < size; ++i) {
-        if (values[i].begin != NULL) continue;
+        if (ranges[i].begin != NULL) continue;
 
-        values[i] = initial[i];
+        ranges[i] = initial[i];
       }
     }
 
@@ -294,7 +294,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
   const CSSOM_CSSPropertyType *subtypes, _CSSOM_PropertyHandler handler,
   const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  struct _CSSOM_LexicalUnitRange *values)
+  struct _CSSOM_LexicalUnitRange *ranges)
 {
   switch (end - begin) {
     case 1:
@@ -304,11 +304,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      if (values != NULL) {
-        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[0], &begin[1]);
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subtypes[1], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[2], subtypes[2], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[3], subtypes[3], &begin[0], &begin[1]);
       }
 
       break;
@@ -319,11 +319,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      if (values != NULL) {
-        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
-        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[1], &begin[2]);
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(ranges[2], subtypes[2], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[3], subtypes[3], &begin[1], &begin[2]);
       }
 
       break;
@@ -335,11 +335,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      if (values != NULL) {
-        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
-        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[2], &begin[3]);
-        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[1], &begin[2]);
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(ranges[2], subtypes[2], &begin[2], &begin[3]);
+        _CSSOM_SET_RANGE(ranges[3], subtypes[3], &begin[1], &begin[2]);
       }
 
       break;
@@ -352,11 +352,11 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
         return begin;
       }
 
-      if (values != NULL) {
-        _CSSOM_SET_RANGE(values[0], subtypes[0], &begin[0], &begin[1]);
-        _CSSOM_SET_RANGE(values[1], subtypes[1], &begin[1], &begin[2]);
-        _CSSOM_SET_RANGE(values[2], subtypes[2], &begin[2], &begin[3]);
-        _CSSOM_SET_RANGE(values[3], subtypes[3], &begin[3], &begin[4]);
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subtypes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subtypes[1], &begin[1], &begin[2]);
+        _CSSOM_SET_RANGE(ranges[2], subtypes[2], &begin[2], &begin[3]);
+        _CSSOM_SET_RANGE(ranges[3], subtypes[3], &begin[3], &begin[4]);
       }
 
       break;
@@ -371,9 +371,9 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], 0, begin, end);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], 0, begin, end);
   return end;
 }

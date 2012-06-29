@@ -21,14 +21,14 @@ static const SAC_LexicalUnit** color(const SAC_LexicalUnit **begin,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_color(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = color(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_COLOR_PROPERTY, begin, tail);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_COLOR_PROPERTY, begin, tail);
   return tail;
 }

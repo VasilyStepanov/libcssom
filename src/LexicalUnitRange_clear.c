@@ -24,14 +24,14 @@ static const SAC_LexicalUnit** clear(const SAC_LexicalUnit **begin,
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_clear(
   const CSSOM *cssom CSSOM_UNUSED, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *values)
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
 {
   const SAC_LexicalUnit **tail;
 
   tail = clear(begin, end);
   if (tail == begin) return begin;
 
-  if (values != NULL)
-    _CSSOM_SET_RANGE(values[0], CSSOM_CLEAR_PROPERTY, begin, tail);
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_CLEAR_PROPERTY, begin, tail);
   return tail;
 }
