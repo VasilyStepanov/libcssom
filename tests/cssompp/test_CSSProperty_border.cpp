@@ -2026,6 +2026,30 @@ void shorthand() {
 
 
 
+void initial() {
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+
+  style.setBorder(NULL);
+  style.setBorder("dotted");
+  assert(style.border() != NULL);
+  assertEquals(std::string("rgb(0, 0, 0)"), style.borderColor());
+
+  style.setColor(NULL);
+  style.setColor("red");
+  style.setBorder(NULL);
+  style.setBorder("dotted");
+  assertEquals(std::string("dotted red"), style.border());
+  assertEquals(std::string("red"), style.borderColor());
+
+  style.setColor(NULL);
+  assertEquals(std::string("rgb(0, 0, 0)"), style.borderColor());
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -2056,6 +2080,7 @@ void cssPropertyBorder() {
   borderLeft();
   border();
   shorthand();
+  // initial();
 }
 
 
