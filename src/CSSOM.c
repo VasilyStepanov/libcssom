@@ -11,6 +11,7 @@
 #include "LexicalUnitRange_border.h"
 #include "LexicalUnitRange_bottom.h"
 #include "LexicalUnitRange_captionSide.h"
+#include "LexicalUnitRange_clear.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -438,7 +439,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_clear,
     NULL },
   /* CSSOM_CLIP_PROPERTY */
   { "clip",

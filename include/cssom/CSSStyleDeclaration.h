@@ -321,6 +321,14 @@ void CSSOM_CSSStyleDeclaration_setCaptionSide(CSSOM_CSSStyleDeclaration * cssSty
 
 
 
+const char * CSSOM_CSSStyleDeclaration_clear(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setClear(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * clear);
+
+
+
 #ifdef __cplusplus
 }
 #endif

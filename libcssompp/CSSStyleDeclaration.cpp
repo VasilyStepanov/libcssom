@@ -521,4 +521,16 @@ void CSSStyleDeclaration::setCaptionSide(const char * captionSide) {
 
 
 
+const char * CSSStyleDeclaration::clear() const {
+  return CSSOM_CSSStyleDeclaration_clear(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setClear(const char * clear) {
+  CSSOM_CSSStyleDeclaration_setClear(_impl, clear);
+}
+
+
+
 } // cssom

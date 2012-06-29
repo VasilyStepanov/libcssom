@@ -162,6 +162,9 @@ class CSSStyleDeclaration {
     const char * captionSide() const;
     void setCaptionSide(const char * captionSide);
 
+    const char * clear() const;
+    void setClear(const char * clear);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

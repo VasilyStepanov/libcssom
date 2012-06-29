@@ -8,6 +8,7 @@
 #include "test_CSSProperty_border.hpp"
 #include "test_CSSProperty_bottom.hpp"
 #include "test_CSSProperty_captionSide.hpp"
+#include "test_CSSProperty_clear.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -39,6 +40,7 @@ int main() {
   test::cssPropertyBorder();
   test::cssPropertyBottom();
   test::cssPropertyCaptionSide();
+  test::cssPropertyClear();
   test::selector();
   return 0;
 }

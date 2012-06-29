@@ -815,3 +815,21 @@ void CSSOM_CSSStyleDeclaration_setCaptionSide(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CAPTION_SIDE_PROPERTY, captionSide);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_clear(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CLEAR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setClear(
+  CSSOM_CSSStyleDeclaration *style, const char *clear)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CLEAR_PROPERTY, clear);
+}
