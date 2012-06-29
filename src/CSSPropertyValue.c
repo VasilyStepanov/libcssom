@@ -777,10 +777,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
 
   property = assignProperties(cssom, parentValues, data, ranges,
     _CSSOM_ARSIZE(ranges), important, error);
-  if (property == NULL) {
-    if (error != NULL) *error = 1;
-    return NULL;
-  }
+  if (property == NULL) return NULL;
   
   if (error != NULL) *error = 0;
   return property;
