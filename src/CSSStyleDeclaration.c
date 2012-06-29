@@ -833,3 +833,21 @@ void CSSOM_CSSStyleDeclaration_setClear(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CLEAR_PROPERTY, clear);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_clip(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CLIP_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setClip(
+  CSSOM_CSSStyleDeclaration *style, const char *clip)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CLIP_PROPERTY, clip);
+}

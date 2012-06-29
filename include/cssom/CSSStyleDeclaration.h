@@ -329,6 +329,14 @@ void CSSOM_CSSStyleDeclaration_setClear(CSSOM_CSSStyleDeclaration * cssStyleDecl
 
 
 
+const char * CSSOM_CSSStyleDeclaration_clip(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setClip(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * clip);
+
+
+
 #ifdef __cplusplus
 }
 #endif

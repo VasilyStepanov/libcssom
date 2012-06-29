@@ -31,6 +31,8 @@ int CSSOM_LexicalUnit_isUrl(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
+int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value);
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   const _CSSOM_PropertyHandler *handlers,

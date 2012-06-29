@@ -533,4 +533,16 @@ void CSSStyleDeclaration::setClear(const char * clear) {
 
 
 
+const char * CSSStyleDeclaration::clip() const {
+  return CSSOM_CSSStyleDeclaration_clip(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setClip(const char * clip) {
+  CSSOM_CSSStyleDeclaration_setClip(_impl, clip);
+}
+
+
+
 } // cssom

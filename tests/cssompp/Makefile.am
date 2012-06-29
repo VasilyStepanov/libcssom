@@ -22,6 +22,7 @@ test_suite_SOURCES = Errors.cpp \
                      test_CSSProperty_bottom.cpp \
                      test_CSSProperty_captionSide.cpp \
                      test_CSSProperty_clear.cpp \
+                     test_CSSProperty_clip.cpp \
                      test_CSSPropertyValue.cpp \
                      test_CSSRule.cpp \
                      test_CSSStyleDeclaration.cpp \

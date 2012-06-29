@@ -156,6 +156,65 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
 
 
 
+static int LexicalUnitRange_isShapeArg(const SAC_LexicalUnit *value) {
+  if (CSSOM_LexicalUnit_isLength(value)) {
+    return 1;
+  } else if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("auto", value->desc.ident) == 0) return 1;
+  }
+  return 0;
+}
+
+
+
+int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_RECT_FUNCTION) {
+    if (value->desc.function.parameters[0] == NULL) return 0;
+    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[0]))
+      return 0;
+
+    if (value->desc.function.parameters[1] == NULL) return 0;
+    if (value->desc.function.parameters[1]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[2] == NULL) return 0;
+    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[2]))
+      return 0;
+
+    if (value->desc.function.parameters[3] == NULL) return 0;
+    if (value->desc.function.parameters[3]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[4] == NULL) return 0;
+    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[4]))
+      return 0;
+
+    if (value->desc.function.parameters[5] == NULL) return 0;
+    if (value->desc.function.parameters[5]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[6] == NULL) return 0;
+    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[6]))
+      return 0;
+
+    if (value->desc.function.parameters[7] != NULL) return 0;
+
+    return 1;
+  }
+  return 0;
+}
+
+
+
 static const SAC_LexicalUnit** LexicalUnitRange_walk(
   const CSSOM *cssom, const CSSOM_CSSPropertyType *subtypes,
   const _CSSOM_PropertyHandler *handlers,
