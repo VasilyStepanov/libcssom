@@ -24,9 +24,9 @@ typedef const SAC_LexicalUnit**(*_CSSOM_PropertyHandler)(const CSSOM *cssom,
 
 struct _CSSOM_CSSPropertySetting {
   const char *name;
-  const CSSOM_CSSPropertyType *subtypes;
+  const int *subhashes;
   const struct _CSSOM_LexicalUnitRange *initial;
-  size_t nsubtypes;
+  size_t nsubhashes;
   _CSSOM_PropertyHandler handler;
   int (*omit)(const CSSOM_CSSPropertyValue *property,
     struct _CSSOM_LexicalUnitRange *ranges);

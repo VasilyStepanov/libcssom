@@ -90,7 +90,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
 
     setting = CSSOM__propertySetting(cssom, i);
 
-    if (setting->nsubtypes == 0) continue;
+    if (setting->nsubhashes == 0) continue;
 
     property = CSSOM_CSSPropertyValue__allocShorthand(cssom, values, i);
     if (property == NULL) {
@@ -202,7 +202,7 @@ const char* CSSOM_CSSStyleDeclarationValue_item(
 
 
 static void CSSStyleDeclarationValue__fremoveProperty(
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property);
+  CSSOM_CSSStyleDeclarationValue *values, int hash);
 
 
 
@@ -226,7 +226,7 @@ static CSSOM_CSSPropertyValue* CSSStyleDeclarationValue__addProperty(
   setting = CSSOM__propertySetting(values->cssom, iter->hash);
 
   if (iter->value != NULL) {
-    if (setting->nsubtypes == 0) {
+    if (setting->nsubhashes == 0) {
       iter = CSSOM_FSM_CSSPropertyValue_update(values->fsm, iter);
       if (iter == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
         if (iter->value == NULL)
@@ -251,12 +251,12 @@ static void CSSStyleDeclarationValue__eraseProperty(
   
   setting = CSSOM__propertySetting(values->cssom, iter->hash);
 
-  if (setting->nsubtypes == 0) {
+  if (setting->nsubhashes == 0) {
     CSSOM_CSSPropertyValue_release(iter->value);
     CSSOM_FSM_CSSPropertyValue_erase(values->fsm, iter);
   } else {
-    for (i = 0; i < setting->nsubtypes; ++i)
-      CSSStyleDeclarationValue__fremoveProperty(values, setting->subtypes[i]);
+    for (i = 0; i < setting->nsubhashes; ++i)
+      CSSStyleDeclarationValue__fremoveProperty(values, setting->subhashes[i]);
   }
 }
 
@@ -274,22 +274,22 @@ CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue_getProperty(
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
-  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
+  const CSSOM_CSSStyleDeclarationValue *values, int hash)
 {
   CSSOM_FSMIter_CSSPropertyValue it;
 
-  it = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
+  it = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, hash);
   return CSSStyleDeclarationValue__getProperty(values, it);
 }
 
 
 
 const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
+  const CSSOM_CSSStyleDeclarationValue *values, int hash)
 {
   CSSOM_CSSPropertyValue *value;
 
-  value = CSSOM_CSSStyleDeclarationValue__fgetProperty(values, property);
+  value = CSSOM_CSSStyleDeclarationValue__fgetProperty(values, hash);
   if (value == NULL) return NULL;
 
   return CSSOM_CSSPropertyValue_cssText(value);
@@ -387,11 +387,11 @@ void CSSOM_CSSStyleDeclarationValue_setPropertyEx(
 
 
 static void CSSStyleDeclarationValue__fremoveProperty(
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property)
+  CSSOM_CSSStyleDeclarationValue *values, int hash)
 {
   CSSOM_FSMIter_CSSPropertyValue match;
   
-  match = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, property);
+  match = CSSOM_FSM_CSSPropertyValue_ffind(values->fsm, hash);
   if (match == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;
 
   CSSStyleDeclarationValue__eraseProperty(values, match);
@@ -400,19 +400,18 @@ static void CSSStyleDeclarationValue__fremoveProperty(
 
 
 void CSSOM_CSSStyleDeclarationValue__fsetProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  CSSOM_CSSPropertyType property, const char *value)
+  CSSOM_CSSStyleDeclarationValue *values, int hash, const char *value)
 {
   CSSOM_FSMIter_CSSPropertyValue it;
   CSSOM_CSSPropertyValue *propertyValue;
   const char *sproperty;
 
   if (value == NULL) {
-    CSSStyleDeclarationValue__fremoveProperty(values, property);
+    CSSStyleDeclarationValue__fremoveProperty(values, hash);
     return;
   }
 
-  sproperty = CSSOM__propertySetting(values->cssom, property)->name;
+  sproperty = CSSOM__propertySetting(values->cssom, hash)->name;
 
   it = CSSOM_FSM_CSSPropertyValue_insert(values->fsm, sproperty, NULL);
   if (it == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) return;

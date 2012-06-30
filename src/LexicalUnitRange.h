@@ -12,16 +12,16 @@ extern "C" {
 
 
 struct _CSSOM_LexicalUnitRange {
-  CSSOM_CSSPropertyType type;
+  int hash;
   const SAC_LexicalUnit **begin;
   const SAC_LexicalUnit **end;
 };
 
 
 
-#define _CSSOM_SET_RANGE(range, type_val, begin_val, end_val) \
+#define _CSSOM_SET_RANGE(range, hash_val, begin_val, end_val) \
   do { \
-    (range).type = (type_val); \
+    (range).hash = (hash_val); \
     (range).begin = (begin_val); \
     (range).end = (end_val); \
   } while (0)

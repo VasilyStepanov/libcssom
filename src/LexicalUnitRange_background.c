@@ -30,12 +30,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_background(const CSSOM *cssom,
 
   setting = CSSOM__propertySetting(cssom, CSSOM_BACKGROUND_PROPERTY);
 
-  assert(setting->nsubtypes == _CSSOM_ARSIZE(marker));
-  assert(setting->nsubtypes == _CSSOM_ARSIZE(handlers));
+  assert(setting->nsubhashes == _CSSOM_ARSIZE(marker));
+  assert(setting->nsubhashes == _CSSOM_ARSIZE(handlers));
 
-  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, values, setting->subtypes,
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, values, setting->subhashes,
     handlers, setting->initial, ranges != NULL ? &ranges[1] : NULL, marker,
-    setting->nsubtypes, begin, end) != end)
+    setting->nsubhashes, begin, end) != end)
   {
     return begin;
   }

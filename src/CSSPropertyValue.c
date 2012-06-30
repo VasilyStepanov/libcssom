@@ -31,7 +31,7 @@ struct _CSSOM_CSSPropertyValue {
   const CSSOM *cssom;
   CSSOM_CSSStyleDeclarationValue *parentValues;
   CSSOM_CSSPropertyValue *shorthand;
-  CSSOM_CSSPropertyType type;
+  int hash;
   const char *name;
   CSSOM_CSSPropertyData *data;
   const SAC_LexicalUnit **begin;
@@ -228,12 +228,12 @@ static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
   size_t i;
   CSSOM_CSSPropertyValue *property;
 
-  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->hash);
   _size = 0;
   _isInherit = 1;
-  for (i = 0; i < setting->nsubtypes; ++i) {
+  for (i = 0; i < setting->nsubhashes; ++i) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues, setting->subtypes[i]);
+      shorthand->parentValues, setting->subhashes[i]);
 
     if (property == NULL) return 0;
 
@@ -263,22 +263,22 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
   int isInherit;
   struct _CSSOM_LexicalUnitRange *it;
 
-  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->hash);
 
   if (!testShorthand(shorthand, &size, &isInherit)) return 0;
   if (isInherit) {
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-      shorthand->parentValues, setting->subtypes[0]);
-    _CSSOM_SET_RANGE(ranges[0], shorthand->type, property->begin,
+      shorthand->parentValues, setting->subhashes[0]);
+    _CSSOM_SET_RANGE(ranges[0], shorthand->hash, property->begin,
       property->end);
   } else {
     holder = (const SAC_LexicalUnit **)CSSOM_malloc(
       sizeof(const SAC_LexicalUnit*) * size);
     if (holder == NULL) return -1;
     wit = holder;
-    for (i = 0; i < setting->nsubtypes; ++i) {
+    for (i = 0; i < setting->nsubhashes; ++i) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-        shorthand->parentValues, setting->subtypes[i]);
+        shorthand->parentValues, setting->subhashes[i]);
 
       for (rit = property->begin; rit != property->end; ++rit, ++wit)
         *wit = *rit;
@@ -289,9 +289,9 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
     if (!rval) return 0;
 
     it = ranges;
-    for (i = 0; i < setting->nsubtypes; ++i) {
+    for (i = 0; i < setting->nsubhashes; ++i) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-        shorthand->parentValues, setting->subtypes[i]);
+        shorthand->parentValues, setting->subhashes[i]);
 
       if (LexicalUnitRange_eq(property->begin, property->end,
         setting->initial[i].begin, setting->initial[i].end))
@@ -299,15 +299,15 @@ int CSSOM_CSSPropertyValue__omitGenericShorthand(
         continue;
       }
 
-      _CSSOM_SET_RANGE(*it, property->type, property->begin, property->end);
+      _CSSOM_SET_RANGE(*it, property->hash, property->begin, property->end);
       ++it;
     }
 
     if (it == ranges) {
       property = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-        shorthand->parentValues, setting->subtypes[0]);
+        shorthand->parentValues, setting->subhashes[0]);
 
-      _CSSOM_SET_RANGE(ranges[0], property->type, property->begin,
+      _CSSOM_SET_RANGE(ranges[0], property->hash, property->begin,
         property->end);
     }
 
@@ -336,16 +336,16 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   int rightleft;
   int topright;
 
-  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->hash);
 
   top = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    shorthand->parentValues, setting->subtypes[0]);
+    shorthand->parentValues, setting->subhashes[0]);
   right = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    shorthand->parentValues, setting->subtypes[1]);
+    shorthand->parentValues, setting->subhashes[1]);
   bottom = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    shorthand->parentValues, setting->subtypes[2]);
+    shorthand->parentValues, setting->subhashes[2]);
   left = CSSOM_CSSStyleDeclarationValue__fgetProperty(
-    shorthand->parentValues, setting->subtypes[3]);
+    shorthand->parentValues, setting->subhashes[3]);
 
 
 
@@ -393,25 +393,25 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   if (rightleft) {
     if (topbottom) {
       if (topright) {
-        _CSSOM_SET_RANGE(ranges[0], setting->subtypes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
       } else {
-        _CSSOM_SET_RANGE(ranges[0], setting->subtypes[0], top->begin, top->end);
-        _CSSOM_SET_RANGE(ranges[1], setting->subtypes[1], right->begin,
+        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin,
           right->end);
       }
     } else {
-      _CSSOM_SET_RANGE(ranges[0], setting->subtypes[0], top->begin, top->end);
-      _CSSOM_SET_RANGE(ranges[1], setting->subtypes[1], right->begin,
+      _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
+      _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin,
         right->end);
-      _CSSOM_SET_RANGE(ranges[2], setting->subtypes[2], bottom->begin,
+      _CSSOM_SET_RANGE(ranges[2], setting->subhashes[2], bottom->begin,
         bottom->end);
     }
   } else {
-    _CSSOM_SET_RANGE(ranges[0], setting->subtypes[0], top->begin, top->end);
-    _CSSOM_SET_RANGE(ranges[1], setting->subtypes[1], right->begin, right->end);
-    _CSSOM_SET_RANGE(ranges[2], setting->subtypes[2], bottom->begin,
+    _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
+    _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin, right->end);
+    _CSSOM_SET_RANGE(ranges[2], setting->subhashes[2], bottom->begin,
       bottom->end);
-    _CSSOM_SET_RANGE(ranges[3], setting->subtypes[3], left->begin, left->end);
+    _CSSOM_SET_RANGE(ranges[3], setting->subhashes[3], left->begin, left->end);
   }
 
   return 0;
@@ -427,14 +427,14 @@ static int fetchRecursiveShorthand(
   struct _CSSOM_LexicalUnitRange *it;
   const struct _CSSOM_CSSPropertySetting *propertySetting;
   CSSOM_CSSPropertyValue *property;
-  size_t nsubtypes;
+  size_t nsubhashes;
   size_t i;
   size_t j;
   int rval;
 
   *size = 0;
   it = ranges;
-  for (i = 0; i < setting->nsubtypes; ++i) {
+  for (i = 0; i < setting->nsubhashes; ++i) {
     struct _CSSOM_LexicalUnitRange propertyRanges[_CSSOM_RANGES_CAPACITY] = {
       { 0, NULL, NULL }, /*  0 */
       { 0, NULL, NULL }, /*  1 */
@@ -451,28 +451,28 @@ static int fetchRecursiveShorthand(
       { 0, NULL, NULL }  /* 12 */
     };
 
-    propertySetting = CSSOM__propertySetting(cssom, setting->subtypes[i]);
+    propertySetting = CSSOM__propertySetting(cssom, setting->subhashes[i]);
 
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
-      setting->subtypes[i]);
+      setting->subhashes[i]);
 
     if (propertySetting->omit != NULL) {
       rval = propertySetting->omit(property, propertyRanges);
       if (rval != 0) return rval;
 
-      nsubtypes = propertySetting->nsubtypes;
+      nsubhashes = propertySetting->nsubhashes;
     } else {
       if (property == NULL) {
         *size = 0;
         return 0;
       }
-      _CSSOM_SET_RANGE(propertyRanges[0], property->type, property->begin,
+      _CSSOM_SET_RANGE(propertyRanges[0], property->hash, property->begin,
         property->end);
 
-      nsubtypes = 1;
+      nsubhashes = 1;
     }
 
-    for (j = 0; j < nsubtypes; ++j) {
+    for (j = 0; j < nsubhashes; ++j) {
       if (propertyRanges[j].begin == NULL) break;
 
       if (j > 1) {
@@ -526,7 +526,7 @@ static int applyRecursiveShorthand(const CSSOM *cssom,
   }
 
   if (isInherit) {
-    _CSSOM_SET_RANGE(ranges[0], shorthandRanges[0].type,
+    _CSSOM_SET_RANGE(ranges[0], shorthandRanges[0].hash,
       shorthandRanges[0].begin, shorthandRanges[0].end);
   } else {
     holder = (const SAC_LexicalUnit **)CSSOM_malloc(
@@ -555,14 +555,14 @@ static int applyRecursiveShorthand(const CSSOM *cssom,
         continue;
       }
 
-      _CSSOM_SET_RANGE(*it, shorthandRanges[i].type, shorthandRanges[i].begin,
+      _CSSOM_SET_RANGE(*it, shorthandRanges[i].hash, shorthandRanges[i].begin,
         shorthandRanges[i].end);
       ++it;
       rval = 1;
     }
 
     if (rval == 0)
-      _CSSOM_SET_RANGE(ranges[0], setting->initial[0].type,
+      _CSSOM_SET_RANGE(ranges[0], setting->initial[0].hash,
         setting->initial[0].begin, setting->initial[0].end);
   }
 
@@ -595,7 +595,7 @@ int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
   size_t size;
   int rval;
 
-  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->type);
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->hash);
 
   rval = fetchRecursiveShorthand(shorthand->cssom, shorthand->parentValues,
     setting, _ranges, &size);
@@ -633,7 +633,7 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   int rval;
   int emitted;
 
-  setting = CSSOM__propertySetting(property->cssom, property->type);
+  setting = CSSOM__propertySetting(property->cssom, property->hash);
 
   if (setting->omit == NULL)
     return LexicalUnitRange__emit(property->begin, property->end, out);
@@ -642,7 +642,7 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   if (rval != 0) return rval;
 
   emitted = 0;
-  for (i = 0; i < setting->nsubtypes; ++i) {
+  for (i = 0; i < setting->nsubhashes; ++i) {
     if (ranges[i].begin == NULL) break;
 
     if (emitted) {
@@ -662,9 +662,9 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, CSSOM_CSSPropertyType type,
-  CSSOM_CSSPropertyData *data, const SAC_LexicalUnit **begin,
-  const SAC_LexicalUnit **end, SAC_Boolean important)
+  CSSOM_CSSPropertyValue *shorthand, int hash, CSSOM_CSSPropertyData *data,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
 
@@ -676,8 +676,8 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   property->cssom = cssom;
   property->parentValues = parentValues;
   property->shorthand = shorthand;
-  property->type = type;
-  property->name = CSSOM__propertySetting(cssom, type)->name;
+  property->hash = hash;
+  property->name = CSSOM__propertySetting(cssom, hash)->name;
   property->data = data;
   property->begin = begin;
   property->end = end;
@@ -706,8 +706,8 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
     return NULL;
   }
 
-  shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL,
-      ranges[0].type, data, ranges[0].begin, ranges[0].end, important);
+  shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL, ranges[0].hash,
+    data, ranges[0].begin, ranges[0].end, important);
   if (shorthand == NULL) {
     if (error != NULL) *error = -1;
     return NULL;
@@ -717,7 +717,7 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
     if (ranges[i].begin == NULL) continue;
 
     property = CSSPropertyValue_alloc(cssom, parentValues, shorthand,
-      ranges[i].type, data, ranges[i].begin, ranges[i].end, important);
+      ranges[i].hash, data, ranges[i].begin, ranges[i].end, important);
     if (property == NULL) {
       if (error != NULL) *error = -1;
       return NULL;
@@ -738,7 +738,7 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
+  CSSOM_CSSStyleDeclarationValue *parentValues, int hash,
   CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error)
 {
   struct _CSSOM_LexicalUnitRange ranges[_CSSOM_RANGES_CAPACITY] = {
@@ -761,7 +761,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
 
   CSSOM_CSSPropertyValue *property;
 
-  setting = CSSOM__propertySetting(cssom, type);
+  setting = CSSOM__propertySetting(cssom, hash);
 
   if (setting->handler(cssom, parentValues, CSSOM_CSSPropertyData_begin(data),
     CSSOM_CSSPropertyData_end(data), ranges) != CSSOM_CSSPropertyData_end(data))
@@ -773,7 +773,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   /**
    * FIXME: Drop this line after CSSOM_LexicalUnitRange_whatever cleanup.
    */
-  ranges[0].type = type;
+  ranges[0].hash = hash;
 
   property = assignProperties(cssom, parentValues, data, ranges,
     _CSSOM_ARSIZE(ranges), important, error);
@@ -787,11 +787,11 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__allocShorthand(
   const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyType type)
+  int hash)
 {
-  assert(CSSOM__propertySetting(cssom, type)->nsubtypes != 0);
+  assert(CSSOM__propertySetting(cssom, hash)->nsubhashes != 0);
 
-  return CSSPropertyValue_alloc(cssom, parentValues, NULL, type, NULL, NULL,
+  return CSSPropertyValue_alloc(cssom, parentValues, NULL, hash, NULL, NULL,
     NULL, SAC_FALSE);
 }
 
@@ -870,7 +870,7 @@ static void CSSPropertyValue_swap(
   assert(lhs->cssom == rhs->cssom);
   assert(lhs->parentValues == rhs->parentValues);
   SWAPP(lhs->shorthand, rhs->shorthand);
-  SWAPS(lhs->type, rhs->type);
+  SWAPS(lhs->hash, rhs->hash);
   SWAPP(lhs->name, rhs->name);
   SWAPP(lhs->data, rhs->data);
   SWAPP(lhs->begin, rhs->begin);
@@ -887,7 +887,7 @@ void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
   CSSOM_CSSPropertyValue *newProperty;
 
   newProperty = CSSOM__parsePropertyValue(property->cssom,
-    property->parentValues, property->type, cssText, strlen(cssText), NULL, 0);
+    property->parentValues, property->hash, cssText, strlen(cssText), NULL, 0);
   if (newProperty == NULL) return;
 
   CSSPropertyValue_swap(property, newProperty);

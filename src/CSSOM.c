@@ -80,7 +80,7 @@ static const SAC_LexicalUnit *backgroundPosition[] = {
 
 
 
-static const CSSOM_CSSPropertyType backgroundSubtypes[] = {
+static const int backgroundSubhashes[] = {
   CSSOM_BACKGROUND_COLOR_PROPERTY,
   CSSOM_BACKGROUND_IMAGE_PROPERTY,
   CSSOM_BACKGROUND_REPEAT_PROPERTY,
@@ -91,7 +91,7 @@ static const CSSOM_CSSPropertyType backgroundSubtypes[] = {
 
 
 static const struct _CSSOM_LexicalUnitRange
-backgroundInitial[_CSSOM_ARSIZE(backgroundSubtypes)] = {
+backgroundInitial[_CSSOM_ARSIZE(backgroundSubhashes)] = {
   { CSSOM_BACKGROUND_COLOR_PROPERTY, _CSSOM_INITIAL(backgroundColor) },
   { CSSOM_BACKGROUND_IMAGE_PROPERTY, _CSSOM_INITIAL(backgroundImage) },
   { CSSOM_BACKGROUND_REPEAT_PROPERTY, _CSSOM_INITIAL(backgroundRepeat) },
@@ -120,95 +120,87 @@ static const SAC_LexicalUnit *borderWidth[] = {
 
 
 
-const CSSOM_CSSPropertyType
-borderColorSubtypes[] = {
+static const int borderColorSubhashes[] = {
   CSSOM_BORDER_TOP_COLOR_PROPERTY,
   CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
   CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
   CSSOM_BORDER_LEFT_COLOR_PROPERTY
 };
 
-const CSSOM_CSSPropertyType
-borderStyleSubtypes[] = {
+static const int borderStyleSubhashes[] = {
   CSSOM_BORDER_TOP_STYLE_PROPERTY,
   CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
   CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
   CSSOM_BORDER_LEFT_STYLE_PROPERTY
 };
 
-const CSSOM_CSSPropertyType
-borderWidthSubtypes[] = {
+static const int borderWidthSubhashes[] = {
   CSSOM_BORDER_TOP_WIDTH_PROPERTY,
   CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
   CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
   CSSOM_BORDER_LEFT_WIDTH_PROPERTY
 };
 
-const CSSOM_CSSPropertyType
-borderSubtypes[] = {
+static const int borderSubhashes[] = {
   CSSOM_BORDER_WIDTH_PROPERTY,
   CSSOM_BORDER_STYLE_PROPERTY,
   CSSOM_BORDER_COLOR_PROPERTY
 };
 
 static const struct _CSSOM_LexicalUnitRange
-borderInitial[_CSSOM_ARSIZE(borderSubtypes)] = {
+borderInitial[_CSSOM_ARSIZE(borderSubhashes)] = {
   { CSSOM_BORDER_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
   { CSSOM_BORDER_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
   { CSSOM_BORDER_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
 };
 
-const CSSOM_CSSPropertyType
-borderTopSubtypes[] = {
+static const int borderTopSubhashes[] = {
   CSSOM_BORDER_TOP_WIDTH_PROPERTY,
   CSSOM_BORDER_TOP_STYLE_PROPERTY,
   CSSOM_BORDER_TOP_COLOR_PROPERTY
 };
 
 static const struct _CSSOM_LexicalUnitRange
-borderTopInitial[_CSSOM_ARSIZE(borderTopSubtypes)] = {
+borderTopInitial[_CSSOM_ARSIZE(borderTopSubhashes)] = {
   { CSSOM_BORDER_TOP_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
   { CSSOM_BORDER_TOP_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
   { CSSOM_BORDER_TOP_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
 };
 
-const CSSOM_CSSPropertyType
-borderRightSubtypes[] = {
+static const int borderRightSubhashes[] = {
   CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
   CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
   CSSOM_BORDER_RIGHT_COLOR_PROPERTY
 };
 
 static const struct _CSSOM_LexicalUnitRange
-borderRightInitial[_CSSOM_ARSIZE(borderRightSubtypes)] = {
+borderRightInitial[_CSSOM_ARSIZE(borderRightSubhashes)] = {
   { CSSOM_BORDER_RIGHT_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
   { CSSOM_BORDER_RIGHT_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
   { CSSOM_BORDER_RIGHT_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
 };
 
-const CSSOM_CSSPropertyType
-borderBottomSubtypes[] = {
+static const int borderBottomSubhashes[] = {
   CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
   CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
   CSSOM_BORDER_BOTTOM_COLOR_PROPERTY
 };
 
 static const struct _CSSOM_LexicalUnitRange
-borderBottomInitial[_CSSOM_ARSIZE(borderBottomSubtypes)] = {
+borderBottomInitial[_CSSOM_ARSIZE(borderBottomSubhashes)] = {
   { CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
   { CSSOM_BORDER_BOTTOM_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
   { CSSOM_BORDER_BOTTOM_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
 };
 
-const CSSOM_CSSPropertyType
-borderLeftSubtypes[] = {
+static const int borderLeftSubhashes[] = {
   CSSOM_BORDER_LEFT_WIDTH_PROPERTY,
   CSSOM_BORDER_LEFT_STYLE_PROPERTY,
   CSSOM_BORDER_LEFT_COLOR_PROPERTY
 };
 
 static const struct _CSSOM_LexicalUnitRange
-borderLeftInitial[_CSSOM_ARSIZE(borderLeftSubtypes)] = {
+borderLeftInitial[_CSSOM_ARSIZE(borderLeftSubhashes)] = {
   { CSSOM_BORDER_LEFT_WIDTH_PROPERTY, _CSSOM_INITIAL(borderWidth) },
   { CSSOM_BORDER_LEFT_STYLE_PROPERTY, _CSSOM_INITIAL(borderStyle) },
   { CSSOM_BORDER_LEFT_COLOR_PROPERTY, _CSSOM_INITIAL(borderColor) }
@@ -228,9 +220,9 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BACKGROUND_PROPERTY */
   { "background",
-    backgroundSubtypes,
+    backgroundSubhashes,
     backgroundInitial,
-    _CSSOM_ARSIZE(backgroundSubtypes),
+    _CSSOM_ARSIZE(backgroundSubhashes),
     CSSOM_LexicalUnitRange_background,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BACKGROUND_ATTACHMENT_PROPERTY */
@@ -270,9 +262,9 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BORDER_PROPERTY */
   { "border",
-    borderSubtypes,
+    borderSubhashes,
     borderInitial,
-    _CSSOM_ARSIZE(borderSubtypes),
+    _CSSOM_ARSIZE(borderSubhashes),
     CSSOM_LexicalUnitRange_border,
     &CSSOM_CSSPropertyValue__omitRecursiveShorthand },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
@@ -284,9 +276,9 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BORDER_COLOR_PROPERTY */
   { "border-color",
-    borderColorSubtypes,
+    borderColorSubhashes,
     NULL,
-    _CSSOM_ARSIZE(borderColorSubtypes),
+    _CSSOM_ARSIZE(borderColorSubhashes),
     CSSOM_LexicalUnitRange_borderColor,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_SPACING_PROPERTY */
@@ -298,37 +290,37 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BORDER_STYLE_PROPERTY */
   { "border-style",
-    borderStyleSubtypes,
+    borderStyleSubhashes,
     NULL,
-    _CSSOM_ARSIZE(borderStyleSubtypes),
+    _CSSOM_ARSIZE(borderStyleSubhashes),
     CSSOM_LexicalUnitRange_borderStyle,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_TOP_PROPERTY */
   { "border-top",
-    borderTopSubtypes,
+    borderTopSubhashes,
     borderTopInitial,
-    _CSSOM_ARSIZE(borderTopSubtypes),
+    _CSSOM_ARSIZE(borderTopSubhashes),
     CSSOM_LexicalUnitRange_borderTop,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_RIGHT_PROPERTY */
   { "border-right",
-    borderRightSubtypes,
+    borderRightSubhashes,
     borderRightInitial,
-    _CSSOM_ARSIZE(borderRightSubtypes),
+    _CSSOM_ARSIZE(borderRightSubhashes),
     CSSOM_LexicalUnitRange_borderRight,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_BOTTOM_PROPERTY */
   { "border-bottom",
-    borderBottomSubtypes,
+    borderBottomSubhashes,
     borderBottomInitial,
-    _CSSOM_ARSIZE(borderBottomSubtypes),
+    _CSSOM_ARSIZE(borderBottomSubhashes),
     CSSOM_LexicalUnitRange_borderBottom,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_LEFT_PROPERTY */
   { "border-left",
-    borderLeftSubtypes,
+    borderLeftSubhashes,
     borderLeftInitial,
-    _CSSOM_ARSIZE(borderLeftSubtypes),
+    _CSSOM_ARSIZE(borderLeftSubhashes),
     CSSOM_LexicalUnitRange_borderLeft,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_TOP_COLOR_PROPERTY */
@@ -417,9 +409,9 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL },
   /* CSSOM_BORDER_WIDTH_PROPERTY */
   { "border-width",
-    borderWidthSubtypes,
+    borderWidthSubhashes,
     NULL,
-    _CSSOM_ARSIZE(borderWidthSubtypes),
+    _CSSOM_ARSIZE(borderWidthSubhashes),
     CSSOM_LexicalUnitRange_borderWidth,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BOTTOM_PROPERTY */
@@ -1155,7 +1147,7 @@ CSSOM* CSSOM_create(void) {
     setting = &CSSOM_propertySettings[i];
 
     properties[i] = setting->name;
-    if (setting->nsubtypes != 0) ++nshorthands;
+    if (setting->nsubhashes != 0) ++nshorthands;
   }
   properties[CSSOM_nproperties] = NULL;
 
@@ -1628,8 +1620,8 @@ int CSSOM__parsePriority(const CSSOM *cssom, const char *priority, int len) {
 
 
 CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType type,
-  const char *value, int valueLen, const char *priority, int priorityLen)
+  CSSOM_CSSStyleDeclarationValue *values, int hash, const char *value,
+  int valueLen, const char *priority, int priorityLen)
 {
   SAC_Parser parser;
   CSSOM_ParserStack *stack;
@@ -1676,7 +1668,7 @@ CSSOM_CSSPropertyValue* CSSOM__parsePropertyValue(const CSSOM *cssom,
     return NULL;
   }
 
-  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, type,
+  propertyValue = CSSOM_CSSPropertyValue__alloc(cssom, values, hash,
     propertyData, important, NULL);
   if (propertyValue == NULL) {
     CSSOM_CSSPropertyData_release(propertyData);

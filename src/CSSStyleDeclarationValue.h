@@ -33,17 +33,16 @@ int CSSOM_CSSStyleDeclarationValue__setProperty(
   const SAC_LexicalUnit *value, SAC_Boolean priority);
 
 void CSSOM_CSSStyleDeclarationValue__fsetProperty(
-  CSSOM_CSSStyleDeclarationValue *values,
-  CSSOM_CSSPropertyType type, const char *value);
+  CSSOM_CSSStyleDeclarationValue *values, int hash, const char *value);
 
 int CSSOM_CSSStyleDeclarationValue__assignProperty(
   CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyValue *property);
 
 CSSOM_CSSPropertyValue* CSSOM_CSSStyleDeclarationValue__fgetProperty(
-  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType type);
+  const CSSOM_CSSStyleDeclarationValue *values, int hash);
 
 const char* CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(
-  const CSSOM_CSSStyleDeclarationValue *values, CSSOM_CSSPropertyType property);
+  const CSSOM_CSSStyleDeclarationValue *values, int hash);
 
 void CSSOM_CSSStyleDeclarationValue__setParentStyle(
   CSSOM_CSSStyleDeclarationValue *values,

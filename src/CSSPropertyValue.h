@@ -18,12 +18,11 @@ extern "C" {
 
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues, CSSOM_CSSPropertyType type,
+  CSSOM_CSSStyleDeclarationValue *parentValues, int hash,
   CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error);
 
 CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__allocShorthand(
-  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyType type);
+  const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues, int hash);
 
 const char* CSSOM_CSSPropertyValue__name(
   const CSSOM_CSSPropertyValue *property);
