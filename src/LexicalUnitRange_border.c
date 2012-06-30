@@ -2,6 +2,7 @@
 
 #include "CSSOM.h"
 #include "CSSEmitter.h"
+#include "CSSStyleDeclarationValue.h"
 #include "gcc.h"
 
 #include <string.h>
@@ -234,6 +235,8 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
   struct _CSSOM_LexicalUnitRange *ranges)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
+  const struct _CSSOM_CSSPropertySetting *colorSetting;
+  const CSSOM_CSSPropertyValue *color;
 
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderTopWidthToken,
@@ -255,6 +258,25 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
   }
 
   if (ranges != NULL) {
+    color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
+      CSSOM_COLOR_PROPERTY);
+    if (color != NULL) {
+      if (ranges[2 + 1].begin == setting->initial[2].begin &&
+        ranges[2 + 1].end == setting->initial[2].end)
+      {
+        struct _CSSOM_LexicalUnitRange colorRanges;
+
+        colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+
+        assert(colorSetting->nsubhashes == 0);
+
+        colorSetting->omit(color, &colorRanges);
+
+        _CSSOM_SET_RANGE(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
+          colorRanges.begin, colorRanges.end);
+      }
+    }
+    
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_PROPERTY, begin, end);
     _CSSOM_SET_RANGE(ranges[1], CSSOM_BORDER_TOP_WIDTH_PROPERTY,
       ranges[1].begin, ranges[1].end);

@@ -219,6 +219,16 @@ static int CSSPropertyValue_isInherit(const CSSOM_CSSPropertyValue *property) {
 
 
 
+int CSSOM_CSSPropertyValue__omitTrivial(const CSSOM_CSSPropertyValue *property,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  _CSSOM_SET_RANGE(ranges[0], property->hash, property->begin, property->end);
+  return 0;
+}
+
+
+
+
 static int testShorthand(const CSSOM_CSSPropertyValue *shorthand, size_t *size,
   int *isInherit)
 {
@@ -456,21 +466,11 @@ static int fetchRecursiveShorthand(
     property = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
       setting->subhashes[i]);
 
-    if (propertySetting->omit != NULL) {
-      rval = propertySetting->omit(property, propertyRanges);
-      if (rval != 0) return rval;
+    rval = propertySetting->omit(property, propertyRanges);
+    if (rval != 0) return rval;
 
-      nsubhashes = propertySetting->nsubhashes;
-    } else {
-      if (property == NULL) {
-        *size = 0;
-        return 0;
-      }
-      _CSSOM_SET_RANGE(propertyRanges[0], property->hash, property->begin,
-        property->end);
-
-      nsubhashes = 1;
-    }
+    nsubhashes = propertySetting->nsubhashes == 0 ? 1 :
+      propertySetting->nsubhashes;
 
     for (j = 0; j < nsubhashes; ++j) {
       if (propertyRanges[j].begin == NULL) break;
@@ -632,17 +632,17 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   size_t i;
   int rval;
   int emitted;
+  size_t nsubhashes;
 
   setting = CSSOM__propertySetting(property->cssom, property->hash);
-
-  if (setting->omit == NULL)
-    return LexicalUnitRange__emit(property->begin, property->end, out);
 
   rval = setting->omit(property, ranges);
   if (rval != 0) return rval;
 
+  nsubhashes = setting->nsubhashes == 0 ? 1 : setting->nsubhashes;
+
   emitted = 0;
-  for (i = 0; i < setting->nsubhashes; ++i) {
+  for (i = 0; i < nsubhashes; ++i) {
     if (ranges[i].begin == NULL) break;
 
     if (emitted) {
