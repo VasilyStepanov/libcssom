@@ -30,7 +30,6 @@ struct _CSSOM_CSSPropertyValue {
   size_t handles;
   const CSSOM *cssom;
   CSSOM_CSSStyleDeclarationValue *parentValues;
-  CSSOM_CSSPropertyValue *shorthand;
   int hash;
   const char *name;
   CSSOM_CSSPropertyData *data;
@@ -661,10 +660,9 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
 
 
 static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
-  CSSOM_CSSStyleDeclarationValue *parentValues,
-  CSSOM_CSSPropertyValue *shorthand, int hash, CSSOM_CSSPropertyData *data,
-  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
-  SAC_Boolean important)
+  CSSOM_CSSStyleDeclarationValue *parentValues, int hash,
+  CSSOM_CSSPropertyData *data, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, SAC_Boolean important)
 {
   CSSOM_CSSPropertyValue *property;
 
@@ -675,7 +673,6 @@ static CSSOM_CSSPropertyValue* CSSPropertyValue_alloc(const CSSOM *cssom,
   property->handles = 1;
   property->cssom = cssom;
   property->parentValues = parentValues;
-  property->shorthand = shorthand;
   property->hash = hash;
   property->name = CSSOM__propertySetting(cssom, hash)->name;
   property->data = data;
@@ -716,7 +713,7 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
     useData = data;
   }
 
-  shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL, ranges[0].hash,
+  shorthand = CSSPropertyValue_alloc(cssom, parentValues, ranges[0].hash,
     useData, ranges[0].begin, ranges[0].end, important);
   if (shorthand == NULL) {
     if (error != NULL) *error = -1;
@@ -734,8 +731,8 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
       useData = data;
     }
 
-    property = CSSPropertyValue_alloc(cssom, parentValues, shorthand,
-      ranges[i].hash, useData, ranges[i].begin, ranges[i].end, important);
+    property = CSSPropertyValue_alloc(cssom, parentValues, ranges[i].hash,
+      useData, ranges[i].begin, ranges[i].end, important);
     if (property == NULL) {
       if (error != NULL) *error = -1;
       return NULL;
@@ -809,8 +806,8 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__allocShorthand(
 {
   assert(CSSOM__propertySetting(cssom, hash)->nsubhashes != 0);
 
-  return CSSPropertyValue_alloc(cssom, parentValues, NULL, hash, NULL, NULL,
-    NULL, SAC_FALSE);
+  return CSSPropertyValue_alloc(cssom, parentValues, hash, NULL, NULL, NULL,
+    SAC_FALSE);
 }
 
 
@@ -820,7 +817,6 @@ void CSSOM_CSSPropertyValue_acquire(CSSOM_CSSPropertyValue *property) {
 
   ++property->handles;
   CSSOM_CSSStyleDeclarationValue_acquire(property->parentValues);
-  CSSOM_CSSPropertyValue_acquire(property->shorthand);
 }
 
 
@@ -831,7 +827,6 @@ void CSSOM_CSSPropertyValue_release(CSSOM_CSSPropertyValue *property) {
   assert(property->handles > 0);
   --property->handles;
   if (property->handles > 0) {
-    CSSOM_CSSPropertyValue_release(property->shorthand);
     CSSOM_CSSStyleDeclarationValue_release(property->parentValues);
     return;
   }
@@ -887,7 +882,6 @@ static void CSSPropertyValue_swap(
 {
   assert(lhs->cssom == rhs->cssom);
   assert(lhs->parentValues == rhs->parentValues);
-  SWAPP(lhs->shorthand, rhs->shorthand);
   SWAPS(lhs->hash, rhs->hash);
   SWAPP(lhs->name, rhs->name);
   SWAPP(lhs->data, rhs->data);
