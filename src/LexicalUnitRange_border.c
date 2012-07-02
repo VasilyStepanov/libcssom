@@ -274,6 +274,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
 
         _CSSOM_SET_RANGE(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
           colorRanges.begin, colorRanges.end);
+        ranges[3].owner = CSSOM_COLOR_PROPERTY;
       }
     }
     
@@ -282,26 +283,26 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
       ranges[1].begin, ranges[1].end);
     _CSSOM_SET_RANGE(ranges[2], CSSOM_BORDER_TOP_STYLE_PROPERTY,
       ranges[2].begin, ranges[2].end);
-    _CSSOM_SET_RANGE(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
-      ranges[3].begin, ranges[3].end);
+    _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
+      ranges[3].begin, ranges[3].end, ranges[3].owner);
     _CSSOM_SET_RANGE(ranges[4], CSSOM_BORDER_RIGHT_WIDTH_PROPERTY,
       ranges[1].begin, ranges[1].end);
     _CSSOM_SET_RANGE(ranges[5], CSSOM_BORDER_RIGHT_STYLE_PROPERTY,
       ranges[2].begin, ranges[2].end);
-    _CSSOM_SET_RANGE(ranges[6], CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
-      ranges[3].begin, ranges[3].end);
+    _CSSOM_SET_RANGE_EX(ranges[6], CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
+      ranges[3].begin, ranges[3].end, ranges[3].owner);
     _CSSOM_SET_RANGE(ranges[7], CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY,
       ranges[1].begin, ranges[1].end);
     _CSSOM_SET_RANGE(ranges[8], CSSOM_BORDER_BOTTOM_STYLE_PROPERTY,
       ranges[2].begin, ranges[2].end);
-    _CSSOM_SET_RANGE(ranges[9], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
-      ranges[3].begin, ranges[3].end);
+    _CSSOM_SET_RANGE_EX(ranges[9], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
+      ranges[3].begin, ranges[3].end, ranges[3].owner);
     _CSSOM_SET_RANGE(ranges[10], CSSOM_BORDER_LEFT_WIDTH_PROPERTY,
       ranges[1].begin, ranges[1].end);
     _CSSOM_SET_RANGE(ranges[11], CSSOM_BORDER_LEFT_STYLE_PROPERTY,
       ranges[2].begin, ranges[2].end);
-    _CSSOM_SET_RANGE(ranges[12], CSSOM_BORDER_LEFT_COLOR_PROPERTY,
-      ranges[3].begin, ranges[3].end);
+    _CSSOM_SET_RANGE_EX(ranges[12], CSSOM_BORDER_LEFT_COLOR_PROPERTY,
+      ranges[3].begin, ranges[3].end, ranges[3].owner);
   }
 
   return end;

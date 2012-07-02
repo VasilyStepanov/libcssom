@@ -33,7 +33,7 @@
 
 
 #define _CSSOM_INITIAL(initial) \
-  (initial), &(initial)[_CSSOM_ARSIZE(initial)]
+  (initial), &(initial)[_CSSOM_ARSIZE(initial)], -1
 
 
 

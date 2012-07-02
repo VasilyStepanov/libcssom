@@ -2045,7 +2045,7 @@ void initial() {
   assertEquals(std::string("red"), style.borderColor());
 
   style.setColor(NULL);
-  /* assertEquals(std::string("red"), style.borderColor()); */
+  assertEquals(std::string("red"), style.borderColor());
 }
 
 

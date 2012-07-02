@@ -446,19 +446,19 @@ static int fetchRecursiveShorthand(
   it = ranges;
   for (i = 0; i < setting->nsubhashes; ++i) {
     struct _CSSOM_LexicalUnitRange propertyRanges[_CSSOM_RANGES_CAPACITY] = {
-      { 0, NULL, NULL }, /*  0 */
-      { 0, NULL, NULL }, /*  1 */
-      { 0, NULL, NULL }, /*  2 */
-      { 0, NULL, NULL }, /*  3 */
-      { 0, NULL, NULL }, /*  4 */
-      { 0, NULL, NULL }, /*  5 */
-      { 0, NULL, NULL }, /*  6 */
-      { 0, NULL, NULL }, /*  7 */
-      { 0, NULL, NULL }, /*  8 */
-      { 0, NULL, NULL }, /*  9 */
-      { 0, NULL, NULL }, /* 10 */
-      { 0, NULL, NULL }, /* 11 */
-      { 0, NULL, NULL }  /* 12 */
+      { 0, NULL, NULL, -1 }, /*  0 */
+      { 0, NULL, NULL, -1 }, /*  1 */
+      { 0, NULL, NULL, -1 }, /*  2 */
+      { 0, NULL, NULL, -1 }, /*  3 */
+      { 0, NULL, NULL, -1 }, /*  4 */
+      { 0, NULL, NULL, -1 }, /*  5 */
+      { 0, NULL, NULL, -1 }, /*  6 */
+      { 0, NULL, NULL, -1 }, /*  7 */
+      { 0, NULL, NULL, -1 }, /*  8 */
+      { 0, NULL, NULL, -1 }, /*  9 */
+      { 0, NULL, NULL, -1 }, /* 10 */
+      { 0, NULL, NULL, -1 }, /* 11 */
+      { 0, NULL, NULL, -1 }  /* 12 */
     };
 
     propertySetting = CSSOM__propertySetting(cssom, setting->subhashes[i]);
@@ -576,19 +576,19 @@ int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
   struct _CSSOM_LexicalUnitRange *ranges)
 {
   struct _CSSOM_LexicalUnitRange _ranges[_CSSOM_RANGES_CAPACITY] = {
-    { 0, NULL, NULL }, /*  0 */
-    { 0, NULL, NULL }, /*  1 */
-    { 0, NULL, NULL }, /*  2 */
-    { 0, NULL, NULL }, /*  3 */
-    { 0, NULL, NULL }, /*  4 */
-    { 0, NULL, NULL }, /*  5 */
-    { 0, NULL, NULL }, /*  6 */
-    { 0, NULL, NULL }, /*  7 */
-    { 0, NULL, NULL }, /*  8 */
-    { 0, NULL, NULL }, /*  9 */
-    { 0, NULL, NULL }, /* 10 */
-    { 0, NULL, NULL }, /* 11 */
-    { 0, NULL, NULL }  /* 12 */
+    { 0, NULL, NULL, -1 }, /*  0 */
+    { 0, NULL, NULL, -1 }, /*  1 */
+    { 0, NULL, NULL, -1 }, /*  2 */
+    { 0, NULL, NULL, -1 }, /*  3 */
+    { 0, NULL, NULL, -1 }, /*  4 */
+    { 0, NULL, NULL, -1 }, /*  5 */
+    { 0, NULL, NULL, -1 }, /*  6 */
+    { 0, NULL, NULL, -1 }, /*  7 */
+    { 0, NULL, NULL, -1 }, /*  8 */
+    { 0, NULL, NULL, -1 }, /*  9 */
+    { 0, NULL, NULL, -1 }, /* 10 */
+    { 0, NULL, NULL, -1 }, /* 11 */
+    { 0, NULL, NULL, -1 }  /* 12 */
   };
 
   const struct _CSSOM_CSSPropertySetting *setting;
@@ -613,19 +613,19 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   FILE *out)
 {
   struct _CSSOM_LexicalUnitRange ranges[_CSSOM_RANGES_CAPACITY] = {
-    { 0, NULL, NULL }, /*  0 */
-    { 0, NULL, NULL }, /*  1 */
-    { 0, NULL, NULL }, /*  2 */
-    { 0, NULL, NULL }, /*  3 */
-    { 0, NULL, NULL }, /*  4 */
-    { 0, NULL, NULL }, /*  5 */
-    { 0, NULL, NULL }, /*  6 */
-    { 0, NULL, NULL }, /*  7 */
-    { 0, NULL, NULL }, /*  8 */
-    { 0, NULL, NULL }, /*  9 */
-    { 0, NULL, NULL }, /* 10 */
-    { 0, NULL, NULL }, /* 11 */
-    { 0, NULL, NULL }  /* 12 */
+    { 0, NULL, NULL, -1 }, /*  0 */
+    { 0, NULL, NULL, -1 }, /*  1 */
+    { 0, NULL, NULL, -1 }, /*  2 */
+    { 0, NULL, NULL, -1 }, /*  3 */
+    { 0, NULL, NULL, -1 }, /*  4 */
+    { 0, NULL, NULL, -1 }, /*  5 */
+    { 0, NULL, NULL, -1 }, /*  6 */
+    { 0, NULL, NULL, -1 }, /*  7 */
+    { 0, NULL, NULL, -1 }, /*  8 */
+    { 0, NULL, NULL, -1 }, /*  9 */
+    { 0, NULL, NULL, -1 }, /* 10 */
+    { 0, NULL, NULL, -1 }, /* 11 */
+    { 0, NULL, NULL, -1 }  /* 12 */
   };
 
   const struct _CSSOM_CSSPropertySetting *setting;
@@ -698,6 +698,8 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
 {
   CSSOM_CSSPropertyValue *shorthand;
   CSSOM_CSSPropertyValue *property;
+  CSSOM_CSSPropertyValue *owner;
+  CSSOM_CSSPropertyData *useData;
   size_t i;
   int rval;
 
@@ -706,8 +708,16 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
     return NULL;
   }
 
+  if (ranges[0].owner != -1) {
+    owner = CSSOM_CSSStyleDeclarationValue__fgetProperty(parentValues,
+      ranges[0].owner);
+    useData = owner != NULL ? owner->data : data;
+  } else {
+    useData = data;
+  }
+
   shorthand = CSSPropertyValue_alloc(cssom, parentValues, NULL, ranges[0].hash,
-    data, ranges[0].begin, ranges[0].end, important);
+    useData, ranges[0].begin, ranges[0].end, important);
   if (shorthand == NULL) {
     if (error != NULL) *error = -1;
     return NULL;
@@ -716,8 +726,16 @@ static CSSOM_CSSPropertyValue* assignProperties(const CSSOM *cssom,
   for (i = 1; i < size; ++i) {
     if (ranges[i].begin == NULL) continue;
 
+    if (ranges[i].owner != -1) {
+      owner = CSSOM_CSSStyleDeclarationValue__fgetProperty(parentValues,
+        ranges[i].owner);
+      useData = owner != NULL ? owner->data : data;
+    } else {
+      useData = data;
+    }
+
     property = CSSPropertyValue_alloc(cssom, parentValues, shorthand,
-      ranges[i].hash, data, ranges[i].begin, ranges[i].end, important);
+      ranges[i].hash, useData, ranges[i].begin, ranges[i].end, important);
     if (property == NULL) {
       if (error != NULL) *error = -1;
       return NULL;
@@ -742,19 +760,19 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__alloc(const CSSOM *cssom,
   CSSOM_CSSPropertyData *data, SAC_Boolean important, int *error)
 {
   struct _CSSOM_LexicalUnitRange ranges[_CSSOM_RANGES_CAPACITY] = {
-    { 0, NULL, NULL }, /*  0 */
-    { 0, NULL, NULL }, /*  1 */
-    { 0, NULL, NULL }, /*  2 */
-    { 0, NULL, NULL }, /*  3 */
-    { 0, NULL, NULL }, /*  4 */
-    { 0, NULL, NULL }, /*  5 */
-    { 0, NULL, NULL }, /*  6 */
-    { 0, NULL, NULL }, /*  7 */
-    { 0, NULL, NULL }, /*  8 */
-    { 0, NULL, NULL }, /*  9 */
-    { 0, NULL, NULL }, /* 10 */
-    { 0, NULL, NULL }, /* 11 */
-    { 0, NULL, NULL }  /* 12 */
+    { 0, NULL, NULL, -1 }, /*  0 */
+    { 0, NULL, NULL, -1 }, /*  1 */
+    { 0, NULL, NULL, -1 }, /*  2 */
+    { 0, NULL, NULL, -1 }, /*  3 */
+    { 0, NULL, NULL, -1 }, /*  4 */
+    { 0, NULL, NULL, -1 }, /*  5 */
+    { 0, NULL, NULL, -1 }, /*  6 */
+    { 0, NULL, NULL, -1 }, /*  7 */
+    { 0, NULL, NULL, -1 }, /*  8 */
+    { 0, NULL, NULL, -1 }, /*  9 */
+    { 0, NULL, NULL, -1 }, /* 10 */
+    { 0, NULL, NULL, -1 }, /* 11 */
+    { 0, NULL, NULL, -1 }  /* 12 */
   };
 
   const struct _CSSOM_CSSPropertySetting *setting;

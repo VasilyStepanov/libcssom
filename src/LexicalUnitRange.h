@@ -15,6 +15,7 @@ struct _CSSOM_LexicalUnitRange {
   int hash;
   const SAC_LexicalUnit **begin;
   const SAC_LexicalUnit **end;
+  int owner;
 };
 
 
@@ -24,6 +25,17 @@ struct _CSSOM_LexicalUnitRange {
     (range).hash = (hash_val); \
     (range).begin = (begin_val); \
     (range).end = (end_val); \
+    (range).owner = -1; \
+  } while (0)
+
+
+
+#define _CSSOM_SET_RANGE_EX(range, hash_val, begin_val, end_val, owner_val) \
+  do { \
+    (range).hash = (hash_val); \
+    (range).begin = (begin_val); \
+    (range).end = (end_val); \
+    (range).owner = (owner_val); \
   } while (0)
 
 
