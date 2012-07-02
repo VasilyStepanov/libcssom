@@ -235,8 +235,6 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
   struct _CSSOM_LexicalUnitRange *ranges)
 {
   const struct _CSSOM_CSSPropertySetting *setting;
-  const struct _CSSOM_CSSPropertySetting *colorSetting;
-  const CSSOM_CSSPropertyValue *color;
 
   static const _CSSOM_PropertyHandler handlers[3] = {
     borderTopWidthToken,
@@ -258,24 +256,25 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
   }
 
   if (ranges != NULL) {
+    const CSSOM_CSSPropertyValue *color;
+
     color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
       CSSOM_COLOR_PROPERTY);
-    if (color != NULL) {
-      if (ranges[2 + 1].begin == setting->initial[2].begin &&
-        ranges[2 + 1].end == setting->initial[2].end)
-      {
-        struct _CSSOM_LexicalUnitRange colorRanges;
+    if (color != NULL &&
+      ranges[2 + 1].begin == setting->initial[2].begin &&
+      ranges[2 + 1].end == setting->initial[2].end)
+    {
+      const struct _CSSOM_CSSPropertySetting *colorSetting;
+      struct _CSSOM_LexicalUnitRange colorRanges;
 
-        colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+      colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-        assert(colorSetting->nsubhashes == 0);
+      assert(colorSetting->nsubhashes == 0);
 
-        colorSetting->omit(color, &colorRanges);
+      colorSetting->omit(color, &colorRanges);
 
-        _CSSOM_SET_RANGE(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
-          colorRanges.begin, colorRanges.end);
-        ranges[3].owner = CSSOM_COLOR_PROPERTY;
-      }
+      _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
+        colorRanges.begin, colorRanges.end, CSSOM_COLOR_PROPERTY);
     }
     
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_PROPERTY, begin, end);
@@ -466,8 +465,30 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(const CSSOM *cssom,
     return begin;
   }
 
-  if (ranges != NULL)
+  if (ranges != NULL) {
+    const CSSOM_CSSPropertyValue *color;
+
+    color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
+      CSSOM_COLOR_PROPERTY);
+    if (color != NULL &&
+      ranges[2 + 1].begin == setting->initial[2].begin &&
+      ranges[2 + 1].end == setting->initial[2].end)
+    {
+      const struct _CSSOM_CSSPropertySetting *colorSetting;
+      struct _CSSOM_LexicalUnitRange colorRanges;
+
+      colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+
+      assert(colorSetting->nsubhashes == 0);
+
+      colorSetting->omit(color, &colorRanges);
+
+      _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_TOP_COLOR_PROPERTY,
+        colorRanges.begin, colorRanges.end, CSSOM_COLOR_PROPERTY);
+    }
+
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_TOP_PROPERTY, begin, end);
+  }
   return end;
 }
 
@@ -502,8 +523,30 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(const CSSOM *cssom,
     return begin;
   }
 
-  if (ranges != NULL)
+  if (ranges != NULL) {
+    const CSSOM_CSSPropertyValue *color;
+
+    color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
+      CSSOM_COLOR_PROPERTY);
+    if (color != NULL &&
+      ranges[2 + 1].begin == setting->initial[2].begin &&
+      ranges[2 + 1].end == setting->initial[2].end)
+    {
+      const struct _CSSOM_CSSPropertySetting *colorSetting;
+      struct _CSSOM_LexicalUnitRange colorRanges;
+
+      colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+
+      assert(colorSetting->nsubhashes == 0);
+
+      colorSetting->omit(color, &colorRanges);
+
+      _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_RIGHT_COLOR_PROPERTY,
+        colorRanges.begin, colorRanges.end, CSSOM_COLOR_PROPERTY);
+    }
+
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_RIGHT_PROPERTY, begin, end);
+  }
   return end;
 }
 
@@ -538,8 +581,30 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(const CSSOM *cssom,
     return begin;
   }
 
-  if (ranges != NULL)
+  if (ranges != NULL) {
+    const CSSOM_CSSPropertyValue *color;
+
+    color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
+      CSSOM_COLOR_PROPERTY);
+    if (color != NULL &&
+      ranges[2 + 1].begin == setting->initial[2].begin &&
+      ranges[2 + 1].end == setting->initial[2].end)
+    {
+      const struct _CSSOM_CSSPropertySetting *colorSetting;
+      struct _CSSOM_LexicalUnitRange colorRanges;
+
+      colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+
+      assert(colorSetting->nsubhashes == 0);
+
+      colorSetting->omit(color, &colorRanges);
+
+      _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_BOTTOM_COLOR_PROPERTY,
+        colorRanges.begin, colorRanges.end, CSSOM_COLOR_PROPERTY);
+    }
+
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_BOTTOM_PROPERTY, begin, end);
+  }
   return end;
 }
 
@@ -574,8 +639,30 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(const CSSOM *cssom,
     return begin;
   }
 
-  if (ranges != NULL)
+  if (ranges != NULL) {
+    const CSSOM_CSSPropertyValue *color;
+
+    color = CSSOM_CSSStyleDeclarationValue__fgetProperty(values,
+      CSSOM_COLOR_PROPERTY);
+    if (color != NULL &&
+      ranges[2 + 1].begin == setting->initial[2].begin &&
+      ranges[2 + 1].end == setting->initial[2].end)
+    {
+      const struct _CSSOM_CSSPropertySetting *colorSetting;
+      struct _CSSOM_LexicalUnitRange colorRanges;
+
+      colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
+
+      assert(colorSetting->nsubhashes == 0);
+
+      colorSetting->omit(color, &colorRanges);
+
+      _CSSOM_SET_RANGE_EX(ranges[3], CSSOM_BORDER_LEFT_COLOR_PROPERTY,
+        colorRanges.begin, colorRanges.end, CSSOM_COLOR_PROPERTY);
+    }
+
     _CSSOM_SET_RANGE(ranges[0], CSSOM_BORDER_LEFT_PROPERTY, begin, end);
+  }
   return end;
 }
 

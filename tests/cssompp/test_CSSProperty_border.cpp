@@ -2045,6 +2045,34 @@ void initial() {
   assertEquals(std::string("red"), style.borderColor());
 
   style.setColor(NULL);
+  style.setColor("red");
+  style.setBorderTop(NULL);
+  style.setBorderTop("dotted");
+  assertEquals(std::string("dotted red"), style.borderTop());
+  assertEquals(std::string("red"), style.borderTopColor());
+
+  style.setColor(NULL);
+  style.setColor("red");
+  style.setBorderRight(NULL);
+  style.setBorderRight("dotted");
+  assertEquals(std::string("dotted red"), style.borderRight());
+  assertEquals(std::string("red"), style.borderRightColor());
+
+  style.setColor(NULL);
+  style.setColor("red");
+  style.setBorderBottom(NULL);
+  style.setBorderBottom("dotted");
+  assertEquals(std::string("dotted red"), style.borderBottom());
+  assertEquals(std::string("red"), style.borderBottomColor());
+
+  style.setColor(NULL);
+  style.setColor("red");
+  style.setBorderLeft(NULL);
+  style.setBorderLeft("dotted");
+  assertEquals(std::string("dotted red"), style.borderLeft());
+  assertEquals(std::string("red"), style.borderLeftColor());
+
+  style.setColor(NULL);
   assertEquals(std::string("red"), style.borderColor());
 }
 
