@@ -11,6 +11,7 @@
 #include "test_CSSProperty_clear.hpp"
 #include "test_CSSProperty_clip.hpp"
 #include "test_CSSProperty_color.hpp"
+#include "test_CSSProperty_content.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -45,6 +46,7 @@ int main() {
   test::cssPropertyClear();
   test::cssPropertyClip();
   test::cssPropertyColor();
+  test::cssPropertyContent();
   test::selector();
   return 0;
 }

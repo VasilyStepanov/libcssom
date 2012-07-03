@@ -171,6 +171,9 @@ class CSSStyleDeclaration {
     const char * color() const;
     void setColor(const char * color);
 
+    const char * content() const;
+    void setContent(const char * content);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

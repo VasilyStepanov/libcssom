@@ -345,6 +345,14 @@ void CSSOM_CSSStyleDeclaration_setColor(CSSOM_CSSStyleDeclaration * cssStyleDecl
 
 
 
+const char * CSSOM_CSSStyleDeclaration_content(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setContent(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * content);
+
+
+
 #ifdef __cplusplus
 }
 #endif

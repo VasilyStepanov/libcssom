@@ -27,11 +27,15 @@ int CSSOM_LexicalUnit_isNonNegativeLength(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isColor(const SAC_LexicalUnit *value);
 
-int CSSOM_LexicalUnit_isUrl(const SAC_LexicalUnit *value);
+int CSSOM_LexicalUnit_isUri(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value);
+
+int CSSOM_LexicalUnit_isString(const SAC_LexicalUnit *value);
+
+int CSSOM_LexicalUnit_isCounter(const SAC_LexicalUnit *value);
 
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_genericShorthand(
   const CSSOM *cssom, const CSSOM_CSSStyleDeclarationValue *values,

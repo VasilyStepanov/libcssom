@@ -557,4 +557,16 @@ void CSSStyleDeclaration::setColor(const char * color) {
 
 
 
+const char * CSSStyleDeclaration::content() const {
+  return CSSOM_CSSStyleDeclaration_content(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setContent(const char * content) {
+  CSSOM_CSSStyleDeclaration_setContent(_impl, content);
+}
+
+
+
 } // cssom

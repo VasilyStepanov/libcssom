@@ -59,6 +59,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       LexicalUnitRange_clear.c \
                       LexicalUnitRange_clip.c \
                       LexicalUnitRange_color.c \
+                      LexicalUnitRange_content.c \
                       LexicalUnitRange_utility.c \
                       MediaList.c \
                       MediaQuery.c \

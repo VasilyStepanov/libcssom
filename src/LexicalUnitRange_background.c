@@ -129,7 +129,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_backgroundColor(
 static const SAC_LexicalUnit** backgroundImage(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
-  if (CSSOM_LexicalUnit_isUrl(begin[0])) {
+  if (CSSOM_LexicalUnit_isUri(begin[0])) {
     return &begin[1];
   } else if (begin[0]->lexicalUnitType == SAC_IDENT) {
     if (strcmp("none", begin[0]->desc.ident) == 0) return &begin[1];

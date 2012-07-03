@@ -869,3 +869,20 @@ void CSSOM_CSSStyleDeclaration_setColor(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_COLOR_PROPERTY, color);
 }
+
+
+const char* CSSOM_CSSStyleDeclaration_content(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CONTENT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setContent(
+  CSSOM_CSSStyleDeclaration *style, const char *content)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CONTENT_PROPERTY, content);
+}

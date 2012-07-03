@@ -142,7 +142,7 @@ int CSSOM_LexicalUnit_isColor(const SAC_LexicalUnit *value) {
 
 
 
-int CSSOM_LexicalUnit_isUrl(const SAC_LexicalUnit *value) {
+int CSSOM_LexicalUnit_isUri(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_URI) return 1;
   return 0;
 }
@@ -156,7 +156,7 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
 
 
 
-static int LexicalUnitRange_isShapeArg(const SAC_LexicalUnit *value) {
+static int LexicalUnit_isShapeArg(const SAC_LexicalUnit *value) {
   if (CSSOM_LexicalUnit_isLength(value)) {
     return 1;
   } else if (value->lexicalUnitType == SAC_IDENT) {
@@ -170,7 +170,7 @@ static int LexicalUnitRange_isShapeArg(const SAC_LexicalUnit *value) {
 int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
   if (value->lexicalUnitType == SAC_RECT_FUNCTION) {
     if (value->desc.function.parameters[0] == NULL) return 0;
-    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[0]))
+    if (!LexicalUnit_isShapeArg(value->desc.function.parameters[0]))
       return 0;
 
     if (value->desc.function.parameters[1] == NULL) return 0;
@@ -181,7 +181,7 @@ int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
     }
 
     if (value->desc.function.parameters[2] == NULL) return 0;
-    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[2]))
+    if (!LexicalUnit_isShapeArg(value->desc.function.parameters[2]))
       return 0;
 
     if (value->desc.function.parameters[3] == NULL) return 0;
@@ -192,7 +192,7 @@ int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
     }
 
     if (value->desc.function.parameters[4] == NULL) return 0;
-    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[4]))
+    if (!LexicalUnit_isShapeArg(value->desc.function.parameters[4]))
       return 0;
 
     if (value->desc.function.parameters[5] == NULL) return 0;
@@ -203,10 +203,66 @@ int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value) {
     }
 
     if (value->desc.function.parameters[6] == NULL) return 0;
-    if (!LexicalUnitRange_isShapeArg(value->desc.function.parameters[6]))
+    if (!LexicalUnit_isShapeArg(value->desc.function.parameters[6]))
       return 0;
 
     if (value->desc.function.parameters[7] != NULL) return 0;
+
+    return 1;
+  }
+  return 0;
+}
+
+
+
+int CSSOM_LexicalUnit_isString(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_STRING_VALUE) return 1;
+  return 0;
+}
+
+
+
+static int LexicalUnit_isListStyleType(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("disc", value->desc.ident) == 0) return 1;
+    if (strcmp("circle", value->desc.ident) == 0) return 1;
+    if (strcmp("square", value->desc.ident) == 0) return 1;
+    if (strcmp("decimal", value->desc.ident) == 0) return 1;
+    if (strcmp("decimal-leading-zero", value->desc.ident) == 0) return 1;
+    if (strcmp("lower-roman", value->desc.ident) == 0) return 1;
+    if (strcmp("upper-roman", value->desc.ident) == 0) return 1;
+    if (strcmp("lower-greek", value->desc.ident) == 0) return 1;
+    if (strcmp("lower-latin", value->desc.ident) == 0) return 1;
+    if (strcmp("upper-latin", value->desc.ident) == 0) return 1;
+    if (strcmp("armenian", value->desc.ident) == 0) return 1;
+    if (strcmp("georgian", value->desc.ident) == 0) return 1;
+    if (strcmp("lower-alpha", value->desc.ident) == 0) return 1;
+    if (strcmp("upper-alpha", value->desc.ident) == 0) return 1;
+    if (strcmp("none", value->desc.ident) == 0) return 1;
+  }
+  return 0;
+}
+
+
+
+int CSSOM_LexicalUnit_isCounter(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_COUNTER_FUNCTION) {
+    if (value->desc.function.parameters[0] == NULL) return 0;
+    if (value->desc.function.parameters[0]->lexicalUnitType != SAC_IDENT)
+      return 0;
+
+    if (value->desc.function.parameters[1] == NULL) return 1;
+    if (value->desc.function.parameters[1]->lexicalUnitType !=
+      SAC_OPERATOR_COMMA)
+    {
+      return 0;
+    }
+
+    if (value->desc.function.parameters[2] == NULL) return 0;
+    if (!LexicalUnit_isListStyleType(value->desc.function.parameters[2]))
+      return 0;
+
+    if (value->desc.function.parameters[3] != NULL) return 0;
 
     return 1;
   }
@@ -235,8 +291,8 @@ static const SAC_LexicalUnit** LexicalUnitRange_walk(
 
     marker[i] = 1;
 
-    if (LexicalUnitRange_walk(cssom, values, subhashes, handlers, ranges, marker,
-      size, tail, end) == end)
+    if (LexicalUnitRange_walk(cssom, values, subhashes, handlers, ranges,
+      marker, size, tail, end) == end)
     {
       return end;
     }
