@@ -569,4 +569,28 @@ void CSSStyleDeclaration::setContent(const char * content) {
 
 
 
+const char * CSSStyleDeclaration::counterIncrement() const {
+  return CSSOM_CSSStyleDeclaration_counterIncrement(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCounterIncrement(const char * counterIncrement) {
+  CSSOM_CSSStyleDeclaration_setCounterIncrement(_impl, counterIncrement);
+}
+
+
+
+const char * CSSStyleDeclaration::counterReset() const {
+  return CSSOM_CSSStyleDeclaration_counterReset(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCounterReset(const char * counterReset) {
+  CSSOM_CSSStyleDeclaration_setCounterReset(_impl, counterReset);
+}
+
+
+
 } // cssom

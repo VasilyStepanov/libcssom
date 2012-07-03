@@ -871,6 +871,7 @@ void CSSOM_CSSStyleDeclaration_setColor(
 }
 
 
+
 const char* CSSOM_CSSStyleDeclaration_content(
   const CSSOM_CSSStyleDeclaration *style)
 {
@@ -885,4 +886,40 @@ void CSSOM_CSSStyleDeclaration_setContent(
 {
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CONTENT_PROPERTY, content);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_counterIncrement(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_COUNTER_INCREMENT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCounterIncrement(
+  CSSOM_CSSStyleDeclaration *style, const char *counterIncrement)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_COUNTER_INCREMENT_PROPERTY, counterIncrement);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_counterReset(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_COUNTER_RESET_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCounterReset(
+  CSSOM_CSSStyleDeclaration *style, const char *counterReset)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_COUNTER_RESET_PROPERTY, counterReset);
 }

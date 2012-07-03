@@ -353,6 +353,22 @@ void CSSOM_CSSStyleDeclaration_setContent(CSSOM_CSSStyleDeclaration * cssStyleDe
 
 
 
+const char * CSSOM_CSSStyleDeclaration_counterIncrement(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCounterIncrement(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * counterIncrement);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_counterReset(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCounterReset(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * counterReset);
+
+
+
 #ifdef __cplusplus
 }
 #endif

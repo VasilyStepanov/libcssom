@@ -50,9 +50,9 @@ interface CSSStyleDeclaration {
            attribute DOMString? clip;
            attribute DOMString? color;
            attribute DOMString? content;
-  /*
            attribute DOMString? counterIncrement;
            attribute DOMString? counterReset;
+  /*
            attribute DOMString? cue;
            attribute DOMString? cueAfter;
            attribute DOMString? cueBefore;

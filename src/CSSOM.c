@@ -15,6 +15,7 @@
 #include "LexicalUnitRange_clip.h"
 #include "LexicalUnitRange_color.h"
 #include "LexicalUnitRange_content.h"
+#include "LexicalUnitRange_counter.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -458,18 +459,18 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     CSSOM_LexicalUnitRange_content,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_COUNTER_INCREMENT_PROPERTY */
-  { "counter",
+  { "counter-increment",
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_counterIncrement,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_COUNTER_RESET_PROPERTY */
   { "counter-reset",
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_counterReset,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CUE_PROPERTY */
   { "cue",

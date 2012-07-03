@@ -174,6 +174,12 @@ class CSSStyleDeclaration {
     const char * content() const;
     void setContent(const char * content);
 
+    const char * counterIncrement() const;
+    void setCounterIncrement(const char * counterIncrement);
+
+    const char * counterReset() const;
+    void setCounterReset(const char * counterReset);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };
