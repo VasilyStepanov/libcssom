@@ -195,6 +195,9 @@ class CSSStyleDeclaration {
     const char * direction() const;
     void setDirection(const char * direction);
 
+    const char * display() const;
+    void setDisplay(const char * display);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

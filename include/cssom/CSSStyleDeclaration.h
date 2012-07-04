@@ -409,6 +409,14 @@ void CSSOM_CSSStyleDeclaration_setDirection(CSSOM_CSSStyleDeclaration * cssStyle
 
 
 
+const char * CSSOM_CSSStyleDeclaration_display(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setDisplay(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * display);
+
+
+
 #ifdef __cplusplus
 }
 #endif

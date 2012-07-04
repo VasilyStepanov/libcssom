@@ -653,4 +653,16 @@ void CSSStyleDeclaration::setDirection(const char * direction) {
 
 
 
+const char * CSSStyleDeclaration::display() const {
+  return CSSOM_CSSStyleDeclaration_display(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setDisplay(const char * display) {
+  CSSOM_CSSStyleDeclaration_setDisplay(_impl, display);
+}
+
+
+
 } // cssom

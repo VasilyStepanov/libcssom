@@ -1013,3 +1013,21 @@ void CSSOM_CSSStyleDeclaration_setDirection(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_DIRECTION_PROPERTY, direction);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_display(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_DISPLAY_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setDisplay(
+  CSSOM_CSSStyleDeclaration *style, const char *display)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_DISPLAY_PROPERTY, display);
+}
