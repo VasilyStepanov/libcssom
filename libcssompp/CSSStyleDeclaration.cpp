@@ -665,4 +665,16 @@ void CSSStyleDeclaration::setDisplay(const char * display) {
 
 
 
+const char * CSSStyleDeclaration::elevation() const {
+  return CSSOM_CSSStyleDeclaration_elevation(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setElevation(const char * elevation) {
+  CSSOM_CSSStyleDeclaration_setElevation(_impl, elevation);
+}
+
+
+
 } // cssom

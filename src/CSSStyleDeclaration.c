@@ -1031,3 +1031,21 @@ void CSSOM_CSSStyleDeclaration_setDisplay(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_DISPLAY_PROPERTY, display);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_elevation(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_ELEVATION_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setElevation(
+  CSSOM_CSSStyleDeclaration *style, const char *elevation)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_ELEVATION_PROPERTY, elevation);
+}

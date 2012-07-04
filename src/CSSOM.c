@@ -20,6 +20,7 @@
 #include "LexicalUnitRange_cursor.h"
 #include "LexicalUnitRange_direction.h"
 #include "LexicalUnitRange_display.h"
+#include "LexicalUnitRange_elevation.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -532,7 +533,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_elevation,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_EMPTY_CELLS_PROPERTY */
   { "empty-cells",

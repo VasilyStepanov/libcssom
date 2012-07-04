@@ -417,6 +417,14 @@ void CSSOM_CSSStyleDeclaration_setDisplay(CSSOM_CSSStyleDeclaration * cssStyleDe
 
 
 
+const char * CSSOM_CSSStyleDeclaration_elevation(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setElevation(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * elevation);
+
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -198,6 +198,9 @@ class CSSStyleDeclaration {
     const char * display() const;
     void setDisplay(const char * display);
 
+    const char * elevation() const;
+    void setElevation(const char * elevation);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

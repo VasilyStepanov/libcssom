@@ -17,6 +17,7 @@
 #include "test_CSSProperty_cursor.hpp"
 #include "test_CSSProperty_direction.hpp"
 #include "test_CSSProperty_display.hpp"
+#include "test_CSSProperty_elevation.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -57,6 +58,7 @@ int main() {
   test::cssPropertyCursor();
   test::cssPropertyDirection();
   test::cssPropertyDisplay();
+  test::cssPropertyElevation();
   test::selector();
   return 0;
 }
