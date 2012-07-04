@@ -641,4 +641,16 @@ void CSSStyleDeclaration::setCursor(const char * cursor) {
 
 
 
+const char * CSSStyleDeclaration::direction() const {
+  return CSSOM_CSSStyleDeclaration_direction(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setDirection(const char * direction) {
+  CSSOM_CSSStyleDeclaration_setDirection(_impl, direction);
+}
+
+
+
 } // cssom

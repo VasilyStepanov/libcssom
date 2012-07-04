@@ -995,3 +995,21 @@ void CSSOM_CSSStyleDeclaration_setCursor(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CURSOR_PROPERTY, cursor);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_direction(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_DIRECTION_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setDirection(
+  CSSOM_CSSStyleDeclaration *style, const char *direction)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_DIRECTION_PROPERTY, direction);
+}

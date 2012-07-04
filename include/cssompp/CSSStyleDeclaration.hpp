@@ -192,6 +192,9 @@ class CSSStyleDeclaration {
     const char * cursor() const;
     void setCursor(const char * cursor);
 
+    const char * direction() const;
+    void setDirection(const char * direction);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

@@ -18,6 +18,7 @@
 #include "LexicalUnitRange_counter.h"
 #include "LexicalUnitRange_cue.h"
 #include "LexicalUnitRange_cursor.h"
+#include "LexicalUnitRange_direction.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -516,7 +517,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_direction,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_DISPLAY_PROPERTY */
   { "display",

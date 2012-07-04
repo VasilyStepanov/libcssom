@@ -56,8 +56,8 @@ interface CSSStyleDeclaration {
            attribute DOMString? cueAfter;
            attribute DOMString? cueBefore;
            attribute DOMString? cursor;
-  /*
            attribute DOMString? direction;
+  /*
            attribute DOMString? display;
            attribute DOMString? elevation;
            attribute DOMString? emptyCells;

@@ -401,6 +401,14 @@ void CSSOM_CSSStyleDeclaration_setCursor(CSSOM_CSSStyleDeclaration * cssStyleDec
 
 
 
+const char * CSSOM_CSSStyleDeclaration_direction(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setDirection(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * direction);
+
+
+
 #ifdef __cplusplus
 }
 #endif
