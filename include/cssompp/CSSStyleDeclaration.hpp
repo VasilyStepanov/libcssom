@@ -201,6 +201,9 @@ class CSSStyleDeclaration {
     const char * elevation() const;
     void setElevation(const char * elevation);
 
+    const char * emptyCells() const;
+    void setEmptyCells(const char * emptyCells);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

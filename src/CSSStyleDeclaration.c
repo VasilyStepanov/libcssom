@@ -1049,3 +1049,21 @@ void CSSOM_CSSStyleDeclaration_setElevation(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_ELEVATION_PROPERTY, elevation);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_emptyCells(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_EMPTY_CELLS_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setEmptyCells(
+  CSSOM_CSSStyleDeclaration *style, const char *emptyCells)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_EMPTY_CELLS_PROPERTY, emptyCells);
+}

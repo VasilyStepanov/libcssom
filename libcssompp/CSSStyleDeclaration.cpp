@@ -677,4 +677,16 @@ void CSSStyleDeclaration::setElevation(const char * elevation) {
 
 
 
+const char * CSSStyleDeclaration::emptyCells() const {
+  return CSSOM_CSSStyleDeclaration_emptyCells(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setEmptyCells(const char * emptyCells) {
+  CSSOM_CSSStyleDeclaration_setEmptyCells(_impl, emptyCells);
+}
+
+
+
 } // cssom

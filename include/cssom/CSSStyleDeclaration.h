@@ -425,6 +425,14 @@ void CSSOM_CSSStyleDeclaration_setElevation(CSSOM_CSSStyleDeclaration * cssStyle
 
 
 
+const char * CSSOM_CSSStyleDeclaration_emptyCells(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setEmptyCells(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * emptyCells);
+
+
+
 #ifdef __cplusplus
 }
 #endif
