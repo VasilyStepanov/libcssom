@@ -60,8 +60,8 @@ interface CSSStyleDeclaration {
            attribute DOMString? display;
            attribute DOMString? elevation;
            attribute DOMString? emptyCells;
-  /*
            attribute DOMString? cssFloat;
+  /*
            attribute DOMString? font;
            attribute DOMString? fontFamily;
            attribute DOMString? fontSize;

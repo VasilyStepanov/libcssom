@@ -1067,3 +1067,21 @@ void CSSOM_CSSStyleDeclaration_setEmptyCells(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_EMPTY_CELLS_PROPERTY, emptyCells);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cssFloat(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FLOAT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCSSFloat(
+  CSSOM_CSSStyleDeclaration *style, const char *cssFloat)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FLOAT_PROPERTY, cssFloat);
+}

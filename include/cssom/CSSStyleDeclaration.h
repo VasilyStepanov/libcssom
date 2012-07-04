@@ -433,6 +433,14 @@ void CSSOM_CSSStyleDeclaration_setEmptyCells(CSSOM_CSSStyleDeclaration * cssStyl
 
 
 
+const char * CSSOM_CSSStyleDeclaration_cssFloat(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCSSFloat(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cssFloat);
+
+
+
 #ifdef __cplusplus
 }
 #endif

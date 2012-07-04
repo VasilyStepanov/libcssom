@@ -204,6 +204,9 @@ class CSSStyleDeclaration {
     const char * emptyCells() const;
     void setEmptyCells(const char * emptyCells);
 
+    const char * cssFloat() const;
+    void setCSSFloat(const char * cssFloat);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

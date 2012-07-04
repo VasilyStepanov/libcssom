@@ -689,4 +689,16 @@ void CSSStyleDeclaration::setEmptyCells(const char * emptyCells) {
 
 
 
+const char * CSSStyleDeclaration::cssFloat() const {
+  return CSSOM_CSSStyleDeclaration_cssFloat(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCSSFloat(const char * cssFloat) {
+  CSSOM_CSSStyleDeclaration_setCSSFloat(_impl, cssFloat);
+}
+
+
+
 } // cssom

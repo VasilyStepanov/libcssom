@@ -22,6 +22,7 @@
 #include "LexicalUnitRange_display.h"
 #include "LexicalUnitRange_elevation.h"
 #include "LexicalUnitRange_emptyCells.h"
+#include "LexicalUnitRange_float.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -548,7 +549,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_float,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_PROPERTY */
   { "font",
