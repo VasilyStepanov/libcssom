@@ -977,3 +977,21 @@ void CSSOM_CSSStyleDeclaration_setCueBefore(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_CUE_BEFORE_PROPERTY, cueBefore);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cursor(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CURSOR_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCursor(
+  CSSOM_CSSStyleDeclaration *style, const char *cursor)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CURSOR_PROPERTY, cursor);
+}

@@ -629,4 +629,16 @@ void CSSStyleDeclaration::setCueBefore(const char * cueBefore) {
 
 
 
+const char * CSSStyleDeclaration::cursor() const {
+  return CSSOM_CSSStyleDeclaration_cursor(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCursor(const char * cursor) {
+  CSSOM_CSSStyleDeclaration_setCursor(_impl, cursor);
+}
+
+
+
 } // cssom

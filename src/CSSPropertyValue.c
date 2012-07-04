@@ -201,7 +201,9 @@ static int LexicalUnitRange__emit(const SAC_LexicalUnit **begin,
   if (it != end) {
     if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
     while (++it != end) {
-      if (fprintf(out, " ") < 0) return 1;
+      if ((**it).lexicalUnitType != SAC_OPERATOR_COMMA) {
+        if (fprintf(out, " ") < 0) return 1;
+      }
       if (CSSOM_CSSEmitter_lexicalUnit(out, *it) != 0) return 1;
     }
   }

@@ -189,6 +189,9 @@ class CSSStyleDeclaration {
     const char * cueBefore() const;
     void setCueBefore(const char * cueBefore);
 
+    const char * cursor() const;
+    void setCursor(const char * cursor);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

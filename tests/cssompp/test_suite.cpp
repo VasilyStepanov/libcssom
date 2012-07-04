@@ -14,6 +14,7 @@
 #include "test_CSSProperty_content.hpp"
 #include "test_CSSProperty_counter.hpp"
 #include "test_CSSProperty_cue.hpp"
+#include "test_CSSProperty_cursor.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -51,6 +52,7 @@ int main() {
   test::cssPropertyContent();
   test::cssPropertyCounter();
   test::cssPropertyCue();
+  test::cssPropertyCursor();
   test::selector();
   return 0;
 }

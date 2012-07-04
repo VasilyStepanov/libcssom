@@ -393,6 +393,14 @@ void CSSOM_CSSStyleDeclaration_setCueBefore(CSSOM_CSSStyleDeclaration * cssStyle
 
 
 
+const char * CSSOM_CSSStyleDeclaration_cursor(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCursor(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cursor);
+
+
+
 #ifdef __cplusplus
 }
 #endif
