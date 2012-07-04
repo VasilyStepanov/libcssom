@@ -16,6 +16,7 @@
 #include "LexicalUnitRange_color.h"
 #include "LexicalUnitRange_content.h"
 #include "LexicalUnitRange_counter.h"
+#include "LexicalUnitRange_cue.h"
 #include "CSSRule.h"
 #include "CSSStyleRule.h"
 #include "CSSStyleDeclaration.h"
@@ -209,6 +210,15 @@ borderLeftInitial[_CSSOM_ARSIZE(borderLeftSubhashes)] = {
 };
 
 
+
+/**
+ * cue
+ */
+
+static const int cueSubhashes[] = {
+  CSSOM_CUE_BEFORE_PROPERTY,
+  CSSOM_CUE_AFTER_PROPERTY
+};
 
 
 
@@ -474,24 +484,24 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CUE_PROPERTY */
   { "cue",
+    cueSubhashes,
     NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    &CSSOM_CSSPropertyValue__omitTrivial },
+    _CSSOM_ARSIZE(cueSubhashes),
+    CSSOM_LexicalUnitRange_cue,
+    &CSSOM_CSSPropertyValue__omitLinearShorthand },
   /* CSSOM_CUE_AFTER_PROPERTY */
   { "cue-after",
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_cueAfter,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CUE_BEFORE_PROPERTY */
   { "cue-before",
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_cueBefore,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CURSOR_PROPERTY */
   { "cursor",

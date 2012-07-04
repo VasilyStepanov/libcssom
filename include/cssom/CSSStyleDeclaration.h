@@ -369,6 +369,30 @@ void CSSOM_CSSStyleDeclaration_setCounterReset(CSSOM_CSSStyleDeclaration * cssSt
 
 
 
+const char * CSSOM_CSSStyleDeclaration_cue(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCue(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cue);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_cueAfter(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCueAfter(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cueAfter);
+
+
+
+const char * CSSOM_CSSStyleDeclaration_cueBefore(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setCueBefore(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * cueBefore);
+
+
+
 #ifdef __cplusplus
 }
 #endif

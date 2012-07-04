@@ -370,10 +370,6 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
 
 
 
-  /**
-   * Imposible shorthand
-   */
-
   if (!(rightleft && topbottom && topright &&
     CSSPropertyValue_isInherit(top) &&
     CSSPropertyValue_isInherit(right) &&
@@ -402,9 +398,11 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   if (rightleft) {
     if (topbottom) {
       if (topright) {
-        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin,
+          top->end);
       } else {
-        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
+        _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin,
+          top->end);
         _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin,
           right->end);
       }
@@ -417,10 +415,78 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
     }
   } else {
     _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], top->begin, top->end);
-    _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin, right->end);
+    _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], right->begin,
+      right->end);
     _CSSOM_SET_RANGE(ranges[2], setting->subhashes[2], bottom->begin,
       bottom->end);
     _CSSOM_SET_RANGE(ranges[3], setting->subhashes[3], left->begin, left->end);
+  }
+
+  return 0;
+}
+
+
+
+int CSSOM_CSSPropertyValue__omitLinearShorthand(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+  CSSOM_CSSPropertyValue *before;
+  CSSOM_CSSPropertyValue *after;
+  size_t size;
+  const SAC_LexicalUnit **rit;
+  const SAC_LexicalUnit **wit;
+  const SAC_LexicalUnit **holder;
+  int beforeafter;
+  int rval;
+
+  setting = CSSOM__propertySetting(shorthand->cssom, shorthand->hash);
+
+  before = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    shorthand->parentValues, setting->subhashes[0]);
+  after = CSSOM_CSSStyleDeclarationValue__fgetProperty(
+    shorthand->parentValues, setting->subhashes[1]);
+
+
+
+  /**
+   * Imposible shorthand
+   */
+
+  if (before == NULL || after == NULL) return 0;
+
+  beforeafter = CSSPropertyValue_eq(before, after);
+
+
+
+  if (!(beforeafter &&
+    CSSPropertyValue_isInherit(before) &&
+    CSSPropertyValue_isInherit(after)))
+  {
+    size = 0;
+    size += before->end - before->begin;
+    size += after->end - after->begin;
+    holder = (const SAC_LexicalUnit **)CSSOM_malloc(
+      sizeof(const SAC_LexicalUnit*) * size);
+    if (holder == NULL) return -1;
+    wit = holder;
+    for (rit = before->begin; rit != before->end; ++rit, ++wit) *wit = *rit;
+    for (rit = after->begin; rit != after->end; ++rit, ++wit) *wit = *rit;
+    rval = setting->handler(shorthand->cssom, shorthand->parentValues, holder,
+      wit, NULL) == wit;
+    CSSOM_free(holder);
+    if (!rval) return 0;
+  }
+
+  if (beforeafter) {
+    _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], before->begin,
+      before->end);
+  } else {
+    _CSSOM_SET_RANGE(ranges[0], setting->subhashes[0], before->begin,
+      before->end);
+    _CSSOM_SET_RANGE(ranges[1], setting->subhashes[1], after->begin,
+      after->end);
   }
 
   return 0;

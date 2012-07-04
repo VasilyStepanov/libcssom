@@ -426,6 +426,48 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
 
 
 
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_linearShorthand(
+  const CSSOM *cssom, const CSSOM_CSSStyleDeclarationValue *values,
+  const int *subhashes, _CSSOM_PropertyHandler handler,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  switch (end - begin) {
+    case 1:
+      if (!CSSOM_LexicalUnit_isInherit(begin[0]) && handler(cssom, values,
+        begin, end, NULL) != end)
+      {
+        return begin;
+      }
+
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subhashes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subhashes[1], &begin[0], &begin[1]);
+      }
+
+      break;
+    case 2:
+      if (handler(cssom, values, &begin[0], &begin[1], NULL) != &begin[1] ||
+        handler(cssom, values, &begin[1], &begin[2], NULL) != &begin[2])
+      {
+        return begin;
+      }
+
+      if (ranges != NULL) {
+        _CSSOM_SET_RANGE(ranges[0], subhashes[0], &begin[0], &begin[1]);
+        _CSSOM_SET_RANGE(ranges[1], subhashes[1], &begin[1], &begin[2]);
+      }
+
+      break;
+    default:
+      return begin;
+  }
+
+  return end;
+}
+
+
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(
   const CSSOM *cssom CSSOM_UNUSED,
   const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,

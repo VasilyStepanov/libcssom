@@ -923,3 +923,57 @@ void CSSOM_CSSStyleDeclaration_setCounterReset(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_COUNTER_RESET_PROPERTY, counterReset);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cue(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CUE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCue(
+  CSSOM_CSSStyleDeclaration *style, const char *cue)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CUE_PROPERTY, cue);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cueAfter(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CUE_AFTER_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCueAfter(
+  CSSOM_CSSStyleDeclaration *style, const char *cueAfter)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CUE_AFTER_PROPERTY, cueAfter);
+}
+
+
+
+const char* CSSOM_CSSStyleDeclaration_cueBefore(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_CUE_BEFORE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setCueBefore(
+  CSSOM_CSSStyleDeclaration *style, const char *cueBefore)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_CUE_BEFORE_PROPERTY, cueBefore);
+}

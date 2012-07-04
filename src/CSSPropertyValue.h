@@ -43,6 +43,10 @@ int CSSOM_CSSPropertyValue__omitBoxShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *ranges);
 
+int CSSOM_CSSPropertyValue__omitLinearShorthand(
+  const CSSOM_CSSPropertyValue *shorthand,
+  struct _CSSOM_LexicalUnitRange *ranges);
+
 int CSSOM_CSSPropertyValue__omitRecursiveShorthand(
   const CSSOM_CSSPropertyValue *shorthand,
   struct _CSSOM_LexicalUnitRange *ranges);

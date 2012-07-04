@@ -49,6 +49,12 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_boxShorthand(const CSSOM *cssom,
   _CSSOM_PropertyHandler handler, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
 
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_linearShorthand(
+  const CSSOM *cssom, const CSSOM_CSSStyleDeclarationValue *values,
+  const int *subhashes, _CSSOM_PropertyHandler handler,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges);
+
 const SAC_LexicalUnit** CSSOM_LexicalUnitRange_whatever(const CSSOM *cssom,
   const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);

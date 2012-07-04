@@ -593,4 +593,40 @@ void CSSStyleDeclaration::setCounterReset(const char * counterReset) {
 
 
 
+const char * CSSStyleDeclaration::cue() const {
+  return CSSOM_CSSStyleDeclaration_cue(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCue(const char * cue) {
+  CSSOM_CSSStyleDeclaration_setCue(_impl, cue);
+}
+
+
+
+const char * CSSStyleDeclaration::cueAfter() const {
+  return CSSOM_CSSStyleDeclaration_cueAfter(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCueAfter(const char * cueAfter) {
+  CSSOM_CSSStyleDeclaration_setCueAfter(_impl, cueAfter);
+}
+
+
+
+const char * CSSStyleDeclaration::cueBefore() const {
+  return CSSOM_CSSStyleDeclaration_cueBefore(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setCueBefore(const char * cueBefore) {
+  CSSOM_CSSStyleDeclaration_setCueBefore(_impl, cueBefore);
+}
+
+
+
 } // cssom

@@ -180,6 +180,15 @@ class CSSStyleDeclaration {
     const char * counterReset() const;
     void setCounterReset(const char * counterReset);
 
+    const char * cue() const;
+    void setCue(const char * cue);
+
+    const char * cueAfter() const;
+    void setCueAfter(const char * cueAfter);
+
+    const char * cueBefore() const;
+    void setCueBefore(const char * cueBefore);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };
