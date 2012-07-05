@@ -441,6 +441,14 @@ void CSSOM_CSSStyleDeclaration_setCSSFloat(CSSOM_CSSStyleDeclaration * cssStyleD
 
 
 
+const char * CSSOM_CSSStyleDeclaration_fontFamily(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontFamily(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * fontFamily);
+
+
+
 #ifdef __cplusplus
 }
 #endif

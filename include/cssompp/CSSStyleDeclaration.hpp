@@ -207,6 +207,9 @@ class CSSStyleDeclaration {
     const char * cssFloat() const;
     void setCSSFloat(const char * cssFloat);
 
+    const char * fontFamily() const;
+    void setFontFamily(const char * fontFamily);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

@@ -63,7 +63,9 @@ interface CSSStyleDeclaration {
            attribute DOMString? cssFloat;
   /*
            attribute DOMString? font;
+  */
            attribute DOMString? fontFamily;
+  /*
            attribute DOMString? fontSize;
            attribute DOMString? fontSizeAdjust;
            attribute DOMString? fontStretch;

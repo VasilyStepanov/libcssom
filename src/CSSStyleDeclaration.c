@@ -1085,3 +1085,21 @@ void CSSOM_CSSStyleDeclaration_setCSSFloat(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_FLOAT_PROPERTY, cssFloat);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_fontFamily(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FONT_FAMILY_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontFamily(
+  CSSOM_CSSStyleDeclaration *style, const char *fontFamily)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FONT_FAMILY_PROPERTY, fontFamily);
+}

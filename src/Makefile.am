@@ -68,6 +68,7 @@ libcssom_la_SOURCES = CSSEmitter.c \
                       LexicalUnitRange_elevation.c \
                       LexicalUnitRange_emptyCells.c \
                       LexicalUnitRange_float.c \
+                      LexicalUnitRange_font.c \
                       LexicalUnitRange_utility.c \
                       MediaList.c \
                       MediaQuery.c \

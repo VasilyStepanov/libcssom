@@ -20,6 +20,7 @@
 #include "test_CSSProperty_elevation.hpp"
 #include "test_CSSProperty_emptyCells.hpp"
 #include "test_CSSProperty_float.hpp"
+#include "test_CSSProperty_font.hpp"
 #include "test_CSSPropertyValue.hpp"
 #include "test_CSSRule.hpp"
 #include "test_CSSStyleDeclaration.hpp"
@@ -61,8 +62,9 @@ int main() {
   test::cssPropertyDirection();
   test::cssPropertyDisplay();
   test::cssPropertyElevation();
-  test::cssPropertyFloat();
   test::cssPropertyEmptyCells();
+  test::cssPropertyFloat();
+  test::cssPropertyFont();
   test::selector();
   return 0;
 }

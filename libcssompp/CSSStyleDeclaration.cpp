@@ -701,4 +701,16 @@ void CSSStyleDeclaration::setCSSFloat(const char * cssFloat) {
 
 
 
+const char * CSSStyleDeclaration::fontFamily() const {
+  return CSSOM_CSSStyleDeclaration_fontFamily(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setFontFamily(const char * fontFamily) {
+  CSSOM_CSSStyleDeclaration_setFontFamily(_impl, fontFamily);
+}
+
+
+
 } // cssom

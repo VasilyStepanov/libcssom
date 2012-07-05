@@ -33,6 +33,7 @@ test_suite_SOURCES = Errors.cpp \
                      test_CSSProperty_elevation.cpp \
                      test_CSSProperty_emptyCells.cpp \
                      test_CSSProperty_float.cpp \
+                     test_CSSProperty_font.cpp \
                      test_CSSPropertyValue.cpp \
                      test_CSSRule.cpp \
                      test_CSSStyleDeclaration.cpp \
