@@ -465,6 +465,14 @@ void CSSOM_CSSStyleDeclaration_setFontStyle(CSSOM_CSSStyleDeclaration * cssStyle
 
 
 
+const char * CSSOM_CSSStyleDeclaration_fontVariant(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontVariant(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * fontVariant);
+
+
+
 #ifdef __cplusplus
 }
 #endif

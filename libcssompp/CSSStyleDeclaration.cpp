@@ -737,4 +737,16 @@ void CSSStyleDeclaration::setFontStyle(const char * fontStyle) {
 
 
 
+const char * CSSStyleDeclaration::fontVariant() const {
+  return CSSOM_CSSStyleDeclaration_fontVariant(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setFontVariant(const char * fontVariant) {
+  CSSOM_CSSStyleDeclaration_setFontVariant(_impl, fontVariant);
+}
+
+
+
 } // cssom

@@ -325,6 +325,62 @@ void fontStyle() {
 
 
 
+void fontVariant() {
+  
+  /**
+   * normal | small-caps | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.fontVariant() == NULL);
+
+
+
+  /**
+   * normal | small-caps
+   */
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("normal");
+  assertEquals(std::string("normal"), style.fontVariant());
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("small-caps");
+  assertEquals(std::string("small-caps"), style.fontVariant());
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("NORMAL");
+  assertEquals(std::string("normal"), style.fontVariant());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("inherit");
+  assertEquals(std::string("inherit"), style.fontVariant());
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("INHERIT");
+  assertEquals(std::string("inherit"), style.fontVariant());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setFontVariant(NULL);
+  style.setFontVariant("invalid");
+  assert(style.fontVariant() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -335,6 +391,7 @@ void cssPropertyFont() {
   fontFamily();
   fontSize();
   fontStyle();
+  fontVariant();
 }
 
 

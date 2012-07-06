@@ -216,6 +216,9 @@ class CSSStyleDeclaration {
     const char * fontStyle() const;
     void setFontStyle(const char * fontStyle);
 
+    const char * fontVariant() const;
+    void setFontVariant(const char * fontVariant);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };

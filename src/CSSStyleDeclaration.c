@@ -1139,3 +1139,21 @@ void CSSOM_CSSStyleDeclaration_setFontStyle(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_FONT_STYLE_PROPERTY, fontStyle);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_fontVariant(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FONT_VARIANT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontVariant(
+  CSSOM_CSSStyleDeclaration *style, const char *fontVariant)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FONT_VARIANT_PROPERTY, fontVariant);
+}
