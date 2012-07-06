@@ -473,6 +473,14 @@ void CSSOM_CSSStyleDeclaration_setFontVariant(CSSOM_CSSStyleDeclaration * cssSty
 
 
 
+const char * CSSOM_CSSStyleDeclaration_fontWeight(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontWeight(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * fontWeight);
+
+
+
 #ifdef __cplusplus
 }
 #endif

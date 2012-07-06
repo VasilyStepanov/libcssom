@@ -72,8 +72,8 @@ interface CSSStyleDeclaration {
   */
            attribute DOMString? fontStyle;
            attribute DOMString? fontVariant;
-  /*
            attribute DOMString? fontWeight;
+  /*
            attribute DOMString? height;
            attribute DOMString? left;
            attribute DOMString? letterSpacing;

@@ -218,3 +218,51 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontVariant(
     _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_VARIANT_PROPERTY, begin, tail);
   return tail;
 }
+
+
+
+/**
+ * font-weight
+ */
+
+static const SAC_LexicalUnit** fontWeight(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("normal", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("bold", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("bolder", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("lighter", begin[0]->desc.ident) == 0) return &begin[1];
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
+    return &begin[1];
+  } else if (begin[0]->lexicalUnitType == SAC_INTEGER) {
+    if (begin[0]->desc.integer == 100) return &begin[1];
+    if (begin[0]->desc.integer == 200) return &begin[1];
+    if (begin[0]->desc.integer == 300) return &begin[1];
+    if (begin[0]->desc.integer == 400) return &begin[1];
+    if (begin[0]->desc.integer == 500) return &begin[1];
+    if (begin[0]->desc.integer == 600) return &begin[1];
+    if (begin[0]->desc.integer == 700) return &begin[1];
+    if (begin[0]->desc.integer == 800) return &begin[1];
+    if (begin[0]->desc.integer == 900) return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontWeight(
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = fontWeight(begin, end);
+  if (tail == begin) return begin;
+
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_WEIGHT_PROPERTY, begin, tail);
+  return tail;
+}

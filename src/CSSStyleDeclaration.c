@@ -1157,3 +1157,21 @@ void CSSOM_CSSStyleDeclaration_setFontVariant(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_FONT_VARIANT_PROPERTY, fontVariant);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_fontWeight(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FONT_WEIGHT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontWeight(
+  CSSOM_CSSStyleDeclaration *style, const char *fontWeight)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FONT_WEIGHT_PROPERTY, fontWeight);
+}

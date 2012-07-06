@@ -749,4 +749,16 @@ void CSSStyleDeclaration::setFontVariant(const char * fontVariant) {
 
 
 
+const char * CSSStyleDeclaration::fontWeight() const {
+  return CSSOM_CSSStyleDeclaration_fontWeight(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setFontWeight(const char * fontWeight) {
+  CSSOM_CSSStyleDeclaration_setFontWeight(_impl, fontWeight);
+}
+
+
+
 } // cssom

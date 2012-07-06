@@ -606,7 +606,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_fontWeight,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_HEIGHT_PROPERTY */
   { "height",

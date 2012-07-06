@@ -381,6 +381,117 @@ void fontVariant() {
 
 
 
+void fontWeight() {
+  
+  /**
+   * normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 |
+   *  700 | 800 | 900 | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.fontWeight() == NULL);
+
+
+
+  /**
+   * normal | bold | bolder | lighter
+   */
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("normal");
+  assertEquals(std::string("normal"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("bold");
+  assertEquals(std::string("bold"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("bolder");
+  assertEquals(std::string("bolder"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("lighter");
+  assertEquals(std::string("lighter"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("NORMAL");
+  assertEquals(std::string("normal"), style.fontWeight());
+
+
+
+  /**
+   * 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+   */
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("100");
+  assertEquals(std::string("100"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("200");
+  assertEquals(std::string("200"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("300");
+  assertEquals(std::string("300"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("400");
+  assertEquals(std::string("400"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("500");
+  assertEquals(std::string("500"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("600");
+  assertEquals(std::string("600"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("700");
+  assertEquals(std::string("700"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("800");
+  assertEquals(std::string("800"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("900");
+  assertEquals(std::string("900"), style.fontWeight());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("inherit");
+  assertEquals(std::string("inherit"), style.fontWeight());
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("INHERIT");
+  assertEquals(std::string("inherit"), style.fontWeight());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("invalid");
+  assert(style.fontWeight() == NULL);
+
+  style.setFontWeight(NULL);
+  style.setFontWeight("101");
+  assert(style.fontWeight() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -392,6 +503,7 @@ void cssPropertyFont() {
   fontSize();
   fontStyle();
   fontVariant();
+  fontWeight();
 }
 
 
