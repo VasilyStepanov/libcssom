@@ -725,4 +725,16 @@ void CSSStyleDeclaration::setFontSize(const char * fontSize) {
 
 
 
+const char * CSSStyleDeclaration::fontStyle() const {
+  return CSSOM_CSSStyleDeclaration_fontStyle(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setFontStyle(const char * fontStyle) {
+  CSSOM_CSSStyleDeclaration_setFontStyle(_impl, fontStyle);
+}
+
+
+
 } // cssom

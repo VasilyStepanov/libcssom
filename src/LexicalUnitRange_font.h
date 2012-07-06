@@ -19,6 +19,10 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontSize(const CSSOM *cssom,
   const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
 
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontStyle(const CSSOM *cssom,
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges);
+
 
 
 #ifdef __cplusplus

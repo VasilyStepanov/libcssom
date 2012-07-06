@@ -592,7 +592,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_fontStyle,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_VARIANT_PROPERTY */
   { "font-variant",

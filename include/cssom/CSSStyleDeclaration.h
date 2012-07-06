@@ -457,6 +457,14 @@ void CSSOM_CSSStyleDeclaration_setFontSize(CSSOM_CSSStyleDeclaration * cssStyleD
 
 
 
+const char * CSSOM_CSSStyleDeclaration_fontStyle(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontStyle(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * fontStyle);
+
+
+
 #ifdef __cplusplus
 }
 #endif

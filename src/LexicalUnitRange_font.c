@@ -142,6 +142,43 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontSize(
   if (tail == begin) return begin;
 
   if (ranges != NULL)
-    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_FAMILY_PROPERTY, begin, tail);
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_SIZE_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+/**
+ * font-style
+ */
+
+static const SAC_LexicalUnit** fontStyle(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("normal", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("italic", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("oblique", begin[0]->desc.ident) == 0) return &begin[1];
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontStyle(
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = fontStyle(begin, end);
+  if (tail == begin) return begin;
+
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_STYLE_PROPERTY, begin, tail);
   return tail;
 }

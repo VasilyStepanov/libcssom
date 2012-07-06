@@ -265,6 +265,66 @@ void fontSize() {
 
 
 
+void fontStyle() {
+  
+  /**
+   * normal | italic | oblique | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.fontStyle() == NULL);
+
+
+
+  /**
+   * normal | italic | oblique
+   */
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("normal");
+  assertEquals(std::string("normal"), style.fontStyle());
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("italic");
+  assertEquals(std::string("italic"), style.fontStyle());
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("oblique");
+  assertEquals(std::string("oblique"), style.fontStyle());
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("NORMAL");
+  assertEquals(std::string("normal"), style.fontStyle());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("inherit");
+  assertEquals(std::string("inherit"), style.fontStyle());
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("INHERIT");
+  assertEquals(std::string("inherit"), style.fontStyle());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setFontStyle(NULL);
+  style.setFontStyle("invalid");
+  assert(style.fontStyle() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -274,6 +334,7 @@ namespace test {
 void cssPropertyFont() {
   fontFamily();
   fontSize();
+  fontStyle();
 }
 
 
