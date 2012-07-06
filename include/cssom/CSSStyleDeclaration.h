@@ -449,6 +449,14 @@ void CSSOM_CSSStyleDeclaration_setFontFamily(CSSOM_CSSStyleDeclaration * cssStyl
 
 
 
+const char * CSSOM_CSSStyleDeclaration_fontSize(const CSSOM_CSSStyleDeclaration * cssStyleDeclaration);
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontSize(CSSOM_CSSStyleDeclaration * cssStyleDeclaration, const char * fontSize);
+
+
+
 #ifdef __cplusplus
 }
 #endif

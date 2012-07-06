@@ -1103,3 +1103,21 @@ void CSSOM_CSSStyleDeclaration_setFontFamily(
   CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
     CSSOM_FONT_FAMILY_PROPERTY, fontFamily);
 }
+
+
+
+const char* CSSOM_CSSStyleDeclaration_fontSize(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FONT_SIZE_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setFontSize(
+  CSSOM_CSSStyleDeclaration *style, const char *fontSize)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FONT_SIZE_PROPERTY, fontSize);
+}

@@ -7,6 +7,10 @@
 
 
 
+/**
+ * font-family
+ */
+
 static const SAC_LexicalUnit** genericFamily(const SAC_LexicalUnit **begin,
   const SAC_LexicalUnit **end CSSOM_UNUSED)
 {
@@ -87,6 +91,54 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontFamily(
   const SAC_LexicalUnit **tail;
 
   tail = fontFamily(begin, end);
+  if (tail == begin) return begin;
+
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_FAMILY_PROPERTY, begin, tail);
+  return tail;
+}
+
+
+
+/**
+ * font-size
+ */
+
+static const SAC_LexicalUnit** fontSize(const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end CSSOM_UNUSED)
+{
+  if (begin[0]->lexicalUnitType == SAC_IDENT) {
+    if (strcmp("xx-small", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("x-small", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("small", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("medium", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("large", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("x-large", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("xx-large", begin[0]->desc.ident) == 0) return &begin[1];
+
+    if (strcmp("larger", begin[0]->desc.ident) == 0) return &begin[1];
+    if (strcmp("smaller", begin[0]->desc.ident) == 0) return &begin[1];
+  } else if (CSSOM_LexicalUnit_isNonNegativeLength(begin[0])) {
+    return &begin[1];
+  } else if (CSSOM_LexicalUnit_isNonNegativePercentage(begin[0])) {
+    return &begin[1];
+  } else if (CSSOM_LexicalUnit_isInherit(begin[0])) {
+    return &begin[1];
+  }
+  return &begin[0];
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontSize(
+  const CSSOM *cssom CSSOM_UNUSED,
+  const CSSOM_CSSStyleDeclarationValue *values CSSOM_UNUSED,
+  const SAC_LexicalUnit **begin, const SAC_LexicalUnit **end,
+  struct _CSSOM_LexicalUnitRange *ranges)
+{
+  const SAC_LexicalUnit **tail;
+
+  tail = fontSize(begin, end);
   if (tail == begin) return begin;
 
   if (ranges != NULL)

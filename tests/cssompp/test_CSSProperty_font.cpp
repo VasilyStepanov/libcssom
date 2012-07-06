@@ -143,6 +143,128 @@ void fontFamily() {
 
 
 
+void fontSize() {
+  
+  /**
+   * <absolute-size> | <relative-size> | <length> | <percentage> | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assert(style.fontSize() == NULL);
+
+
+
+  /**
+   * <absolute-size>
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("xx-small");
+  assertEquals(std::string("xx-small"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("x-small");
+  assertEquals(std::string("x-small"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("small");
+  assertEquals(std::string("small"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("medium");
+  assertEquals(std::string("medium"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("large");
+  assertEquals(std::string("large"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("x-large");
+  assertEquals(std::string("x-large"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("xx-large");
+  assertEquals(std::string("xx-large"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("XX-SMALL");
+  assertEquals(std::string("xx-small"), style.fontSize());
+
+
+
+  /**
+   * <relative-size>
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("larger");
+  assertEquals(std::string("larger"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("smaller");
+  assertEquals(std::string("smaller"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("LARGER");
+  assertEquals(std::string("larger"), style.fontSize());
+
+
+
+  /**
+   * <length>
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("12pt");
+  assertEquals(std::string("12pt"), style.fontSize());
+
+
+
+  /**
+   * <percentage>
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("150%");
+  assertEquals(std::string("150%"), style.fontSize());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("inherit");
+  assertEquals(std::string("inherit"), style.fontSize());
+
+  style.setFontSize(NULL);
+  style.setFontSize("INHERIT");
+  assertEquals(std::string("inherit"), style.fontSize());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setFontSize(NULL);
+  style.setFontSize("invalid");
+  assert(style.fontSize() == NULL);
+
+  style.setFontSize(NULL);
+  style.setFontSize("-1em");
+  assert(style.fontSize() == NULL);
+
+  style.setFontSize(NULL);
+  style.setFontSize("-10%");
+  assert(style.fontSize() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -151,6 +273,7 @@ namespace test {
 
 void cssPropertyFont() {
   fontFamily();
+  fontSize();
 }
 
 

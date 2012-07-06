@@ -31,6 +31,8 @@ int CSSOM_LexicalUnit_isUri(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value);
 
+int CSSOM_LexicalUnit_isNonNegativePercentage(const SAC_LexicalUnit *value);
+
 int CSSOM_LexicalUnit_isShape(const SAC_LexicalUnit *value);
 
 int CSSOM_LexicalUnit_isString(const SAC_LexicalUnit *value);

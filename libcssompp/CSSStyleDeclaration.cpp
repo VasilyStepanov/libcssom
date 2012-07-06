@@ -713,4 +713,16 @@ void CSSStyleDeclaration::setFontFamily(const char * fontFamily) {
 
 
 
+const char * CSSStyleDeclaration::fontSize() const {
+  return CSSOM_CSSStyleDeclaration_fontSize(_impl);
+}
+
+
+
+void CSSStyleDeclaration::setFontSize(const char * fontSize) {
+  CSSOM_CSSStyleDeclaration_setFontSize(_impl, fontSize);
+}
+
+
+
 } // cssom

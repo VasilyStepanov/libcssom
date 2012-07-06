@@ -571,7 +571,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     NULL,
     0,
-    CSSOM_LexicalUnitRange_whatever,
+    CSSOM_LexicalUnitRange_fontSize,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_SIZE_ADJUST_PROPERTY */
   { "font-size-adjust",

@@ -156,6 +156,17 @@ int CSSOM_LexicalUnit_isPercentage(const SAC_LexicalUnit *value) {
 
 
 
+int CSSOM_LexicalUnit_isNonNegativePercentage(const SAC_LexicalUnit *value) {
+  if (value->lexicalUnitType == SAC_PERCENTAGE &&
+    value->desc.dimension.value.sreal >= 0)
+  {
+    return 1;
+  }
+  return 0;
+}
+
+
+
 static int LexicalUnit_isShapeArg(const SAC_LexicalUnit *value) {
   if (CSSOM_LexicalUnit_isLength(value)) {
     return 1;

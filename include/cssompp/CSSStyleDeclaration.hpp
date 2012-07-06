@@ -210,6 +210,9 @@ class CSSStyleDeclaration {
     const char * fontFamily() const;
     void setFontFamily(const char * fontFamily);
 
+    const char * fontSize() const;
+    void setFontSize(const char * fontSize);
+
   protected:
     cssom::CSSStyleDeclaration::Impl _impl;
 };
