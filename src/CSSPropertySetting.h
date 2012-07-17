@@ -28,6 +28,7 @@ struct _CSSOM_CSSPropertySetting {
   const struct _CSSOM_LexicalUnitRange *initial;
   size_t nsubhashes;
   _CSSOM_PropertyHandler handler;
+  int (*isShorthand)(const CSSOM_CSSPropertyValue *property);
   int (*omit)(const CSSOM_CSSPropertyValue *property,
     struct _CSSOM_LexicalUnitRange *ranges);
 };

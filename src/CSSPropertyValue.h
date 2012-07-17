@@ -29,6 +29,12 @@ const char* CSSOM_CSSPropertyValue__name(
 
 int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property);
 
+int CSSOM_CSSPropertyValue__isAShorthand(
+  const CSSOM_CSSPropertyValue *property);
+
+int CSSOM_CSSPropertyValue__isNotAShorthand(
+  const CSSOM_CSSPropertyValue *property);
+
 int CSSOM_CSSPropertyValue__omit(const CSSOM_CSSPropertyValue *property,
   struct _CSSOM_LexicalUnitRange *ranges);
 

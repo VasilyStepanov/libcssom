@@ -90,7 +90,7 @@ CSSOM_CSSStyleDeclarationValue* CSSOM_CSSStyleDeclarationValue__alloc(
 
     setting = CSSOM__propertySetting(cssom, i);
 
-    if (setting->nsubhashes == 0) continue;
+    if (!setting->isShorthand(NULL)) continue;
 
     property = CSSOM_CSSPropertyValue__allocShorthand(cssom, values, i);
     if (property == NULL) {
@@ -226,7 +226,7 @@ static CSSOM_CSSPropertyValue* CSSStyleDeclarationValue__addProperty(
   setting = CSSOM__propertySetting(values->cssom, iter->hash);
 
   if (iter->value != NULL) {
-    if (setting->nsubhashes == 0) {
+    if (!setting->isShorthand(iter->value)) {
       iter = CSSOM_FSM_CSSPropertyValue_update(values->fsm, iter);
       if (iter == CSSOM_FSM_CSSPropertyValue_end(values->fsm)) {
         if (iter->value == NULL)
@@ -251,7 +251,7 @@ static void CSSStyleDeclarationValue__eraseProperty(
   
   setting = CSSOM__propertySetting(values->cssom, iter->hash);
 
-  if (setting->nsubhashes == 0) {
+  if (!setting->isShorthand(iter->value)) {
     CSSOM_CSSPropertyValue_release(iter->value);
     CSSOM_FSM_CSSPropertyValue_erase(values->fsm, iter);
   } else {

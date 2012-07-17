@@ -536,7 +536,7 @@ static int fetchRecursiveShorthand(
     rval = propertySetting->omit(property, propertyRanges);
     if (rval != 0) return rval;
 
-    nsubhashes = propertySetting->nsubhashes == 0 ? 1 :
+    nsubhashes = !propertySetting->isShorthand(property) ? 1 :
       propertySetting->nsubhashes;
 
     for (j = 0; j < nsubhashes; ++j) {
@@ -706,7 +706,8 @@ static int CSSPropertyValue_emit(const CSSOM_CSSPropertyValue *property,
   rval = setting->omit(property, ranges);
   if (rval != 0) return rval;
 
-  nsubhashes = setting->nsubhashes == 0 ? 1 : setting->nsubhashes;
+  nsubhashes = !setting->isShorthand(property) ? 1 :
+    setting->nsubhashes;
 
   emitted = 0;
   for (i = 0; i < nsubhashes; ++i) {
@@ -872,7 +873,7 @@ CSSOM_CSSPropertyValue* CSSOM_CSSPropertyValue__allocShorthand(
   const CSSOM *cssom, CSSOM_CSSStyleDeclarationValue *parentValues,
   int hash)
 {
-  assert(CSSOM__propertySetting(cssom, hash)->nsubhashes != 0);
+  assert(CSSOM__propertySetting(cssom, hash)->isShorthand(NULL));
 
   return CSSPropertyValue_alloc(cssom, parentValues, hash, NULL, NULL, NULL,
     SAC_FALSE);
@@ -979,4 +980,20 @@ void CSSOM_CSSPropertyValue_setCSSText(CSSOM_CSSPropertyValue *property,
 
 int CSSOM_CSSPropertyValue__important(const CSSOM_CSSPropertyValue *property) {
   return property->important == SAC_TRUE ? 1 : 0;
+}
+
+
+
+int CSSOM_CSSPropertyValue__isAShorthand(
+  const CSSOM_CSSPropertyValue *property CSSOM_UNUSED)
+{
+  return 1;
+}
+
+
+
+int CSSOM_CSSPropertyValue__isNotAShorthand(
+  const CSSOM_CSSPropertyValue *property CSSOM_UNUSED)
+{
+  return 0;
 }

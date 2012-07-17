@@ -268,7 +268,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_border(const CSSOM *cssom,
 
       colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-      assert(colorSetting->nsubhashes == 0);
+      assert(!colorSetting->isShorthand(color));
 
       colorSetting->omit(color, &colorRanges);
 
@@ -478,7 +478,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderTop(const CSSOM *cssom,
 
       colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-      assert(colorSetting->nsubhashes == 0);
+      assert(!colorSetting->isShorthand(color));
 
       colorSetting->omit(color, &colorRanges);
 
@@ -536,7 +536,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderRight(const CSSOM *cssom,
 
       colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-      assert(colorSetting->nsubhashes == 0);
+      assert(!colorSetting->isShorthand(color));
 
       colorSetting->omit(color, &colorRanges);
 
@@ -594,7 +594,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderBottom(const CSSOM *cssom,
 
       colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-      assert(colorSetting->nsubhashes == 0);
+      assert(!colorSetting->isShorthand(color));
 
       colorSetting->omit(color, &colorRanges);
 
@@ -652,7 +652,7 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_borderLeft(const CSSOM *cssom,
 
       colorSetting = CSSOM__propertySetting(cssom, CSSOM_COLOR_PROPERTY);
 
-      assert(colorSetting->nsubhashes == 0);
+      assert(!colorSetting->isShorthand(color));
 
       colorSetting->omit(color, &colorRanges);
 

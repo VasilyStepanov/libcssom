@@ -236,6 +236,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_azimuth,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BACKGROUND_PROPERTY */
   { "background",
@@ -243,6 +244,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     backgroundInitial,
     _CSSOM_ARSIZE(backgroundSubhashes),
     CSSOM_LexicalUnitRange_background,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BACKGROUND_ATTACHMENT_PROPERTY */
   { "background-attachment",
@@ -250,6 +252,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundAttachment,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BACKGROUND_COLOR_PROPERTY */
   { "background-color",
@@ -257,6 +260,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundColor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BACKGROUND_IMAGE_PROPERTY */
   { "background-image",
@@ -264,6 +268,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundImage,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BACKGROUND_POSITION_PROPERTY */
   { "background-position",
@@ -271,6 +276,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundPosition,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BACKGROUND_REPEAT_PROPERTY */
   { "background-repeat",
@@ -278,6 +284,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_backgroundRepeat,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_PROPERTY */
   { "border",
@@ -285,6 +292,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderInitial,
     _CSSOM_ARSIZE(borderSubhashes),
     CSSOM_LexicalUnitRange_border,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitRecursiveShorthand },
   /* CSSOM_BORDER_COLLAPSE_PROPERTY */
   { "border-collapse",
@@ -292,6 +300,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderCollapse,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_COLOR_PROPERTY */
   { "border-color",
@@ -299,6 +308,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     _CSSOM_ARSIZE(borderColorSubhashes),
     CSSOM_LexicalUnitRange_borderColor,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_SPACING_PROPERTY */
   { "border-spacing",
@@ -306,6 +316,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderSpacing,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_STYLE_PROPERTY */
   { "border-style",
@@ -313,6 +324,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     _CSSOM_ARSIZE(borderStyleSubhashes),
     CSSOM_LexicalUnitRange_borderStyle,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BORDER_TOP_PROPERTY */
   { "border-top",
@@ -320,6 +332,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderTopInitial,
     _CSSOM_ARSIZE(borderTopSubhashes),
     CSSOM_LexicalUnitRange_borderTop,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_RIGHT_PROPERTY */
   { "border-right",
@@ -327,6 +340,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderRightInitial,
     _CSSOM_ARSIZE(borderRightSubhashes),
     CSSOM_LexicalUnitRange_borderRight,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_BOTTOM_PROPERTY */
   { "border-bottom",
@@ -334,6 +348,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderBottomInitial,
     _CSSOM_ARSIZE(borderBottomSubhashes),
     CSSOM_LexicalUnitRange_borderBottom,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_LEFT_PROPERTY */
   { "border-left",
@@ -341,6 +356,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     borderLeftInitial,
     _CSSOM_ARSIZE(borderLeftSubhashes),
     CSSOM_LexicalUnitRange_borderLeft,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_BORDER_TOP_COLOR_PROPERTY */
   { "border-top-color",
@@ -348,6 +364,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopColor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_RIGHT_COLOR_PROPERTY */
   { "border-right-color",
@@ -355,6 +372,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightColor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_BOTTOM_COLOR_PROPERTY */
   { "border-bottom-color",
@@ -362,6 +380,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomColor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_LEFT_COLOR_PROPERTY */
   { "border-left-color",
@@ -369,6 +388,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftColor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_TOP_STYLE_PROPERTY */
   { "border-top-style",
@@ -376,6 +396,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopStyle,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_RIGHT_STYLE_PROPERTY */
   { "border-right-style",
@@ -383,6 +404,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightStyle,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_BOTTOM_STYLE_PROPERTY */
   { "border-bottom-style",
@@ -390,6 +412,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomStyle,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_LEFT_STYLE_PROPERTY */
   { "border-left-style",
@@ -397,6 +420,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftStyle,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_TOP_WIDTH_PROPERTY */
   { "border-top-width",
@@ -404,6 +428,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderTopWidth,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_RIGHT_WIDTH_PROPERTY */
   { "border-right-width",
@@ -411,6 +436,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderRightWidth,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_BOTTOM_WIDTH_PROPERTY */
   { "border-bottom-width",
@@ -418,6 +444,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderBottomWidth,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_LEFT_WIDTH_PROPERTY */
   { "border-left-width",
@@ -425,6 +452,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_borderLeftWidth,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_BORDER_WIDTH_PROPERTY */
   { "border-width",
@@ -432,6 +460,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     _CSSOM_ARSIZE(borderWidthSubhashes),
     CSSOM_LexicalUnitRange_borderWidth,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitBoxShorthand },
   /* CSSOM_BOTTOM_PROPERTY */
   { "bottom",
@@ -439,6 +468,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_bottom,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CAPTION_SIDE_PROPERTY */
   { "caption-side",
@@ -446,6 +476,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_captionSide,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CLEAR_PROPERTY */
   { "clear",
@@ -453,6 +484,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_clear,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CLIP_PROPERTY */
   { "clip",
@@ -460,6 +492,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_clip,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_COLOR_PROPERTY */
   { "color",
@@ -467,6 +500,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_color,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CONTENT_PROPERTY */
   { "content",
@@ -474,6 +508,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_content,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_COUNTER_INCREMENT_PROPERTY */
   { "counter-increment",
@@ -481,6 +516,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_counterIncrement,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_COUNTER_RESET_PROPERTY */
   { "counter-reset",
@@ -488,6 +524,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_counterReset,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CUE_PROPERTY */
   { "cue",
@@ -495,6 +532,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     _CSSOM_ARSIZE(cueSubhashes),
     CSSOM_LexicalUnitRange_cue,
+    &CSSOM_CSSPropertyValue__isAShorthand,
     &CSSOM_CSSPropertyValue__omitLinearShorthand },
   /* CSSOM_CUE_AFTER_PROPERTY */
   { "cue-after",
@@ -502,6 +540,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_cueAfter,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CUE_BEFORE_PROPERTY */
   { "cue-before",
@@ -509,6 +548,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_cueBefore,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_CURSOR_PROPERTY */
   { "cursor",
@@ -516,6 +556,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_cursor,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_DIRECTION_PROPERTY */
   { "direction",
@@ -523,6 +564,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_direction,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_DISPLAY_PROPERTY */
   { "display",
@@ -530,6 +572,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_display,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_ELEVATION_PROPERTY */
   { "elevation",
@@ -537,6 +580,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_elevation,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_EMPTY_CELLS_PROPERTY */
   { "empty-cells",
@@ -544,6 +588,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_emptyCells,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FLOAT_PROPERTY */
   { "float",
@@ -551,6 +596,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_float,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_PROPERTY */
   { "font",
@@ -558,6 +604,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_FAMILY_PROPERTY */
   { "font-family",
@@ -565,6 +612,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_fontFamily,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_SIZE_PROPERTY */
   { "font-size",
@@ -572,6 +620,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_fontSize,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_SIZE_ADJUST_PROPERTY */
   { "font-size-adjust",
@@ -579,6 +628,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_STRETCH_PROPERTY */
   { "font-stretch",
@@ -586,6 +636,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_STYLE_PROPERTY */
   { "font-style",
@@ -593,6 +644,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_fontStyle,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_VARIANT_PROPERTY */
   { "font-variant",
@@ -600,6 +652,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_fontVariant,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_WEIGHT_PROPERTY */
   { "font-weight",
@@ -607,6 +660,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_fontWeight,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_HEIGHT_PROPERTY */
   { "height",
@@ -614,6 +668,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LEFT_PROPERTY */
   { "left",
@@ -621,6 +676,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LETTER_SPACING_PROPERTY */
   { "letter-spacing",
@@ -628,6 +684,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LINE_HEIGHT_PROPERTY */
   { "line-height",
@@ -635,6 +692,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LIST_STYLE_PROPERTY */
   { "list-style",
@@ -642,6 +700,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LIST_STYLE_IMAGE_PROPERTY */
   { "list-style-image",
@@ -649,6 +708,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LIST_STYLE_POSITION_PROPERTY */
   { "list-style-position",
@@ -656,6 +716,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_LIST_STYLE_TYPE_PROPERTY */
   { "list-style-type",
@@ -663,6 +724,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARGIN_PROPERTY */
   { "margin",
@@ -670,6 +732,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARGIN_TOP_PROPERTY */
   { "margin-top",
@@ -677,6 +740,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARGIN_RIGHT_PROPERTY */
   { "margin-right",
@@ -684,6 +748,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARGIN_BOTTOM_PROPERTY */
   { "margin-bottom",
@@ -691,6 +756,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARGIN_LEFT_PROPERTY */
   { "margin-left",
@@ -698,6 +764,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARKER_OFFSET_PROPERTY */
   { "marker-offset",
@@ -705,6 +772,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MARKS_PROPERTY */
   { "marks",
@@ -712,6 +780,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MAX_HEIGHT_PROPERTY */
   { "max-height",
@@ -719,6 +788,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MAX_WIDTH_PROPERTY */
   { "max-width",
@@ -726,6 +796,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MIN_HEIGHT_PROPERTY */
   { "min-height",
@@ -733,6 +804,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_MIN_WIDTH_PROPERTY */
   { "min-width",
@@ -740,6 +812,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_ORPHANS_PROPERTY */
   { "orphans",
@@ -747,6 +820,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_OUTLINE_PROPERTY */
   { "outline",
@@ -754,6 +828,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_OUTLINE_COLOR_PROPERTY */
   { "outline-color",
@@ -761,6 +836,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_OUTLINE_STYLE_PROPERTY */
   { "outline-style",
@@ -768,6 +844,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_OUTLINE_WIDTH_PROPERTY */
   { "outline-width",
@@ -775,6 +852,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_OVERFLOW_PROPERTY */
   { "overflow",
@@ -782,6 +860,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PADDING_PROPERTY */
   { "padding",
@@ -789,6 +868,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PADDING_TOP_PROPERTY */
   { "padding-top",
@@ -796,6 +876,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PADDING_RIGHT_PROPERTY */
   { "padding-right",
@@ -803,6 +884,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PADDING_BOTTOM_PROPERTY */
   { "padding-bottom",
@@ -810,6 +892,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PADDING_LEFT_PROPERTY */
   { "padding-left",
@@ -817,6 +900,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAGE_PROPERTY */
   { "page",
@@ -824,6 +908,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAGE_BREAK_AFTER_PROPERTY */
   { "page-break-after",
@@ -831,6 +916,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAGE_BREAK_BEFORE_PROPERTY */
   { "page-break-before",
@@ -838,6 +924,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAGE_BREAK_INSIDE_PROPERTY */
   { "page-break-inside",
@@ -845,6 +932,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAUSE_PROPERTY */
   { "pause",
@@ -852,6 +940,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAUSE_AFTER_PROPERTY */
   { "pause-after",
@@ -859,6 +948,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PAUSE_BEFORE_PROPERTY */
   { "pause-before",
@@ -866,6 +956,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PITCH_PROPERTY */
   { "pitch",
@@ -873,6 +964,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PITCH_RANGE_PROPERTY */
   { "pitch-range",
@@ -880,6 +972,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_PLAY_DURING_PROPERTY */
   { "play-during",
@@ -887,6 +980,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_POSITION_PROPERTY */
   { "position",
@@ -894,6 +988,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_QUOTES_PROPERTY */
   { "quotes",
@@ -901,6 +996,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_RICHNESS_PROPERTY */
   { "richness",
@@ -908,6 +1004,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_RIGHT_PROPERTY */
   { "right",
@@ -915,6 +1012,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SIZE_PROPERTY */
   { "size",
@@ -922,6 +1020,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SPEAK_PROPERTY */
   { "speak",
@@ -929,6 +1028,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SPEAK_HEADER_PROPERTY */
   { "speak-header",
@@ -936,6 +1036,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SPEAK_NUMERAL_PROPERTY */
   { "speak-numeral",
@@ -943,6 +1044,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SPEAK_PUNCTUATION_PROPERTY */
   { "speak-punctuation",
@@ -950,6 +1052,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SPEECH_RATE_PROPERTY */
   { "speech-rate",
@@ -957,6 +1060,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_SRC_PROPERTY */
   { "src",
@@ -964,6 +1068,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_STRESS_PROPERTY */
   { "stress",
@@ -971,6 +1076,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TABLE_LAYOUT_PROPERTY */
   { "table-layout",
@@ -978,6 +1084,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TEXT_ALIGN_PROPERTY */
   { "text-align",
@@ -985,6 +1092,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TEXT_DECORATION_PROPERTY */
   { "text-decoration",
@@ -992,6 +1100,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TEXT_INDENT_PROPERTY */
   { "text-indent",
@@ -999,6 +1108,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TEXT_SHADOW_PROPERTY */
   { "text-shadow",
@@ -1006,6 +1116,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TEXT_TRANSFORM_PROPERTY */
   { "text-transform",
@@ -1013,6 +1124,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_TOP_PROPERTY */
   { "top",
@@ -1020,6 +1132,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_UNICODE_BIDI_PROPERTY */
   { "unicode-bidi",
@@ -1027,6 +1140,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_VERTICAL_ALIGN_PROPERTY */
   { "vertical-align",
@@ -1034,6 +1148,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_VISIBILITY_PROPERTY */
   { "visibility",
@@ -1041,6 +1156,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_VOICE_FAMILY_PROPERTY */
   { "voice-family",
@@ -1048,6 +1164,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_VOLUME_PROPERTY */
   { "volume",
@@ -1055,6 +1172,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_WHITE_SPACE_PROPERTY */
   { "white-space",
@@ -1062,6 +1180,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_WIDOWS_PROPERTY */
   { "widows",
@@ -1069,6 +1188,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_WIDTH_PROPERTY */
   { "width",
@@ -1076,6 +1196,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_WORD_SPACING_PROPERTY */
   { "word-spacing",
@@ -1083,6 +1204,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_Z_INDEX_PROPERTY */
   { "z-index",
@@ -1090,6 +1212,7 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     NULL,
     0,
     CSSOM_LexicalUnitRange_whatever,
+    &CSSOM_CSSPropertyValue__isNotAShorthand,
     &CSSOM_CSSPropertyValue__omitTrivial }
 };
 
@@ -1166,7 +1289,7 @@ CSSOM* CSSOM_create(void) {
     setting = &CSSOM_propertySettings[i];
 
     properties[i] = setting->name;
-    if (setting->nsubhashes != 0) ++nshorthands;
+    if (setting->isShorthand(NULL)) ++nshorthands;
   }
   properties[CSSOM_nproperties] = NULL;
 
