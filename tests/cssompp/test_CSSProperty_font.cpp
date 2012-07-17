@@ -492,6 +492,113 @@ void fontWeight() {
 
 
 
+void font() {
+  
+  /**
+   * [ [ 'font-style' || 'font-variant' || 'font-weight' ]? 'font-size'
+   *  [ / 'line-height' ]? 'font-family' ] | caption | icon | menu |
+   *  message-box | small-caption | status-bar | inherit
+   */
+
+  cssom::CSSOM cssom;
+  cssom::CSSStyleDeclaration style = getStyleDeclaration(cssom);
+
+  assertEquals(std::string(""), style.font());
+
+
+
+  /**
+   * font-style
+   */
+
+  style.setFont(NULL);
+  style.setFont("italic");
+  assertEquals(std::string("italic"), style.font());
+  assertEquals(std::string("italic"), style.fontStyle());
+  assertEquals(std::string("normal"), style.fontVariant());
+  assertEquals(std::string("normal"), style.fontWeight());
+
+
+
+  /**
+   * font-variant
+   */
+
+  style.setFont(NULL);
+  style.setFont("small-caps");
+  assertEquals(std::string("small-caps"), style.font());
+  assertEquals(std::string("normal"), style.fontStyle());
+  assertEquals(std::string("small-caps"), style.fontVariant());
+  assertEquals(std::string("normal"), style.fontWeight());
+
+
+
+  /**
+   * font-weight
+   */
+
+  style.setFont(NULL);
+  style.setFont("bold");
+  assertEquals(std::string("bold"), style.font());
+  assertEquals(std::string("normal"), style.fontStyle());
+  assertEquals(std::string("normal"), style.fontVariant());
+  assertEquals(std::string("bold"), style.fontWeight());
+
+
+
+  /**
+   * 'font-style' || 'font-variant' || 'font-weight'
+   */
+
+  style.setFont(NULL);
+  style.setFont("bold small-caps italic");
+  assertEquals(std::string("italic small-caps bold"), style.font());
+  assertEquals(std::string("italic"), style.fontStyle());
+  assertEquals(std::string("small-caps"), style.fontVariant());
+  assertEquals(std::string("bold"), style.fontWeight());
+
+
+
+  /**
+   * inherit
+   */
+
+  style.setFont(NULL);
+  style.setFont("inherit");
+  assertEquals(std::string("inherit"), style.font());
+  assertEquals(std::string("inherit"), style.fontStyle());
+  assertEquals(std::string("inherit"), style.fontVariant());
+  assertEquals(std::string("inherit"), style.fontWeight());
+
+  style.setFont(NULL);
+  style.setFont("inherit inherit inherit");
+  assertEquals(std::string("inherit"), style.font());
+  assertEquals(std::string("inherit"), style.fontStyle());
+  assertEquals(std::string("inherit"), style.fontVariant());
+  assertEquals(std::string("inherit"), style.fontWeight());
+
+  style.setFont(NULL);
+  style.setFontStyle("inherit");
+  style.setFontVariant("inherit");
+  style.setFontWeight("inherit");
+  assertEquals(std::string("inherit"), style.font());
+
+
+
+  /**
+   * errors
+   */
+
+  style.setFont(NULL);
+  style.setFont("invalid");
+  assertEquals(std::string(""), style.font());
+  assert(style.fontStyle() == NULL);
+  assert(style.fontVariant() == NULL);
+  assert(style.fontWeight() == NULL);
+}
+
+
+
 } // unnamed
 
 namespace test {
@@ -504,6 +611,7 @@ void cssPropertyFont() {
   fontStyle();
   fontVariant();
   fontWeight();
+  font();
 }
 
 

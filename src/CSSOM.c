@@ -61,6 +61,7 @@ static SAC_LexicalUnit unit_comma;
 static SAC_LexicalUnit unit_0;
 static SAC_LexicalUnit *unit_rgb000_paramteters[6];
 static SAC_LexicalUnit unit_medium;
+static SAC_LexicalUnit unit_normal;
 
 
 
@@ -225,6 +226,41 @@ borderLeftInitial[_CSSOM_ARSIZE(borderLeftSubhashes)] = {
 static const int cueSubhashes[] = {
   CSSOM_CUE_BEFORE_PROPERTY,
   CSSOM_CUE_AFTER_PROPERTY
+};
+
+
+
+/**
+ * font
+ */
+
+static const SAC_LexicalUnit *fontStyle[] = {
+  &unit_normal
+};
+
+static const SAC_LexicalUnit *fontVariant[] = {
+  &unit_normal
+};
+
+static const SAC_LexicalUnit *fontWeifght[] = {
+  &unit_normal
+};
+
+
+
+static const int fontSubhashes[] = {
+  CSSOM_FONT_STYLE_PROPERTY,
+  CSSOM_FONT_VARIANT_PROPERTY,
+  CSSOM_FONT_WEIGHT_PROPERTY
+};
+
+
+
+static const struct _CSSOM_LexicalUnitRange
+fontInitial[_CSSOM_ARSIZE(fontSubhashes)] = {
+  { CSSOM_FONT_STYLE_PROPERTY, _CSSOM_INITIAL(fontStyle) },
+  { CSSOM_FONT_VARIANT_PROPERTY, _CSSOM_INITIAL(fontVariant) },
+  { CSSOM_FONT_WEIGHT_PROPERTY, _CSSOM_INITIAL(fontWeifght) }
 };
 
 
@@ -600,12 +636,12 @@ const struct _CSSOM_CSSPropertySetting CSSOM_propertySettings[] = {
     &CSSOM_CSSPropertyValue__omitTrivial },
   /* CSSOM_FONT_PROPERTY */
   { "font",
-    NULL,
-    NULL,
-    0,
-    CSSOM_LexicalUnitRange_whatever,
-    &CSSOM_CSSPropertyValue__isNotAShorthand,
-    &CSSOM_CSSPropertyValue__omitTrivial },
+    fontSubhashes,
+    fontInitial,
+    _CSSOM_ARSIZE(fontSubhashes),
+    CSSOM_LexicalUnitRange_font,
+    &CSSOM_CSSPropertyValue__isAShorthand,
+    &CSSOM_CSSPropertyValue__omitGenericShorthand },
   /* CSSOM_FONT_FAMILY_PROPERTY */
   { "font-family",
     NULL,
@@ -1253,6 +1289,9 @@ static void initGlobals(void) {
 
   unit_medium.lexicalUnitType = SAC_IDENT;
   unit_medium.desc.ident = "medium";
+
+  unit_normal.lexicalUnitType = SAC_IDENT;
+  unit_normal.desc.ident = "normal";
 }
 
 

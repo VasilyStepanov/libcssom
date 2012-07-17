@@ -4,6 +4,7 @@
 #include "gcc.h"
 
 #include <string.h>
+#include <assert.h>
 
 
 
@@ -265,4 +266,37 @@ const SAC_LexicalUnit** CSSOM_LexicalUnitRange_fontWeight(
   if (ranges != NULL)
     _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_WEIGHT_PROPERTY, begin, tail);
   return tail;
+}
+
+
+
+const SAC_LexicalUnit** CSSOM_LexicalUnitRange_font(const CSSOM *cssom,
+  const CSSOM_CSSStyleDeclarationValue *values, const SAC_LexicalUnit **begin,
+  const SAC_LexicalUnit **end, struct _CSSOM_LexicalUnitRange *ranges)
+{
+  const struct _CSSOM_CSSPropertySetting *setting;
+
+  static const _CSSOM_PropertyHandler handlers[3] = {
+    CSSOM_LexicalUnitRange_fontStyle,
+    CSSOM_LexicalUnitRange_fontVariant,
+    CSSOM_LexicalUnitRange_fontWeight
+  };
+
+  int marker[3] = { 0, 0, 0 };
+
+  setting = CSSOM__propertySetting(cssom, CSSOM_FONT_PROPERTY);
+
+  assert(setting->nsubhashes == _CSSOM_ARSIZE(marker));
+  assert(setting->nsubhashes == _CSSOM_ARSIZE(handlers));
+
+  if (CSSOM_LexicalUnitRange_genericShorthand(cssom, values, setting->subhashes,
+    handlers, setting->initial, ranges != NULL ? &ranges[1] : NULL, marker,
+    setting->nsubhashes, begin, end) != end)
+  {
+    return begin;
+  }
+
+  if (ranges != NULL)
+    _CSSOM_SET_RANGE(ranges[0], CSSOM_FONT_PROPERTY, begin, end);
+  return end;
 }

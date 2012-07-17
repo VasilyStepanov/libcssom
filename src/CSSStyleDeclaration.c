@@ -1088,6 +1088,24 @@ void CSSOM_CSSStyleDeclaration_setCSSFloat(
 
 
 
+const char* CSSOM_CSSStyleDeclaration_font(
+  const CSSOM_CSSStyleDeclaration *style)
+{
+  return CSSOM_CSSStyleDeclarationValue__fgetPropertyValue(style->values,
+    CSSOM_FONT_PROPERTY);
+}
+
+
+
+void CSSOM_CSSStyleDeclaration_setFont(
+  CSSOM_CSSStyleDeclaration *style, const char *font)
+{
+  CSSOM_CSSStyleDeclarationValue__fsetProperty(style->values,
+    CSSOM_FONT_PROPERTY, font);
+}
+
+
+
 const char* CSSOM_CSSStyleDeclaration_fontFamily(
   const CSSOM_CSSStyleDeclaration *style)
 {
